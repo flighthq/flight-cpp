@@ -27,11 +27,11 @@ inline flight::Ref<flight::types::RequirementSet> parse_three_ds_requirements(fl
       static_cast<void>(for_of_value);
       auto chunk_id = for_of_key;
       const flight::String chunk_name = flight::scene3d_formats::get_three_ds_chunk_name(chunk_id);
-      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::three_ds_requirement_key_namespace) + flight::String(".") + flight::to_string(chunk_name) + flight::String("")}))));
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::three_ds_requirement_key_namespace) + flight::String(".") + flight::to_string(chunk_name) + flight::String("")}))));
       std::optional<flight::Array<flight::Ref<flight::types::Requirement>>> scene_requirements = flight::scene3d_formats::three_ds_chunk_scene_requirements.get(chunk_name);
       if (scene_requirements.has_value()) {
         for (auto req : scene_requirements.value()) {
-          requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
+          requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
         }
       }
     }

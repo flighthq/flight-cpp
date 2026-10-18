@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -134,7 +135,7 @@ inline void pack_skin_influences(flight::Array<flight::Ref<flight::types::SkinIn
       (i += 1.0);
     }
   }
-  influences.sort([=](flight::Ref<flight::types::SkinInfluence> a, flight::Ref<flight::types::SkinInfluence> b) { return (b->weight - a->weight); });
+  influences.sort(flight::Function<double(flight::Ref<flight::types::SkinInfluence>, flight::Ref<flight::types::SkinInfluence>)>{[=](flight::Ref<flight::types::SkinInfluence> a, flight::Ref<flight::types::SkinInfluence> b) { return (b->weight - a->weight); }});
   const double kept = flight::minimum(static_cast<double>(influences.size()), max_skin_influences);
   double sum = 0.0;
   {

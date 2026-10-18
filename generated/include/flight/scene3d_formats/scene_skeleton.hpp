@@ -13,6 +13,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Mesh; }
 namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct NodeTraits; }
 namespace flight::types { struct Skeleton3D; }
 namespace flight::types { struct Skin; }

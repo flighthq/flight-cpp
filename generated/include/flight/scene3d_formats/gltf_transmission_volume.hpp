@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function resolveTransmissionVolume -- source line 72
 #include <cmath>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -152,7 +153,7 @@ struct khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_s
 using khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_591a8a98ddbcaffc = flight::types::khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_591a8a98ddbcaffc;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_591A8A98DDBCAFFC
 
-inline flight::Ref<flight::types::GltfExtensionHandler> gltf_transmission_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
+inline flight::Ref<flight::types::GltfExtensionHandler> gltf_transmission_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
   flight::Array<flight::Ref<flight::types::GltfMaterial>> materials = ([&]() -> flight::Array<flight::Ref<flight::types::GltfMaterial>> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"materials">>(flight::row_get<flight::RowKey<"source">>(context)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::GltfMaterial>>{}; }());
   {
     double i = 0.0;
@@ -169,14 +170,14 @@ inline flight::Ref<flight::types::GltfExtensionHandler> gltf_transmission_extens
           continue;
         }
         (target.value()->transmission = ([&]() -> double { auto nullish_coalesce_left = block.value()->transmission_factor; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
-        (target.value()->transmission_map = flight::row_get<flight::RowKey<"resolveTexture">>(context)(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> { auto contextual_union_source = block.value()->transmission_texture; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>(contextual_union_source.value()))}; }()), flight::String("linear")));
+        (target.value()->transmission_map = flight::row_get<flight::RowKey<"resolveTexture">>(context)(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> { auto contextual_union_source = block.value()->transmission_texture; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>(contextual_union_source.value()))}; }()), flight::String("linear")));
       }
       (i += 1.0);
     }
   }
-}, .kind = flight::String("KHR_materials_transmission")});
+}}, .kind = flight::String("KHR_materials_transmission")});
 
-inline flight::Ref<flight::types::GltfExtensionHandler> gltf_volume_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
+inline flight::Ref<flight::types::GltfExtensionHandler> gltf_volume_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
   flight::Array<flight::Ref<flight::types::GltfMaterial>> materials = ([&]() -> flight::Array<flight::Ref<flight::types::GltfMaterial>> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"materials">>(flight::row_get<flight::RowKey<"source">>(context)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::GltfMaterial>>{}; }());
   {
     double i = 0.0;
@@ -196,16 +197,16 @@ inline flight::Ref<flight::types::GltfExtensionHandler> gltf_volume_extension_ha
         (target.value()->attenuation_color = flight::color::pack_linear_to_color(flight::Array{([&]() -> double { auto nullish_coalesce_left = attenuation.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), ([&]() -> double { auto nullish_coalesce_left = attenuation.get(1.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), ([&]() -> double { auto nullish_coalesce_left = attenuation.get(2.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), 1.0}));
         (target.value()->attenuation_distance = ([&]() -> double { auto nullish_coalesce_left = block.value()->attenuation_distance; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return std::numeric_limits<double>::infinity(); }()));
         (target.value()->thickness = ([&]() -> double { auto nullish_coalesce_left = block.value()->thickness_factor; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
-        (target.value()->thickness_map = flight::row_get<flight::RowKey<"resolveTexture">>(context)(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> { auto contextual_union_source_2 = block.value()->thickness_texture; if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>(contextual_union_source_2.value()))}; }()), flight::String("linear")));
+        (target.value()->thickness_map = flight::row_get<flight::RowKey<"resolveTexture">>(context)(([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> { auto contextual_union_source_2 = block.value()->thickness_texture; if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>(contextual_union_source_2.value()))}; }()), flight::String("linear")));
       }
       (i += 1.0);
     }
   }
-}, .kind = flight::String("KHR_materials_volume")});
+}}, .kind = flight::String("KHR_materials_volume")});
 
 inline const double gltf_default_ior = 1.5;
 
-inline flight::Ref<flight::types::GltfExtensionHandler> gltf_ior_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
+inline flight::Ref<flight::types::GltfExtensionHandler> gltf_ior_extension_handler = flight::make_ref<flight::types::GltfExtensionHandler>(flight::types::GltfExtensionHandler{.apply = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>> context) {
   flight::Array<flight::Ref<flight::types::GltfMaterial>> materials = ([&]() -> flight::Array<flight::Ref<flight::types::GltfMaterial>> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"materials">>(flight::row_get<flight::RowKey<"source">>(context)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::Ref<flight::types::GltfMaterial>>{}; }());
   {
     double i = 0.0;
@@ -226,6 +227,6 @@ inline flight::Ref<flight::types::GltfExtensionHandler> gltf_ior_extension_handl
       (i += 1.0);
     }
   }
-}, .kind = flight::String("KHR_materials_ior")});
+}}, .kind = flight::String("KHR_materials_ior")});
 
 } // namespace flight::scene3d_formats

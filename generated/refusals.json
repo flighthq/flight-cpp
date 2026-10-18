@@ -6344,7 +6344,7 @@
       "line": 9,
       "module": "packages/scene3d-formats/src/colladaGeometryDecoder.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts: spreading an unbounded collection requires a fold or a variadic target",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts: member replace on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
       "stage": "emission"
     },
     {
@@ -6455,15 +6455,6 @@
       "module": "packages/scene3d-formats/src/gltfParse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts: property baseColorFactor on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 47,
-      "module": "packages/scene3d-formats/src/gltfPunctualLights.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts: contextual nullable interface conversion from DirectionalLight to Light follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::DirectionalLight> and flight::Ref<flight::types::Light> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
       "stage": "emission"
     },
     {
@@ -6730,13 +6721,6 @@
       "module": "packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "dependency ./gltfAnimations.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
-      "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfPunctualLights.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
       "stage": "dependency"
     },
     {

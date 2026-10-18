@@ -38,7 +38,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_obj(flight::String sour
 }
 
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_obj(flight::String source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialLibrary>>>>> materials = std::nullopt, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_obj(source, materials, diagnostics, options))), std::nullopt);
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_obj(source, materials, diagnostics, options))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

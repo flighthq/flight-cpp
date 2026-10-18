@@ -2,7 +2,9 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -59,7 +61,7 @@ using flight::types::Vector3;
 inline std::optional<flight::Ref<flight::types::ThreeDsCamera>> parse_three_ds_camera(flight::DataView view, double offset, double end, flight::String name, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   double cursor = (offset + flight::types::three_ds_chunk_header_bytes);
   if (((cursor + 32.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.camera-truncated"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.camera-truncated"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     return std::nullopt;
   }
   flight::Array<double> position = flight::Array<double>{view.get_float32(cursor, true), view.get_float32((cursor + 4.0), true), view.get_float32((cursor + 8.0), true)};
@@ -73,7 +75,7 @@ inline std::optional<flight::Ref<flight::types::ThreeDsCamera>> parse_three_ds_c
     const double chunk_id = view.get_uint16(cursor, true);
     const double chunk_end = flight::scene3d_formats::read_chunk_end(view, cursor, end);
     if ((chunk_end < 0.0)) {
-      flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-camera"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+      flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-camera"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
       break;
     }
     const double data_start = (cursor + flight::types::three_ds_chunk_header_bytes);
@@ -107,33 +109,33 @@ inline void append_three_ds_camera_document(flight::StructuralRef<flight::RowRea
   (transform->position->y = position->y);
   (transform->position->z = position->z);
   auto aim = convert_three_ds_point_zup_to_yup_flight_value_function_convert_u000054_hree_u000044_s_u000050_oint_u00005a__u000055_p_u000054_o_u000059__u000055_p_flight_private_f5410c96e0f5d772(flight::row_get<flight::RowKey<"target">>(camera));
-  flight::geometry::subtract_vector3(aim, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(position)));
-  if ((flight::geometry::normalize_vector3(aim, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim))) > 0.0)) {
-    flight::geometry::set_quaternion_from_unit_vectors(transform->rotation, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(document_view_local_axis_flight_value_variable__u000044__u00004f__u000043__u000055__u00004d__u000045__u00004e__u000054__u00005f__u000056__u000049__u000045__u000057__u00005f__u00004c__u00004f__u000043__u000041__u00004c__u00005f__u000041__u000058__u000049__u000053__flight_private_f5410c96e0f5d772)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)));
+  flight::geometry::subtract_vector3(aim, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(position)));
+  if ((flight::geometry::normalize_vector3(aim, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim))) > 0.0)) {
+    flight::geometry::set_quaternion_from_unit_vectors(transform->rotation, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(document_view_local_axis_flight_value_variable__u000044__u00004f__u000043__u000055__u00004d__u000045__u00004e__u000054__u00005f__u000056__u000049__u000045__u000057__u00005f__u00004c__u00004f__u000043__u000041__u00004c__u00005f__u000041__u000058__u000049__u000053__flight_private_f5410c96e0f5d772)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)));
     if ((flight::row_get<flight::RowKey<"roll">>(camera) != 0.0)) {
       auto roll = flight::geometry::create_quaternion(std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-      flight::geometry::set_quaternion_from_axis_angle(roll, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)), (flight::row_get<flight::RowKey<"roll">>(camera) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3));
-      flight::geometry::multiply_quaternion(transform->rotation, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(roll)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(transform->rotation)));
+      flight::geometry::set_quaternion_from_axis_angle(roll, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(aim)), (flight::row_get<flight::RowKey<"roll">>(camera) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3));
+      flight::geometry::multiply_quaternion(transform->rotation, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(roll)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::QuaternionLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Quaternion>>>>(transform->rotation)));
     }
   }
   const double focal_length = ((flight::row_get<flight::RowKey<"focalLength">>(camera) > 0.0) ? flight::row_get<flight::RowKey<"focalLength">>(camera) : three_ds_default_focal_length_mm);
   document->cameras.push(flight::make_ref<flight::types::Scene3DDocumentCamera>(flight::types::Scene3DDocumentCamera{.far = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"far">>(camera); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return three_ds_default_far; }()), .near = ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"near">>(camera); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return three_ds_default_near; }()), .projection = std::variant<flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>, flight::Ref<flight::types::RawProjection>>{std::in_place_type<flight::Ref<flight::types::PerspectiveProjection>>, flight::camera::create_perspective_projection(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PerspectiveProjectionOptions>>>>(flight::row_field<flight::RowKey<"fovY">>((2.0 * std::atan((flight::types::three_ds_camera_aperture_mm / (2.0 * focal_length)))))))}, .transform = transform}));
 }
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_camera_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_camera}), flight::row_field<flight::RowKey<"build">>(std::optional<std::function<void(flight::Ref<flight::types::ThreeDsParseState>)>>{[](flight::Ref<flight::types::ThreeDsParseState> state) {
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_camera_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_camera}), flight::row_field<flight::RowKey<"build">>(std::optional<std::function<void(flight::Ref<flight::types::ThreeDsParseState>)>>{flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>)>{[](flight::Ref<flight::types::ThreeDsParseState> state) {
   {
     double i = 0.0;
     while ((i < static_cast<double>(state->cameras.size()))) {
-      append_three_ds_camera_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsCamera>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ThreeDsCamera>>>>(state->cameras.element(i))), state->document);
+      append_three_ds_camera_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsCamera>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsCamera>>>>(state->cameras.element(i))), state->document);
       (i += 1.0);
     }
   }
-}}), flight::row_field<flight::RowKey<"collect">>([](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String name) {
+}}}), flight::row_field<flight::RowKey<"collect">>(flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>, flight::DataView, double, double, flight::String)>{[](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String name) {
   auto camera = parse_three_ds_camera(view, offset, end, name, state->drops);
   if (camera.has_value()) {
     state->cameras.push(camera.value());
   }
-}));
+}}));
 
 inline flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>> three_ds_camera_family = flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>>{flight::structural_ref_cast<flight::Ref<flight::types::ThreeDsChunkHandler>>(three_ds_camera_handler)};
 

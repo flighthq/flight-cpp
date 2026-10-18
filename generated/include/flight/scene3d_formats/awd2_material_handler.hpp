@@ -7,7 +7,9 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/array_buffer.hpp>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -66,13 +68,13 @@ using flight::types::Texture;
 inline std::optional<flight::Ref<flight::types::Awd2ParsedMaterial>> parse_material_block(flight::DataView view, flight::Uint8Array source, double start, double end, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   double offset = start;
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.material-truncated"), flight::String("parseMaterialBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.material-truncated"), flight::String("parseMaterialBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.material-truncated"), flight::String("parseMaterialBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("type")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.material-truncated"), flight::String("parseMaterialBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("type")}}});
     return std::nullopt;
   }
   (offset += 1.0);
@@ -94,13 +96,13 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedTexture>> parse_textur
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 5.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("payload")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("payload")}}});
     return std::nullopt;
   }
   const double tex_type = source.get_index(offset);
@@ -108,7 +110,7 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedTexture>> parse_textur
   const double data_len = dv.get_uint32(offset, true);
   (offset += 4.0);
   if (((offset + data_len) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), {{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, data_len}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("data")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-truncated"), flight::String("parseTextureBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, data_len}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("data")}}});
     return std::nullopt;
   }
   if ((tex_type != flight::scene3d_formats::awd2_texture_type_embedded)) {
@@ -123,17 +125,17 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedTexture>> parse_textur
   return flight::make_ref<flight::types::Awd2ParsedTexture>(flight::types::Awd2ParsedTexture{.bytes = std::optional<flight::Uint8Array>{bytes}, .mime_type = std::optional<flight::String>{mime_type.value()}, .name = name_result->value, .url = std::nullopt});
 }
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_texture_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_texture}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_texture_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_texture}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto texture = parse_texture_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), state->diagnostics);
   if (texture.has_value()) {
     state->textures.set(flight::row_get<flight::RowKey<"blockId">>(block), texture.value());
   }
-}});
+}}});
 
 inline std::optional<flight::types::Texture> resolve_awd_texture(double texture_id, flight::Map<double, flight::Ref<flight::types::Awd2ParsedTexture>> texture_blocks, flight::Ref<flight::types::Scene3DDocument> document, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto parsed = texture_blocks.get(texture_id);
   if (!parsed.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-missing"), flight::String("resolveAwdTexture"), {{flight::String("texture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, texture_id}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.texture-missing"), flight::String("resolveAwdTexture"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("texture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, texture_id}}});
     return std::nullopt;
   }
   if ((parsed.value()->bytes.has_value() && parsed.value()->mime_type.has_value())) {
@@ -257,15 +259,15 @@ inline double get_awd_specular_rgba(std::optional<double> color, double strength
 // contract that validates and recovers the target owner; the compiler will not use a native pointer cast,
 // materialize a replacement row, or invent side storage
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_material_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_material}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_materials}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_material_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_material}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_materials}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto material = parse_material_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), state->diagnostics);
   if (material.has_value()) {
     state->materials.set(flight::row_get<flight::RowKey<"blockId">>(block), material.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   const auto state_capture = flight::make_binding_cell(flight::Ref<flight::types::Awd2ParseState>{state});
   auto resolved = flight::Map<double, double>();
-  (state_capture.read_binding()->resolve_material = std::optional<std::function<double(double)>>{[=](double material_id) { return resolve_awd_material(material_id, state_capture.read_binding()->materials, state_capture.read_binding()->textures, resolved, state_capture.read_binding()->document, state_capture.read_binding()->diagnostics); }});
-}}});
+  (state_capture.read_binding()->resolve_material = std::optional<std::function<double(double)>>{flight::Function<double(double)>{[=](double material_id) { return resolve_awd_material(material_id, state_capture.read_binding()->materials, state_capture.read_binding()->textures, resolved, state_capture.read_binding()->document, state_capture.read_binding()->diagnostics); }}});
+}}}});
 
 } // namespace flight::scene3d_formats

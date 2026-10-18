@@ -22,11 +22,11 @@ inline flight::Ref<flight::types::RequirementSet> parse_md5_mesh_requirements(fl
   flight::Set<flight::String> features = flight::scene3d_formats::collect_md5_mesh_features(source);
   flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>> requirements = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>{};
   for (auto feature : ([&]() { flight::Array<flight::String> array_spread_result; for (const auto& array_spread_item : features) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort()) {
-    requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::md5_requirement_key_namespace) + flight::String(".") + flight::to_string(feature) + flight::String("")}))));
+    requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(flight::scene3d_formats::md5_requirement_key_namespace) + flight::String(".") + flight::to_string(feature) + flight::String("")}))));
     std::optional<flight::Array<flight::Ref<flight::types::Requirement>>> scene_requirements = flight::scene3d_formats::md5_mesh_feature_scene_requirements.get(feature);
     if (scene_requirements.has_value()) {
       for (auto req : scene_requirements.value()) {
-        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
+        requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(req)));
       }
     }
   }

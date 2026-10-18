@@ -6,7 +6,9 @@
 //   missing: function walkAwd2Blocks -- source line 80
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -71,7 +73,7 @@ inline bool is_awd2_version(flight::Uint8Array input, std::optional<flight::Arra
   if ((version_major == flight::scene3d_formats::awd2_format_version)) {
     return true;
   }
-  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.unsupported-version"), flight::String("isAwd2Version"), {{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<double>, version_major}}});
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.unsupported-version"), flight::String("isAwd2Version"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<double>, version_major}}});
   return false;
 }
 
@@ -102,14 +104,14 @@ inline std::optional<flight::Ref<source_view_5898de4c756cf2a0>> rehydrate_awd2_b
   }
   std::optional<std::function<std::optional<flight::Uint8Array>(flight::Uint8Array, double, flight::types::CompressionFraming)>> decompressor = resolve_awd_decompressor(compression, deflate, lzma);
   if (!decompressor.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.compression-no-decompressor"), flight::String("rehydrateAwd2Body"), {{flight::String("compression"), std::variant<bool, double, flight::String>{std::in_place_type<double>, compression}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.compression-no-decompressor"), flight::String("rehydrateAwd2Body"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("compression"), std::variant<bool, double, flight::String>{std::in_place_type<double>, compression}}});
     return std::nullopt;
   }
   const double compressed_end = flight::minimum((flight::scene3d_formats::awd2_header_bytes + view.get_uint32(8.0, true)), static_cast<double>(input.byte_length));
   const flight::String framing = ((compression == flight::scene3d_formats::awd2_compression_deflate) ? flight::types::compression_framing->rfc1950 : flight::types::compression_framing->raw);
   std::optional<flight::Uint8Array> inflated = decompressor.value()(input.subarray(flight::scene3d_formats::awd2_header_bytes, compressed_end), 0.0, framing);
   if (!inflated.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.decompression-failed"), flight::String("rehydrateAwd2Body"), {{flight::String("compression"), std::variant<bool, double, flight::String>{std::in_place_type<double>, compression}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("awd2.decompression-failed"), flight::String("rehydrateAwd2Body"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("compression"), std::variant<bool, double, flight::String>{std::in_place_type<double>, compression}}});
     return std::nullopt;
   }
   flight::Uint8Array rehydrated = flight::Uint8Array((flight::scene3d_formats::awd2_header_bytes + static_cast<double>(inflated.value().byte_length)));
@@ -122,8 +124,8 @@ inline std::optional<flight::Ref<source_view_5898de4c756cf2a0>> rehydrate_awd2_b
 }
 
 inline flight::Array<flight::Ref<flight::types::Awd2BlockHandler>> build_phase_order(flight::Array<flight::Ref<flight::types::Awd2BlockHandler>> blocks) {
-  flight::Array<flight::Ref<flight::types::Awd2BlockHandler>> with_build = blocks.filter([=](flight::Ref<flight::types::Awd2BlockHandler> handler) { return handler->build.has_value(); });
-  with_build.sort([=](flight::Ref<flight::types::Awd2BlockHandler> a, flight::Ref<flight::types::Awd2BlockHandler> b) { return (([&]() -> double { auto nullish_coalesce_left = a->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) - ([&]() -> double { auto nullish_coalesce_left = b->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())); });
+  flight::Array<flight::Ref<flight::types::Awd2BlockHandler>> with_build = blocks.filter(flight::Function<bool(flight::Ref<flight::types::Awd2BlockHandler>)>{[=](flight::Ref<flight::types::Awd2BlockHandler> handler) { return handler->build.has_value(); }});
+  with_build.sort(flight::Function<double(flight::Ref<flight::types::Awd2BlockHandler>, flight::Ref<flight::types::Awd2BlockHandler>)>{[=](flight::Ref<flight::types::Awd2BlockHandler> a, flight::Ref<flight::types::Awd2BlockHandler> b) { return (([&]() -> double { auto nullish_coalesce_left = a->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) - ([&]() -> double { auto nullish_coalesce_left = b->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())); }});
   return with_build;
 }
 
@@ -255,7 +257,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_awd2(flight::Uint8Array
 }
 
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_awd2(flight::Uint8Array bytes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_awd2(bytes, options, diagnostics))), std::nullopt);
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_awd2(bytes, options, diagnostics))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

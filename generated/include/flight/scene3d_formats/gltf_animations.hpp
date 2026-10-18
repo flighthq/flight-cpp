@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function appendGltfWeightsChannels -- source line 118
 //   missing: function buildGltfAnimations -- source line 34
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -55,11 +56,11 @@ using flight::types::Scene3DDocumentAnimationChannel;
 using flight::types::Scene3DDocumentMesh;
 using flight::types::Scene3DDocumentNode;
 
-inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_paths = {{flight::String("rotation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_rotation}}, {flight::String("scale"), std::optional<flight::String>{flight::types::scene_3d_animation_path_scale}}, {flight::String("translation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_translation}}};
+inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_paths = flight::Record<flight::String, std::optional<flight::String>>{{flight::String("rotation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_rotation}}, {flight::String("scale"), std::optional<flight::String>{flight::types::scene_3d_animation_path_scale}}, {flight::String("translation"), std::optional<flight::String>{flight::types::scene_3d_animation_path_translation}}};
 
-inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_output_types = {{flight::String("rotation"), std::optional<flight::String>{flight::String("VEC4")}}, {flight::String("scale"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("translation"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("weights"), std::optional<flight::String>{flight::String("SCALAR")}}};
+inline flight::Record<flight::String, std::optional<flight::String>> gltf_animation_output_types = flight::Record<flight::String, std::optional<flight::String>>{{flight::String("rotation"), std::optional<flight::String>{flight::String("VEC4")}}, {flight::String("scale"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("translation"), std::optional<flight::String>{flight::String("VEC3")}}, {flight::String("weights"), std::optional<flight::String>{flight::String("SCALAR")}}};
 
-inline flight::Record<flight::String, flight::types::AnimationInterpolation> gltf_sampler_interpolations = {{flight::String("CUBICSPLINE"), flight::String("Cubic")}, {flight::String("LINEAR"), flight::String("Linear")}, {flight::String("STEP"), flight::String("Step")}};
+inline flight::Record<flight::String, flight::types::AnimationInterpolation> gltf_sampler_interpolations = flight::Record<flight::String, flight::types::AnimationInterpolation>{{flight::String("CUBICSPLINE"), flight::String("Cubic")}, {flight::String("LINEAR"), flight::String("Linear")}, {flight::String("STEP"), flight::String("Step")}};
 
 
 // NOT GENERATED: function appendGltfWeightsChannels -- source line 118
@@ -205,8 +206,8 @@ inline flight::Record<flight::String, flight::types::AnimationInterpolation> glt
 // undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or
 // a local bound from the storage and tested the same way
 
-inline flight::Ref<flight::types::GltfCoreFeatureHandler> gltf_animations_core_feature_handler = flight::make_ref<flight::types::GltfCoreFeatureHandler>(flight::types::GltfCoreFeatureHandler{.apply = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>> context) {
+inline flight::Ref<flight::types::GltfCoreFeatureHandler> gltf_animations_core_feature_handler = flight::make_ref<flight::types::GltfCoreFeatureHandler>(flight::types::GltfCoreFeatureHandler{.apply = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>> context) {
   ([&]() { auto&& array_push_receiver = flight::row_get<flight::RowKey<"document">>(context)->animations; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> array_spread_result; for (const auto& array_spread_item : build_gltf_animations(context)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-}, .kind = flight::String("animations")});
+}}, .kind = flight::String("animations")});
 
 } // namespace flight::scene3d_formats

@@ -34,7 +34,7 @@ inline flight::Set<flight::String> collect_obj_material_models(flight::String so
   for (const auto& [for_of_key, for_of_value] : library->materials) {
     static_cast<void>(for_of_key);
     auto material = for_of_value;
-    found.add((has_obj_pbr_directives(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<ambient_anisotropy_anisotropy_rotation_clearcoat_clearcoat_roughness_diffuse_dissolve_emissive_illumination_map_ambient_map_bump_map_diffuse_map_dissolve_map_emissive_map_metallic_map_normal_map_roughness_map_specular_metallic_name_roughness_sheen_specular_specular_exponent_c26dc3f9c14be1fd>>>>(material))) ? flight::types::obj_material_standard_pbr_feature : flight::types::obj_material_blinn_phong_feature));
+    found.add((has_obj_pbr_directives(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ambient_anisotropy_anisotropy_rotation_clearcoat_clearcoat_roughness_diffuse_dissolve_emissive_illumination_map_ambient_map_bump_map_diffuse_map_dissolve_map_emissive_map_metallic_map_normal_map_roughness_map_specular_metallic_name_roughness_sheen_specular_specular_exponent_c26dc3f9c14be1fd>>>>(material))) ? flight::types::obj_material_standard_pbr_feature : flight::types::obj_material_blinn_phong_feature));
     if ((static_cast<double>(found.size()) == 2.0)) {
       break;
     }

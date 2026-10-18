@@ -8,6 +8,7 @@
 //   missing: function parseMd5MeshWithSectionHandlers -- source line 142
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
@@ -92,9 +93,7 @@ struct Md5WeightInfluence;
 
 namespace flight::scene3d_formats {
 
-struct Md5WeightInfluence : public flight::ReferenceEnabled {
-  double joint_index;
-  double weight;
+struct Md5WeightInfluence : public flight::types::SkinInfluence {
   double mx;
   double my;
   double mz;
@@ -141,14 +140,14 @@ inline void tally_md5_drop(std::optional<flight::Map<flight::String, flight::Ref
 
 inline void canonicalize_md5_tangent_handedness(flight::Ref<flight::types::MeshGeometry> geometry, std::optional<flight::Map<flight::String, flight::Ref<flight::types::Md5DropTally>>> md5_drops) {
   const double floats_per_vertex = (geometry->layout->stride / 4.0);
-  const double tangent_offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), flight::String("tangent"));
-  const double uv_offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), flight::String("uv0"));
+  const double tangent_offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), flight::String("tangent"));
+  const double uv_offset = flight::mesh::get_vertex_attribute_float_offset(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>>(geometry->layout)), flight::String("uv0"));
   if ((((floats_per_vertex <= 0.0) || (tangent_offset < 0.0)) || (uv_offset < 0.0))) {
     return;
   }
   flight::Float32Array vertices = geometry->vertices;
   const double vertex_count = std::floor((static_cast<double>(vertices.size()) / floats_per_vertex));
-  const double triangle_count = flight::mesh::get_mesh_geometry_triangle_count(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)));
+  const double triangle_count = flight::mesh::get_mesh_geometry_triangle_count(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)));
   flight::Ref<flight::types::MeshTriangleVertexIndices> corner = flight::make_ref<flight::types::MeshTriangleVertexIndices>(flight::types::MeshTriangleVertexIndices{.i0 = 0.0, .i1 = 0.0, .i2 = 0.0});
   flight::Int8Array resolved = flight::Int8Array(vertex_count);
   double contradictions = 0.0;
@@ -156,7 +155,7 @@ inline void canonicalize_md5_tangent_handedness(flight::Ref<flight::types::MeshG
     double triangle = 0.0;
     while ((triangle < triangle_count)) {
       {
-        if (!flight::mesh::get_mesh_geometry_triangle_vertex_indices(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)), triangle)) {
+        if (!flight::mesh::get_mesh_geometry_triangle_vertex_indices(corner, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)), triangle)) {
           (triangle += 1.0);
           continue;
         }
@@ -184,7 +183,7 @@ inline void canonicalize_md5_tangent_handedness(flight::Ref<flight::types::MeshG
     }
   }
   if ((contradictions > 0.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.tangent-handedness-contradiction"), flight::String(""), {{flight::String("firstVertices"), std::variant<bool, double, flight::String>{std::in_place_type<double>, contradictions}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.tangent-handedness-contradiction"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstVertices"), std::variant<bool, double, flight::String>{std::in_place_type<double>, contradictions}}});
   }
   {
     double vertex_2 = 0.0;
@@ -212,10 +211,10 @@ inline void align_md5_records(flight::Array<T> records, double index, std::optio
     return;
   }
   if ((index < static_cast<double>(records.size()))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-index-repeated"), record, {{flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(records.size())}}, {flight::String("firstIndex"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-index-repeated"), record, flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(records.size())}}, {flight::String("firstIndex"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}});
     return;
   }
-  tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-index-gap"), record, {{flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(records.size())}}, {flight::String("firstIndex"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}});
+  tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-index-gap"), record, flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(records.size())}}, {flight::String("firstIndex"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}});
   while ((static_cast<double>(records.size()) < index)) {
     records.push(placeholder());
   }
@@ -225,7 +224,7 @@ inline void report_md5_count_disagreement(std::optional<flight::Map<flight::Stri
   if (((declared < 0.0) || (declared == actual))) {
     return;
   }
-  tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-count-mismatch"), record, {{flight::String("firstActual"), std::variant<bool, double, flight::String>{std::in_place_type<double>, actual}}, {flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, declared}}});
+  tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.") + flight::to_string(record) + flight::String("-count-mismatch"), record, flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstActual"), std::variant<bool, double, flight::String>{std::in_place_type<double>, actual}}, {flight::String("firstExpected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, declared}}});
 }
 
 inline double parse_md5_record_ordinal(flight::String token) {
@@ -245,9 +244,9 @@ struct index_record_9e6ff902ef973696 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_INDEX_RECORD_9E6FF902EF973696
 
 inline std::optional<flight::Ref<index_record_9e6ff902ef973696>> parse_vert_line(flight::String line, std::optional<flight::Map<flight::String, flight::Ref<flight::types::Md5DropTally>>> md5_drops, double line_index) {
-  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 6.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double u = flight::parse_float(tokens.element(2.0));
@@ -255,16 +254,16 @@ inline std::optional<flight::Ref<index_record_9e6ff902ef973696>> parse_vert_line
   const double start_weight = flight::parse_int(tokens.element(4.0), 10.0);
   const double count_weights = flight::parse_int(tokens.element(5.0), 10.0);
   if ((((!std::isfinite(u) || !std::isfinite(v)) || !std::isfinite(start_weight)) || !std::isfinite(count_weights))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("non-numeric"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("non-numeric"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
     return std::nullopt;
   }
   if (((start_weight < 0.0) || (count_weights <= 0.0))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("weight-range"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("weight-range")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("weight-range"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("weight-range")}}});
     return std::nullopt;
   }
   const double index = parse_md5_record_ordinal(tokens.element(1.0));
   if ((index < 0.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("bad-index"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-vert"), flight::String("bad-index"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
     return std::nullopt;
   }
   return std::optional<flight::Ref<index_record_9e6ff902ef973696>>{flight::make_ref<index_record_9e6ff902ef973696>(index_record_9e6ff902ef973696{.index = index, .record = flight::make_ref<flight::types::Md5Vertex>(flight::types::Md5Vertex{.count_weights = count_weights, .start_weight = start_weight, .u = u, .v = v})})};
@@ -279,24 +278,24 @@ struct index_record_26a99e9e4d489d52 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_INDEX_RECORD_26A99E9E4D489D52
 
 inline std::optional<flight::Ref<index_record_26a99e9e4d489d52>> parse_tri_line(flight::String line, std::optional<flight::Map<flight::String, flight::Ref<flight::types::Md5DropTally>>> md5_drops, double line_index) {
-  flight::Array<flight::String> tokens = line.split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = line.split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 5.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double v0 = flight::parse_int(tokens.element(2.0), 10.0);
   const double v1 = flight::parse_int(tokens.element(3.0), 10.0);
   const double v2 = flight::parse_int(tokens.element(4.0), 10.0);
   if (((!std::isfinite(v0) || !std::isfinite(v1)) || !std::isfinite(v2))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("non-numeric"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("non-numeric"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
     return std::nullopt;
   }
   const double index = parse_md5_record_ordinal(tokens.element(1.0));
   if ((index < 0.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("bad-index"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-tri"), flight::String("bad-index"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
     return std::nullopt;
   }
-  return std::optional<flight::Ref<index_record_26a99e9e4d489d52>>{flight::make_ref<index_record_26a99e9e4d489d52>(index_record_26a99e9e4d489d52{.index = index, .record = flight::Array{v0, v1, v2}})};
+  return std::optional<flight::Ref<index_record_26a99e9e4d489d52>>{flight::make_ref<index_record_26a99e9e4d489d52>(index_record_26a99e9e4d489d52{.index = index, .record = flight::Array<double>{v0, v1, v2}})};
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_INDEX_RECORD_3A7E9F7D8E7A2DB9
@@ -308,9 +307,9 @@ struct index_record_3a7e9f7d8e7a2db9 : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_INDEX_RECORD_3A7E9F7D8E7A2DB9
 
 inline std::optional<flight::Ref<index_record_3a7e9f7d8e7a2db9>> parse_weight_line(flight::String line, std::optional<flight::Map<flight::String, flight::Ref<flight::types::Md5DropTally>>> md5_drops, double line_index) {
-  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 7.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double joint_index = flight::parse_int(tokens.element(2.0), 10.0);
@@ -319,12 +318,12 @@ inline std::optional<flight::Ref<index_record_3a7e9f7d8e7a2db9>> parse_weight_li
   const double position_y = flight::parse_float(tokens.element(5.0));
   const double position_z = flight::parse_float(tokens.element(6.0));
   if (((((!std::isfinite(joint_index) || !std::isfinite(bias)) || !std::isfinite(position_x)) || !std::isfinite(position_y)) || !std::isfinite(position_z))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("non-numeric"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("non-numeric"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
     return std::nullopt;
   }
   const double index = parse_md5_record_ordinal(tokens.element(1.0));
   if ((index < 0.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("bad-index"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-weight"), flight::String("bad-index"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("bad-index")}}});
     return std::nullopt;
   }
   return std::optional<flight::Ref<index_record_3a7e9f7d8e7a2db9>>{flight::make_ref<index_record_3a7e9f7d8e7a2db9>(index_record_3a7e9f7d8e7a2db9{.index = index, .record = flight::make_ref<flight::types::Md5Weight>(flight::types::Md5Weight{.bias = bias, .joint_index = joint_index, .position_x = position_x, .position_y = position_y, .position_z = position_z})})};
@@ -453,14 +452,14 @@ inline std::optional<flight::Ref<flight::types::Md5Joint>> parse_joint_line(flig
   const double name_start = line.index_of(flight::String("\""));
   const double name_end = line.index_of(flight::String("\""), (name_start + 1.0));
   if (((name_start < 0.0) || (name_end < 0.0))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("missing-name-quotes"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("missing-name-quotes")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("missing-name-quotes"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("missing-name-quotes")}}});
     return std::nullopt;
   }
   const flight::String name = line.slice((name_start + 1.0), name_end);
   const flight::String rest = line.slice((name_end + 1.0)).trim();
-  flight::Array<flight::String> tokens = rest.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = rest.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 7.0)) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double parent_index = flight::parse_int(tokens.element(0.0), 10.0);
@@ -471,12 +470,12 @@ inline std::optional<flight::Ref<flight::types::Md5Joint>> parse_joint_line(flig
   double orientation_y = flight::parse_float(tokens.element(5.0));
   double orientation_z = flight::parse_float(tokens.element(6.0));
   if (((((((!std::isfinite(parent_index) || !std::isfinite(position_x)) || !std::isfinite(position_y)) || !std::isfinite(position_z)) || !std::isfinite(orientation_x)) || !std::isfinite(orientation_y)) || !std::isfinite(orientation_z))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("non-numeric"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.malformed-joint"), flight::String("non-numeric"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric")}}});
     return std::nullopt;
   }
   double sum_sq = (((orientation_x * orientation_x) + (orientation_y * orientation_y)) + (orientation_z * orientation_z));
   if ((sum_sq > (1.0 + quaternion_sum_tolerance))) {
-    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.joint-orientation-not-unit"), flight::String(""), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}});
+    tally_md5_drop(md5_drops, flight::types::import_diagnostic_severity->recover, flight::String("md5mesh.joint-orientation-not-unit"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}});
     const double scale = (1.0 / std::sqrt(sum_sq));
     (orientation_x *= scale);
     (orientation_y *= scale);

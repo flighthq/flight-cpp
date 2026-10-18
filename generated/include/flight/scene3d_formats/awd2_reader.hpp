@@ -246,7 +246,7 @@ inline flight::Ref<flight::types::Matrix4> awd_transform_scratch = flight::geome
 inline flight::Ref<flight::types::Transform3D> awd_transform_to_transform_3d(flight::Float64Array transform) {
   awd_transform_to_matrix4(awd_transform_scratch, transform);
   auto out = flight::geometry::create_transform_3d();
-  flight::geometry::decompose_matrix4_to_transform_3d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(awd_transform_scratch)));
+  flight::geometry::decompose_matrix4_to_transform_3d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(awd_transform_scratch)));
   return out;
 }
 

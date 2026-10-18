@@ -46,7 +46,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_md5_mesh(flight::String
 }
 
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_md5_mesh(flight::String source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md5ImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_md5_mesh(source, diagnostics, options))), std::nullopt);
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_md5_mesh(source, diagnostics, options))), std::nullopt);
 }
 
 inline flight::Ref<flight::types::Scene3D> import_md5_mesh(flight::String mesh_source, std::optional<std::optional<flight::String>> anim_source = std::nullopt, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Md5ImportOptions>>>>> options = std::nullopt) {
@@ -54,7 +54,7 @@ inline flight::Ref<flight::types::Scene3D> import_md5_mesh(flight::String mesh_s
   if (([&]() { const auto& presence_operand = anim_source; return !presence_operand.has_value() || !presence_operand.value().has_value(); }())) {
     return scene;
   }
-  std::optional<flight::Array<flight::Ref<flight::types::Node3D>>> joints = flight::scene3d_formats::find_scene_3d_skeleton_joints(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)));
+  std::optional<flight::Array<flight::Ref<flight::types::Node3D>>> joints = flight::scene3d_formats::find_scene_3d_skeleton_joints(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)));
   if (!joints.has_value()) {
     flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.animation-no-skeleton"), flight::String("importMd5Mesh"), std::nullopt);
     return scene;

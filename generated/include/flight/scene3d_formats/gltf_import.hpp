@@ -56,7 +56,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_glb(flight::Uint8Array 
 }
 
 inline flight::Array<flight::Ref<flight::types::Scene3D>> create_scene3_ds_from_glb(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene3_ds_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_glb(bytes, diagnostics, options))));
+  return flight::scene3d::create_scene3_ds_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_glb(bytes, diagnostics, options))));
 }
 
 inline flight::Ref<flight::types::Scene3DDocument> parse_gltf(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
@@ -64,7 +64,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_gltf(std::variant<fligh
 }
 
 inline flight::Array<flight::Ref<flight::types::Scene3D>> create_scene3_ds_from_gltf(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene3_ds_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_gltf(source, diagnostics, options))));
+  return flight::scene3d::create_scene3_ds_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse_gltf(source, diagnostics, options))));
 }
 
 } // namespace flight::scene3d_formats

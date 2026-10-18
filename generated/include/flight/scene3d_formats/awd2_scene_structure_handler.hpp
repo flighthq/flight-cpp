@@ -5,7 +5,9 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 26
 //   missing: function buildAwdMeshInstanceNodes -- source line 250
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -58,20 +60,20 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedContainer>> parse_cont
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 4.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
     return std::nullopt;
   }
   const double parent_id = dv.get_uint32(offset, true);
   (offset += 4.0);
   const double float_size = (matrix_wide ? 8.0 : 4.0);
   if (((offset + (12.0 * float_size)) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
     return std::nullopt;
   }
   auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
   (offset = transform_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.container-truncated"), flight::String("parseContainerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
@@ -123,26 +125,26 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedMeshInstance>> parse_m
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 4.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
     return std::nullopt;
   }
   const double parent_id = dv.get_uint32(offset, true);
   (offset += 4.0);
   const double float_size = (matrix_wide ? 8.0 : 4.0);
   if (((offset + (12.0 * float_size)) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
     return std::nullopt;
   }
   auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
   (offset = transform_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 4.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("geometryId")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.mesh-instance-truncated"), flight::String("parseMeshInstanceBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("geometryId")}}});
     return std::nullopt;
   }
   const double geometry_id = dv.get_uint32(offset, true);
@@ -296,14 +298,14 @@ inline void parent_awd_scene_nodes(flight::Ref<flight::types::Awd2ParseState> st
   }
 }
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_mesh_instance_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_mesh_instance}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_scene_structure}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_mesh_instance_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_mesh_instance}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_scene_structure}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto mesh_instance = parse_mesh_instance_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"matrixWide">>(block), state->diagnostics);
   if (mesh_instance.has_value()) {
     state->mesh_instances.set(flight::row_get<flight::RowKey<"blockId">>(block), mesh_instance.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   build_awd_mesh_instance_nodes(state);
   parent_awd_scene_nodes(state);
-}}});
+}}}});
 
 } // namespace flight::scene3d_formats

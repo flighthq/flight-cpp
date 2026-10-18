@@ -38,6 +38,7 @@ using flight::types::XmlElement;
 
 
 // NOT GENERATED: variable (binding) -- source line 9
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export const colladaGeometryDecoder: ColladaElementDecoder = {
@@ -205,6 +206,11 @@ using flight::types::XmlElement;
 //   };
 //   
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts:
-// spreading an unbounded collection requires a fold or a variadic target
+// member replace on optional C++ storage requires proven present payload: nothing proved the payload present, so
+// the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional
+// chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where
+// the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves
+// undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or
+// a local bound from the storage and tested the same way
 
 } // namespace flight::scene3d_formats

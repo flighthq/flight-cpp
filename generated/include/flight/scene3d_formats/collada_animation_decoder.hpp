@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
@@ -71,7 +72,7 @@ inline flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>>
   flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>> out = flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>>{};
   for (auto animation : flight::scene3d_formats::collada_descendants(root, flight::String("animation"))) {
     auto values = flight::Map<flight::String, std::variant<flight::Array<double>, flight::Array<flight::String>>>();
-    for (auto source : animation->children.filter([=](flight::Ref<flight::types::XmlElement> e) { return (e->name == flight::String("source")); })) {
+    for (auto source : animation->children.filter(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> e) { return (e->name == flight::String("source")); }})) {
       const std::optional<flight::String> id = flight::scene3d_formats::collada_id_of(source);
       auto arr = ([&]() -> std::optional<flight::Ref<flight::types::XmlElement>> { auto nullish_coalesce_left = flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{source}, flight::String("float_array")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{source}, flight::String("Name_array")); }());
       if (flight::to_boolean((id && arr))) {
@@ -81,25 +82,25 @@ inline flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>>
     auto sampler = flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{animation}, flight::String("sampler"));
     auto channel = flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{animation}, flight::String("channel"));
     if ((!sampler.has_value() || !channel.has_value())) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("decodeColladaAnimations"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("sampler/channel")}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("decodeColladaAnimations"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("sampler/channel")}}});
       continue;
     }
-    auto input = sampler.value()->children.find([=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("INPUT"))); });
-    auto output = sampler.value()->children.find([=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("OUTPUT"))); });
-    auto interp = sampler.value()->children.find([=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("INTERPOLATION"))); });
+    auto input = sampler.value()->children.find(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("INPUT"))); }});
+    auto output = sampler.value()->children.find(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("OUTPUT"))); }});
+    auto interp = sampler.value()->children.find(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> e) { return ((e->name == flight::String("input")) && (e->attributes.get(flight::String("semantic")).value() == flight::String("INTERPOLATION"))); }});
     flight::Array<double> times = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { const auto& narrowed_union = values.get(([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Record<flight::String, flight::String>> { auto optional_chain_receiver = input; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->attributes; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().source; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String("")); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())); if (!narrowed_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Array<double>>(&narrowed_union.value())) return std::optional<flight::Array<double>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }());
     flight::Array<double> output_values = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { const auto& narrowed_union_2 = values.get(([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Record<flight::String, flight::String>> { auto optional_chain_receiver = output; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->attributes; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().source; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String("")); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())); if (!narrowed_union_2.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Array<double>>(&narrowed_union_2.value())) return std::optional<flight::Array<double>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }());
     flight::Array<flight::String> interpolation = ([&]() -> flight::Array<flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::String>> { const auto& narrowed_union_3 = values.get(([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Record<flight::String, flight::String>> { auto optional_chain_receiver = interp; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->attributes; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().source; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String("")); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }())); if (!narrowed_union_3.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Array<flight::String>>(&narrowed_union_3.value())) return std::optional<flight::Array<flight::String>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<flight::String>{}; }());
     for (auto mode : interpolation) {
       if ((((mode != flight::String("LINEAR")) && (mode != flight::String("STEP"))) && (mode != flight::String("BEZIER")))) {
-        flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-interpolation"), flight::String("decodeColladaAnimations"), {{flight::String("interpolation"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, mode}}});
+        flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-interpolation"), flight::String("decodeColladaAnimations"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("interpolation"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, mode}}});
       }
     }
     if ((!flight::to_boolean(static_cast<double>(times.size())) || !flight::to_boolean(static_cast<double>(output_values.size())))) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("decodeColladaAnimations"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("animation source")}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("decodeColladaAnimations"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("animation source")}}});
       continue;
     }
-    out.push(flight::make_ref<flight::types::ColladaDecodedAnimationChannel>(flight::types::ColladaDecodedAnimationChannel{.target = channel.value()->attributes.get(flight::String("target")).value(), .times = times, .values = output_values, .interpolation = interpolation, .in_tangents = flight::Array<double>{}, .out_tangents = flight::Array<double>{}}));
+    out.push(flight::make_ref<flight::types::ColladaDecodedAnimationChannel>(flight::types::ColladaDecodedAnimationChannel{.target = ([&]() -> flight::String { auto nullish_coalesce_left = channel.value()->attributes.get(flight::String("target")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()), .times = times, .values = output_values, .interpolation = interpolation, .in_tangents = flight::Array<double>{}, .out_tangents = flight::Array<double>{}}));
   }
   return out;
 }
@@ -118,7 +119,7 @@ inline flight::types::AnimationInterpolation map_collada_interpolation(flight::A
     return flight::String("Linear");
   }
   const flight::String first = modes.element(0.0);
-  if (modes.every([=](flight::String m) { return (m == first); })) {
+  if (modes.every(flight::Function<bool(flight::String)>{[=](flight::String m) { return (m == first); }})) {
     if ((first == flight::String("STEP"))) {
       return flight::String("Step");
     }
@@ -146,21 +147,21 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
   for (auto ch : channels) {
     const double slash_index = ch->target.index_of(flight::String("/"));
     if ((slash_index < 0.0)) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), {{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
       continue;
     }
     const flight::String node_id = ch->target.slice(0.0, slash_index);
     const flight::String property = ch->target.slice((slash_index + 1.0));
     const std::optional<double> node_index = node_id_map.get(node_id);
     if (!node_index.has_value()) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.animation-target-unresolved"), flight::String("parseCollada"), {{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.animation-target-unresolved"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
       continue;
     }
     flight::types::AnimationInterpolation interp = map_collada_interpolation(ch->interpolation);
     const double max_time = ((static_cast<double>(ch->times.size()) > 0.0) ? ch->times.element((static_cast<double>(ch->times.size()) - 1.0)) : 0.0);
     if (((property == flight::String("matrix")) || (property == flight::String("transform")))) {
       if ((static_cast<double>(ch->values.size()) < (static_cast<double>(ch->times.size()) * 16.0))) {
-        flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.animation-cardinality"), flight::String("parseCollada"), {{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}, {flight::String("expected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(ch->times.size()) * 16.0)}}, {flight::String("actual"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(ch->values.size())}}});
+        flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.animation-cardinality"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}, {flight::String("expected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(ch->times.size()) * 16.0)}}, {flight::String("actual"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(ch->values.size())}}});
         continue;
       }
       flight::Array<double> t_values = flight::Array<double>{};
@@ -174,7 +175,7 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
             flight::Array<double> rv = ch->values;
             flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76, rv.element(offset), rv.element((offset + 4.0)), rv.element((offset + 8.0)), rv.element((offset + 12.0)), rv.element((offset + 1.0)), rv.element((offset + 5.0)), rv.element((offset + 9.0)), rv.element((offset + 13.0)), rv.element((offset + 2.0)), rv.element((offset + 6.0)), rv.element((offset + 10.0)), rv.element((offset + 14.0)), rv.element((offset + 3.0)), rv.element((offset + 7.0)), rv.element((offset + 11.0)), rv.element((offset + 15.0)));
             auto trs = flight::geometry::create_transform_3d();
-            flight::geometry::decompose_matrix4_to_transform_3d(trs, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76)));
+            flight::geometry::decompose_matrix4_to_transform_3d(trs, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_6dd9a50245eb7f76)));
             t_values.push(trs->position->x, trs->position->y, trs->position->z);
             r_values.push(trs->rotation->x, trs->rotation->y, trs->rotation->z, trs->rotation->w);
             s_values.push(trs->scale->x, trs->scale->y, trs->scale->z);
@@ -217,7 +218,7 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
                 (az = 1.0);
               }
               else {
-                flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), {{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
+                flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
                 continue;
               }
             }
@@ -240,7 +241,7 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
           (values = q_values);
         }
         else {
-          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), {{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
+          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("collada.unsupported-animation-target"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("target"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ch->target}}});
           continue;
         }
       }
@@ -253,10 +254,10 @@ inline void resolve_collada_animations(flight::Ref<flight::types::Scene3DDocumen
   }
 }
 
-inline flight::Ref<flight::types::ColladaElementDecoder> collada_animation_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
+inline flight::Ref<flight::types::ColladaElementDecoder> collada_animation_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
   resolve_collada_animations(flight::row_get<flight::RowKey<"document">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"animationChannels">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"nodeIdMap">>(context), flight::row_get<flight::RowKey<"diagnostics">>(flight::row_get<flight::RowKey<"parse">>(context)));
-}}; auto object_member_build_phase = std::optional<double>{40.0}; auto object_member_decode = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
+}}}; auto object_member_build_phase = std::optional<double>{40.0}; auto object_member_decode = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
   ([&]() { auto&& array_push_receiver = flight::row_get<flight::RowKey<"animationChannels">>(context); const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>> array_spread_result; for (const auto& array_spread_item : decode_collada_animations_from_root(flight::row_get<flight::RowKey<"root">>(context), flight::row_get<flight::RowKey<"diagnostics">>(context))) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-}; auto object_member_elements = flight::Array<flight::String>{flight::String("animation")}; auto object_member_features = flight::Array<flight::String>{flight::String("Animation")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
+}}; auto object_member_elements = flight::Array<flight::String>{flight::String("animation")}; auto object_member_features = flight::Array<flight::String>{flight::String("Animation")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
 
 } // namespace flight::scene3d_formats

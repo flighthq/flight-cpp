@@ -61,7 +61,7 @@ inline flight::Array<flight::Ref<StlFacet>> read_binary_stl_facets(flight::Uint8
     while ((triangle < count)) {
       {
         const double base = (flight::scene3d_formats::binary_stl_header_size + (triangle * flight::scene3d_formats::binary_stl_triangle_size));
-        facets.push(flight::make_ref<StlFacet>(StlFacet{.normal = read_float32_triple(view, base), .vertices = flight::Array{read_float32_triple(view, (base + 12.0)), read_float32_triple(view, (base + 24.0)), read_float32_triple(view, (base + 36.0))}}));
+        facets.push(flight::make_ref<StlFacet>(StlFacet{.normal = read_float32_triple(view, base), .vertices = flight::Array<flight::Array<double>>{read_float32_triple(view, (base + 12.0)), read_float32_triple(view, (base + 24.0)), read_float32_triple(view, (base + 36.0))}}));
       }
       (triangle += 1.0);
     }

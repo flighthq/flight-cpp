@@ -13,14 +13,6 @@ namespace flight::types { struct Requirement; }
 
 namespace flight::scene3d_formats {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_FACET_KEY_DFCEA1A2CD30187E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_FACET_KEY_DFCEA1A2CD30187E
-struct facet_key_dfcea1a2cd30187e : public flight::ReferenceEnabled {
-  flight::String facet;
-  flight::String key;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_FACET_KEY_DFCEA1A2CD30187E
-
-inline flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>> obj_feature_scene_requirements = flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>(flight::Array<std::tuple<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>>{flight::Array{flight::types::obj_material_blinn_phong_feature, flight::Array{flight::make_ref<facet_key_dfcea1a2cd30187e>(facet_key_dfcea1a2cd30187e{.facet = flight::types::requirement_facet->scene_material_kind, .key = flight::types::blinn_phong_material_kind})}}, flight::Array{flight::types::obj_material_standard_pbr_feature, flight::Array{flight::make_ref<facet_key_dfcea1a2cd30187e>(facet_key_dfcea1a2cd30187e{.facet = flight::types::requirement_facet->scene_material_kind, .key = flight::types::standard_pbr_material_kind})}}});
+inline flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>> obj_feature_scene_requirements = flight::Map<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>(flight::Array<std::tuple<flight::String, flight::Array<flight::Ref<flight::types::Requirement>>>>{std::make_tuple(flight::types::obj_material_blinn_phong_feature, flight::Array<flight::Ref<flight::types::Requirement>>{flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_material_kind, .key = flight::types::blinn_phong_material_kind})}), std::make_tuple(flight::types::obj_material_standard_pbr_feature, flight::Array<flight::Ref<flight::types::Requirement>>{flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->scene_material_kind, .key = flight::types::standard_pbr_material_kind})})});
 
 } // namespace flight::scene3d_formats

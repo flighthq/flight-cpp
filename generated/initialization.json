@@ -3221,6 +3221,11 @@
       "source": "packages/scene3d-formats/src/gltfFeatures.ts"
     },
     {
+      "name": "GltfPunctualLights",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+    },
+    {
       "name": "GltfRequirements",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/gltfRequirements.ts"
@@ -3264,6 +3269,11 @@
       "name": "RegisterGltfCameraHandlers",
       "packageName": "@flighthq/scene3d-formats",
       "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+    },
+    {
+      "name": "RegisterGltfLightingExtensionHandlers",
+      "packageName": "@flighthq/scene3d-formats",
+      "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
     },
     {
       "name": "RegisterGltfSkinHandlers",
@@ -26376,6 +26386,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "GltfPunctualLights",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "GltfRequirements",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/gltfRequirements.ts"
@@ -26459,6 +26479,16 @@
           "name": "RegisterGltfCameraHandlers",
           "packageName": "@flighthq/scene3d-formats",
           "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RegisterGltfLightingExtensionHandlers",
+          "packageName": "@flighthq/scene3d-formats",
+          "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
         }
       ]
     },
@@ -153770,6 +153800,354 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
+            "fingerprint": "sha256:9730b966e8452cf0efe3ccbfdc4791c63feb5c6be98ce85cf10dac282c471775",
+            "line": 1,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",9]",
+            "kind": "import",
+            "name": "packLinearToColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "packLinearToColor",
+            "kind": "dependency",
+            "module": {
+              "name": "PackColor",
+              "packageName": "@flighthq/color",
+              "source": "packages/color/src/packColor.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 2,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",71]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f5ebee8d24dda8abaaef87fb8afa798695323b251b80b48542cb70e121426dd9",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",150]",
+            "kind": "import",
+            "name": "createDirectionalLight",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createDirectionalLight",
+            "kind": "dependency",
+            "module": {
+              "name": "DirectionalLight",
+              "packageName": "@flighthq/lighting",
+              "source": "packages/lighting/src/directionalLight.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 34,
+            "fingerprint": "sha256:194a988cb67f554133274045f7901062dac3f48ff4c78c7eac1ca9ced50e916e",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",174]",
+            "kind": "import",
+            "name": "createPointLight",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createPointLight",
+            "kind": "dependency",
+            "module": {
+              "name": "PointLight",
+              "packageName": "@flighthq/lighting",
+              "source": "packages/lighting/src/pointLight.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 52,
+            "fingerprint": "sha256:0051ab49fcb644ae32e5845652d6e6ecee4a90156e161d1fbe9e81d103998de3",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",192]",
+            "kind": "import",
+            "name": "createSpotLight",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSpotLight",
+            "kind": "dependency",
+            "module": {
+              "name": "SpotLight",
+              "packageName": "@flighthq/lighting",
+              "source": "packages/lighting/src/spotLight.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 5,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",351]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:0d18fb106b2c6a1867bc7cb5fc927dfdefc3d1e42c6db8aa11ff878c650bf93f",
+            "line": 7,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",425]",
+            "kind": "variable",
+            "name": "GltfPunctualLightsExtensionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:61123f1d70ea314fbd7230dcbb3d993f5ee36edd4261955c1c4ae5509ca11da1",
+            "line": 47,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",2110]",
+            "kind": "function",
+            "name": "buildGltfPunctualLight",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:376c032db8669980facf48c2c7df13d4e474684b0a54046acda903f5975dffea",
+            "line": 108,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",4416]",
+            "kind": "function",
+            "name": "tallyLightDrop",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "specifier": "@flighthq/color/contract",
+          "target": {
+            "name": "PackColor",
+            "packageName": "@flighthq/color",
+            "source": "packages/color/src/packColor.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "importedNames": [
+            "createDirectionalLight"
+          ],
+          "specifier": "@flighthq/lighting/contract",
+          "target": {
+            "name": "DirectionalLight",
+            "packageName": "@flighthq/lighting",
+            "source": "packages/lighting/src/directionalLight.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "importedNames": [
+            "createPointLight"
+          ],
+          "specifier": "@flighthq/lighting/contract",
+          "target": {
+            "name": "PointLight",
+            "packageName": "@flighthq/lighting",
+            "source": "packages/lighting/src/pointLight.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "importedNames": [
+            "createSpotLight"
+          ],
+          "specifier": "@flighthq/lighting/contract",
+          "target": {
+            "name": "SpotLight",
+            "packageName": "@flighthq/lighting",
+            "source": "packages/lighting/src/spotLight.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "GltfPunctualLights",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:0d18fb106b2c6a1867bc7cb5fc927dfdefc3d1e42c6db8aa11ff878c650bf93f",
+              "line": 7,
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfPunctualLights.ts",
+              "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/gltfPunctualLights.ts\",425]",
+              "kind": "variable",
+              "name": "GltfPunctualLightsExtensionHandler",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
             "fingerprint": "sha256:8ec50ce83fd8ba1548319e46de7a30b03920a87685a1c42cb4a2c033e651228f",
             "line": 1,
             "packageName": "@flighthq/scene3d-formats",
@@ -260942,6 +261320,133 @@
         "name": "RegisterGltfCameraHandlers",
         "packageName": "@flighthq/scene3d-formats",
         "source": "packages/scene3d-formats/src/registerGltfCameraHandlers.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:53c955872f54ea3187eb8afdb5aa8a3b59d90b659f635fba7586e601f88edef5",
+            "line": 3,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts\",80]",
+            "kind": "import",
+            "name": "registerGltfExtensionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "registerGltfExtensionHandler",
+            "kind": "dependency",
+            "module": {
+              "name": "GltfExtensionHandlerRegistry",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0d18fb106b2c6a1867bc7cb5fc927dfdefc3d1e42c6db8aa11ff878c650bf93f",
+            "line": 4,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts\",162]",
+            "kind": "import",
+            "name": "GltfPunctualLightsExtensionHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "GltfPunctualLightsExtensionHandler",
+            "kind": "dependency",
+            "module": {
+              "name": "GltfPunctualLights",
+              "packageName": "@flighthq/scene3d-formats",
+              "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2441e989a0edf51a05d7d3e8db3f3a9e756ae47e84964cc6e9887df506caeeec",
+            "line": 7,
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
+            "id": "binding:[\"@flighthq/scene3d-formats\",\"packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts\",337]",
+            "kind": "function",
+            "name": "registerGltfLightingExtensionHandlers",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RegisterGltfLightingExtensionHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
+          },
+          "specifier": "./gltfExtensionHandlerRegistry.ts",
+          "target": {
+            "name": "GltfExtensionHandlerRegistry",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfExtensionHandlerRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RegisterGltfLightingExtensionHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
+          },
+          "specifier": "./gltfPunctualLights.ts",
+          "target": {
+            "name": "GltfPunctualLights",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/gltfPunctualLights.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RegisterGltfLightingExtensionHandlers",
+            "packageName": "@flighthq/scene3d-formats",
+            "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "GltfExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GltfExtension.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RegisterGltfLightingExtensionHandlers",
+        "packageName": "@flighthq/scene3d-formats",
+        "source": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts"
       },
       "steps": []
     },

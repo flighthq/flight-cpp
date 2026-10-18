@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/regexp.hpp>
 #include <functional>
@@ -28,11 +29,11 @@ inline flight::Array<flight::Ref<flight::types::XmlElement>> collada_children(st
   if (!element.has_value()) {
     return flight::Array<flight::Ref<flight::types::XmlElement>>{};
   }
-  return element.value()->children.filter([=](flight::Ref<flight::types::XmlElement> entry) { return ((entry->name == name) || entry->name.ends_with(flight::String(":") + flight::to_string(name) + flight::String(""))); });
+  return element.value()->children.filter(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> entry) { return ((entry->name == name) || entry->name.ends_with(flight::String(":") + flight::to_string(name) + flight::String(""))); }});
 }
 
 inline std::optional<flight::String> collada_id_of(flight::Ref<flight::types::XmlElement> element) {
-  return element->attributes.get(flight::String("id")).value();
+  return element->attributes.get(flight::String("id"));
 }
 
 inline flight::String collada_local_name(flight::Ref<flight::types::XmlElement> element) {
@@ -77,11 +78,11 @@ inline void walk_collada_element(flight::Ref<flight::types::XmlElement> element,
 
 inline flight::Array<flight::Ref<flight::types::XmlElement>> collada_descendants(flight::Ref<flight::types::XmlElement> element, flight::String name) {
   flight::Array<flight::Ref<flight::types::XmlElement>> out = flight::Array<flight::Ref<flight::types::XmlElement>>{};
-  walk_collada_element(element, [=](flight::Ref<flight::types::XmlElement> e) {
+  walk_collada_element(element, flight::Function<void(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> e) {
   if (((e->name == name) || e->name.ends_with(flight::String(":") + flight::to_string(name) + flight::String("")))) {
     out.push(e);
   }
-});
+}});
   return out;
 }
 

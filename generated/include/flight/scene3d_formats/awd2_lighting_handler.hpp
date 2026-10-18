@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function buildAwdDocumentLights -- source line 247
 //   missing: function reportAwdLightPickerScope -- source line 390
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -91,26 +92,26 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedLight>> parse_light_bl
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 4.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
     return std::nullopt;
   }
   const double parent_id = dv.get_uint32(offset, true);
   (offset += 4.0);
   const double float_size = (matrix_wide ? 8.0 : 4.0);
   if (((offset + (12.0 * float_size)) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
     return std::nullopt;
   }
   auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
   (offset = transform_result->end);
   if ((((offset + 2.0) > end) || (((offset + 2.0) + dv.get_uint16(offset, true)) > end))) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 1.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("lightType")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-truncated"), flight::String("parseLightBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("lightType")}}});
     return std::nullopt;
   }
   const double light_type = source.get_index(offset);
@@ -125,19 +126,19 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedLightPicker>> parse_li
   flight::DataView dv = view;
   double offset = start;
   if ((((offset + 2.0) > end) || (((offset + 2.0) + dv.get_uint16(offset, true)) > end))) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("numLights")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("numLights")}}});
     return std::nullopt;
   }
   const double num_lights = dv.get_uint16(offset, true);
   (offset += 2.0);
   if (((offset + (num_lights * 4.0)) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("lightIds")}}, {flight::String("lights"), std::variant<bool, double, flight::String>{std::in_place_type<double>, num_lights}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.light-picker-truncated"), flight::String("parseLightPickerBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("lightIds")}}, {flight::String("lights"), std::variant<bool, double, flight::String>{std::in_place_type<double>, num_lights}}});
     return std::nullopt;
   }
   flight::Array<double> light_ids = flight::Array<double>{};
@@ -284,20 +285,20 @@ struct ambient_ambient_rgb_casts_shadow_diffuse_direction_x_direction_y_directio
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_AMBIENT_AMBIENT_RGB_CASTS_SHADOW_DIFFUSE_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_FALL_OFF_HAS_RADIUS_LIGHT_TYPE_NAME_PARENT_ID_RADIUS_RGB_SPECULAR_TRANSFORM_6581E7A20AD6A3C6
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_light_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_light}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_lighting}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_light_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_light}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_lighting}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto light = parse_light_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"matrixWide">>(block), state->diagnostics);
   if (light.has_value()) {
     state->lights.set(flight::row_get<flight::RowKey<"blockId">>(block), light.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   auto drops = flight::Map<flight::String, flight::Ref<AwdLightDropTally>>();
   for (const auto& [for_of_key, for_of_value] : state->lights) {
     static_cast<void>(for_of_key);
     auto light = for_of_value;
-    build_awd_document_lights(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<ambient_ambient_rgb_casts_shadow_diffuse_direction_x_direction_y_direction_z_fall_off_has_radius_light_type_name_parent_id_radius_rgb_specular_transform_6581e7a20ad6a3c6>>>>(light)), state->node_index_for_block.get(light->parent_id), state->document, drops);
+    build_awd_document_lights(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedLight>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ambient_ambient_rgb_casts_shadow_diffuse_direction_x_direction_y_direction_z_fall_off_has_radius_light_type_name_parent_id_radius_rgb_specular_transform_6581e7a20ad6a3c6>>>>(light)), state->node_index_for_block.get(light->parent_id), state->document, drops);
   }
   flush_awd_light_drops(drops, state->diagnostics);
-}}});
+}}}});
 
 inline bool is_awd_light_scope_dropped(flight::Set<double> light_block_ids, flight::Map<double, flight::Ref<flight::types::Awd2ParsedLightPicker>> pickers) {
   if ((static_cast<double>(light_block_ids.size()) == 0.0)) {
@@ -346,13 +347,13 @@ inline bool is_awd_light_scope_dropped(flight::Set<double> light_block_ids, flig
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts:
 // contextual multiVariant construction requires expression type evidence
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_light_picker_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_light_picker}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_lighting}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_light_picker_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_light_picker}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_lighting}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto picker = parse_light_picker_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), state->diagnostics);
   if (picker.has_value()) {
     state->light_pickers.set(flight::row_get<flight::RowKey<"blockId">>(block), picker.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   report_awd_light_picker_scope(state);
-}}});
+}}}});
 
 } // namespace flight::scene3d_formats

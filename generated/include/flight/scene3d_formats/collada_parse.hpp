@@ -3,8 +3,10 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/number.hpp>
+#include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -29,13 +31,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct ColladaBuildContext; }
 namespace flight::types { struct ColladaDecodedAnimationChannel; }
+namespace flight::types { struct ColladaDecodedMorph; }
+namespace flight::types { struct ColladaDecodedSkin; }
 namespace flight::types { struct ColladaDeferredCameraBinding; }
 namespace flight::types { struct ColladaDeferredControllerBinding; }
 namespace flight::types { struct ColladaDeferredLightBinding; }
 namespace flight::types { struct ColladaElementDecoder; }
 namespace flight::types { struct ColladaImportOptions; }
+namespace flight::types { struct ColladaLightDefinition; }
+namespace flight::types { struct ColladaOrthographicCameraDefinition; }
 namespace flight::types { struct ColladaParseContext; }
 namespace flight::types { struct ColladaParseResult; }
+namespace flight::types { struct ColladaPerspectiveCameraDefinition; }
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
 namespace flight::types { struct ImportDiagnostic; }
@@ -103,21 +110,21 @@ inline flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> build
 inline void apply_collada_root_transform(flight::Ref<flight::types::Scene3DDocumentNode> node, flight::types::Matrix4Like root_matrix) {
   auto local = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   auto composed = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::compose_matrix4_from_transform_3d(local, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(node->transform)));
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(root_matrix)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(local)));
-  flight::geometry::decompose_matrix4_to_transform_3d(node->transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
+  flight::geometry::compose_matrix4_from_transform_3d(local, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(node->transform)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(root_matrix)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(local)));
+  flight::geometry::decompose_matrix4_to_transform_3d(node->transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
 }
 
 inline flight::Ref<flight::types::Matrix4> scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793 = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 inline void apply_collada_matrix(flight::types::Matrix4Like composed, flight::Array<double> values) {
   flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793, values.element(0.0), values.element(4.0), values.element(8.0), values.element(12.0), values.element(1.0), values.element(5.0), values.element(9.0), values.element(13.0), values.element(2.0), values.element(6.0), values.element(10.0), values.element(14.0), values.element(3.0), values.element(7.0), values.element(11.0), values.element(15.0));
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
 }
 
 inline void apply_collada_translate(flight::types::Matrix4Like composed, flight::Array<double> values) {
   flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, values.element(0.0), values.element(1.0), values.element(2.0), 1.0);
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
 }
 
 inline void apply_collada_rotate(flight::types::Matrix4Like composed, flight::Array<double> values) {
@@ -137,12 +144,12 @@ inline void apply_collada_rotate(flight::types::Matrix4Like composed, flight::Ar
   const double ny = (ay / len);
   const double nz = (az / len);
   flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793, (((t * nx) * nx) + c), (((t * nx) * ny) + (s * nz)), (((t * nx) * nz) - (s * ny)), 0.0, (((t * nx) * ny) - (s * nz)), (((t * ny) * ny) + c), (((t * ny) * nz) + (s * nx)), 0.0, (((t * nx) * nz) + (s * ny)), (((t * ny) * nz) - (s * nx)), (((t * nz) * nz) + c), 0.0, 0.0, 0.0, 0.0, 1.0);
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
 }
 
 inline void apply_collada_scale(flight::types::Matrix4Like composed, flight::Array<double> values) {
   flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793, values.element(0.0), 0.0, 0.0, 0.0, 0.0, values.element(1.0), 0.0, 0.0, 0.0, 0.0, values.element(2.0), 0.0, 0.0, 0.0, 0.0, 1.0);
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
 }
 
 inline void apply_collada_lookat(flight::types::Matrix4Like composed, flight::Array<double> values) {
@@ -179,15 +186,15 @@ inline void apply_collada_lookat(flight::types::Matrix4Like composed, flight::Ar
   const double upy = ((sz * fx) - (sx * fz));
   const double upz = ((sx * fy) - (sy * fx));
   flight::geometry::set_matrix4(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793, sx, upx, -fx, 0.0, sy, upy, -fy, 0.0, sz, upz, -fz, 0.0, ex, ey, ez, 1.0);
-  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
+  flight::geometry::multiply_matrix4(composed, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(composed)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_flight_value_variable__u00005f__u00005f_scratch_flight_private_ea0a54af7b23d793)));
 }
 
 inline flight::Ref<flight::types::Transform3D> compose_collada_transform_elements(flight::Ref<flight::types::XmlElement> node_element) {
   auto transform = flight::geometry::create_transform_3d();
-  flight::Array<flight::Ref<flight::types::XmlElement>> transform_elements = node_element->children.filter([=](flight::Ref<flight::types::XmlElement> c) {
+  flight::Array<flight::Ref<flight::types::XmlElement>> transform_elements = node_element->children.filter(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> c) {
   const flight::String n = flight::scene3d_formats::collada_local_name(c);
   return (((((n == flight::String("matrix")) || (n == flight::String("translate"))) || (n == flight::String("rotate"))) || (n == flight::String("scale"))) || (n == flight::String("lookat")));
-});
+}});
   if ((static_cast<double>(transform_elements.size()) == 0.0)) {
     return transform;
   }
@@ -220,14 +227,14 @@ inline flight::Ref<flight::types::Transform3D> compose_collada_transform_element
       }
     }
   }
-  flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
+  flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(composed)));
   return transform;
 }
 
 inline double build_collada_node(flight::Ref<flight::types::Scene3DDocument> document, flight::Ref<flight::types::XmlElement> node_element, flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> node_library, flight::Set<flight::String> instance_stack, flight::Map<flight::String, double> geometry_id_to_mesh_index, flight::Map<flight::String, flight::Array<flight::String>> geometry_primitive_symbols, flight::Map<flight::String, double> material_indices, flight::Map<flight::String, double> node_id_map, flight::Array<flight::Ref<flight::types::ColladaDeferredCameraBinding>> deferred_cameras, flight::Array<flight::Ref<flight::types::ColladaDeferredControllerBinding>> deferred_controllers, flight::Array<flight::Ref<flight::types::ColladaDeferredLightBinding>> deferred_lights, flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics) {
   const double node_index = static_cast<double>(document->nodes.size());
   auto transform = compose_collada_transform_elements(node_element);
-  flight::Ref<flight::types::Scene3DDocumentNode> node = flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node_3d_kind, .name = std::optional<flight::String>{node_element->attributes.get(flight::String("name")).value()}, .transform = transform});
+  flight::Ref<flight::types::Scene3DDocumentNode> node = flight::make_ref<flight::types::Scene3DDocumentNode>(flight::types::Scene3DDocumentNode{.children = flight::Array<double>{}, .kind = flight::types::node_3d_kind, .name = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = node_element->attributes.get(flight::String("name")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return node_element->attributes.get(flight::String("id")); }()), .transform = transform});
   document->nodes.push(node);
   const flight::String node_id = node_element->attributes.get(flight::String("id")).value();
   const flight::String node_sid = node_element->attributes.get(flight::String("sid")).value();
@@ -247,17 +254,17 @@ inline double build_collada_node(flight::Ref<flight::types::Scene3DDocument> doc
       if ((name == flight::String("instance_node"))) {
         const flight::String url = child_element->attributes.get(flight::String("url")).value();
         if ((false || !url.starts_with(flight::String("#")))) {
-          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_node")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
+          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_node")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
           continue;
         }
         const flight::String ref_id = url.slice(1.0);
         if (instance_stack.has(ref_id)) {
-          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.instance-cycle"), flight::String("parseCollada"), {{flight::String("node"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ref_id}}});
+          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.instance-cycle"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("node"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, ref_id}}});
           continue;
         }
         auto referenced = node_library.get(ref_id);
         if (!referenced.has_value()) {
-          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_node")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
+          flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_node")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
           continue;
         }
         node->children.push(build_collada_node(document, referenced.value(), node_library, instance_stack, geometry_id_to_mesh_index, geometry_primitive_symbols, material_indices, node_id_map, deferred_cameras, deferred_controllers, deferred_lights, diagnostics));
@@ -270,7 +277,7 @@ inline double build_collada_node(flight::Ref<flight::types::Scene3DDocument> doc
           }
           else {
             if (true) {
-              flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_camera")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url_2}}});
+              flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_camera")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url_2}}});
             }
           }
         }
@@ -315,7 +322,7 @@ inline double build_collada_node(flight::Ref<flight::types::Scene3DDocument> doc
 }
 
 inline flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaElementDecoder>>>>> order_collada_build_phases(flight::Array<flight::Ref<flight::types::ColladaElementDecoder>> decoders) {
-  return ([&]() { flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaElementDecoder>>>>> array_spread_result; for (const auto& array_spread_item : decoders) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort([=](flight::Ref<flight::types::ColladaElementDecoder> a, flight::Ref<flight::types::ColladaElementDecoder> b) { return (([&]() -> double { auto nullish_coalesce_left = a->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 9007199254740991.0; }()) - ([&]() -> double { auto nullish_coalesce_left = b->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 9007199254740991.0; }())); });
+  return ([&]() { flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaElementDecoder>>>>> array_spread_result; for (const auto& array_spread_item : decoders) { array_spread_result.push(array_spread_item); } return array_spread_result; }()).sort(flight::Function<double(flight::Ref<flight::types::ColladaElementDecoder>, flight::Ref<flight::types::ColladaElementDecoder>)>{[=](flight::Ref<flight::types::ColladaElementDecoder> a, flight::Ref<flight::types::ColladaElementDecoder> b) { return (([&]() -> double { auto nullish_coalesce_left = a->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 9007199254740991.0; }()) - ([&]() -> double { auto nullish_coalesce_left = b->build_phase; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 9007199254740991.0; }())); }});
 }
 
 inline void build_collada_scene_hierarchy(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> parse, flight::Ref<flight::types::XmlElement> root, flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> visual_scene_library, flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> node_library, flight::Array<double> root_transform, flight::Array<flight::Ref<flight::types::ColladaElementDecoder>> decoders) {
@@ -332,12 +339,12 @@ inline void build_collada_scene_hierarchy(flight::StructuralRef<flight::RowReado
   }
   const flight::String url = instance_visual_scene.value()->attributes.get(flight::String("url")).value();
   if ((false || !url.starts_with(flight::String("#")))) {
-    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_visual_scene")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
+    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_visual_scene")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
     return;
   }
   auto visual_scene = visual_scene_library.get(url.slice(1.0));
   if (!visual_scene.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_visual_scene")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
+    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_visual_scene")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, url}}});
     return;
   }
   auto root_matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
@@ -365,7 +372,7 @@ inline void build_collada_scene_hierarchy(flight::StructuralRef<flight::RowReado
   for (auto decoder : order_collada_build_phases(decoders)) {
     ([&]() { auto optional_chain_receiver = flight::row_get<flight::RowKey<"build">>(decoder); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(build_context); }());
   }
-  flight::Ref<flight::types::Scene3DDocumentScene> scene = flight::make_ref<flight::types::Scene3DDocumentScene>(flight::types::Scene3DDocumentScene{.name = std::optional<flight::String>{visual_scene.value()->attributes.get(flight::String("name")).value()}, .root_nodes = root_node_indices});
+  flight::Ref<flight::types::Scene3DDocumentScene> scene = flight::make_ref<flight::types::Scene3DDocumentScene>(flight::types::Scene3DDocumentScene{.name = visual_scene.value()->attributes.get(flight::String("name")), .root_nodes = root_node_indices});
   document->scenes.push(scene);
 }
 
@@ -381,23 +388,23 @@ inline flight::Ref<flight::types::ColladaParseResult> parse_collada_with_decoder
   const std::optional<flight::String> axis = flight::scene3d_formats::collada_text(asset, flight::String("up_axis"));
   flight::types::ColladaUpAxis up_axis = (((axis == flight::String("Z_UP")) || (axis == flight::String("X_UP"))) ? axis.value() : flight::String("Y_UP"));
   flight::Array<double> root_transform = ((up_axis == flight::String("Z_UP")) ? z_up_root : ((up_axis == flight::String("X_UP")) ? x_up_root : y_up_root));
-  (document->metadata = std::optional<flight::Ref<flight::types::Scene3DMetadata>>{flight::make_ref<flight::types::Scene3DMetadata>(flight::types::Scene3DMetadata{.copyright = flight::scene3d_formats::collada_text(asset, flight::String("copyright")), .generator = flight::scene3d_formats::collada_text(flight::scene3d_formats::collada_child(asset, flight::String("contributor")), flight::String("authoring_tool")), .version = root.value()->attributes.get(flight::String("version")).value()})});
+  (document->metadata = std::optional<flight::Ref<flight::types::Scene3DMetadata>>{flight::make_ref<flight::types::Scene3DMetadata>(flight::types::Scene3DMetadata{.copyright = flight::scene3d_formats::collada_text(asset, flight::String("copyright")), .generator = flight::scene3d_formats::collada_text(flight::scene3d_formats::collada_child(asset, flight::String("contributor")), flight::String("authoring_tool")), .version = root.value()->attributes.get(flight::String("version"))})});
   if ((up_axis != flight::String("Y_UP"))) {
-    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.coordinate-conversion"), flight::String("parseCollada"), {{flight::String("from"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, up_axis}}, {flight::String("to"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("Y_UP")}}});
+    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.coordinate-conversion"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("from"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, up_axis}}, {flight::String("to"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("Y_UP")}}});
   }
-  flight::scene3d_formats::walk_collada_element(root.value(), [=](flight::Ref<flight::types::XmlElement> element) {
+  flight::scene3d_formats::walk_collada_element(root.value(), flight::Function<void(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> element) {
   const flight::String ln = flight::scene3d_formats::collada_local_name(element);
   if (((((ln.starts_with(flight::String("instance_")) && (ln != flight::String("instance_visual_scene"))) && (ln != flight::String("instance_node"))) && (ln != flight::String("instance_material"))) && !flight::to_boolean(element->attributes.get(flight::String("url")).value()))) {
-    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, element->name}}});
+    flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, element->name}}});
   }
-});
+}});
   auto context = flight::make_ref<flight::types::ColladaParseContext>(flight::types::ColladaParseContext{.animation_channels = flight::Array<flight::Ref<flight::types::ColladaDecodedAnimationChannel>>{}, .base_url = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"baseUrl">>(optional_chain_receiver.value()); }()), .camera_definitions = flight::Map<flight::String, std::optional<flight::types::ColladaCameraDefinition>>(), .diagnostics = diagnostics, .document = document, .geometry_id_to_mesh_index = flight::Map<flight::String, double>(), .geometry_positions = flight::Map<flight::String, flight::Array<double>>(), .geometry_primitive_symbols = flight::Map<flight::String, flight::Array<flight::String>>(), .light_definitions = flight::Map<flight::String, std::optional<flight::Ref<flight::types::ColladaLightDefinition>>>(), .material_indices = flight::Map<flight::String, double>(), .morphs = flight::Map<flight::String, flight::Ref<flight::types::ColladaDecodedMorph>>(), .root = root.value(), .skins = flight::Map<flight::String, flight::Ref<flight::types::ColladaDecodedSkin>>()});
   for (auto decoder : decoders) {
-    decoder->decode(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>(context)));
+    decoder->decode(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>(context)));
   }
   flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> node_library = build_collada_id_map(flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{root.value()}, flight::String("library_nodes")), flight::String("node"));
   flight::Map<flight::String, flight::Ref<flight::types::XmlElement>> visual_scene_library = build_collada_id_map(flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{root.value()}, flight::String("library_visual_scenes")), flight::String("visual_scene"));
-  build_collada_scene_hierarchy(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>(context)), root.value(), visual_scene_library, node_library, root_transform, decoders);
+  build_collada_scene_hierarchy(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>(context)), root.value(), visual_scene_library, node_library, root_transform, decoders);
   return flight::make_ref<flight::types::ColladaParseResult>(flight::types::ColladaParseResult{.document = document, .diagnostics = diagnostics, .up_axis = up_axis, .root_transform = root_transform});
 }
 

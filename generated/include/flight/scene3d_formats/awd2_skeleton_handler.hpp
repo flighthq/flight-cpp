@@ -7,7 +7,9 @@
 //   missing: function buildAwd2SkeletonNodes -- source line 121
 //   missing: function buildAwdDocumentAnimation -- source line 553
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -75,13 +77,13 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeleton>> parse_skele
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointCount")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointCount")}}});
     return std::nullopt;
   }
   const double joint_count = dv.get_uint16(offset, true);
@@ -93,21 +95,21 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeleton>> parse_skele
     while ((j < joint_count)) {
       {
         if (((offset + 4.0) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointFields")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointFields")}}});
           return std::nullopt;
         }
         (offset += 2.0);
         const double parent_index = dv.get_uint16(offset, true);
         (offset += 2.0);
         if (((offset + 2.0) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointName")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointName")}}});
           return std::nullopt;
         }
         auto joint_name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
         (offset = joint_name_result->end);
         const double float_size = (matrix_wide ? 8.0 : 4.0);
         if (((offset + (12.0 * float_size)) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointTransform")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-truncated"), flight::String("parseSkeletonBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointTransform")}}});
           return std::nullopt;
         }
         auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
@@ -126,13 +128,13 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonPose>> parse_s
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointCount")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointCount")}}});
     return std::nullopt;
   }
   const double joint_count = dv.get_uint16(offset, true);
@@ -144,7 +146,7 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonPose>> parse_s
     while ((j < joint_count)) {
       {
         if (((offset + 1.0) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("hasTransform")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("hasTransform")}}});
           return std::nullopt;
         }
         const double has_transform = dv.get_uint8(offset);
@@ -152,7 +154,7 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonPose>> parse_s
         if ((has_transform != 0.0)) {
           const double float_size = (matrix_wide ? 8.0 : 4.0);
           if (((offset + (12.0 * float_size)) > end)) {
-            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointTransform")}}});
+            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-pose-truncated"), flight::String("parseSkeletonPoseBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("jointTransform")}}});
             return std::nullopt;
           }
           auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
@@ -169,12 +171,12 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonPose>> parse_s
   return std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonPose>>{flight::make_ref<flight::types::Awd2ParsedSkeletonPose>(flight::types::Awd2ParsedSkeletonPose{.joint_transforms = joint_transforms, .name = name_result->value})};
 }
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_pose_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton_pose}, .deferred = std::optional<bool>{true}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_pose_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton_pose}, .deferred = std::optional<bool>{true}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto pose = parse_skeleton_pose_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"matrixWide">>(block), state->diagnostics);
   if (pose.has_value()) {
     state->skeleton_poses.set(flight::row_get<flight::RowKey<"blockId">>(block), pose.value());
   }
-}});
+}}});
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_DURATION_POSE_BLOCK_ID_0B4526DD9B4A6799
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_DURATION_POSE_BLOCK_ID_0B4526DD9B4A6799
@@ -185,13 +187,13 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonAnimation>> pa
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 2.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("frameCount")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("frameCount")}}});
     return std::nullopt;
   }
   const double pose_count = dv.get_uint16(offset, true);
@@ -203,13 +205,13 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonAnimation>> pa
     while ((p < pose_count)) {
       {
         if (((offset + 4.0) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("poseBlockId")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("poseBlockId")}}});
           return std::nullopt;
         }
         const double pose_block_id = dv.get_uint32(offset, true);
         (offset += 4.0);
         if (((offset + 2.0) > end)) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("poseDuration")}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.skeleton-animation-truncated"), flight::String("parseSkeletonAnimationBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("poseDuration")}}});
           return std::nullopt;
         }
         const double duration = dv.get_uint16(offset, true);
@@ -359,14 +361,14 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedSkeletonAnimation>> pa
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts:
 // contextual multiVariant construction requires expression type evidence
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_block_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_skeleton}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_block_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_skeleton}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto skeleton = parse_skeleton_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"matrixWide">>(block), state->diagnostics);
   if (skeleton.has_value()) {
     state->skeletons.set(flight::row_get<flight::RowKey<"blockId">>(block), skeleton.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   build_awd2_skeleton_nodes(state);
-}}});
+}}}});
 
 
 // NOT GENERATED: function buildAwdDocumentAnimation -- source line 553
@@ -513,7 +515,7 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> build
   for (const auto& [for_of_key, for_of_value] : state->skeleton_animations) {
     static_cast<void>(for_of_key);
     auto parsed_animation = for_of_value;
-    auto built = build_awd_document_animation(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedSkeletonAnimation>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<name_poses_0cc78af403f92f88>>>>(parsed_animation)), joint_count, state->skeleton_poses, state->skeleton_joint_node_indices, state->diagnostics);
+    auto built = build_awd_document_animation(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedSkeletonAnimation>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<name_poses_0cc78af403f92f88>>>>(parsed_animation)), joint_count, state->skeleton_poses, state->skeleton_joint_node_indices, state->diagnostics);
     if (built.has_value()) {
       (built.value()->name = std::optional<flight::String>{([&]() -> flight::String { auto logical_or_value = parsed_animation->name; if (flight::to_boolean(logical_or_value)) return logical_or_value; return flight::String("animation") + flight::to_string(index) + flight::String(""); }())});
       animations.push(built.value());
@@ -523,16 +525,16 @@ inline flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> build
   return animations;
 }
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_animation_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton_animation}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_skeleton_animation}, .deferred = std::optional<bool>{true}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_skeleton_animation_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_skeleton_animation}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_skeleton_animation}, .deferred = std::optional<bool>{true}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto animation = parse_skeleton_animation_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), state->diagnostics);
   if (animation.has_value()) {
     state->skeleton_animations.set(flight::row_get<flight::RowKey<"blockId">>(block), animation.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   if ((static_cast<double>(state->skeleton_joint_node_indices.size()) == 0.0)) {
     return;
   }
   ([&]() { auto&& array_push_receiver = state->document->animations; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<flight::types::Scene3DDocumentAnimation>> array_spread_result; for (const auto& array_spread_item : build_awd2_document_animations(state)) { array_spread_result.push(array_spread_item); } return array_spread_result; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-}}});
+}}}});
 
 } // namespace flight::scene3d_formats

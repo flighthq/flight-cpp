@@ -11,6 +11,7 @@
 //   missing: function parseMd5Anim -- source line 32
 #include <cmath>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/regexp.hpp>
@@ -129,21 +130,21 @@ inline std::optional<flight::Ref<Md5AnimHierarchyEntry>> parse_hierarchy_line(fl
   const double name_start = line.index_of(flight::String("\""));
   const double name_end = line.index_of(flight::String("\""), (name_start + 1.0));
   if (((name_start < 0.0) || (name_end < 0.0))) {
-    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("missing-name-quotes"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("missing-name-quotes")}}});
+    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("missing-name-quotes"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("missing-name-quotes")}}});
     return std::nullopt;
   }
   const flight::String name = line.slice((name_start + 1.0), name_end);
   const flight::String rest = line.slice((name_end + 1.0)).trim();
-  flight::Array<flight::String> tokens = rest.split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = rest.split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 3.0)) {
-    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double parent_index = flight::parse_int(tokens.element(0.0), 10.0);
   const double flags = flight::parse_int(tokens.element(1.0), 10.0);
   const double start_index = flight::parse_int(tokens.element(2.0), 10.0);
   if (((!std::isfinite(parent_index) || !std::isfinite(flags)) || !std::isfinite(start_index))) {
-    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("non-numeric-values"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric-values")}}});
+    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-hierarchy"), flight::String("non-numeric-values"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric-values")}}});
     return std::nullopt;
   }
   return std::optional<flight::Ref<Md5AnimHierarchyEntry>>{flight::make_ref<Md5AnimHierarchyEntry>(Md5AnimHierarchyEntry{.flags = flags, .name = name, .parent_index = parent_index, .start_index = start_index})};
@@ -185,9 +186,9 @@ inline std::optional<flight::Ref<Md5AnimHierarchyEntry>> parse_hierarchy_line(fl
 // from the storage and tested the same way
 
 inline std::optional<flight::Ref<Md5AnimBaseframePose>> parse_baseframe_line(flight::String line, std::optional<flight::Map<flight::String, flight::Ref<Md5AnimDropTally>>> md5_drops, double line_index) {
-  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter([=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); });
+  flight::Array<flight::String> tokens = line.replace(flight::RegExp(flight::String("[()]"), flight::String("g")), flight::String("")).split(flight::RegExp(flight::String("\\s+"), flight::String(""))).filter(flight::Function<bool(flight::String)>{[=](flight::String t) { return (static_cast<double>(t.length()) > 0.0); }});
   if ((static_cast<double>(tokens.size()) < 6.0)) {
-    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-baseframe"), flight::String("not-enough-components"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
+    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-baseframe"), flight::String("not-enough-components"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("not-enough-components")}}});
     return std::nullopt;
   }
   const double position_x = flight::parse_float(tokens.element(0.0));
@@ -197,7 +198,7 @@ inline std::optional<flight::Ref<Md5AnimBaseframePose>> parse_baseframe_line(fli
   const double orientation_y = flight::parse_float(tokens.element(4.0));
   const double orientation_z = flight::parse_float(tokens.element(5.0));
   if ((((((!std::isfinite(position_x) || !std::isfinite(position_y)) || !std::isfinite(position_z)) || !std::isfinite(orientation_x)) || !std::isfinite(orientation_y)) || !std::isfinite(orientation_z))) {
-    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-baseframe"), flight::String("non-numeric-values"), {{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric-values")}}});
+    tally_md5_anim_drop(md5_drops, flight::types::import_diagnostic_severity->drop, flight::String("md5anim.malformed-baseframe"), flight::String("non-numeric-values"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstLine"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (line_index + 1.0)}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("non-numeric-values")}}});
     return std::nullopt;
   }
   return std::optional<flight::Ref<Md5AnimBaseframePose>>{flight::make_ref<Md5AnimBaseframePose>(Md5AnimBaseframePose{.orientation_x = orientation_x, .orientation_y = orientation_y, .orientation_z = orientation_z, .position_x = position_x, .position_y = position_y, .position_z = position_z})};

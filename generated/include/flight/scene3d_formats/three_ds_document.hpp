@@ -44,7 +44,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse3ds(flight::Uint8Array b
 }
 
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from3ds(flight::Uint8Array bytes, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsImportOptions>>>>> options = std::nullopt) {
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse3ds(bytes, diagnostics, options))), std::nullopt);
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(parse3ds(bytes, diagnostics, options))), std::nullopt);
 }
 
 } // namespace flight::scene3d_formats

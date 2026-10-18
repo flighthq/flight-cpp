@@ -388,7 +388,7 @@ inline double resolve_three_ds_material(flight::String name, flight::Map<flight:
     return cached.value();
   }
   const double index = static_cast<double>(document->materials.size());
-  document->materials.push(three_ds_material_to_blinn_phong(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ThreeDsMaterial>>>>(parsed.value())), document));
+  document->materials.push(three_ds_material_to_blinn_phong(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMaterial>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMaterial>>>>(parsed.value())), document));
   material_index_by_name.set(name, index);
   return index;
 }
@@ -400,7 +400,7 @@ inline flight::Ref<flight::types::Matrix4> three_ds_y_up_to_z_up = flight::geome
 inline bool localize_three_ds_positions(flight::Array<double> positions, flight::Float32Array local_matrix, std::optional<flight::Array<double>> pivot, flight::Ref<flight::types::Transform3D> out, flight::String name, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   auto placement = flight::geometry::create_matrix4(local_matrix.get_index(0.0), local_matrix.get_index(1.0), local_matrix.get_index(2.0), 0.0, local_matrix.get_index(3.0), local_matrix.get_index(4.0), local_matrix.get_index(5.0), 0.0, local_matrix.get_index(6.0), local_matrix.get_index(7.0), local_matrix.get_index(8.0), 0.0, local_matrix.get_index(9.0), local_matrix.get_index(10.0), local_matrix.get_index(11.0), 1.0);
   auto inverse = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  if (!flight::geometry::inverse_matrix4(inverse, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)))) {
+  if (!flight::geometry::inverse_matrix4(inverse, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)))) {
     flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.local-matrix-singular"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     return false;
   }
@@ -412,7 +412,7 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
         (point->x = positions.element(i));
         (point->y = positions.element((i + 1.0)));
         (point->z = positions.element((i + 2.0)));
-        flight::geometry::matrix4_transform_point(point, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(inverse)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(point)));
+        flight::geometry::matrix4_transform_point(point, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(inverse)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Vector3>>>>(point)));
         (positions.element(i) = point->x);
         (positions.element((i + 1.0)) = point->y);
         (positions.element((i + 2.0)) = point->z);
@@ -433,12 +433,12 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
       }
     }
     auto pivot_translation = flight::geometry::create_matrix4(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, pivot.value().element(0.0), pivot.value().element(1.0), pivot.value().element(2.0), 1.0);
-    flight::geometry::multiply_matrix4(placement, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(pivot_translation)));
+    flight::geometry::multiply_matrix4(placement, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(pivot_translation)));
   }
   auto conjugated = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::multiply_matrix4(conjugated, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(three_ds_z_up_to_y_up)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)));
-  flight::geometry::multiply_matrix4(conjugated, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(conjugated)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(three_ds_y_up_to_z_up)));
-  flight::geometry::decompose_matrix4_to_transform_3d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(conjugated)));
+  flight::geometry::multiply_matrix4(conjugated, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(three_ds_z_up_to_y_up)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)));
+  flight::geometry::multiply_matrix4(conjugated, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(conjugated)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(three_ds_y_up_to_z_up)));
+  flight::geometry::decompose_matrix4_to_transform_3d(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(conjugated)));
   return true;
 }
 
@@ -669,7 +669,7 @@ inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<fligh
     double i = 0.0;
     while ((i < static_cast<double>(meshes.size()))) {
       {
-        append_mesh_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMesh>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ThreeDsMesh>>>>(meshes.element(i))), materials, material_index_by_name, pivots, document, drops);
+        append_mesh_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMesh>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsMesh>>>>(meshes.element(i))), materials, material_index_by_name, pivots, document, drops);
       }
       (i += 1.0);
     }

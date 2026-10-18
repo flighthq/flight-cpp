@@ -4313,10 +4313,10 @@
       "package": "@flighthq/scene-document"
     },
     {
-      "dependency": "flight",
-      "digest": "d442b9157942116151bd701485d4691523b7a27051cd0a72be9835dda088dc0b",
-      "id": "scene3d-formats-optional-null-storage",
-      "module": "packages/scene3d-formats/src/mtlParse.ts",
+      "dependency": "flight-compiler",
+      "digest": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022",
+      "id": "compiler-contextual-tuple-element-array-literal",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/scene3d-formats"
     },
     {
@@ -4496,16 +4496,16 @@
     },
     {
       "dependency": "flight",
-      "digest": "c892a1175c0e40d0829f1ba2e4506187c8d6e07a35f0d4d927f022e82ea32827",
-      "id": "scene3d-formats-resource-ref-owner-lookup",
-      "module": "packages/scene3d-formats/src/shared.ts plus ImageResourceReference owner lookups",
+      "digest": "d442b9157942116151bd701485d4691523b7a27051cd0a72be9835dda088dc0b",
+      "id": "scene3d-formats-optional-null-storage",
+      "module": "packages/scene3d-formats/src/mtlParse.ts",
       "package": "@flighthq/scene3d-formats"
     },
     {
       "dependency": "flight",
-      "digest": "afa77d9a7641776ab4a9218f2d7e8542db5fd96b5d5358d50c76bfb25183a826",
-      "id": "scene3d-formats-gltf-camera-diagnostic-details",
-      "module": "packages/scene3d-formats/src/gltfCameras.ts",
+      "digest": "c892a1175c0e40d0829f1ba2e4506187c8d6e07a35f0d4d927f022e82ea32827",
+      "id": "scene3d-formats-resource-ref-owner-lookup",
+      "module": "packages/scene3d-formats/src/shared.ts plus ImageResourceReference owner lookups",
       "package": "@flighthq/scene3d-formats"
     },
     {
@@ -5399,16 +5399,16 @@
     },
     {
       "dependency": "flight",
-      "digest": "8d67b87767da9a2df8dedb66a69f7d53d056c1e27d027056dcb33014605eb7b6",
-      "id": "scene3d-formats-gltf-skin-matrix-loop",
-      "module": "packages/scene3d-formats/src/gltfSkins.ts",
+      "digest": "afa77d9a7641776ab4a9218f2d7e8542db5fd96b5d5358d50c76bfb25183a826",
+      "id": "scene3d-formats-gltf-camera-diagnostic-details",
+      "module": "packages/scene3d-formats/src/gltfCameras.ts",
       "package": "@flighthq/scene3d-formats"
     },
     {
       "dependency": "flight",
-      "digest": "d1d818c5647ec793f95122ff1e5fbc73e942e213f06686ada18cf8b3e10ea839",
-      "id": "scene3d-formats-obj-standard-pbr-explicit-options",
-      "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "digest": "8d67b87767da9a2df8dedb66a69f7d53d056c1e27d027056dcb33014605eb7b6",
+      "id": "scene3d-formats-gltf-skin-matrix-loop",
+      "module": "packages/scene3d-formats/src/gltfSkins.ts",
       "package": "@flighthq/scene3d-formats"
     },
     {
@@ -5487,6 +5487,13 @@
       "id": "registry-kind-map-keys-value-parameter",
       "module": "packages/registry/src/registryTable.ts",
       "package": "@flighthq/registry"
+    },
+    {
+      "dependency": "flight",
+      "digest": "d1d818c5647ec793f95122ff1e5fbc73e942e213f06686ada18cf8b3e10ea839",
+      "id": "scene3d-formats-obj-standard-pbr-explicit-options",
+      "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats"
     },
     {
       "dependency": "flight",
@@ -5730,6 +5737,7 @@
       "entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_043bb97832a671f4",
       "failures_reason_f82a2518cf67b45c",
       "height_width_86f909d1d50ed705",
+      "inner_cone_angle_outer_cone_angle_81ac248f9a5471c3",
       "k_4676b95d8bf2f899",
       "khr_draco_mesh_compression_332a1e80702266ac",
       "khr_lights_punctual_57088e9c45e874e0",
@@ -7121,12 +7129,12 @@
       "sourceModules": 21
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
-      "emittedModules": 75,
+      "emittedModules": 76,
       "package": "@flighthq/scene3d-formats",
-      "refusedModules": 36,
+      "refusedModules": 35,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7793,8 +7801,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2577,
-    "refusedModules": 574,
+    "emittedModules": 2578,
+    "refusedModules": 573,
     "sourceModules": 3151
   }
 }

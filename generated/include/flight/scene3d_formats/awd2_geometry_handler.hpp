@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function parseTriangleGeometryBlock -- source line 55
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <flight/runtime.hpp>
@@ -321,8 +322,8 @@ inline const double awd2_tangent_handedness = -1.0;
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts: ambient
 // value Uint32Array member from has no C++ binding
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_triangle_geometry_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_triangle_geometry}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_triangle_geometry_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_triangle_geometry}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   state->geometries.set(flight::row_get<flight::RowKey<"blockId">>(block), parse_triangle_geometry_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"geometryWide">>(block), state->diagnostics));
-}});
+}}});
 
 } // namespace flight::scene3d_formats

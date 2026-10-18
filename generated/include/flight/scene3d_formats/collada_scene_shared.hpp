@@ -4,9 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function buildColladaNodeWorldMatrices -- source line 38
-#include <flight/boolean.hpp>
+//   missing: function parseColladaBindMaterial -- source line 62
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
-#include <flight/regexp.hpp>
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
@@ -44,7 +44,6 @@ namespace flight::types { struct XmlElement; }
 #include <flight/types/scene_3d_metadata.hpp>
 #include <flight/types/transform_3d.hpp>
 #include <flight/types/xml_element.hpp>
-#include <flight/scene3d_formats/collada_xml.hpp>
 
 namespace flight::scene3d_formats {
 
@@ -97,28 +96,38 @@ using flight::types::XmlElement;
 // represent holes; use an explicit fill value, build the array with push, or use Array.from when every element
 // should be present
 
-inline flight::Map<flight::String, double> parse_collada_bind_material(flight::Ref<flight::types::XmlElement> instance_element, flight::Map<flight::String, double> material_indices) {
-  auto symbol_to_index = flight::Map<flight::String, double>();
-  auto bind_material = flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{instance_element}, flight::String("bind_material"));
-  if (!bind_material.has_value()) {
-    return symbol_to_index;
-  }
-  auto technique = flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{bind_material.value()}, flight::String("technique_common"));
-  if (!technique.has_value()) {
-    return symbol_to_index;
-  }
-  for (auto inst : flight::scene3d_formats::collada_children(std::optional<flight::Ref<flight::types::XmlElement>>{technique.value()}, flight::String("instance_material"))) {
-    const flight::String symbol = inst->attributes.get(flight::String("symbol")).value();
-    const flight::String target = inst->attributes.get(flight::String("target")).value().replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String(""));
-    if ((flight::to_boolean(symbol) && flight::to_boolean(target))) {
-      const std::optional<double> material_index = material_indices.get(target);
-      if (material_index.has_value()) {
-        symbol_to_index.set(symbol, material_index.value());
-      }
-    }
-  }
-  return symbol_to_index;
-}
+
+// NOT GENERATED: function parseColladaBindMaterial -- source line 62
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
+//
+// The source it stood for:
+//   export function parseColladaBindMaterial(
+//     instanceElement: XmlElement,
+//     materialIndices: ReadonlyMap<string, number>,
+//   ): Map<string, number> {
+//     const symbolToIndex = new Map<string, number>();
+//     const bindMaterial = colladaChild(instanceElement, 'bind_material');
+//     if (!bindMaterial) return symbolToIndex;
+//     const technique = colladaChild(bindMaterial, 'technique_common');
+//     if (!technique) return symbolToIndex;
+//     for (const inst of colladaChildren(technique, 'instance_material')) {
+//       const symbol = inst.attributes.symbol;
+//       const target = inst.attributes.target?.replace(/^#/, '');
+//       if (symbol && target) {
+//         const materialIndex = materialIndices.get(target);
+//         if (materialIndex !== undefined) symbolToIndex.set(symbol, materialIndex);
+//       }
+//     }
+//     return symbolToIndex;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts: member
+// replace on optional C++ storage requires proven present payload: nothing proved the payload present, so the
+// read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain,
+// or narrow it into a present local first; the compiler will not call value() without that proof. Where the
+// storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves
+// undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or
+// a local bound from the storage and tested the same way
 
 inline flight::Array<double> resolve_collada_primitive_symbols(std::optional<flight::Array<flight::String>> symbols, flight::Map<flight::String, double> symbol_to_index) {
   if ((!symbols.has_value() || (static_cast<double>(symbol_to_index.size()) == 0.0))) {
@@ -144,7 +153,7 @@ inline double apply_collada_material_overrides(flight::Ref<flight::types::Scene3
     (mesh->materials = resolved);
     return mesh_index;
   }
-  if (((static_cast<double>(mesh->materials.size()) == static_cast<double>(resolved.size())) && mesh->materials.every([=](double m, double i) { return (m == resolved.element(i)); }))) {
+  if (((static_cast<double>(mesh->materials.size()) == static_cast<double>(resolved.size())) && mesh->materials.every(flight::Function<bool(double, double)>{[=](double m, double i) { return (m == resolved.element(i)); }}))) {
     return mesh_index;
   }
   const double clone_index = static_cast<double>(document->meshes.size());

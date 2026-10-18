@@ -7,7 +7,9 @@
 //   missing: function decodeColladaControllersFromRoot -- source line 81
 //   missing: function buildColladaMeshMorph -- source line 237
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -133,6 +135,7 @@ inline flight::Array<flight::Ref<flight::types::ColladaDecodedMorph>> decode_col
 
 
 // NOT GENERATED: function decodeColladaControllersFromRoot -- source line 81
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function decodeColladaControllersFromRoot(root: XmlElement, diagnostics: ImportDiagnostic[]): ColladaDecodedSkin[] {
@@ -211,7 +214,12 @@ inline flight::Array<flight::Ref<flight::types::ColladaDecodedMorph>> decode_col
 //   }
 //   
 // cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaControllerDecoder.ts:
-// spreading an unbounded collection requires a fold or a variadic target
+// member replace on optional C++ storage requires proven present payload: nothing proved the payload present, so
+// the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional
+// chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where
+// the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves
+// undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or
+// a local bound from the storage and tested the same way
 
 inline flight::Array<flight::Ref<flight::types::ColladaDecodedSkin>> decode_collada_controllers(flight::String xml, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   diagnostics = diagnostics.value_or(flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{});
@@ -271,7 +279,7 @@ inline void resolve_collada_skins(flight::Ref<flight::types::Scene3DDocument> do
     auto decoded = controller_map.get(binding->controller_id);
     auto morph = (flight::to_boolean(decoded) ? morph_map.get(decoded.value()->geometry_ref) : morph_map.get(binding->controller_id));
     if ((!decoded.has_value() && !morph.has_value())) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_controller")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("#") + flight::to_string(binding->controller_id) + flight::String("")}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_controller")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("#") + flight::to_string(binding->controller_id) + flight::String("")}}});
       continue;
     }
     const flight::String geometry_ref = (flight::to_boolean(morph) ? morph.value()->base_geometry : decoded.value()->geometry_ref);
@@ -296,7 +304,7 @@ inline void resolve_collada_skins(flight::Ref<flight::types::Scene3DDocument> do
             const flight::String joint_name = decoded.value()->joint_names.element(i);
             const std::optional<double> joint_index = node_id_map.get(joint_name);
             if (!joint_index.has_value()) {
-              flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("skin joint")}}, {flight::String("joint"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, joint_name}}});
+              flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("parseCollada"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("skin joint")}}, {flight::String("joint"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, joint_name}}});
               {
                 (i += 1.0);
                 continue;
@@ -340,15 +348,15 @@ inline void resolve_collada_skins(flight::Ref<flight::types::Scene3DDocument> do
   }
 }
 
-inline flight::Ref<flight::types::ColladaElementDecoder> collada_controller_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
+inline flight::Ref<flight::types::ColladaElementDecoder> collada_controller_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
   resolve_collada_skins(flight::row_get<flight::RowKey<"document">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"deferredControllers">>(context), flight::row_get<flight::RowKey<"skins">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"morphs">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"geometryIdToMeshIndex">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"geometryPositions">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"geometryPrimitiveSymbols">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"nodeIdMap">>(context), flight::row_get<flight::RowKey<"diagnostics">>(flight::row_get<flight::RowKey<"parse">>(context)));
-}}; auto object_member_build_phase = std::optional<double>{30.0}; auto object_member_decode = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
+}}}; auto object_member_build_phase = std::optional<double>{30.0}; auto object_member_decode = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
   for (auto skin : decode_collada_controllers_from_root(flight::row_get<flight::RowKey<"root">>(context), flight::row_get<flight::RowKey<"diagnostics">>(context))) {
     flight::row_get<flight::RowKey<"skins">>(context).set(skin->controller_id, skin);
   }
   for (auto morph : decode_collada_morphs_from_root(flight::row_get<flight::RowKey<"root">>(context), flight::row_get<flight::RowKey<"diagnostics">>(context))) {
     flight::row_get<flight::RowKey<"morphs">>(context).set(morph->controller_id, morph);
   }
-}; auto object_member_elements = flight::Array<flight::String>{flight::String("controller")}; auto object_member_features = flight::Array<flight::String>{flight::String("Controller"), flight::String("Controller.Morph"), flight::String("Controller.Skin")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
+}}; auto object_member_elements = flight::Array<flight::String>{flight::String("controller")}; auto object_member_features = flight::Array<flight::String>{flight::String("Controller"), flight::String("Controller.Morph"), flight::String("Controller.Skin")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
 
 } // namespace flight::scene3d_formats

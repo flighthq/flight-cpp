@@ -3,8 +3,10 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/number.hpp>
+#include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -105,7 +107,7 @@ inline std::optional<flight::Array<double>> parse_finite_number_list(std::option
 }
 
 inline void report_malformed_collada_light(flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics, flight::String light, flight::String field) {
-  flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.light-malformed"), flight::String("parseColladaLightDefinition"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, field}}, {flight::String("light"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, light}}});
+  flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->drop, flight::String("collada.light-malformed"), flight::String("parseColladaLightDefinition"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, field}}, {flight::String("light"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, light}}});
 }
 
 inline std::optional<double> parse_nonnegative_collada_light_scalar(flight::Ref<flight::types::XmlElement> parent, flight::String name, double default_value, flight::String id, flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics) {
@@ -127,10 +129,10 @@ inline std::optional<flight::Ref<flight::types::ColladaLightDefinition>> parse_c
     report_malformed_collada_light(diagnostics, id, flight::String("technique_common"));
     return std::nullopt;
   }
-  flight::Array<flight::Ref<flight::types::XmlElement>> techniques = technique_common.value()->children.filter([=](flight::Ref<flight::types::XmlElement> entry) {
+  flight::Array<flight::Ref<flight::types::XmlElement>> techniques = technique_common.value()->children.filter(flight::Function<bool(flight::Ref<flight::types::XmlElement>)>{[=](flight::Ref<flight::types::XmlElement> entry) {
   const flight::String name = flight::scene3d_formats::collada_local_name(entry);
   return ((((name == flight::String("ambient")) || (name == flight::String("directional"))) || (name == flight::String("point"))) || (name == flight::String("spot")));
-});
+}});
   if ((static_cast<double>(techniques.size()) != 1.0)) {
     report_malformed_collada_light(diagnostics, id, flight::String("type"));
     return std::nullopt;
@@ -138,13 +140,13 @@ inline std::optional<flight::Ref<flight::types::ColladaLightDefinition>> parse_c
   auto technique = techniques.element(0.0);
   flight::types::ColladaLightKind kind = flight::scene3d_formats::collada_local_name(technique);
   std::optional<flight::Array<double>> color_values = parse_finite_number_list(flight::scene3d_formats::collada_child(std::optional<flight::Ref<flight::types::XmlElement>>{technique}, flight::String("color")));
-  if (((!color_values.has_value() || (static_cast<double>(color_values.value().size()) != 3.0)) || color_values.value().some([=](double value) { return (value < 0.0); }))) {
+  if (((!color_values.has_value() || (static_cast<double>(color_values.value().size()) != 3.0)) || color_values.value().some(flight::Function<bool(double)>{[=](double value) { return (value < 0.0); }}))) {
     report_malformed_collada_light(diagnostics, id, flight::String("color"));
     return std::nullopt;
   }
   const double color_intensity = flight::maximum(1.0, color_values.value().element(0.0), color_values.value().element(1.0), color_values.value().element(2.0));
   const double color = flight::color::pack_linear_to_color(flight::Array{(color_values.value().element(0.0) / color_intensity), (color_values.value().element(1.0) / color_intensity), (color_values.value().element(2.0) / color_intensity), 1.0});
-  flight::Ref<flight::types::ColladaLightDefinition> definition = flight::make_ref<flight::types::ColladaLightDefinition>(flight::types::ColladaLightDefinition{.color = color, .decay = 0.0, .inner_cone_degrees = 0.0, .intensity = color_intensity, .kind = kind, .name = std::optional<flight::String>{light_element->attributes.get(flight::String("name")).value()}, .outer_cone_degrees = 0.0, .spot_blend = 0.0});
+  flight::Ref<flight::types::ColladaLightDefinition> definition = flight::make_ref<flight::types::ColladaLightDefinition>(flight::types::ColladaLightDefinition{.color = color, .decay = 0.0, .inner_cone_degrees = 0.0, .intensity = color_intensity, .kind = kind, .name = light_element->attributes.get(flight::String("name")), .outer_cone_degrees = 0.0, .spot_blend = 0.0});
   if (((kind == flight::String("point")) || (kind == flight::String("spot")))) {
     const std::optional<double> constant = parse_nonnegative_collada_light_scalar(technique, flight::String("constant_attenuation"), 1.0, id, diagnostics);
     const std::optional<double> linear = parse_nonnegative_collada_light_scalar(technique, flight::String("linear_attenuation"), 0.0, id, diagnostics);
@@ -159,8 +161,8 @@ inline std::optional<flight::Ref<flight::types::ColladaLightDefinition>> parse_c
     }
     (definition->intensity *= (1.0 / denominator_at_unit_distance));
     (definition->decay = ((linear.value() + (2.0 * quadratic.value())) / denominator_at_unit_distance));
-    if ((static_cast<double>(flight::Array{constant.value(), linear.value(), quadratic.value()}.filter([=](double value) { return (value > 0.0); }).size()) > 1.0)) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.light-attenuation-approximated"), flight::String("parseColladaLightDefinition"), {{flight::String("constant"), std::variant<bool, double, flight::String>{std::in_place_type<double>, constant.value()}}, {flight::String("light"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, id}}, {flight::String("linear"), std::variant<bool, double, flight::String>{std::in_place_type<double>, linear.value()}}, {flight::String("quadratic"), std::variant<bool, double, flight::String>{std::in_place_type<double>, quadratic.value()}}});
+    if ((static_cast<double>(flight::Array{constant.value(), linear.value(), quadratic.value()}.filter(flight::Function<bool(double)>{[=](double value) { return (value > 0.0); }}).size()) > 1.0)) {
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.light-attenuation-approximated"), flight::String("parseColladaLightDefinition"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("constant"), std::variant<bool, double, flight::String>{std::in_place_type<double>, constant.value()}}, {flight::String("light"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, id}}, {flight::String("linear"), std::variant<bool, double, flight::String>{std::in_place_type<double>, linear.value()}}, {flight::String("quadratic"), std::variant<bool, double, flight::String>{std::in_place_type<double>, quadratic.value()}}});
     }
   }
   if ((kind == flight::String("spot"))) {
@@ -203,7 +205,7 @@ struct color_intensity_db2e07c88a17ab5c : public flight::ReferenceEnabled {
 inline flight::Ref<flight::types::Light> create_collada_light(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaLightDefinition>>>> definition) {
   auto common = flight::make_ref<color_intensity_db2e07c88a17ab5c>(color_intensity_db2e07c88a17ab5c{.color = flight::row_get<flight::RowKey<"color">>(definition), .intensity = flight::row_get<flight::RowKey<"intensity">>(definition)});
   if ((flight::row_get<flight::RowKey<"kind">>(definition) == flight::String("ambient"))) {
-    return flight::lighting::create_ambient_light(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<color_intensity_db2e07c88a17ab5c>>>>(common)));
+    return flight::lighting::create_ambient_light(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AmbientLightOptions>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<color_intensity_db2e07c88a17ab5c>>>>(common)));
   }
   if ((flight::row_get<flight::RowKey<"kind">>(definition) == flight::String("directional"))) {
     return flight::lighting::create_directional_light(([&]() { auto&& structural_spread_source = common; auto structural_spread_field_color = structural_spread_source->color; auto structural_spread_field_intensity = structural_spread_source->intensity; auto structural_spread_field_direction = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>>(flight::row_field<flight::RowKey<"x">>(0.0), flight::row_field<flight::RowKey<"y">>(0.0), flight::row_field<flight::RowKey<"z">>(-1.0))); return flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::DirectionalLightOptions>>>>(flight::row_field<flight::RowKey<"color">>(std::move(structural_spread_field_color)), flight::row_field<flight::RowKey<"intensity">>(std::move(structural_spread_field_intensity)), flight::row_field<flight::RowKey<"direction">>(std::move(structural_spread_field_direction))); }()));
@@ -218,13 +220,13 @@ inline void resolve_collada_lights(flight::Ref<flight::types::Scene3DDocument> d
   flight::Array<std::optional<flight::Ref<flight::types::Matrix4>>> world_matrices = flight::scene3d_formats::build_collada_node_world_matrices(document->nodes, root_node_indices);
   for (auto binding : deferred) {
     if ((!binding->url.starts_with(flight::String("#")) || (static_cast<double>(binding->url.length()) == 1.0))) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("resolveColladaLights"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_light")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, binding->url}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("resolveColladaLights"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_light")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, binding->url}}});
       continue;
     }
     const flight::String id = binding->url.slice(1.0);
     std::variant<flight::Ref<flight::types::ColladaLightDefinition>, flight::Null, flight::Undefined> definition = definitions.get(id);
     if (std::holds_alternative<flight::Undefined>(definition)) {
-      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("resolveColladaLights"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_light")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, binding->url}}});
+      flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("collada.missing-reference"), flight::String("resolveColladaLights"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_light")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, binding->url}}});
       continue;
     }
     if (std::holds_alternative<flight::Null>(definition)) {
@@ -235,19 +237,19 @@ inline void resolve_collada_lights(flight::Ref<flight::types::Scene3DDocument> d
       continue;
     }
     auto transform = flight::geometry::create_transform_3d();
-    flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
+    flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>(world_matrix.value())));
     document->lights.push(flight::make_ref<flight::types::Scene3DDocumentLight>(flight::types::Scene3DDocumentLight{.descriptor = std::variant<flight::Ref<flight::types::DirectionalLight>, flight::Ref<flight::types::AreaLight>, flight::Ref<flight::types::Light>, flight::Ref<flight::types::Environment>, flight::Ref<flight::types::AmbientLight>, flight::Ref<flight::types::HemisphereLight>, flight::Ref<flight::types::SpotLight>, flight::Ref<flight::types::PointLight>>{std::in_place_type<flight::Ref<flight::types::Light>>, create_collada_light(std::get<0>(definition))}, .name = std::get<0>(definition)->name, .node = std::optional<double>{binding->node_index}, .transform = transform}));
   }
 }
 
-inline flight::Ref<flight::types::ColladaElementDecoder> collada_light_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
+inline flight::Ref<flight::types::ColladaElementDecoder> collada_light_decoder = ([]() { auto object_member_build = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>>{flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaBuildContext>>>> context) {
   resolve_collada_lights(flight::row_get<flight::RowKey<"document">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"deferredLights">>(context), flight::row_get<flight::RowKey<"lightDefinitions">>(flight::row_get<flight::RowKey<"parse">>(context)), flight::row_get<flight::RowKey<"rootNodeIndices">>(context), flight::row_get<flight::RowKey<"diagnostics">>(flight::row_get<flight::RowKey<"parse">>(context)));
-}}; auto object_member_build_phase = std::optional<double>{20.0}; auto object_member_decode = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
+}}}; auto object_member_build_phase = std::optional<double>{20.0}; auto object_member_decode = flight::Function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>>)>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColladaParseContext>>>> context) {
   for (auto array_pattern_value : parse_collada_light_definitions(flight::row_get<flight::RowKey<"root">>(context), flight::row_get<flight::RowKey<"diagnostics">>(context))) {
     const flight::String id = std::get<0>(array_pattern_value);
     auto definition = std::get<1>(array_pattern_value);
     flight::row_get<flight::RowKey<"lightDefinitions">>(context).set(id, definition);
   }
-}; auto object_member_elements = flight::Array<flight::String>{flight::String("light")}; auto object_member_features = flight::Array<flight::String>{flight::String("Light"), flight::String("Light.Ambient"), flight::String("Light.Directional"), flight::String("Light.Point"), flight::String("Light.Spot")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
+}}; auto object_member_elements = flight::Array<flight::String>{flight::String("light")}; auto object_member_features = flight::Array<flight::String>{flight::String("Light"), flight::String("Light.Ambient"), flight::String("Light.Directional"), flight::String("Light.Point"), flight::String("Light.Spot")}; return flight::make_ref<flight::types::ColladaElementDecoder>(flight::types::ColladaElementDecoder{.build = object_member_build, .build_phase = object_member_build_phase, .elements = object_member_elements, .features = object_member_features, .decode = object_member_decode}); }());
 
 } // namespace flight::scene3d_formats

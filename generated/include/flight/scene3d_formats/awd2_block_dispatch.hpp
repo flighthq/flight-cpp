@@ -38,7 +38,7 @@ inline flight::types::Awd2BlockDispatch expand_awd2_block_dispatch(flight::Array
   flight::Map<double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>> dispatch = flight::Map<double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>>();
   for (auto handler : blocks) {
     for (auto block_type : handler->block_types) {
-      dispatch.set(block_type, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>(handler)));
+      dispatch.set(block_type, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2BlockHandler>>>>(handler)));
     }
   }
   return dispatch;

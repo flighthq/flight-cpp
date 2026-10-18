@@ -201,12 +201,12 @@ inline double resolve_obj_material(flight::String name, std::optional<flight::St
     cache.set(name, -1.0);
     return -1.0;
   }
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>> handler = material_handlers.find(flight::Function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>)>{[=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>> candidate) { return flight::row_get<flight::RowKey<"matches">>(candidate)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value()))); }});
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>> handler = material_handlers.find(flight::Function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>)>{[=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>> candidate) { return flight::row_get<flight::RowKey<"matches">>(candidate)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value()))); }});
   if (!handler.has_value()) {
     cache.set(name, -1.0);
     return -1.0;
   }
-  auto material = handler.value()->resolve(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value())), document, diagnostics);
+  auto material = handler.value()->resolve(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value())), document, diagnostics);
   (material->name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, name});
   const double index = static_cast<double>(document->materials.size());
   document->materials.push(material);

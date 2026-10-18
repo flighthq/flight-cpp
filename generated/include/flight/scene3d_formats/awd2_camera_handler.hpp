@@ -4,7 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function buildAwdDocumentCamera -- source line 133
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -146,26 +148,26 @@ inline std::optional<flight::Ref<flight::types::Awd2ParsedCamera>> parse_camera_
   flight::DataView dv = view;
   double offset = start;
   if (((offset + 4.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("parentId")}}});
     return std::nullopt;
   }
   const double parent_id = dv.get_uint32(offset, true);
   (offset += 4.0);
   const double float_size = (matrix_wide ? 8.0 : 4.0);
   if (((offset + (12.0 * float_size)) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("transform")}}});
     return std::nullopt;
   }
   auto transform_result = flight::scene3d_formats::read_awd_transform(view, offset, matrix_wide);
   (offset = transform_result->end);
   if ((((offset + 2.0) > end) || (((offset + 2.0) + dv.get_uint16(offset, true)) > end))) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("name")}}});
     return std::nullopt;
   }
   auto name_result = flight::scene3d_formats::read_awd_string(view, source, offset);
   (offset = name_result->end);
   if (((offset + 5.0) > end)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), {{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("projectionType")}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("awd2.camera-truncated"), flight::String("parseCameraBlock"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("projectionType")}}});
     return std::nullopt;
   }
   (offset += 3.0);
@@ -190,17 +192,17 @@ struct bottom_fov_left_name_parent_id_projection_type_right_top_transform_f6fff5
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_BOTTOM_FOV_LEFT_NAME_PARENT_ID_PROJECTION_TYPE_RIGHT_TOP_TRANSFORM_F6FFF5CF49BCFADB
 
-inline flight::Ref<flight::types::Awd2BlockHandler> awd2_camera_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_camera}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_camera}, .parse = [](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
+inline flight::Ref<flight::types::Awd2BlockHandler> awd2_camera_handler = flight::make_ref<flight::types::Awd2BlockHandler>(flight::types::Awd2BlockHandler{.block_types = flight::Array<double>{flight::scene3d_formats::awd2_block_camera}, .build_phase = std::optional<double>{flight::scene3d_formats::awd2_build_phase_camera}, .parse = flight::Function<void(flight::Ref<flight::types::Awd2ParseState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>>)>{[](flight::Ref<flight::types::Awd2ParseState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2Block>>>> block) {
   auto camera = parse_camera_block(flight::row_get<flight::RowKey<"view">>(block), flight::row_get<flight::RowKey<"source">>(block), flight::row_get<flight::RowKey<"dataStart">>(block), flight::row_get<flight::RowKey<"dataEnd">>(block), flight::row_get<flight::RowKey<"matrixWide">>(block), state->diagnostics);
   if (camera.has_value()) {
     state->cameras.set(flight::row_get<flight::RowKey<"blockId">>(block), camera.value());
   }
-}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{[](flight::Ref<flight::types::Awd2ParseState> state) {
+}}, .build = std::optional<std::function<void(flight::Ref<flight::types::Awd2ParseState>)>>{flight::Function<void(flight::Ref<flight::types::Awd2ParseState>)>{[](flight::Ref<flight::types::Awd2ParseState> state) {
   for (const auto& [for_of_key, for_of_value] : state->cameras) {
     static_cast<void>(for_of_key);
     auto camera = for_of_value;
-    build_awd_document_camera(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedCamera>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<bottom_fov_left_name_parent_id_projection_type_right_top_transform_f6fff5cf49bcfadb>>>>(camera)), state->node_index_for_block.get(camera->parent_id), state->document, state->diagnostics);
+    build_awd_document_camera(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Awd2ParsedCamera>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<bottom_fov_left_name_parent_id_projection_type_right_top_transform_f6fff5cf49bcfadb>>>>(camera)), state->node_index_for_block.get(camera->parent_id), state->document, state->diagnostics);
   }
-}}});
+}}}});
 
 } // namespace flight::scene3d_formats

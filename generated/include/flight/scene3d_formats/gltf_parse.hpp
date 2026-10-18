@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
 #include <flight/json.hpp>
 #include <flight/number.hpp>
@@ -408,12 +409,12 @@ inline flight::Ref<flight::types::MeshGeometry> complete_gltf_shading_attributes
   if (!has_normals) {
     const bool morphed = (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"targets">>(primitive); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) > 0.0);
     if (!morphed) {
-      (out = flight::mesh::index_mesh_geometry_vertices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(flight::mesh::expand_mesh_geometry_indices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)))))));
+      (out = flight::mesh::index_mesh_geometry_vertices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(flight::mesh::expand_mesh_geometry_indices(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)))))));
     }
-    flight::mesh::compute_mesh_geometry_flat_normals(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)));
+    flight::mesh::compute_mesh_geometry_flat_normals(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)));
   }
   if (((!has_tangents && has_uvs) && reads_gltf_tangent_space(doc, primitive))) {
-    flight::mesh::compute_mesh_geometry_tangents(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)), std::nullopt);
+    flight::mesh::compute_mesh_geometry_tangents(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(out)), std::nullopt);
   }
   return out;
 }
@@ -557,15 +558,15 @@ inline ComponentArray create_component_array(flight::types::GltfComponentType co
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline flight::Record<flight::types::GltfComponentType, double> component_byte_size = {{5120.0, 1.0}, {5121.0, 1.0}, {5122.0, 2.0}, {5123.0, 2.0}, {5125.0, 4.0}, {5126.0, 4.0}};
+inline flight::Record<flight::types::GltfComponentType, double> component_byte_size = flight::Record<flight::types::GltfComponentType, double>{{5120.0, 1.0}, {5121.0, 1.0}, {5122.0, 2.0}, {5123.0, 2.0}, {5125.0, 4.0}, {5126.0, 4.0}};
 
-inline flight::Record<flight::String, double> type_components = {{flight::String("MAT2"), 4.0}, {flight::String("MAT3"), 9.0}, {flight::String("MAT4"), 16.0}, {flight::String("SCALAR"), 1.0}, {flight::String("VEC2"), 2.0}, {flight::String("VEC3"), 3.0}, {flight::String("VEC4"), 4.0}};
+inline flight::Record<flight::String, double> type_components = flight::Record<flight::String, double>{{flight::String("MAT2"), 4.0}, {flight::String("MAT3"), 9.0}, {flight::String("MAT4"), 16.0}, {flight::String("SCALAR"), 1.0}, {flight::String("VEC2"), 2.0}, {flight::String("VEC3"), 3.0}, {flight::String("VEC4"), 4.0}};
 
-inline flight::Record<double, flight::types::TextureFilter> gltf_texture_filter = {{9728.0, flight::String("nearest")}, {9729.0, flight::String("linear")}, {9984.0, flight::String("nearest-mipmap-nearest")}, {9985.0, flight::String("linear-mipmap-nearest")}, {9986.0, flight::String("nearest-mipmap-linear")}, {9987.0, flight::String("linear-mipmap-linear")}};
+inline flight::Record<double, flight::types::TextureFilter> gltf_texture_filter = flight::Record<double, flight::types::TextureFilter>{{9728.0, flight::String("nearest")}, {9729.0, flight::String("linear")}, {9984.0, flight::String("nearest-mipmap-nearest")}, {9985.0, flight::String("linear-mipmap-nearest")}, {9986.0, flight::String("nearest-mipmap-linear")}, {9987.0, flight::String("linear-mipmap-linear")}};
 
-inline flight::Record<double, bool> gltf_min_filter_mipmaps = {{9728.0, false}, {9729.0, false}, {9984.0, true}, {9985.0, true}, {9986.0, true}, {9987.0, true}};
+inline flight::Record<double, bool> gltf_min_filter_mipmaps = flight::Record<double, bool>{{9728.0, false}, {9729.0, false}, {9984.0, true}, {9985.0, true}, {9986.0, true}, {9987.0, true}};
 
-inline flight::Record<double, flight::types::TextureWrap> gltf_texture_wrap = {{10497.0, flight::String("repeat")}, {33071.0, flight::String("clamp-to-edge")}, {33648.0, flight::String("mirror-repeat")}};
+inline flight::Record<double, flight::types::TextureWrap> gltf_texture_wrap = flight::Record<double, flight::types::TextureWrap>{{10497.0, flight::String("repeat")}, {33071.0, flight::String("clamp-to-edge")}, {33648.0, flight::String("mirror-repeat")}};
 
 inline void apply_gltf_sampler(flight::types::Texture texture, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfSampler>>>>> sampler) {
   if (!sampler.has_value()) {
@@ -617,7 +618,7 @@ inline std::optional<flight::Ref<binary_document_9ce2b54a7bd261de>> read_glb_con
   }
   const double version = view.get_uint32(4.0, true);
   if ((version != 2.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("glb.unsupported-version"), flight::String("readGlbContainer"), {{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<double>, version}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("glb.unsupported-version"), flight::String("readGlbContainer"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<double>, version}}});
     return std::nullopt;
   }
   const double declared_length = view.get_uint32(8.0, true);
@@ -688,11 +689,11 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
       {
         for (auto child : ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<std::optional<flight::Array<double>>> { auto optional_chain_receiver = nodes.get(parent); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().children; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }())) {
           if (((child < 0.0) || (child >= static_cast<double>(nodes.size())))) {
-            tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-child-out-of-range"), flight::String(""), {{flight::String("firstChild"), std::variant<bool, double, flight::String>{std::in_place_type<double>, child}}});
+            tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-child-out-of-range"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstChild"), std::variant<bool, double, flight::String>{std::in_place_type<double>, child}}});
             continue;
           }
           if ((parents.get_index(child) != -1.0)) {
-            tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-multiple-parents"), flight::String(""), {{flight::String("firstChild"), std::variant<bool, double, flight::String>{std::in_place_type<double>, child}}, {flight::String("firstParent"), parents.get_index(child)}});
+            tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-multiple-parents"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstChild"), std::variant<bool, double, flight::String>{std::in_place_type<double>, child}}, {flight::String("firstParent"), parents.get_index(child)}});
             continue;
           }
           ([&]() { auto&& typed_array_6 = parents; const auto typed_index_6 = child; const auto typed_value_6 = parent; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
@@ -701,12 +702,12 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
       (parent += 1.0);
     }
   }
-  flight::Array<flight::Ref<flight::types::Matrix4>> local_matrices = nodes.map([=](flight::Ref<flight::types::GltfNode> node) {
+  flight::Array<flight::Ref<flight::types::Matrix4>> local_matrices = nodes.map(flight::Function<flight::Ref<flight::types::Matrix4>(flight::Ref<flight::types::GltfNode>)>{[=](flight::Ref<flight::types::GltfNode> node) {
   auto matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-  flight::geometry::compose_matrix4_from_transform_3d(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(gltf_node_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>(node))))));
+  flight::geometry::compose_matrix4_from_transform_3d(matrix, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Transform3DLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(gltf_node_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfNode>>>>(node))))));
   return matrix;
-});
-  flight::Array<flight::Ref<flight::types::Matrix4>> world_matrices = nodes.map([=]() { return flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt); });
+}});
+  flight::Array<flight::Ref<flight::types::Matrix4>> world_matrices = nodes.map(flight::Function<flight::Ref<flight::types::Matrix4>()>{[=]() { return flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt); }});
   flight::Uint8Array state = flight::Uint8Array(static_cast<double>(nodes.size()));
   flight::Array<double> stack = flight::Array<double>{};
   flight::Array<flight::Ref<flight::types::Transform3D>> transforms = flight::Array<flight::Ref<flight::types::Transform3D>>{};
@@ -720,7 +721,7 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
           bool cycle = false;
           while (((node >= 0.0) && (state.get_index(node) != 2.0))) {
             if ((state.get_index(node) == 1.0)) {
-              tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-hierarchy-cycle"), flight::String(""), {{flight::String("firstNode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, node}}});
+              tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.node-hierarchy-cycle"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstNode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, node}}});
               ([&]() { auto&& typed_array_7 = parents; const auto typed_index_7 = node; const auto typed_value_7 = -1.0; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
               {
                 double i = 0.0;
@@ -743,7 +744,7 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
             (node = stack.pop().value());
             const double parent_2 = parents.get_index(node);
             if ((parent_2 >= 0.0)) {
-              flight::geometry::multiply_matrix4(world_matrices.element(node), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(parent_2))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(local_matrices.element(node))));
+              flight::geometry::multiply_matrix4(world_matrices.element(node), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(parent_2))), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(local_matrices.element(node))));
             }
             else {
               world_matrices.element(node)->m.set(local_matrices.element(node)->m);
@@ -760,7 +761,7 @@ inline flight::Array<flight::Ref<flight::types::Transform3D>> build_gltf_node_wo
     while ((node_2 < static_cast<double>(nodes.size()))) {
       {
         auto transform = flight::geometry::create_transform_3d();
-        flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(node_2))));
+        flight::geometry::decompose_matrix4_to_transform_3d(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(world_matrices.element(node_2))));
         transforms.push(transform);
       }
       (node_2 += 1.0);
@@ -798,18 +799,18 @@ inline std::optional<flight::types::Texture> resolve_gltf_texture(flight::Struct
   flight::Ref<flight::types::GltfTexture> texture = ([&]() -> std::optional<flight::Ref<flight::types::GltfTexture>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"textures">>(doc); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(info.value()->index); }());
   const std::optional<double> source = ([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Ref<source_7d365186fbb687ba>> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Ref<khr_texture_basisu_e59745e8c15a4024>> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->extensions; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->khr_texture_basisu; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return ([&]() -> std::optional<double> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->source; }()); }());
   if (!source.has_value()) {
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texture-source-missing"), flight::String(""), {{flight::String("firstTexture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, info.value()->index}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texture-source-missing"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstTexture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, info.value()->index}}});
     return std::nullopt;
   }
   std::optional<std::optional<flight::types::ImageResourceReference>> resource = image_resources.get(source.value());
   if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(resource))) {
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texture-image-unresolved"), flight::String(""), {{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source.value()}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texture-image-unresolved"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source.value()}}});
     return std::nullopt;
   }
   auto result = flight::texture::create_texture({.resource = resource.value()});
   const double requested_uv_set = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Ref<flight::types::GltfTextureTransform>> { auto optional_chain_receiver = info.value()->extensions; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->khr_texture_transform; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->tex_coord; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return info.value()->tex_coord; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
   if ((requested_uv_set != 0.0)) {
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texcoord-set-unsupported"), flight::String(""), {{flight::String("firstTexture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, info.value()->index}}, {flight::String("firstUvSet"), std::variant<bool, double, flight::String>{std::in_place_type<double>, requested_uv_set}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.texcoord-set-unsupported"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstTexture"), std::variant<bool, double, flight::String>{std::in_place_type<double>, info.value()->index}}, {flight::String("firstUvSet"), std::variant<bool, double, flight::String>{std::in_place_type<double>, requested_uv_set}}});
   }
   (result->color_space = color_space);
   apply_gltf_sampler(std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, result}, (([&]() -> std::optional<double> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->sampler; }()).has_value() ? std::optional{([&]() -> std::optional<flight::Ref<flight::types::GltfSampler>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"samplers">>(doc); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(texture->sampler.value()); }())} : std::nullopt));
@@ -824,19 +825,19 @@ inline void apply_gltf_extension_handlers(flight::Ref<flight::types::Scene3DDocu
   auto selected = flight::Map<flight::String, flight::Ref<flight::types::GltfExtensionHandler>>();
   for (auto handler : handlers.value()) {
     if (selected.has(handler->kind)) {
-      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.duplicate-extension-handler"), flight::String(""), {{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, handler->kind}}});
+      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.duplicate-extension-handler"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, handler->kind}}});
     }
     selected.set(handler->kind, handler);
   }
-  flight::Ref<flight::types::GltfExtensionContext> context = flight::make_ref<flight::types::GltfExtensionContext>(flight::types::GltfExtensionContext{.build_node_transform = [=](double node) {
-  return clone_gltf_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(([&]() -> flight::Ref<flight::types::Transform3D> { auto nullish_coalesce_left = node_world_transforms.get(node); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_identity_transform(); }()))));
-}, .diagnostics = diagnostics, .document = document, .node_indices = node_indices, .resolve_texture = [=](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> info, flight::types::TextureColorSpace color_space) -> std::optional<flight::types::Texture> {
+  flight::Ref<flight::types::GltfExtensionContext> context = flight::make_ref<flight::types::GltfExtensionContext>(flight::types::GltfExtensionContext{.build_node_transform = flight::Function<flight::Ref<flight::types::Transform3D>(double)>{[=](double node) {
+  return clone_gltf_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(([&]() -> flight::Ref<flight::types::Transform3D> { auto nullish_coalesce_left = node_world_transforms.get(node); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_identity_transform(); }()))));
+}}, .diagnostics = diagnostics, .document = document, .node_indices = node_indices, .resolve_texture = flight::Function<std::optional<flight::types::Texture>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>>, flight::types::TextureColorSpace)>{[=](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfTextureInfo>>>>> info, flight::types::TextureColorSpace color_space) -> std::optional<flight::types::Texture> {
   return resolve_gltf_texture(source, image_resources, info, color_space, gltf_drops);
-}, .source = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(source)});
+}}, .source = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(source)});
   for (const auto& [for_of_key, for_of_value] : selected) {
     static_cast<void>(for_of_key);
     auto handler_2 = for_of_value;
-    handler_2->apply(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>(context)));
+    handler_2->apply(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfExtensionContext>>>>(context)));
   }
 }
 
@@ -890,7 +891,7 @@ inline std::optional<flight::types::ImageResourceReference> build_gltf_image_res
     if (flight::row_get<flight::RowKey<"uri">>(image).value().starts_with(flight::String("data:"))) {
       const double comma = flight::row_get<flight::RowKey<"uri">>(image).value().index_of(flight::String(","));
       if ((comma < 0.0)) {
-        tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-malformed-uri"), flight::String(""), {{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
+        tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-malformed-uri"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
         return std::nullopt;
       }
       const double semicolon = flight::row_get<flight::RowKey<"uri">>(image).value().index_of(flight::String(";"));
@@ -904,18 +905,18 @@ inline std::optional<flight::types::ImageResourceReference> build_gltf_image_res
     std::optional<flight::Ref<flight::types::GltfBufferView>> buffer_view = ([&]() -> std::optional<flight::Ref<flight::types::GltfBufferView>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"bufferViews">>(doc); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(flight::row_get<flight::RowKey<"bufferView">>(image).value()); }());
     std::optional<flight::Uint8Array> buffer = (buffer_view.has_value() ? std::optional{buffers.element(buffer_view.value()->buffer)} : std::nullopt);
     if ((!buffer_view.has_value() || !buffer.has_value())) {
-      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-bufferview-out-of-range"), flight::String(""), {{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"bufferView">>(image).value()}}, {flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
+      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-bufferview-out-of-range"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"bufferView">>(image).value()}}, {flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
       return std::nullopt;
     }
     const double start = ([&]() -> double { auto nullish_coalesce_left = buffer_view.value()->byte_offset; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
     if ((!is_gltf_byte_count(std::optional<double>{start}) || !is_gltf_byte_count(std::optional<double>{buffer_view.value()->byte_length}))) {
-      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-bufferview-out-of-range"), flight::String(""), {{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"bufferView">>(image).value()}}, {flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
+      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-bufferview-out-of-range"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"bufferView">>(image).value()}}, {flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
       return std::nullopt;
     }
     flight::Uint8Array bytes_2 = buffer.value().slice(start, (start + buffer_view.value()->byte_length));
     return std::optional<std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::EmbeddedImageResourceReference>>, flight::image::create_embedded_image_resource_reference(bytes_2, ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"mimeType">>(image); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return flight::image_codec::detect_image_mime_type(bytes_2); }()))};
   }
-  tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-no-source"), flight::String(""), {{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
+  tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.image-no-source"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstImage"), std::variant<bool, double, flight::String>{std::in_place_type<double>, image_index}}});
   return std::nullopt;
 }
 
@@ -988,7 +989,7 @@ inline std::optional<flight::Ref<indices_topology_b20f6901c821608d>> build_gltf_
       return std::optional<flight::Ref<indices_topology_b20f6901c821608d>>{flight::make_ref<indices_topology_b20f6901c821608d>(indices_topology_b20f6901c821608d{.indices = std::optional<flight::Uint32Array>{build_gltf_triangle_fan_indices(source, vertex_count)}, .topology = flight::String("triangle-list")})};
     }
     else {
-      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.primitive-unsupported-mode"), flight::String(""), {{flight::String("firstMode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, mode}}});
+      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.primitive-unsupported-mode"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstMode"), std::variant<bool, double, flight::String>{std::in_place_type<double>, mode}}});
       return std::nullopt;
     }
   }
@@ -1024,7 +1025,7 @@ inline std::optional<flight::Ref<flight::types::GltfDracoMesh>> resolve_gltf_dra
   std::optional<flight::Ref<flight::types::GltfBufferView>> view = ([&]() -> std::optional<flight::Ref<flight::types::GltfBufferView>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"bufferViews">>(doc); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(block.value()->buffer_view); }());
   std::optional<flight::Uint8Array> bytes = (view.has_value() ? std::optional{buffers.element(view.value()->buffer)} : std::nullopt);
   if ((!view.has_value() || !bytes.has_value())) {
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.draco-payload-missing"), flight::String(""), {{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, block.value()->buffer_view}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.draco-payload-missing"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, block.value()->buffer_view}}});
     return std::nullopt;
   }
   const double start = ([&]() -> double { auto nullish_coalesce_left = view.value()->byte_offset; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
@@ -1037,7 +1038,7 @@ inline std::optional<flight::Ref<flight::types::GltfDracoMesh>> resolve_gltf_dra
     (decoded = std::nullopt);
   }
   if (!decoded.has_value()) {
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.draco-decode-failed"), flight::String(""), {{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, block.value()->buffer_view}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->drop, flight::String("gltf.draco-decode-failed"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstBufferView"), std::variant<bool, double, flight::String>{std::in_place_type<double>, block.value()->buffer_view}}});
   }
   return decoded;
 }
@@ -1153,15 +1154,15 @@ inline std::optional<flight::Ref<flight::types::GltfDracoMesh>> resolve_gltf_dra
 inline flight::Ref<flight::types::GltfAccessorData> read_accessor(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>> doc, flight::Array<flight::Uint8Array> buffers, double accessor_index, std::optional<flight::Map<flight::String, flight::Ref<GltfDropTally>>> gltf_drops, std::optional<flight::String> expected_type = std::nullopt) {
   std::optional<flight::Ref<flight::types::GltfAccessor>> accessor = ([&]() -> std::optional<flight::Ref<flight::types::GltfAccessor>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"accessors">>(doc); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(accessor_index); }());
   if (!accessor.has_value()) {
-    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-not-found")})}});
+    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-not-found")})}});
   }
   if ((expected_type.has_value() && (accessor.value()->type != expected_type.value()))) {
-    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-type-mismatch")})}});
+    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-type-mismatch")})}});
   }
   const double component_count = type_components.get(accessor.value()->type).value();
   const double component_byte_size_2 = component_byte_size.get(accessor.value()->component_type).value();
   if (((!is_gltf_byte_count(std::optional<double>{component_count}) || !is_gltf_byte_count(std::optional<double>{component_byte_size_2})) || !is_gltf_byte_count(std::optional<double>{accessor.value()->count}))) {
-    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-invalid-read")})}});
+    return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-invalid-read")})}});
   }
   const bool normalize = ((accessor.value()->normalized == true) && (accessor.value()->component_type != 5126.0));
   const double total = (accessor.value()->count * component_count);
@@ -1171,13 +1172,13 @@ inline flight::Ref<flight::types::GltfAccessorData> read_accessor(flight::Struct
   if (view.has_value()) {
     std::optional<flight::Uint8Array> bytes = buffers.get(view.value()->buffer);
     if (([&]() { const auto& presence_operand = bytes; return !presence_operand.has_value(); }())) {
-      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}, {flight::String("firstBuffer"), view.value()->buffer}}, .kind = flight::String("gltf.accessor-buffer-not-found")})}});
+      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}, {flight::String("firstBuffer"), view.value()->buffer}}, .kind = flight::String("gltf.accessor-buffer-not-found")})}});
     }
     const double element_byte_size = (component_count * component_byte_size_2);
     const double stride = ((!view.value()->byte_stride.has_value() || (view.value()->byte_stride.value() == 0.0)) ? element_byte_size : view.value()->byte_stride.value());
-    const double base_offset = resolve_gltf_read_offset(bytes.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfBufferView>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfBufferView>>>>(view.value())), ([&]() -> double { auto nullish_coalesce_left = accessor.value()->byte_offset; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), element_byte_size, stride, accessor.value()->count);
+    const double base_offset = resolve_gltf_read_offset(bytes.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfBufferView>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfBufferView>>>>(view.value())), ([&]() -> double { auto nullish_coalesce_left = accessor.value()->byte_offset; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), element_byte_size, stride, accessor.value()->count);
     if ((base_offset < 0.0)) {
-      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-invalid-read")})}});
+      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}}, .kind = flight::String("gltf.accessor-invalid-read")})}});
     }
     flight::DataView data_view = flight::DataView(bytes.value().buffer);
     {
@@ -1202,7 +1203,7 @@ inline flight::Ref<flight::types::GltfAccessorData> read_accessor(flight::Struct
   }
   else {
     if (!accessor.value()->sparse.has_value()) {
-      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = {{flight::String("firstAccessor"), accessor_index}, {flight::String("firstBufferView"), buffer_view_index}}, .kind = flight::String("gltf.accessor-bufferview-not-found")})}});
+      return flight::make_ref<flight::types::GltfAccessorData>(flight::types::GltfAccessorData{.count = 0.0, .data = flight::Float32Array(0.0), .fault = std::optional<flight::Ref<flight::types::GltfAccessorFault>>{flight::make_ref<flight::types::GltfAccessorFault>(flight::types::GltfAccessorFault{.detail = flight::Record<flight::String, double>{{flight::String("firstAccessor"), accessor_index}, {flight::String("firstBufferView"), buffer_view_index}}, .kind = flight::String("gltf.accessor-bufferview-not-found")})}});
     }
   }
   if (accessor.value()->sparse.has_value()) {
@@ -1221,7 +1222,7 @@ inline void apply_gltf_core_feature_handlers(flight::Ref<flight::types::Scene3DD
   auto selected = flight::Map<flight::String, flight::Ref<flight::types::GltfCoreFeatureHandler>>();
   for (auto handler : handlers) {
     if (selected.has(handler->kind)) {
-      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.duplicate-core-feature-handler"), flight::String(""), {{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, handler->kind}}});
+      tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::String("gltf.duplicate-core-feature-handler"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, handler->kind}}});
     }
     selected.set(handler->kind, handler);
   }
@@ -1229,23 +1230,23 @@ inline void apply_gltf_core_feature_handlers(flight::Ref<flight::types::Scene3DD
     if (((get_gltf_core_feature_length(source, kind) == 0.0) || selected.has(kind))) {
       continue;
     }
-    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->skip, flight::String("gltf.core-feature-handler-missing"), kind, {{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, kind}}});
+    tally_gltf_drop(gltf_drops, flight::types::import_diagnostic_severity->skip, flight::String("gltf.core-feature-handler-missing"), kind, flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstKind"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, kind}}});
   }
-  flight::Ref<flight::types::GltfCoreFeatureContext> context = flight::make_ref<flight::types::GltfCoreFeatureContext>(flight::types::GltfCoreFeatureContext{.build_node_transform = [=](double node) {
-  return clone_gltf_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(([&]() -> flight::Ref<flight::types::Transform3D> { auto nullish_coalesce_left = node_world_transforms.get(node); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_identity_transform(); }()))));
-}, .document = document, .mesh_indices = mesh_indices, .node_indices = node_indices, .primitive_node_indices = primitive_node_indices, .read_accessor = [=](double accessor, std::optional<flight::String> expected_type) {
+  flight::Ref<flight::types::GltfCoreFeatureContext> context = flight::make_ref<flight::types::GltfCoreFeatureContext>(flight::types::GltfCoreFeatureContext{.build_node_transform = flight::Function<flight::Ref<flight::types::Transform3D>(double)>{[=](double node) {
+  return clone_gltf_transform(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Transform3D>>>>(([&]() -> flight::Ref<flight::types::Transform3D> { auto nullish_coalesce_left = node_world_transforms.get(node); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_identity_transform(); }()))));
+}}, .document = document, .mesh_indices = mesh_indices, .node_indices = node_indices, .primitive_node_indices = primitive_node_indices, .read_accessor = flight::Function<flight::Ref<flight::types::GltfAccessorData>(double, std::optional<flight::String>)>{[=](double accessor, std::optional<flight::String> expected_type) {
   return read_accessor(source, buffers, accessor, gltf_drops, expected_type);
-}, .report_accessor_fault = [=](flight::types::ImportDiagnosticSeverity severity, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>> fault) {
+}}, .report_accessor_fault = flight::Function<void(flight::types::ImportDiagnosticSeverity, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>)>{[=](flight::types::ImportDiagnosticSeverity severity, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>> fault) {
   report_gltf_accessor_fault(gltf_drops, severity, fault);
-}, .report_diagnostic = [=](flight::types::ImportDiagnosticSeverity severity, flight::String kind, std::optional<flight::Ref<anonymous_3e6b344a3b6bd77e>> detail = std::nullopt, std::optional<flight::String> discriminator = std::nullopt) {
+}}, .report_diagnostic = flight::Function<void(flight::types::ImportDiagnosticSeverity, flight::String, std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>, std::optional<flight::String>)>{[=](flight::types::ImportDiagnosticSeverity severity, flight::String kind, std::optional<flight::Ref<anonymous_3e6b344a3b6bd77e>> detail = std::nullopt, std::optional<flight::String> discriminator = std::nullopt) {
   detail = detail.value_or(flight::make_ref<anonymous_3e6b344a3b6bd77e>(anonymous_3e6b344a3b6bd77e{}));
   discriminator = discriminator.value_or(flight::String(""));
   tally_gltf_drop(gltf_drops, severity, kind, discriminator, detail);
-}, .source = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(source)});
+}}, .source = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(source)});
   for (const auto& [for_of_key_2, for_of_value_2] : selected) {
     static_cast<void>(for_of_key_2);
     auto handler_2 = for_of_value_2;
-    handler_2->apply(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>>(context)));
+    handler_2->apply(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>>(context)));
   }
 }
 
@@ -1270,11 +1271,11 @@ inline std::optional<flight::Ref<data_b5d55667a3cd4df3>> read_optional_gltf_attr
   }
   auto result = read_gltf_attribute(draco, semantic, doc, buffers, index.value(), gltf_drops, expected_type);
   if (result->fault.has_value()) {
-    report_gltf_accessor_fault(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>(result->fault.value())));
+    report_gltf_accessor_fault(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>(result->fault.value())));
     return std::nullopt;
   }
   if ((result->count != vertex_count)) {
-    report_gltf_accessor_fault(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>(flight::row_field<flight::RowKey<"detail">>({{flight::String("firstAccessor"), index.value()}, {flight::String("firstActual"), result->count}, {flight::String("firstExpected"), vertex_count}}), flight::row_field<flight::RowKey<"kind">>(flight::String("gltf.accessor-count-mismatch"))));
+    report_gltf_accessor_fault(gltf_drops, flight::types::import_diagnostic_severity->recover, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfAccessorFault>>>>(flight::row_field<flight::RowKey<"detail">>(flight::Record<flight::String, double>{{flight::String("firstAccessor"), index.value()}, {flight::String("firstActual"), result->count}, {flight::String("firstExpected"), vertex_count}}), flight::row_field<flight::RowKey<"kind">>(flight::String("gltf.accessor-count-mismatch"))));
     return std::nullopt;
   }
   return std::optional<flight::Ref<data_b5d55667a3cd4df3>>{flight::make_ref<data_b5d55667a3cd4df3>(data_b5d55667a3cd4df3{.data = result->data})};
@@ -1714,17 +1715,17 @@ inline std::optional<flight::Ref<data_b5d55667a3cd4df3>> read_optional_gltf_attr
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_glb_with_core_feature_handlers(flight::Uint8Array bytes, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
   auto container = read_glb_container(bytes, diagnostics);
   if (!container.has_value()) {
-    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
+    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
   }
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = container.value()->document->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = container.value()->document->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
 inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_gltf_with_core_feature_handlers(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
   auto doc = parse_gltf_source(source, diagnostics);
   if (!doc.has_value()) {
-    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
+    return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(create_empty_gltf_document())), std::nullopt);
   }
-  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = doc.value()->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  return flight::scene3d::create_scene_3d_from_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>>(build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics))), ([&]() -> double { auto nullish_coalesce_left = doc.value()->scene; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
 }
 
 inline flight::Ref<flight::types::Scene3DDocument> parse_glb_with_core_feature_handlers(flight::Uint8Array bytes, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
@@ -1732,7 +1733,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_glb_with_core_feature_h
   if (!container.has_value()) {
     return create_empty_gltf_document();
   }
-  return build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics);
+  return build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(container.value()->document)), container.value()->binary, core_feature_handlers, options, diagnostics);
 }
 
 inline flight::Ref<flight::types::Scene3DDocument> parse_gltf_with_core_feature_handlers(std::variant<flight::Ref<flight::types::GltfDocument>, flight::String> source, flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> core_feature_handlers, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfImportOptions>>>>> options = std::nullopt) {
@@ -1740,7 +1741,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_gltf_with_core_feature_
   if (!doc.has_value()) {
     return create_empty_gltf_document();
   }
-  return build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics);
+  return build_gltf_document(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>>(doc.value())), std::nullopt, core_feature_handlers, options, diagnostics);
 }
 
 } // namespace flight::scene3d_formats
