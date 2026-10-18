@@ -1,0 +1,136 @@
+{
+  "schema": "flight-cpp-guarded-indexed-nullable-member-qualification/1",
+  "frozenInputCommit": "9e05585b",
+  "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+  "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "compilerPatches": 96,
+  "flightPatches": 201,
+  "generation": {
+    "command": "node scripts/pkgGenerate.mjs skeleton2d-formats -j2 --progress",
+    "exitCode": 0,
+    "pinsRestoredClean": true,
+    "changedPaths": [
+      "generated/README.md",
+      "generated/best-effort.json",
+      "generated/include/flight/skeleton2d_formats/dragon_bones_parse.hpp",
+      "generated/include/flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp",
+      "generated/include/flight/skeleton2d_formats/skeleton2d_json_analyzer.hpp",
+      "generated/include/flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+      "generated/include/flight/skeleton2d_formats/spine_json_skins_handler.hpp",
+      "generated/initialization.json",
+      "generated/manifest.json",
+      "generated/refusals.json"
+    ],
+    "normalHeaderSha256": {
+      "generated/include/flight/skeleton2d_formats/dragon_bones_parse.hpp": "e018e8e07d750995ac4533fc4ef78f4d92345e7dad08b97195c0c49bb0961ae4",
+      "generated/include/flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp": "413f5df60908209125736f50ff0474db6e8cc8bded8df9036742846330c882ce",
+      "generated/include/flight/skeleton2d_formats/skeleton2d_json_analyzer.hpp": "e215360f1263b8984d13986db2045b9cc273bd36f7f9a8d0a3131d37a6e10f7e",
+      "generated/include/flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp": "b3dd07657268b97b07004564e5edbcd5325de4200b80478b9e83a7765d92ad74",
+      "generated/include/flight/skeleton2d_formats/spine_json_skins_handler.hpp": "50c2499383f9f0463fbff602ec622de588e1c2157a7e5236dd55c6d2d0528538"
+    }
+  },
+  "focusedQualification": {
+    "nativeTests": 2,
+    "nativeCheckpointGroups": 15,
+    "unchangedTypeScriptChecks": 71,
+    "baselineParity": {
+      "selected": 328,
+      "pass": 305,
+      "sameBaselineFail": 23,
+      "unselected": 1236,
+      "changedTitles": []
+    },
+    "byteIdenticalExcludedOptionalDefaultedControls": 5,
+    "fixtureIr92To96ByteIdentical": true
+  },
+  "originalConsumer": {
+    "target": "flight_cpp_generated_skeleton2d_formats_spine_easings_tests",
+    "configure": "pass",
+    "buildExitCode": 2,
+    "baselineErrors": 9,
+    "ownedErrorsCleared": 6,
+    "remainingBaselineErrors": 3,
+    "remainingLocations": [
+      227,
+      236,
+      237
+    ],
+    "typeScriptOracleCases": 11,
+    "typeScriptNumericSamples": 42,
+    "typeScriptDiagnostics": 1,
+    "executed": false,
+    "ctestRun": false
+  },
+  "headerCompilation": {
+    "schema": "flight-sdk-header-compilation/2",
+    "compiler": {
+      "command": "/tmp/builder5-generic/bin/c++",
+      "version": "clang version 22.1.8"
+    },
+    "generated": {
+      "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "sourceRevisions": [
+        "a62784923f3be814463286c9fb28edfe6ab15789"
+      ]
+    },
+    "run": {
+      "complete": true,
+      "elapsedSeconds": 219.3,
+      "headerSelection": "explicit",
+      "jobs": 2
+    },
+    "summary": {
+      "attemptedHeaders": 8,
+      "failedHeaders": 8,
+      "passedHeaders": 0,
+      "totalHeaders": 8,
+      "unattemptedHeaders": 0
+    },
+    "failures": [
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_animations_handler.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_full.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_handlers.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_slot_timeline_handler.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      },
+      {
+        "diagnostic": "no member named 'values' in 'std::shared_ptr<flight::skeleton2d_formats::path_values_75dd95791873738d>'; did you mean to use '->' instead of '.'?",
+        "header": "flight/skeleton2d_formats/spine_binary_timeline_handlers.hpp",
+        "location": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp:227"
+      }
+    ],
+    "passed": [],
+    "unattempted": []
+  },
+  "historicalHeaderPromotions": 0,
+  "followOn": "Nonnullable typeof TABLE[number] Ref parameter member operator; Foreman-d07d4c5f authorized, pending."
+}

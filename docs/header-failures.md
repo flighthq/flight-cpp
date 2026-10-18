@@ -5667,3 +5667,18 @@ passes: this follow-on adds functionality with **zero new header promotions**. T
 Matrix callers remain separately owned by builder4; no repeat survey was made. The
 header command still exits one for its13known Scene3DGL override hash drifts. Independent
 CSS collection and whole SVG import/package completion remain open.
+
+
+## Scoped Spine binary nullable member qualification
+
+The frozen96 normal skeleton2d-formats output clears the six doubly optional
+`points.length`/index member errors in the original bone timeline header. Exactly
+eight assigned headers were attempted with Clang22.1.8 at two jobs: **0 PASS / 8 FAIL**,
+all now first failing at `kind.values` on a required `flight::Ref` parameter at
+`spine_binary_bone_timeline_handler.hpp:227`. Their rows advance from
+`missing-member-00139043` to `missing-member-edbd79e9`; no sweep totals or other rows
+change. The registered original whole-header easings consumer also fails at the same
+three pre-existing `kind.values`/`kind.path` accesses and has not executed. See the
+[existing request and frozen evidence](compiler-requests/nullable-array-element-null-test.md#frozen96-normal-output-and-nonnullable-parameter-follow-on).
+The separately authorized type-query/indexed parameter carrier correction remains
+active; no whole-package or public native behavior pass is claimed.

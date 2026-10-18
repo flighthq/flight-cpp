@@ -213,4 +213,44 @@ local each, all pointing at `spine_binary_bone_timeline_handler.hpp:88`. Recorde
 
 The bounded `compiler-guarded-indexed-nullable-member` correction applies at member operations on immutable indexed locals with a single optional element representation and the existing present-payload proof. The declaration and null/undefined comparisons retain both layers. A generic checked receiver adapts to the actual stored carrier; it preserves the original array storage, object owner and live cells. Computed indexing caches its base and key before checking the receiver, including a key's exact thrown owner. Method lookup checks the receiver before arguments. The ordinary binding and defaulted-parameter projections remain on their established paths.
 
-Scratch qualification reproduces the old native optional<Array>.size failure and passes 15 emitted native checkpoint groups and 71 comparisons with the unchanged TypeScript fixture. Controls include null/undefined states, negative/out-of-range/fractional/NaN/Infinity indices, both guards, nullable undefined elements, ordinary single-layer reads, String/array/object payloads, shared ownership, live mutation and delayed captured reads. Two focused length-proven test failures are identical on the saved baseline; the final required-member predicate and broader prototype both have identical outcomes to the saved baseline on 328 existing backend tests (305 pass, 23 fail, 1236 unselected each). Original optional-chain operations are excluded, with five optional/defaulted emissions byte-identical to baseline. The final declared 96-patch stack applies and builds, reproduces the owned helper, dispatch and full fixture exactly, and passes the two native fixture tests. The fixture IR is byte-identical across the 92-to-96 frontend advance. The prepared public consumer includes the complete original header and calls buildSpineBinarySegmentEasings, using 11 untouched-source cases, 42 numeric samples and the original diagnostic callee. Its normal scoped output, actual execution and eight affected header checks remain pending.
+Scratch qualification reproduces the old native optional<Array>.size failure and passes 15 emitted native checkpoint groups and 71 comparisons with the unchanged TypeScript fixture. Controls include null/undefined states, negative/out-of-range/fractional/NaN/Infinity indices, both guards, nullable undefined elements, ordinary single-layer reads, String/array/object payloads, shared ownership, live mutation and delayed captured reads. Two focused length-proven test failures are identical on the saved baseline; the final required-member predicate and broader prototype both have identical outcomes to the saved baseline on 328 existing backend tests (305 pass, 23 fail, 1236 unselected each). Original optional-chain operations are excluded, with five optional/defaulted emissions byte-identical to baseline. The final declared 96-patch stack applies and builds, reproduces the owned helper, dispatch and full fixture exactly, and passes the two native fixture tests. The fixture IR is byte-identical across the 92-to-96 frontend advance. The prepared public consumer includes the complete original header and calls buildSpineBinarySegmentEasings, using 11 untouched-source cases, 42 numeric samples and the original diagnostic callee. The first normal scoped generation and complete eight-header attempt are recorded below; actual public execution remains blocked by the separate parameter-carrier error.
+
+
+### Frozen96 normal output and nonnullable parameter follow-on
+
+The sole normal `skeleton2d-formats` generation from frozen clean `9e05585b`
+(96 compiler patches / 201 Flight patches) exits zero and restores both exact pinned
+checkouts cleanly. It changes five headers and ten normal generated paths; all five
+headers are preserved byte for byte after reconciling the newer base. The six old
+`points` optional-array member errors are absent from the actual original whole-header
+consumer build. The build still exits two on exactly the three **baseline**
+`kind.values`/`kind.path` errors below, so no consumer execution or CTest pass is claimed.
+
+The complete scoped Clang22.1.8 `-j2` check of exactly the eight assigned headers is
+**0 PASS / 8 FAIL / 0 unattempted**. All now fail first at the bone header line227:
+
+```ts
+function buildSpineBinaryBoneChannel(
+  timeline: { curves: (number[] | null)[]; times: number[]; values: number[] },
+  kind: (typeof SPINE_BINARY_BONE_TIMELINES)[number],
+  boneIndex: number,
+  diagnostics?: ImportDiagnostic[],
+): AnimationChannel { /* original body uses kind.values and kind.path */ }
+```
+
+The emitted parameter is `flight::Ref<path_values_75dd95791873738d>`, but its three
+member reads at227/236/237 use `kind.values` or `kind.path` instead of reference access.
+This required, nonnullable parameter is separate from the guarded nullable local. Its
+selected semantic reference/struct representation must choose the member operator,
+including inline and named aliases, without allocating/copying an owner, adding null
+coercions or changing optional/variant/refusal lanes. Foreman has authorized that
+bounded follow-on as the dependency of the prepared original easings consumer.
+
+The eight rows advance from `missing-member-00139043` to
+`missing-member-edbd79e9`; no header is promoted and the original sweep totals remain
+unchanged. The [bounded qualification record](../../artifacts/guarded-indexed-nullable-member-qualification.json)
+preserves the frozen-input provenance, complete eight-header result and exact consumer
+limits. The first header invocation lacked the already-installed SDL include path;
+it was a setup failure, corrected with the same SDL include path as CMake before
+recording these eight code failures. The command also reports unrelated override
+derivation drift; those foreign overrides are not modified or counted as this cause.
