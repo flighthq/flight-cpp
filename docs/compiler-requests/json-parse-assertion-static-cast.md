@@ -850,3 +850,15 @@ On the ordered 121-patch compiler floor, strict checks and 31 focused tests pass
 including 38 native checks; the same three guarded-path controls still fail. The whole original
 consumer still fails compilation, now past the flat, native-cast and raw-membership sites and at
 later readonly record, mask-result, event-data and sequence operations. No native public case has run.
+
+
+[Closed readonly-record qualification](../../artifacts/closed-readonly-record-qualification.json)
+retains the original narrow diagnostic detail owner through the source-declared wider readonly
+parameter and escaped field. The bounded facade observes caller writes and erase, preserves key
+order and identity, and retains lifetime; it exposes no writable widened storage. Mutable, generic,
+erased and numeric-keyed contracts keep their prior representation, and writable escapes refuse.
+Production and owned strict checks pass. The 124-patch composition retains incoming particle
+forwarding and passes 53 focused tests without skips, with 10 new emitted-native and 17 separate
+runtime checks. All bodies in the original Lottie, diagnostic type and collector modules emit.
+The whole public consumer still requires its native closure proof; no SDK or Types generation,
+public 32-case success, or exact 21-header promotion is inferred.

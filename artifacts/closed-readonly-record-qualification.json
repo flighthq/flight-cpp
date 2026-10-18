@@ -1,0 +1,87 @@
+{
+  "schema": "flight-cpp-closed-readonly-record-qualification/1",
+  "status": "compiler-preparation-qualified; original-public-Lottie-native-pending",
+  "authority": [
+    "foreman-96e07292",
+    "foreman-095e1214"
+  ],
+  "checkedCodeCommit": "7ef41417",
+  "sameCodeRebasedCommit": "4165c0a0",
+  "compiler": {
+    "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "initialCompilerPatches": 123,
+    "initialTotalPatches": 325,
+    "currentCompilerPatches": 124,
+    "currentTotalPatches": 326,
+    "patch": "source-patches/compiler-closed-readonly-record-view.patch",
+    "patchSha256": "cfc8dd6213ae6bd5907e0db9717cacc351afcf2255389b16de4841092a1bb429",
+    "backendSha256": "c2ff43aedc95cafa8fd8495288b52cc5f8968f744cf115b853d646434f6fc83d",
+    "fixtureSha256": "6a04200999c7033604043e20eff9fd28a1f4a9dd94e3c2ba695bc35b61187274",
+    "orderedApplyAndRawClean": true,
+    "incomingParticleReadonlyEntrypointsRetained": true
+  },
+  "verification": {
+    "productionStrictExit": 0,
+    "ownedFixtureStrictExit": 0,
+    "initialFocused": {
+      "files": 8,
+      "pass": 41,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    "currentFocused": {
+      "files": 9,
+      "pass": 53,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    "newEmittedNativeChecks": 10,
+    "runtimeFacadeNativeChecks": 17,
+    "sourcePatchAutomation": {
+      "pass": 2,
+      "fail": 0,
+      "exit": 0
+    },
+    "knownGuardControls": "Earlier8PASS3FAIL guarded-path controls remain failures, with no pass inferred or retest claimed by this capability."
+  },
+  "sourceContract": {
+    "source": "reportLottieDrop/Skip detail?:Record<string,string|number>",
+    "alreadyReadonlyTarget": "reportImportDiagnostic detail?:Readonly<Record<string,boolean|number|string>> and stored ImportDiagnostic.detail",
+    "oldCarriers": "optional<Record<String,variant<double,String>>> -> optional<Record<String,variant<bool,double,String>>>",
+    "newTargetCarrier": "optional<ReadonlyRecordView<variant<bool,double,String>>>",
+    "ownerPreserved": true,
+    "copiesOrStorageCasts": false,
+    "mutationEscapeProof": "Escaped diagnostic retains caller original identity and observes subsequent set/erase; view retains storage after caller handle scope exits.",
+    "exclusions": [
+      "writable widened escape",
+      "mutable target representation rewrite",
+      "generic/erased/numeric-keyed record facade",
+      "unrelated readonly interface index-signature facade"
+    ]
+  },
+  "wholeOriginalModules": {
+    "modules": [
+      "packages/scene2d-formats/src/lottieDocument.ts",
+      "packages/types/src/ImportDiagnostic.ts",
+      "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+    ],
+    "bodyChanges": false,
+    "missingBodies": 0,
+    "freshLoweredDependencyModules": 1467,
+    "lottieSourceSha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "emissionLog": "/tmp/builder5-lottie-body/readonly124-original-closure.log",
+    "publicCompile": "running after normal declared Lottie repairs and dependency-checked alias derivation",
+    "nativePublicCasesRun": 0,
+    "publicCaseDenominator": 32
+  },
+  "setupCorrections": [
+    "Earlier new native fixture attempts hit explicit ENOSPC; discarded as setup failures. Lossless hash-verified archiving of own completed scratch binaries freed disk, and sameClang22 -g0 retry passed."
+  ],
+  "limitations": [
+    "No normal SDK/Types generation; later coherent Types and collector output must coordinate with Builder2 after shared B.",
+    "No original Lottie public success or exact21 promotion.",
+    "Readonly facade is bounded to explicit source Readonly<Record<string,closed primitive union>>, not a global scalar ABI change."
+  ]
+}
