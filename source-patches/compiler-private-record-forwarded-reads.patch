@@ -1,0 +1,152 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8959,14 +8959,16 @@
+ }
+ 
+ // Select a private implementation carrier only when every reference to the helper is a direct call,
+-// and every use of this exact parameter is a non-optional property/index receiver. A returned, aliased,
+-// compared, forwarded, mutated, exported, or callback-visible Record keeps its existing Record ABI.
++// and every use of this exact parameter is a non-optional property/index receiver or an argument to
++// an already-proven private reader. Returned, aliased, compared, mutated, exported, callback-visible
++// or unproven forwarded Records retain their existing Record ABI.
+ function collectCppPrivateReadonlyRecordReadViewsCpp(
+   module: Readonly<IrModule>, context: EmitContext,
+ ): ReadonlySet<string> {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return new Set();
+   const exported = new Set(module.exports.flatMap((item) => item.kind === 'local' ? [item.binding.id] : []));
+   const candidates = new Map<string, string>();
++  const functions = new Map(module.declarations.flatMap((declaration) => declaration.kind === 'function' ? [[declaration.binding.id, declaration] as const] : []));
+   for (const declaration of module.declarations) {
+     if (declaration.kind !== 'function' || declaration.exported || exported.has(declaration.binding.id) ||
+         declaration.async || declaration.overloads.length > 0 || declaration.typeParameters.length > 0) continue;
+@@ -8984,6 +8986,7 @@
+   }
+   const receivers = new Set<Readonly<IrExpression>>();
+   const callees = new Set<Readonly<IrExpression>>();
++  const forwarded = new Map<Readonly<IrExpression>, string>();
+   const references: Readonly<IrExpression>[] = [];
+   const writes = new Set<Readonly<IrExpression>>();
+   analyzeIrModuleTraversal(module, {
+@@ -8991,7 +8994,14 @@
+       if ((expression.kind === 'property' || expression.kind === 'element') && !expression.optional) {
+         receivers.add(expression.object);
+       }
+-      if (expression.kind === 'call' && !expression.optional) callees.add(expression.callee);
++      if (expression.kind === 'call' && !expression.optional) {
++        callees.add(expression.callee);
++        const target = expression.callee.kind === 'identifier' && expression.callee.reference.kind === 'binding'
++          ? functions.get(expression.callee.reference.binding.id) : undefined;
++        target?.parameters.forEach((parameter, index) => {
++          if (candidates.has(parameter.binding.id) && expression.arguments[index]) forwarded.set(expression.arguments[index]!, parameter.binding.id);
++        });
++      }
+       if (expression.kind === 'assignment') writes.add(expression.left);
+       if (expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator)) writes.add(expression.operand);
+       if (expression.kind === 'identifier') references.push(expression);
+@@ -8999,6 +9009,7 @@
+   });
+   const invalidHelpers = new Set<string>();
+   const invalidParameters = new Set<string>();
++  const uses = new Map<string, Readonly<IrExpression>[]>();
+   const used = new Set<string>();
+   for (const expression of references) {
+     if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') continue;
+@@ -9006,15 +9017,28 @@
+     if (!callees.has(expression)) invalidHelpers.add(id);
+     if (candidates.has(id)) {
+       used.add(id);
+-      if (!receivers.has(expression)) invalidParameters.add(id);
++      uses.set(id, [...uses.get(id) ?? [], expression]);
+     }
+   }
+   for (const target of writes) {
+     if ((target.kind === 'property' || target.kind === 'element') && target.object.kind === 'identifier' &&
+         target.object.reference.kind === 'binding') invalidParameters.add(target.object.reference.binding.id);
+   }
+-  return new Set([...candidates].flatMap(([id, helper]) =>
+-    used.has(id) && !invalidParameters.has(id) && !invalidHelpers.has(helper) ? [id] : []));
++  // Prove forwarding from already-selected private readers upward. A pure recursive cycle
++  // with no established reader does not select itself, and every reference must stay a read.
++  const selected = new Set<string>();
++  let changed = true;
++  while (changed) {
++    changed = false;
++    for (const [id, helper] of candidates) {
++      if (selected.has(id) || !used.has(id) || invalidParameters.has(id) || invalidHelpers.has(helper)) continue;
++      if ((uses.get(id) ?? []).every((reference) => receivers.has(reference) || selected.has(forwarded.get(reference) ?? ''))) {
++        selected.add(id);
++        changed = true;
++      }
++    }
++  }
++  return selected;
+ }
+ 
+ 
+diff --git a/packages/compiler-backend-cpp/src/cppPrivateRecordForwardedReads.test.ts b/packages/compiler-backend-cpp/src/cppPrivateRecordForwardedReads.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppPrivateRecordForwardedReads.test.ts
+@@ -0,0 +1,61 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const file = ts.createSourceFile('/flight/packages/example/src/forwardedRecord.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(file, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++function attempt(source: string): string | undefined {
++  try { return emit(source); }
++  catch (error) {
++    if (typeof error !== 'object' || error === null || !('kind' in error) || error.kind !== 'backend-emission') throw error;
++    return undefined;
++  }
++}
++
++const prefix = 'type R=Record<string,unknown>;function leaf(row:R):unknown{return row.x;}';
++const source = prefix + 'function middle(row:R):unknown{return leaf(row);}export function run(row:R):unknown{return middle(row);}';
++
++it('forwards through an established private reader while retaining the public Record ABI', () => {
++  const output = emit(source);
++  expect(output).toContain('leaf(flight::NamedProperties row)');
++  expect(output).toContain('middle(flight::NamedProperties row)');
++  expect(output).toContain('run(R row)');
++  expect(output).toContain('middle(flight::named_properties(row))');
++});
++it('grows the proof from a real reader through two private forwarding calls', () => {
++  const output = emit(prefix + 'function middle(row:R):unknown{return leaf(row);}function outer(row:R):unknown{return middle(row);}export function run(row:R):unknown{return outer(row);}');
++  expect(output).toContain('outer(flight::NamedProperties row)');
++});
++it('keeps one original guarded JSON owner through the private forwarding graph', () => {
++  const output = emit(prefix + `function middle(row:R):unknown{return leaf(row);}
++function parse(text:string):R{let raw:unknown;try{raw=JSON.parse(text);}catch(e){throw new Error((e as Error).message);}if(raw===null||typeof raw!=='object'||Array.isArray(raw))throw new Error('object');return raw as R;}
++export function run(text:string):unknown{return middle(parse(text));}`);
++  expect(output).toContain('flight::NamedProperties parse(');
++  expect(output).toContain('return flight::named_properties(raw)');
++  expect(output).toContain('catch (const flight::JsonSyntaxError&');
++});
++
++const excluded: readonly (readonly [string, string])[] = [
++  ['returned owner', 'type R=Record<string,unknown>;function leaf(row:R):R{return row;}function middle(row:R):R{return leaf(row);}export function run(row:R):R{return middle(row);}'],
++  ['mutation', source.replace('return row.x;', 'row.x=1;return row.x;')],
++  ['comparison', source.replace('return row.x;', 'return row===row;')],
++  ['alias', source.replace('return row.x;', 'const alias=row;return alias.x;')],
++  ['escaped closure', source.replace('return row.x;', 'return ()=>row.x;')],
++  ['callback exposure', source + 'export function callback():(row:R)=>unknown{return leaf;}'],
++  ['exported callee', source.replace('function leaf', 'export function leaf')],
++  ['exported forwarding helper', source.replace('function middle', 'export function middle')],
++  ['external forwarding', source.replace('return leaf(row);', 'return external(row);') + 'export function external(row:R):unknown{return row.x;}'],
++  ['stored callback', source.replace('return leaf(row);', 'sink(leaf);return leaf(row);') + 'function sink(fn:(row:R)=>unknown):void{}'],
++  ['optional parameter', source.replace('middle(row:R)', 'middle(row?:R)').replace('return leaf(row);', 'return row?leaf(row):undefined;')],
++  ['defaulted parameter', source.replace('middle(row:R)', 'middle(row:R={})')],
++  ['unestablished recursion', 'type R=Record<string,unknown>;function first(row:R):unknown{return second(row);}function second(row:R):unknown{return first(row);}export function run(row:R):unknown{return first(row);}'],
++];
++it.each(excluded)('does not select an unsafe or unestablished forwarding parameter: %s', (_name, input) => {
++  const output = attempt(input);
++  if (output) expect(output).not.toContain((_name === 'unestablished recursion' ? 'first' : 'middle') + '(flight::NamedProperties row)');
++});

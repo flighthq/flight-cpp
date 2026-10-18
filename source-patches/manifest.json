@@ -5030,6 +5030,23 @@
       "unblocks": "Inherited value-alias storage and compatible primary native interface heritage, including current patched WgpuRenderState : RenderState. Does not authorize GL runtime-slot covariance, registry helper/prototype membership, or a public consumer/header completion claim.",
       "expires": "when the upstream C++ backend plans inherited alias references against their unique declaration owner, including synthetic imports introduced after source-module indexing.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-private-record-forwarded-reads",
+      "dependency": "flight-compiler",
+      "patch": "compiler-private-record-forwarded-reads.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateRecordForwardedReads.test.ts",
+      "package": "@flighthq/particles-formats",
+      "answers": "diagnostic",
+      "refusal": "The original private parseUnityJson return still requires owning Record storage because rawToConfig forwards the same record to another private read-only helper, so its complete caller graph is not selected.",
+      "rewrite": "Grow private read-only Record parameter selection from property/index readers through exact arguments to already-proven private readers; keep direct-call-only synchronous nongeneric helpers and reject every other reference or write. A least fixed point cannot prove a recursive forwarding cycle from itself.",
+      "equivalence": "Only private implementation carriers change. Every selected use reads the original named owner or forwards it to an already-proven reader. Public Record parameters/returns, escaped callbacks/closures, mutation, aliases, comparison, optional/defaulted parameters and unestablished recursion retain the prior ABI or refusal. NamedProperties retains live original native/JSON ownership; no parsed tree, Record or nominal object is copied or fabricated, and no JSON schema or input restriction is added. The original parse guard, one parse, exception arc and algorithm bodies remain unchanged.",
+      "whyNotUpstreamFirst": "The pinned source already has the intended behavior. This pin-bound compiler proof extends the existing private read lane while the upstream correction remains outstanding.",
+      "unblocks": "Preparation for original parseUnityParticle/parseUnityParticleDocument and their three public barrels through the Unity return77 cause only; remaining original erased-array, optional-member and complete native consumer barriers remain open.",
+      "expires": "when upstream proves transitive private read-only Record forwarding without changing public/escaping owners (docs/compiler-requests/parsed-json-object-shape-reads.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "PREPARATION ONLY: strict production compiler build on the complete declared 96-patch floor plus this exact backend change PASS. Direct production API 3 positives / 13 byte-or-refusal-equivalent exclusions PASS. Native public Record ABI/live native and parsed owner aliases, missing/present undefined/null, signed zero/NaN, original JSON root and syntax failures PASS 16 checkpoints. Original Spine/Pixi/ParticleDesigner/Starling diagnostic-context headers remain byte-identical; no SDK repeated. The original Unity diagnostic private root now uses NamedProperties but rawToConfig/collectUnityDiagnostics/readEmission remain omitted; no installed Unity consumer, four-header gain, inventory or historical25 promotion is claimed. Focused Vitest fixture carried; Vitest unavailable, not executed."
     }
   ]
 }

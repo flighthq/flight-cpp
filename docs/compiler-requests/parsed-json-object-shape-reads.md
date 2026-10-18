@@ -521,3 +521,32 @@ opaque getter/index observations. The seven mapper exclusions and emitted native
 thrown-owner/live-alias checks pass. The first attempted run was stopped before inventory writes
 to add that getter exclusion, and its patches recovered cleanly; its partial emission is not evidence
 of a successful generation. The carried own Vitest fixture was not run because Vitest is unavailable.
+
+## Unity preparation: private Record forwarding (2026-10-18)
+
+The next bounded Unity unit starts from the integrated Spine product and its qualified capture floor.
+The original `rawToConfig` reads its Record and forwards it to private `unityBlendMode`, which only
+reads it. The earlier proof accepted direct property/index receivers, so this forwarding kept
+`rawToConfig` outside the private read lane and prevented the original `parseUnityJson` result from
+retaining its parsed owner as a view.
+
+The declared `compiler-private-record-forwarded-reads` patch grows selection from established private
+readers through exact arguments to those readers. Every use must be a read or a proven forwarding
+argument. The least fixed point rejects a recursive forwarding cycle with no established reader.
+Exported signatures, returned owners, aliases, comparison, mutation, escaped callbacks/closures and
+optional/defaulted parameters retain their prior ABI or refusal. No tree/Record copy, nominal
+reconstruction, schema gate, input restriction or algorithm replacement is supplied.
+
+The strict production compiler build on the full 96-patch floor plus the exact change passes.
+Direct production API controls pass three positives and thirteen byte-or-refusal-equivalent excluded
+cases. A compiled native control passes sixteen checkpoints for the public Record ABI, live native
+and parsed owners/aliases, missing versus present undefined/null, signed zero/NaN and original JSON
+root/syntax failures. Existing Spine, Pixi, ParticleDesigner and Starling diagnostic-context headers
+remain byte-identical to their baseline; no SDK was repeated. The focused compiler Vitest fixture is
+carried but was not executed because Vitest is unavailable.
+
+This is preparation only. The original Unity diagnostic now returns `NamedProperties`, while
+`rawToConfig`, `collectUnityDiagnostics` and `readEmission` still have their original erased-array or
+optional-member refusals. Installed Unity execution, the four assigned headers and inventory promotion
+remain unqualified; no historical 25 gain is recorded. The next step is original-owner array/member
+lowering and a complete original public consumer, preserving all earlier Spine/capture results.
