@@ -45,6 +45,13 @@ struct PresenceNative final : public flight::ReferenceEnabled {
   std::optional<int> required_value{4};
 };
 
+// A source literal's own keys/order/sentinels override declaration order and optional engagement.
+struct ConstructedNative final : public flight::ReferenceEnabled {
+  std::optional<flight::String> a;
+  std::optional<flight::String> b;
+  std::optional<int> value;
+};
+
 namespace {
 
 int failures = 0;
@@ -4794,9 +4801,94 @@ static void test_native_named_presence() {
         "deleting an own member removes it from enumeration and presence on the same owner");
 }
 
+
+// A constructed native object's own keys are the ones its source literal authored, in authored order:
+// an authored null is own even when its C++ carrier is a disengaged optional, and a declared member the
+// literal omitted is not own even when its carrier is engaged. Recorded on the same owner every view
+// shares; the mark returns the same pointer and replaces nothing.
+static void test_constructed_own_named_properties() {
+  struct Constructed : flight::ReferenceEnabled {
+    std::optional<double> authored_null;
+    std::optional<double> omitted;
+    std::optional<double> second_authored;
+  };
+  const auto object = flight::make_ref<Constructed>();
+  {
+    auto owner = flight::detail::owner_for(object);
+    owner->bind_named("authored_null", [object]() -> decltype(auto) { return (object->authored_null); },
+                      flight::MemberPresence::RequiredNullable);
+    owner->bind_named("omitted", [object]() -> decltype(auto) { return (object->omitted); },
+                      flight::MemberPresence::SourceOptional);
+    owner->bind_named("second_authored", [object]() -> decltype(auto) { return (object->second_authored); },
+                      flight::MemberPresence::SourceOptional);
+  }
+  object->omitted = 5.0;  // engaged, but the source literal did not author it
+  const auto same = flight::mark_constructed_own_named_properties(
+      object, {flight::String("second_authored"), flight::String("authored_null"), flight::String("second_authored")});
+  check(same.get() == object.get(), "the construction mark returns the same object pointer");
+  const auto view = flight::named_properties(object);
+  check(view.has(flight::String("authored_null")) && view.get(flight::String("authored_null")).is_null(),
+        "an authored null is an own key even though its carrier is a disengaged optional");
+  check(!view.has(flight::String("omitted")),
+        "a declared member the literal did not author is not an own key even when engaged");
+  const auto keys = view.keys();
+  check(keys.size() == 2 && keys[0] == flight::String("second_authored") &&
+            keys[1] == flight::String("authored_null"),
+        "own keys follow the authored order, with a repeated key ignored");
+}
+
+// Explicit constructed own-key API: source literal order, authored undefined vs null, add/delete.
+static void test_constructed_own_keys() {
+  const auto object = flight::make_ref<ConstructedNative>(ConstructedNative{});
+  auto owner = flight::detail::owner_for(object);
+  owner->bind_named("a", [object]() -> decltype(auto) { return (object->a); });
+  owner->bind_named("b", [object]() -> decltype(auto) { return (object->b); });
+  owner->bind_named("value", [object]() -> decltype(auto) { return (object->value); });
+  const flight::StructuralRef<flight::RowOf<flight::Ref<ConstructedNative>>> row(object);
+
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("b"), flight::ConstructedKeySentinel::Undefined}});
+  auto properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("b")} &&
+            properties.has(flight::String("b")) && !properties.has(flight::String("a")) &&
+            properties.get(flight::String("b")).is_undefined() &&
+            properties.get(flight::String("a")).is_undefined(),
+        "a literal {b:undefined} is own b only; a is absent and b reads undefined");
+
+  object->b = flight::String("2");
+  object->a = flight::String("1");
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("b"), flight::ConstructedKeySentinel::Value},
+               flight::ConstructedOwnKey{flight::String("a"), flight::ConstructedKeySentinel::Value}});
+  properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("b"), flight::String("a")} &&
+            properties.get(flight::String("b")).as_string() == flight::String("2") &&
+            properties.get(flight::String("a")).as_string() == flight::String("1"),
+        "source literal order b,a overrides declaration/address order a,b");
+
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("value"), flight::ConstructedKeySentinel::Null}});
+  properties = flight::named_properties(row);
+  check(properties.has(flight::String("value")) && properties.get(flight::String("value")).is_null(),
+        "a required nullable authored as null is own and reads null");
+
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("b"), flight::ConstructedKeySentinel::Value}});
+  properties = flight::named_properties(row);
+  check(properties.set(flight::String("a"), flight::Any(flight::String("7"))) &&
+            properties.has(flight::String("a")) &&
+            properties.keys() == std::vector<flight::String>{flight::String("b"), flight::String("a")} &&
+            properties.get(flight::String("a")).as_string() == flight::String("7"),
+        "assignment adds a declared but un-authored key at the end on the same owner");
+  check(properties.erase(flight::String("b")) && !properties.has(flight::String("b")) &&
+            properties.keys() == std::vector<flight::String>{flight::String("a")},
+        "delete removes the own key from presence and order on the same owner");
+}
+
 int main() {
   test_array();
   test_array_callback_arity();
+  test_constructed_own_named_properties();
   test_array_get_optional_index();
   test_array_is_array_optional_payload();
   test_null_carrier_selects_the_null_arm();
@@ -4818,6 +4910,7 @@ int main() {
   test_json_record();
   test_json_mutable_storage();
   test_native_named_presence();
+  test_constructed_own_keys();
   test_json_owner_shared_view();
   test_json_scalar_cell();
   test_json_scalar_member_projection();

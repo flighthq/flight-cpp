@@ -95,6 +95,15 @@ enum class MemberPresence {
   RequiredNullable,  // always an own key; a disengaged carrier is the source null
 };
 
+// The sentinel a constructed source literal authored for one own key. `Value` reads the native
+// carrier; `Null` and `Undefined` are the source sentinels that share an empty optional carrier.
+enum class ConstructedKeySentinel { Value, Null, Undefined };
+
+struct ConstructedOwnKey final {
+  String key;
+  ConstructedKeySentinel sentinel{ConstructedKeySentinel::Value};
+};
+
 // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
 // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
 class RowCell {
@@ -304,6 +313,7 @@ class RowOwner {
   }
 
   [[nodiscard]] virtual std::shared_ptr<RowCell> named_cell(std::string_view key) const {
+    if (named_own_marked_ && !named_own_contains(key)) return nullptr;
     const auto found = named_cells_.find(std::string(key));
     return found == named_cells_.end() ? nullptr : found->second;
   }
@@ -318,7 +328,78 @@ class RowOwner {
   // Dynamic containers can enumerate their exact String keys without a UTF-8 round trip.
   // Native rows retain the declaration-address ordering applied by NamedProperties below.
   [[nodiscard]] virtual std::optional<std::vector<String>> enumerable_string_keys() const {
+    // An explicitly marked construction enumerates its authored keys in authored order. Without the
+    // mark, the dynamic view applies its own declaration-address ordering below.
+    if (named_own_marked_) {
+      std::vector<String> keys;
+      keys.reserve(named_own_order_.size());
+      for (const auto& name : named_own_order_) keys.push_back(String::from_utf8(name));
+      return keys;
+    }
     return std::nullopt;
+  }
+
+  // EXPLICIT SOURCE OWN PRESENCE for a constructed native object. A source object literal names its
+  // own keys, and that list -- not the C++ carrier's engagement -- decides presence and order: an
+  // authored `key: null` or `key: undefined` is own even when its carrier is a disengaged optional,
+  // and a declared member the literal omitted is not own even when its carrier is engaged. Recorded
+  // once, after construction, on the owner every view of the object already shares. First spelling
+  // and first position win; a repeated key is ignored.
+  void mark_named_own_properties(std::initializer_list<String> keys) {
+    named_own_order_.clear();
+    named_own_marked_ = true;
+    for (const auto& key : keys) {
+      const auto name = key.to_utf8();
+      if (String::from_utf8(name) != key) continue;  // a lossy spelling names no native member
+      if (std::find(named_own_order_.begin(), named_own_order_.end(), name) != named_own_order_.end()) continue;
+      named_own_order_.push_back(name);
+    }
+  }
+
+  void mark_named_own_properties(std::initializer_list<ConstructedOwnKey> keys) {
+    named_own_order_.clear();
+    named_own_sentinels_.clear();
+    named_own_marked_ = true;
+    for (const auto& entry : keys) {
+      const auto name = entry.key.to_utf8();
+      if (String::from_utf8(name) != entry.key) continue;
+      if (std::find(named_own_order_.begin(), named_own_order_.end(), name) != named_own_order_.end()) continue;
+      named_own_order_.push_back(name);
+      named_own_sentinels_.emplace(name, entry.sentinel);
+    }
+  }
+
+  [[nodiscard]] std::optional<ConstructedKeySentinel> named_own_sentinel(std::string_view key) const {
+    const auto found = named_own_sentinels_.find(std::string(key));
+    if (found == named_own_sentinels_.end()) return std::nullopt;
+    return found->second;
+  }
+
+  void mark_named_own_key(std::string_view key, ConstructedKeySentinel sentinel) {
+    if (!named_own_marked_) return;
+    std::string name(key);
+    if (std::find(named_own_order_.begin(), named_own_order_.end(), name) == named_own_order_.end()) {
+      named_own_order_.push_back(name);
+    }
+    named_own_sentinels_.insert_or_assign(name, sentinel);
+  }
+
+  void remove_named_own_key(std::string_view key) {
+    if (!named_own_marked_) return;
+    std::string name(key);
+    std::erase(named_own_order_, name);
+    named_own_sentinels_.erase(name);
+  }
+
+  [[nodiscard]] std::shared_ptr<RowCell> named_cell_unmasked(std::string_view key) const {
+    const auto found = named_cells_.find(std::string(key));
+    return found == named_cells_.end() ? nullptr : found->second;
+  }
+
+  [[nodiscard]] bool named_own_marked() const noexcept { return named_own_marked_; }
+
+  [[nodiscard]] bool named_own_contains(std::string_view key) const {
+    return std::find(named_own_order_.begin(), named_own_order_.end(), key) != named_own_order_.end();
   }
 
   virtual void set_named_cell(std::string_view key, std::shared_ptr<RowCell> cell) {
@@ -329,6 +410,7 @@ class RowOwner {
   }
 
   [[nodiscard]] virtual bool has_named_cell(std::string_view key) const {
+    if (named_own_marked_) return named_own_contains(key);
     return named_cells_.contains(std::string(key));
   }
 
@@ -336,7 +418,9 @@ class RowOwner {
   // member table binds in its own sorted order, so this is NOT declaration order on its own -- the
   // dynamic view reorders the object's own members by address and keeps the rest in this order,
   // which is where a key written after construction belongs.
-  [[nodiscard]] virtual const std::vector<std::string>& named_keys() const { return named_order_; }
+  [[nodiscard]] virtual const std::vector<std::string>& named_keys() const {
+    return named_own_marked_ ? named_own_order_ : named_order_;
+  }
 
   // COMPUTED CELLS: the subject's own members that are reached through a `Symbol` rather than
   // through a string key -- `[EntityRuntimeKey]: EntityRuntime | undefined` and its kin.
@@ -458,6 +542,11 @@ class RowOwner {
   std::shared_ptr<SymbolAttachment> attachment_{std::make_shared<SymbolAttachment>()};
   std::unordered_map<std::string, std::shared_ptr<RowCell>> named_cells_;
   std::vector<std::string> named_order_;
+  // The explicit source own-key list of a constructed object, in authored order, when one was
+  // recorded. It decides presence and enumeration; the member policy still decides the read value.
+  std::vector<std::string> named_own_order_;
+  std::unordered_map<std::string, ConstructedKeySentinel> named_own_sentinels_;
+  bool named_own_marked_{false};
   // Keyed on symbol identity, not on the description: two `Symbol(String("X"))` are two symbols.
   std::unordered_map<const void*, SymbolCell> symbol_cells_;
   std::unordered_map<const void*, Symbol> symbol_written_;
@@ -2296,6 +2385,18 @@ class NamedProperties final {
   // inventing one; `is_represented` asks that in advance.
   [[nodiscard]] Any get(const String& key) const {
     if (!owner_) return Any(undefined);
+    if (owner_->named_own_marked()) {
+      if (!owner_->named_own_contains(key.to_utf8())) return Any(undefined);
+      if (const auto sentinel = owner_->named_own_sentinel(key.to_utf8())) {
+        if (*sentinel == ConstructedKeySentinel::Null) return Any(nullptr);
+        if (*sentinel == ConstructedKeySentinel::Undefined) return Any(undefined);
+      }
+      const auto unmasked = owner_->named_cell_unmasked(key.to_utf8());
+      if (!unmasked) return Any(undefined);
+      auto value = unmasked->as_any();
+      if (!value) throw UnrepresentedProperty(key.to_utf8(), unmasked->value_type());
+      return *std::move(value);
+    }
     const auto cell = owner_->string_key_cell(key);
     if (!cell) return Any(undefined);
     auto value = cell->as_any();
@@ -2336,10 +2437,33 @@ class NamedProperties final {
   bool set(const String& key, const Any& value) const {
     if (!owner_) return false;
     const auto name = key.to_utf8();
-    const auto cell = owner_->string_key_cell(key);
+    auto cell = owner_->string_key_cell(key);
+    if (!cell && owner_->named_own_marked()) {
+      // JavaScript assignment of a declared but un-authored member makes it own; a member with no
+      // native storage at all remains unsupported (false below).
+      cell = owner_->named_cell_unmasked(name);
+      if (!cell) return false;
+      owner_->mark_named_own_key(name, value.is_undefined() ? ConstructedKeySentinel::Undefined
+                                                            : ConstructedKeySentinel::Value);
+    } else if (cell && owner_->named_own_marked()) {
+      owner_->mark_named_own_key(name, value.is_undefined() ? ConstructedKeySentinel::Undefined
+                                                            : ConstructedKeySentinel::Value);
+    }
     if (!cell) return false;
     owner_->before_named_write(name);
+    if (value.is_undefined()) return cell->assign_absent();
     return cell->assign_any(value);
+  }
+
+  // Delete-through-the-view: remove the own key from enumeration/presence on the same owner and
+  // clear the native storage when one exists.
+  bool erase(const String& key) const {
+    if (!owner_) return false;
+    const auto name = key.to_utf8();
+    const bool was_own = !owner_->named_own_marked() || owner_->named_own_contains(name);
+    owner_->remove_named_own_key(name);
+    if (auto cell = owner_->named_cell_unmasked(name)) cell->assign_absent();
+    return was_own;
   }
 
   // Whether `get` will answer this key without raising. An absent key is representable: it reads
@@ -2381,6 +2505,25 @@ template <typename Object>
 const std::shared_ptr<Object>& mark_constructed_own_property(const std::shared_ptr<Object>& object,
                                                              const Symbol& key) {
   if (object) detail::owner_for(object)->mark_symbol_written(key);
+  return object;
+}
+
+// The string-key form of the construction mark: the exact own keys the source literal authored, in
+// authored order, recorded on the same owner every view shares. Returns the same pointer and control
+// block; it reads no member, copies no schema or value and replaces no owner.
+template <typename Object>
+const std::shared_ptr<Object>& mark_constructed_own_named_properties(
+    const std::shared_ptr<Object>& object, std::initializer_list<String> sourceKeys) {
+  if (object) detail::owner_for(object)->mark_named_own_properties(sourceKeys);
+  return object;
+}
+
+// The sentinel-aware form: the source literal's own keys in authored order, each with the sentinel it
+// was authored with (Value, Null, Undefined). Same owner/control block; no copy.
+template <typename Object>
+const std::shared_ptr<Object>& mark_constructed_own_named_properties(
+    const std::shared_ptr<Object>& object, std::initializer_list<ConstructedOwnKey> sourceKeys) {
+  if (object) detail::owner_for(object)->mark_named_own_properties(sourceKeys);
   return object;
 }
 
