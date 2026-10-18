@@ -51,9 +51,17 @@ Seven direct source cases pass. A freshly lowered minimal expression refuses wit
 `cpp-optional-property-call-missing-callable-result`. The retained earlier normal IR graph refuses
 the descriptor at the same expression with `cpp-member-projection-without-present-storage`.
 These are distinct measured contexts and rules; neither establishes current normal SDK output.
-Builder2 already owns optional-call declared-return evidence for its GPU binder. This exact
-counterexample is being sent there to avoid duplicating that work. No detector rewrite or new
-compiler fix is included.
+Builder2f2f23d97 confirms no overlap: its work covers IR `call.optional`, declared callable returns,
+external binding `callResultType` and erased local evidence. This detector instead calls a member
+through an optional chain on a builtin string receiver obtained by indexing. Its separate proposed
+scope is to recover the existing builtin String method's known return evidence and preserve the
+optional receiver guard, with each receiver/index evaluated once. No public function ABI or runtime
+primitive changes are proposed. The absent receiver must remain undefined, and the present branch
+must invoke the original trim exactly once; a proof may not assume an indexed array is nonempty
+because this particular producer is split. Unknown/non-String callees must retain their established
+refusal. This also requires a scope decision before implementation. No detector rewrite or new
+compiler fix is included. Builder2 separately advises that generic lazy nonliteral `??` fallback work
+is in flight; this request does not assume it has landed or covers the optional-member call.
 
 The libGDX config/document assignments at registration lines 51/52 are a separate approved
 follow-on, accepted by Foreman71091a29. Their assignment-only witness emits both existing-family

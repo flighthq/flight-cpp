@@ -90,7 +90,9 @@
       "optional presence/member reads",
       "nested JSON member projection"
     ],
-    "detectorOwnership": "builder2 already owns optional-call declared-return evidence; exact fresh minimal rule/counterexample to be sent to avoid duplicate fix"
+    "detectorOwnership": "Builder2f2f23d97 confirms no overlap: builtin String optional-chain member call from indexed read is separate from its call.optional/declared return/external binding/erased local evidence.",
+    "detectorBoundedInvestigation": "Existing builtin String method return evidence plus original optional receiver guard and single receiver/index evaluation; preserve undefined on absence and original trim once on presence, no public ABI/runtime primitive, unknown/non-String callees retain established refusal. Scope proposal only.",
+    "peer2AttachedRuntimeDiff": "Advisory three-commit allocation diff not applied; current nonwithdrawn runtime used."
   },
   "unchangedClaims": {
     "normalTypes": "sole builder2 shared B pending",
