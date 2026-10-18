@@ -110,3 +110,72 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/pack
    it('preserves entity construction through a generic node initializer', () => {
      const entityTypes = ts.createSourceFile(
        '/flight/packages/types/src/Entity.ts',
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -8800,21 +8800,35 @@
+ // inferred (an awaited call result, a destructured shape) arrives as a checker-collapsed object shape
+ // in which `T | unknown` IS `unknown`; the declaration still states the alternatives the carrier
+ // stores, and lowering each union member on its own keeps that spelling instead of re-collapsing it.
++// The union type node a member declares, following the type aliases it may be spelled through
++// (`body: NetResponseBody`). Bounded so an alias cycle cannot loop; anything not resolved is not the
++// written union this rule can name.
++function getTypeScriptWrittenUnionTypeNode(
++  declaration: Readonly<ts.PropertySignature | ts.PropertyDeclaration>,
++  context: LoweringContext,
++): ts.UnionTypeNode | undefined {
++  let unionNode = declaration.type;
++  for (let depth = 0; depth < 8 && unionNode !== undefined && ts.isTypeReferenceNode(unionNode); depth++) {
++    const aliasSymbol = context.checker.getSymbolAtLocation(unionNode.typeName);
++    const aliasDeclaration = aliasSymbol ? getTypeScriptPreferredSymbolDeclaration(aliasSymbol, context) : undefined;
++    if (!aliasDeclaration || !ts.isTypeAliasDeclaration(aliasDeclaration)) return undefined;
++    unionNode = aliasDeclaration.type;
++  }
++  return unionNode !== undefined && ts.isUnionTypeNode(unionNode) ? unionNode : undefined;
++}
++
+ function getTypeScriptWrittenUnionDeclarationEvidence(
+   node: ts.PropertyAccessExpression,
+   context: LoweringContext,
+ ): Readonly<Extract<IrType, { kind: 'union' }>> | undefined {
+   const symbol = context.checker.getSymbolAtLocation(node.name);
+   const declaration = symbol ? getTypeScriptPreferredSymbolDeclaration(symbol, context) : undefined;
+-  if (
+-    !declaration ||
+-    !(ts.isPropertySignature(declaration) || ts.isPropertyDeclaration(declaration)) ||
+-    declaration.type === undefined ||
+-    !ts.isUnionTypeNode(declaration.type)
+-  ) {
++  if (!declaration || !(ts.isPropertySignature(declaration) || ts.isPropertyDeclaration(declaration))) {
+     return undefined;
+   }
+-  const [first, second, ...rest] = declaration.type.types.map((member) =>
++  const unionNode = getTypeScriptWrittenUnionTypeNode(declaration, context);
++  if (unionNode === undefined) return undefined;
++  const [first, second, ...rest] = unionNode.types.map((member) =>
+     lowerTypeScriptTypeNodeEvidence(member, context),
+   );
+   if (first === undefined || second === undefined) return undefined;
+@@ -9722,7 +9736,7 @@
+       // whole re-collapses it the same way. The carrier stores the written alternatives, so lower
+       // each member on its own and keep that spelling rather than ending at `unknown`.
+       const recovered =
+-        written.kind === 'unknown' && ts.isUnionTypeNode(declaration.type)
++        written.kind === 'unknown' && getTypeScriptWrittenUnionTypeNode(declaration, context) !== undefined
+           ? getTypeScriptWrittenUnionDeclarationEvidence(expression, context)
+           : undefined;
+       const evidence = recovered ?? written;
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -30042,7 +30042,9 @@
+   });
+ 
+   it('projects an instanceOf-guarded written union member through an inferred receiver', () => {
+-    const source = `interface Response { ok: boolean; body: string | unknown | ArrayBuffer | null }
++    // The real shape names the union through an alias: `body: NetResponseBody`.
++    const source = `type NetBody = string | unknown | ArrayBuffer | null;
++      interface Response { ok: boolean; body: NetBody }
+       async function send(): Promise<Response> {
+         return { ok: true, body: null };
+       }
