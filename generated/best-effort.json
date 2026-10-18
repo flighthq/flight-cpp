@@ -16751,8 +16751,7 @@
       },
       "path": "flight/particles_formats/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
-        "@flighthq/particles-formats/packages/particles-formats/src/unityParse.ts"
+        "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -16971,38 +16970,9 @@
       "status": "emitted"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0b048a724d43b046fe1b753eed1bd5ab61133bfd81c7b0078886c0a09eb10b58",
-        "sha256:272aa5db3b900fe2f191bc8d9679a67c670db880aa9c2ad612c77819a40e4542",
-        "sha256:2f6e7c39923d317a66c31a731f8aa3ed633785deaa347cd426967b8930582e72",
-        "sha256:315ee4ed5497b33817e50089c4d02f089ede43e4539125112a9be070d3e2fc4a",
-        "sha256:34adf3a2495ecb7eb4124803672c24d61e3ef010b28fdb81a5bef9e6c1276d0f",
-        "sha256:37cd23c246752beeb8c10b6a0e8f2b1e16e813a620e5dc9b3a889ff36a6c35ce",
-        "sha256:3b3a1a83c141c8e1eb77d31580d5c0efd3cb73ef5d870f93d35e36d3affab50c",
-        "sha256:4511bd331bd6186074839cca751c78407d2ed03dc4c681e5afeb6f71756f606b",
-        "sha256:612486414bc6111cb9ba0da0c5bb6602c8317d71a6769e37a96009dfd1692ee7",
-        "sha256:760941bceddf37857fe1aad6bbd3bf63b98f234d4bbecbdff780d2636939b329",
-        "sha256:786d2b400964927bfa4f18283611cdebe2b7a6f2413bd524c94265de7232df60",
-        "sha256:7b7ce5cd5bcc1e1f74c76d30708f50d970f686969a4f431c5d93f1d3dbfd803a",
-        "sha256:933aa9903f490bb7d5055cdc86c85e530e501b5e5bcb1a20ce50ff452331266a",
-        "sha256:a6df8cd7c7f203737085b41d48d1bc64a136fe237a33ba5cb424ffd6dd1f7caa",
-        "sha256:a70dc58f8deb4fce982ead83ee38ba23cbf8c6f5799d8dfac52dab80aa282732",
-        "sha256:a7f8b7255c653388cf5be5703d28e07d9e0c8ba8f1dd7040bc7812aa38690c1d",
-        "sha256:ae90c6350dc177e64b69030633f0621fbc4c49a9b455f201b5de1e7d1ee670c4",
-        "sha256:b95c40d34b5e0b26bb83f59d7b607325d1344c492fce899489eb4be1dc76f14b",
-        "sha256:c1e0100e5bb19022c406cf6bf10ccbe709ca69e5f6efae6ee4b1875080f6e2a3",
-        "sha256:c79efa762cbdc3a560c3152bc98e097154e8ee48219d1543855ee7f26708f521",
-        "sha256:ccdb5ba9aadf8f28d83e0563f4b8dc0b7b78765d916b1fc119b6c3a89134004d",
-        "sha256:d29393f28d6e0a88c203f784d7f48809b8ca444fe648ab3ecfdff36910695adc",
-        "sha256:da184ac5d9f5667604b50d25a2760263fd140121670933b725740385182a22fe",
-        "sha256:dcf93029f4835da3f745b32ad65c0b4679c235b5dbd5e30fa11212c3825049e5",
-        "sha256:f57fdc0f80da42683015b7373b59f2d3a84d1ed83d26fbaec6e5108632fd84e4",
-        "sha256:fcfbf2fd1e8369a8d9d20df22e60ac54476317901202aef42fb217b4a1db3fab"
       ],
       "module": {
         "name": "UnityParse",
@@ -17010,8 +16980,7 @@
         "source": "packages/particles-formats/src/unityParse.ts"
       },
       "path": "flight/particles_formats/unity_parse.hpp",
-      "rule": "cpp-erased-array-assertion-runtime-required",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [

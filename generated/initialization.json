@@ -2316,6 +2316,11 @@
       "source": "packages/particles-formats/src/starlingPexSerialize.ts"
     },
     {
+      "name": "UnityParse",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/unityParse.ts"
+    },
+    {
       "name": "UnitySerialize",
       "packageName": "@flighthq/particles-formats",
       "source": "packages/particles-formats/src/unitySerialize.ts"
@@ -24659,6 +24664,16 @@
           "name": "StarlingPexSerialize",
           "packageName": "@flighthq/particles-formats",
           "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "UnityParse",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/unityParse.ts"
         }
       ]
     },
@@ -364703,6 +364718,890 @@
           "path": [
             "declarations",
             1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9297ab84587f4b5413e65a55a7dacc75024a9110900c90c78222c62eaad5b8c3",
+            "line": 2,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",88]",
+            "kind": "import",
+            "name": "DEG_TO_RAD",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "DEG_TO_RAD",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e16302f414831e40aaf112b35484a5290110e093ad12cf81697523be95d413df",
+            "line": 4,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",144]",
+            "kind": "import",
+            "name": "createParticleEmitterConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createParticleEmitterConfig",
+            "kind": "dependency",
+            "module": {
+              "name": "ParticleEmitterConfig",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/particleEmitterConfig.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:9a58386728356e40bdfd4d95f4ff017f2dd8e60152a5a91ec2c527c3aedbc424",
+            "line": 5,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",175]",
+            "kind": "import",
+            "name": "particleColorCurveFromKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleColorCurveFromKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e24a4db27e0b9e15d49268e93444c44018600339264366cd841a76ed4b2fad5d",
+            "line": 6,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",210]",
+            "kind": "import",
+            "name": "particleCurveFromKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleCurveFromKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 26,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",663]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:7da5db3994c4142a81c5225dde128165d3669e1978e24c8847c17ca1ceb8e4a1",
+            "line": 28,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",730]",
+            "kind": "variable",
+            "name": "DEFAULT_PPU",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:dfa01206559d5aaa192bf947909c1e1284632a181ed08d54342f5fb5257bafee",
+            "line": 29,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",755]",
+            "kind": "variable",
+            "name": "DEFAULT_GRAVITY",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e76cf1180345df3634eb320ce6091a8b36faffb47680b9a91dd1f532c2a5ee68",
+            "line": 35,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",1110]",
+            "kind": "function",
+            "name": "parseUnityJson",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:80d3daa0bc6703c1a41481b2d9dc1a5dcf0ffa0c3ce31985722e642a86df7ca5",
+            "line": 50,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",1614]",
+            "kind": "function",
+            "name": "rn",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e1637ed65f9e3ad548a372181de6debb2f3cd554c53f2a20750c82036900bc47",
+            "line": 53,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",1707]",
+            "kind": "function",
+            "name": "rb",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:32c7d3db20bdedad54b9092e8e28b86a6cb610b650a0cfbb974df6a43edb2f85",
+            "line": 56,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",1807]",
+            "kind": "function",
+            "name": "rs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eac911311bc8863140cede42a0ff5e0b146c8f661cc1a3551899ac9cf12334ad",
+            "line": 60,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",1905]",
+            "kind": "function",
+            "name": "mmLow",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a99aaea4ce71d95fb8c4f440475571d51771fadedc036ccf513d7eaaad051e55",
+            "line": 68,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",2244]",
+            "kind": "function",
+            "name": "mmHigh",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d5dac71e337ddbae69f9fdd48b12b372625b4d855d94ce8f99314f2409c0b495",
+            "line": 77,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",2585]",
+            "kind": "function",
+            "name": "colorAt",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7007ae5db6959b5357b0b33f4ec2c73b319f71b6462c59f1581b917b0d5aa83f",
+            "line": 85,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",2860]",
+            "kind": "function",
+            "name": "rawToConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:75960cdcfcc4531b01467a9c3c355c16d5d65e370d98b1085d432e00267c83c5",
+            "line": 197,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",7612]",
+            "kind": "variable",
+            "name": "UNSUPPORTED_UNITY_MODULES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e4921e4fce21a0f23603354d3e2507ae60e2985020a134ee1df1169d30a40533",
+            "line": 216,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",8660]",
+            "kind": "function",
+            "name": "collectUnityDiagnostics",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:f70b141fc79e593464eafffe41f3e3746b8d1bf93ed27c0376ca57a8cfbb7f30",
+            "line": 304,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",11667]",
+            "kind": "variable",
+            "name": "KNOWN_UNITY_SHAPES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:797633efea076de5e2fe1b10cc1f05ada1a12ee505ec79cb4df86d5abe1d3c07",
+            "line": 308,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",11931]",
+            "kind": "function",
+            "name": "colorKeysToCurve",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e1d92fc847f618b11bca298dff0f34fe27bf1279160af50005e62ba71f2855da",
+            "line": 319,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",12429]",
+            "kind": "function",
+            "name": "alphaKeysToCurve",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d96ea6e8a2a23b98c7344571ede182991f12a66e43ab7fee0158959bf2d7fbab",
+            "line": 330,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",12896]",
+            "kind": "function",
+            "name": "sizeKeysToCurve",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:08e84b9cff3482ba4bef3dd0b4ff29aa2e64eaef2abfb1c2ec64df7f3161d961",
+            "line": 342,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",13396]",
+            "kind": "function",
+            "name": "unityBlendMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2609a3993fa70eb0188a0c9fcf6e8de531bec81c98cddfdf6cc842a614e57246",
+            "line": 353,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",13938]",
+            "kind": "function",
+            "name": "readMinMax",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:97d12eab00f20e2fe2f25d0cd7e8b65a1299c8ce54b79c02651bd85d7813784a",
+            "line": 364,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",14405]",
+            "kind": "function",
+            "name": "readEmission",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e27f91dbccdd9adb5a65dc50ac94934b039c8e08d475581a432d93ca6cdf5344",
+            "line": 377,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",14961]",
+            "kind": "function",
+            "name": "readShape",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3dcb5c057701d9c11b330618185ce76c4a775e67436e83a2a66fb75ccedcc6f5",
+            "line": 390,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",15561]",
+            "kind": "function",
+            "name": "readColorLifetime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7e2cbaafbbd785c3f807e6e36783ee7d72ed06f53822f51bc7d2a13851120f95",
+            "line": 404,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",16038]",
+            "kind": "function",
+            "name": "readSizeLifetime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:703356fd242b89f79b6893d6c8528884b371ca4ec060372622787e23be058e07",
+            "line": 409,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",16350]",
+            "kind": "function",
+            "name": "readRotationLifetime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3926425c10556a325a1477dec752e5f584201bb6c050014481c8a4bc570018ae",
+            "line": 416,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",16694]",
+            "kind": "function",
+            "name": "rawToDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d99d67324652048e8b455abc59072ade9a3666f80e00632c31b6244487dba338",
+            "line": 442,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",17883]",
+            "kind": "function",
+            "name": "parseUnityParticle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:126a456fafe22cd892aa82b94a6c466170d546b5807cbe36518f529b9221597a",
+            "line": 448,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",18224]",
+            "kind": "function",
+            "name": "parseUnityParticleDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UnityParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UnityParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UnityParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts"
+          },
+          "importedNames": [
+            "particleColorCurveFromKeyframes",
+            "particleCurveFromKeyframes"
+          ],
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "Curve",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/curve.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UnityParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts"
+          },
+          "importedNames": [
+            "createParticleEmitterConfig"
+          ],
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "ParticleEmitterConfig",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/particleEmitterConfig.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "UnityParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/unityParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "UnityParse",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/unityParse.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:7da5db3994c4142a81c5225dde128165d3669e1978e24c8847c17ca1ceb8e4a1",
+              "line": 28,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/unityParse.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",730]",
+              "kind": "variable",
+              "name": "DEFAULT_PPU",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:dfa01206559d5aaa192bf947909c1e1284632a181ed08d54342f5fb5257bafee",
+              "line": 29,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/unityParse.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",755]",
+              "kind": "variable",
+              "name": "DEFAULT_GRAVITY",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:75960cdcfcc4531b01467a9c3c355c16d5d65e370d98b1085d432e00267c83c5",
+              "line": 197,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/unityParse.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",7612]",
+              "kind": "variable",
+              "name": "UNSUPPORTED_UNITY_MODULES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            10
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:f70b141fc79e593464eafffe41f3e3746b8d1bf93ed27c0376ca57a8cfbb7f30",
+              "line": 304,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/unityParse.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/unityParse.ts\",11667]",
+              "kind": "variable",
+              "name": "KNOWN_UNITY_SHAPES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            12
           ]
         }
       ]

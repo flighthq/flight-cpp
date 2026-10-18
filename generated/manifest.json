@@ -1003,6 +1003,7 @@
         "flight/node/node_color_adjustment.hpp",
         "flight/particles_formats/libgdx_parse.hpp",
         "flight/particles_formats/particle_designer_parse.hpp",
+        "flight/particles_formats/unity_parse.hpp",
         "flight/path_boolean/martinez_kernel.hpp",
         "flight/permissions/permission.hpp",
         "flight/render/render_cache.hpp",
@@ -4337,6 +4338,20 @@
       "package": "@flighthq/particles-formats"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410",
+      "id": "compiler-private-record-forwarded-reads",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateRecordForwardedReads.test.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7",
+      "id": "compiler-private-json-record-graph-reads",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
       "dependency": "flight",
       "digest": "7d53ff4c20ec3b2a3384036ce096a8d48a235432cf4e8eadd61206942de1d2e2",
       "id": "particles-formats-string-operations",
@@ -5665,6 +5680,7 @@
       "flight/particles_formats/register_built_in_particle_formats.hpp",
       "flight/particles_formats/spine_parse.hpp",
       "flight/particles_formats/starling_pex_parse.hpp",
+      "flight/particles_formats/unity_parse.hpp",
       "flight/path/path_morph_geometry.hpp",
       "flight/path/reverse_path.hpp",
       "flight/path_formats/svg_path_data.hpp",
@@ -6758,9 +6774,9 @@
       "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
-      "emittedModules": 16,
+      "emittedModules": 17,
       "package": "@flighthq/particles-formats",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7832,8 +7848,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2585,
-    "refusedModules": 566,
+    "emittedModules": 2586,
+    "refusedModules": 565,
     "sourceModules": 3151
   }
 }

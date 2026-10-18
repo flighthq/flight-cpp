@@ -70,8 +70,8 @@ inline bool is_unknown_record(flight::Any value) {
 inline double range_mid(flight::Any obj, std::optional<double> def = std::nullopt) {
   def = def.value_or(0.0);
   if (is_unknown_record(obj)) {
-    const double lo = ([&]() -> double { const auto& erased_typeof_carrier = flight::named_properties(obj).get(flight::String("low")); if (erased_typeof_carrier.type_of() == flight::String("number")) return erased_typeof_carrier.as_number(); return def.value(); }());
-    const double hi = ([&]() -> double { const auto& erased_typeof_carrier_2 = flight::named_properties(obj).get(flight::String("high")); if (erased_typeof_carrier_2.type_of() == flight::String("number")) return erased_typeof_carrier_2.as_number(); return def.value(); }());
+    const double lo = ([&]() -> double { const auto& erased_typeof_carrier = flight::read_json_data_property(obj, flight::String("low")); if (erased_typeof_carrier.type_of() == flight::String("number")) return erased_typeof_carrier.as_number(); return def.value(); }());
+    const double hi = ([&]() -> double { const auto& erased_typeof_carrier_2 = flight::read_json_data_property(obj, flight::String("high")); if (erased_typeof_carrier_2.type_of() == flight::String("number")) return erased_typeof_carrier_2.as_number(); return def.value(); }());
     return ((lo + hi) * 0.5);
   }
   return def.value();
