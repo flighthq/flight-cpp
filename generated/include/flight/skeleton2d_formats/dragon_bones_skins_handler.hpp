@@ -12,6 +12,7 @@
 //   missing: function parseDragonBonesSkins -- source line 187
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -60,7 +61,7 @@ using flight::types::SkinAttachment2D;
 using DragonBonesBoneRemap = std::function<double(double)>;
 
 inline DragonBonesBoneRemap build_dragon_bones_bone_remap(flight::Array<double> raw_index_to_output) {
-  return [=](double raw_bone_index) { return (((raw_bone_index >= 0.0) && (raw_bone_index < static_cast<double>(raw_index_to_output.size()))) ? raw_index_to_output.element(raw_bone_index) : -1.0); };
+  return flight::Function<double(double)>{[=](double raw_bone_index) { return (((raw_bone_index >= 0.0) && (raw_bone_index < static_cast<double>(raw_index_to_output.size()))) ? raw_index_to_output.element(raw_bone_index) : -1.0); }};
 }
 
 inline double find_bone_pose_ordinal(flight::Array<double> bone_pose, double used_bone_count, double raw_bone_index) {
@@ -332,14 +333,14 @@ inline std::optional<flight::Ref<flight::types::Attachment2D>> parse_dragon_bone
     return std::nullopt;
   }
   flight::NamedProperties display = flight::named_properties(raw);
-  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = display.get(flight::String("type")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("image"); }());
+  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = display.get(flight::String("type")); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("image"); }());
   if ((type == flight::String("image"))) {
     return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_dragon_bones_region_display(display)};
   }
   if ((type == flight::String("mesh"))) {
     return ([&]() -> std::optional<flight::Ref<flight::types::Attachment2D>> { auto contextual_union_source_2 = parse_dragon_bones_mesh_display(display, remap_bone_index, diagnostics); if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::Ref<flight::types::Attachment2D>>{flight::Ref<flight::types::Attachment2D>{contextual_union_source_2.value()}}; }());
   }
-  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(type) + flight::String("-display-unsupported"), flight::String("parseDragonBonesDisplay"), {{flight::String("displays"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(type) + flight::String("-display-unsupported"), flight::String("parseDragonBonesDisplay"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("displays"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
   return std::nullopt;
 }
 
@@ -404,7 +405,7 @@ inline flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> pa
 
 inline void dragon_bones_skins_section_handler(flight::Ref<flight::types::DragonBonesSectionContext> context) {
   DragonBonesBoneRemap remap_bone_index = build_dragon_bones_bone_remap(context->raw_index_to_output);
-  auto object_pattern_value = parse_dragon_bones_skins(context->armature.get(flight::String("skin")).value(), context->slot_order, remap_bone_index, context->diagnostics);
+  auto object_pattern_value = parse_dragon_bones_skins(context->armature.get(flight::String("skin")).value_or(flight::Any(flight::undefined)), context->slot_order, remap_bone_index, context->diagnostics);
   flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins = object_pattern_value->skins;
   flight::Map<flight::String, flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>> table = object_pattern_value->table;
   for (auto skin : skins) {

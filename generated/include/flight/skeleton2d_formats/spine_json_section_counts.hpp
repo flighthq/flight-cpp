@@ -21,7 +21,7 @@ namespace flight::skeleton2d_formats {
 using flight::shortcut::parse;
 
 inline bool is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_b16acba8c43d94d4(flight::Record<flight::String, flight::Any> record) {
-  return ((flight::is_array(record.get(flight::String("bones")).value()) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")).value(); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).value().type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature")).value()));
+  return ((flight::is_array(record.get(flight::String("bones")).value_or(flight::Any(flight::undefined))) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)).type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined))));
 }
 
 inline void count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
@@ -76,14 +76,14 @@ inline void count_animation_timelines_flight_value_function_count_u000041_nimati
       continue;
     }
     flight::NamedProperties anim = flight::named_properties(anim_entry);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("bones")).value(), flight::types::spine_json_timeline_kind->bone);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("slots")).value(), flight::types::spine_json_timeline_kind->slot);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("deform")).value(), flight::types::spine_json_timeline_kind->deform);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("drawOrder")).value(), flight::types::spine_json_timeline_kind->draw_order);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("events")).value(), flight::types::spine_json_timeline_kind->event);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("ik")).value(), flight::types::spine_json_timeline_kind->ik);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("path")).value(), flight::types::spine_json_timeline_kind->path);
-    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("transform")).value(), flight::types::spine_json_timeline_kind->transform);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("bones")), flight::types::spine_json_timeline_kind->bone);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("slots")), flight::types::spine_json_timeline_kind->slot);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("deform")), flight::types::spine_json_timeline_kind->deform);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("drawOrder")), flight::types::spine_json_timeline_kind->draw_order);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("events")), flight::types::spine_json_timeline_kind->event);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("ik")), flight::types::spine_json_timeline_kind->ik);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("path")), flight::types::spine_json_timeline_kind->path);
+    tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_b16acba8c43d94d4(counts, anim.get(flight::String("transform")), flight::types::spine_json_timeline_kind->transform);
   }
 }
 
@@ -110,7 +110,7 @@ inline std::optional<flight::Map<flight::String, double>> collect_spine_json_sec
   count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(counts, record, flight::String("ik"), flight::types::spine_json_section_kind->ik_constraints);
   count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(counts, record, flight::String("path"), flight::types::spine_json_section_kind->path_constraints);
   count_section_flight_value_function_count_u000053_ection_flight_private_b16acba8c43d94d4(counts, record, flight::String("transform"), flight::types::spine_json_section_kind->transform_constraints);
-  count_animation_timelines_flight_value_function_count_u000041_nimation_u000054_imelines_flight_private_b16acba8c43d94d4(counts, record.get(flight::String("animations")).value());
+  count_animation_timelines_flight_value_function_count_u000041_nimation_u000054_imelines_flight_private_b16acba8c43d94d4(counts, record.get(flight::String("animations")));
   return std::optional<flight::Map<flight::String, double>>{counts};
 }
 

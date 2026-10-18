@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
@@ -70,10 +71,10 @@ inline void add_spine_slot_color_channel(flight::Array<flight::Ref<flight::types
     }
     flight::NamedProperties k = flight::named_properties(key);
     keys.push(k);
-    times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")).value(), 0.0));
-    const double packed = flight::skeleton2d_formats::parse_spine_color(k.get(flight::String("color")).value());
+    times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")), 0.0));
+    const double packed = flight::skeleton2d_formats::parse_spine_color(k.get(flight::String("color")));
     values.push((flight::bitwise_and(flight::unsigned_right_shift(packed, 24.0), 255.0) / 255.0), (flight::bitwise_and(flight::unsigned_right_shift(packed, 16.0), 255.0) / 255.0), (flight::bitwise_and(flight::unsigned_right_shift(packed, 8.0), 255.0) / 255.0), (flight::bitwise_and(packed, 255.0) / 255.0));
-    if ((k.get(flight::String("curve")).value() != flight::String("stepped"))) {
+    if ((k.get(flight::String("curve")) != flight::String("stepped"))) {
       (all_stepped = false);
     }
   }
@@ -87,7 +88,7 @@ inline void add_spine_slot_color_channel(flight::Array<flight::Ref<flight::types
 }
 
 inline void add_spine_slot_attachment_channel(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Array<flight::Any> raw_keys, double slot_index, flight::String slot_name, flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins) {
-  auto setup = ([&]() -> flight::Ref<flight::types::AttachmentSkin2D> { auto nullish_coalesce_left = skins.find([=](flight::Ref<flight::types::AttachmentSkin2D> skin) { return (skin->name == flight::skeleton2d_formats::spine_default_skin_name); }); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return skins.element(0.0); }());
+  auto setup = ([&]() -> flight::Ref<flight::types::AttachmentSkin2D> { auto nullish_coalesce_left = skins.find(flight::Function<bool(flight::Ref<flight::types::AttachmentSkin2D>)>{[=](flight::Ref<flight::types::AttachmentSkin2D> skin) { return (skin->name == flight::skeleton2d_formats::spine_default_skin_name); }}); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return skins.element(0.0); }());
   flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> attachments = flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>{};
   auto index_by_name = flight::Map<flight::String, double>();
   flight::Array<double> times = flight::Array<double>{};
@@ -97,15 +98,15 @@ inline void add_spine_slot_attachment_channel(flight::Array<flight::Ref<flight::
       continue;
     }
     flight::NamedProperties k = flight::named_properties(key);
-    times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")).value(), 0.0));
-    const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = k.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
+    times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")), 0.0));
+    const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = k.get(flight::String("name")); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
     if (!name.has_value()) {
       values.push(flight::skeleton2d_formats::spine_no_attachment_index);
       continue;
     }
     std::optional<double> index = index_by_name.get(name.value());
     if (!index.has_value()) {
-      auto found = setup->attachments.find([=](flight::Ref<flight::types::SkinAttachment2D> entry) { return ((entry->slot_index == slot_index) && (entry->name == name.value())); });
+      auto found = setup->attachments.find(flight::Function<bool(flight::Ref<flight::types::SkinAttachment2D>)>{[=](flight::Ref<flight::types::SkinAttachment2D> entry) { return ((entry->slot_index == slot_index) && (entry->name == name.value())); }});
       (index = (!found.has_value() ? std::optional<double>{flight::skeleton2d_formats::spine_no_attachment_index} : std::optional<double>{(attachments.push(std::optional<flight::Ref<flight::types::Attachment2D>>{found.value()->attachment}) - 1.0)}));
       index_by_name.set(name.value(), index.value());
     }
@@ -151,12 +152,12 @@ inline void parse_spine_slot_timelines(flight::Array<flight::Ref<flight::types::
   for (auto array_pattern_value_3 : unmodeled) {
     const flight::String kind_2 = std::get<0>(array_pattern_value_3);
     const double count = std::get<1>(array_pattern_value_3);
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.slot-") + flight::to_string(kind_2) + flight::String("-timeline-unsupported"), flight::String("parseSpineSlotTimelines"), {{flight::String("timelines"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.slot-") + flight::to_string(kind_2) + flight::String("-timeline-unsupported"), flight::String("parseSpineSlotTimelines"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("timelines"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
   }
 }
 
 inline void spine_json_slot_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  parse_spine_slot_timelines(context->channels, anim_entry.get(flight::String("slots")).value(), context->section->slots, context->section->skins, context->section->diagnostics);
+  parse_spine_slot_timelines(context->channels, anim_entry.get(flight::String("slots")).value_or(flight::Any(flight::undefined)), context->section->slots, context->section->skins, context->section->diagnostics);
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_slot_timeline_reader = spine_json_slot_timeline_handler;

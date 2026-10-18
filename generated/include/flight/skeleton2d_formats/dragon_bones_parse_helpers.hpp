@@ -36,7 +36,7 @@ inline flight::Array<double> dragon_bones_frame_times(flight::Array<flight::Reco
   double elapsed_frames = 0.0;
   for (auto frame : frames) {
     times.push((elapsed_frames / frame_rate));
-    (elapsed_frames += flight::maximum(0.0, number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("duration")).value(), 1.0)));
+    (elapsed_frames += flight::maximum(0.0, number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("duration")).value_or(flight::Any(flight::undefined)), 1.0)));
   }
   return times;
 }
@@ -58,14 +58,14 @@ inline flight::Ref<rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a> parse_
   double rotation;
   double shear_y;
   if (((flight::String("rotate") in t) || (flight::String("skew") in t))) {
-    (rotation = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("rotate")).value(), 0.0));
-    (shear_y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skew")).value(), 0.0));
+    (rotation = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("rotate")).value_or(flight::Any(flight::undefined)), 0.0));
+    (shear_y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skew")).value_or(flight::Any(flight::undefined)), 0.0));
   }
   else {
-    (rotation = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skY")).value(), 0.0));
-    (shear_y = (number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skX")).value(), 0.0) - rotation));
+    (rotation = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skY")).value_or(flight::Any(flight::undefined)), 0.0));
+    (shear_y = (number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("skX")).value_or(flight::Any(flight::undefined)), 0.0) - rotation));
   }
-  return flight::make_ref<rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a>(rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a{.rotation = rotation, .scale_x = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("scX")).value(), 1.0), .scale_y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("scY")).value(), 1.0), .shear_y = shear_y, .x = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("x")).value(), 0.0), .y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("y")).value(), 0.0)});
+  return flight::make_ref<rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a>(rotation_scale_x_scale_y_shear_y_x_y_57c8569645defe0a{.rotation = rotation, .scale_x = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("scX")).value_or(flight::Any(flight::undefined)), 1.0), .scale_y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("scY")).value_or(flight::Any(flight::undefined)), 1.0), .shear_y = shear_y, .x = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 0.0), .y = number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(t.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 0.0)});
 }
 
 inline void skip_crumb_dragon_bones_group(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::Any raw, flight::String kind) {
@@ -79,7 +79,7 @@ inline void skip_crumb_dragon_bones_group(std::optional<flight::Array<flight::Re
     }
   }
   if ((count > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, kind, flight::String("parseDragonBonesSkeleton"), {{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, kind, flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
   }
 }
 
@@ -98,7 +98,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
     double i = 0.0;
     while ((i < segments)) {
       {
-        auto curve = frames.element(i).get(flight::String("curve")).value();
+        auto curve = frames.element(i).get(flight::String("curve")).value_or(flight::Any(flight::undefined));
         if ((!flight::is_array(curve) || (static_cast<double>(curve.array_size()) < 4.0))) {
           easings.push(std::nullopt);
           {
@@ -124,7 +124,7 @@ inline bool is_dragon_bones_frame_stepped(flight::Record<flight::String, flight:
   if (!(flight::String("tweenEasing") in frame)) {
     return false;
   }
-  auto easing = frame.get(flight::String("tweenEasing")).value();
+  auto easing = frame.get(flight::String("tweenEasing")).value_or(flight::Any(flight::undefined));
   return (([&]() { const auto& presence_operand = easing; return presence_operand.is_null(); }()) || (easing == dragonbones_no_tween));
 }
 
@@ -140,7 +140,7 @@ inline flight::types::AnimationInterpolation dragon_bones_interpolation(flight::
           (stepped = false);
         }
         if (!(flight::String("curve") in frame)) {
-          auto easing = frame.get(flight::String("tweenEasing")).value();
+          auto easing = frame.get(flight::String("tweenEasing")).value_or(flight::Any(flight::undefined));
           if ((((easing.type_of() == flight::String("number")) && (easing.as_number() != 0.0)) && (easing.as_number() != dragonbones_no_tween))) {
             approximated++;
           }
@@ -150,7 +150,7 @@ inline flight::types::AnimationInterpolation dragon_bones_interpolation(flight::
     }
   }
   if ((approximated > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.tween-easing-approximated"), flight::String("dragonBonesInterpolation"), {{flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, approximated}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.tween-easing-approximated"), flight::String("dragonBonesInterpolation"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, approximated}}});
   }
   return (stepped ? flight::types::animation_interpolation_step : flight::types::animation_interpolation_linear);
 }
@@ -177,7 +177,7 @@ inline flight::Array<flight::Record<flight::String, flight::Any>> dragon_bones_f
     }
   }
   if ((recovered > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.malformed-frame-recovered"), flight::String("dragonBonesFrames"), {{flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, recovered}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.malformed-frame-recovered"), flight::String("dragonBonesFrames"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, recovered}}});
   }
   return frames;
 }

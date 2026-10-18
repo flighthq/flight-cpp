@@ -60,7 +60,7 @@ inline void add_dragon_bones_vector_channel(flight::Array<flight::Ref<flight::ty
   const double fallback = ((path == flight::types::skeleton_2d_animation_path->scale) ? 1.0 : 0.0);
   flight::Array<double> values = flight::Array<double>{};
   for (auto frame : frames) {
-    values.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("x")).value(), fallback), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("y")).value(), fallback));
+    values.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("x")).value_or(flight::Any(flight::undefined)), fallback), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("y")).value_or(flight::Any(flight::undefined)), fallback));
   }
   add_dragon_bones_bone_channel(channels, flight::skeleton2d_formats::dragon_bones_frame_times(frames, frame_rate), values, 2.0, flight::skeleton2d_formats::dragon_bones_interpolation(frames, diagnostics), bone_index, path, flight::skeleton2d_formats::build_dragon_bones_segment_easings(frames));
 }
@@ -87,7 +87,7 @@ inline void add_dragon_bones_rotate_channels(flight::Array<flight::Ref<flight::t
     while ((i < static_cast<double>(frames.size()))) {
       {
         flight::Record<flight::String, flight::Any> frame = frames.element(i);
-        double rotation = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("rotate")).value(), 0.0);
+        double rotation = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("rotate")).value_or(flight::Any(flight::undefined)), 0.0);
         if ((times.element(i) != 0.0)) {
           if ((previous_clockwise == 0.0)) {
             (rotation = (previous_rotation + normalize_degrees((rotation - previous_rotation))));
@@ -99,9 +99,9 @@ inline void add_dragon_bones_rotate_channels(flight::Array<flight::Ref<flight::t
             (rotation += (360.0 * previous_clockwise));
           }
         }
-        (previous_clockwise = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("clockwise")).value(), 0.0), 0.0));
+        (previous_clockwise = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("clockwise")).value_or(flight::Any(flight::undefined)), 0.0), 0.0));
         (previous_rotation = rotation);
-        const double skew = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("skew")).value(), 0.0);
+        const double skew = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("skew")).value_or(flight::Any(flight::undefined)), 0.0);
         if ((skew != 0.0)) {
           (skewed = true);
         }
@@ -121,10 +121,10 @@ inline void add_dragon_bones_rotate_channels(flight::Array<flight::Ref<flight::t
 }
 
 inline void parse_dragon_bones_bone_timeline(flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Record<flight::String, flight::Any> timeline, double bone_index, double frame_rate, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")).value(), bone_index, flight::types::skeleton_2d_animation_path->translation, frame_rate, diagnostics);
-  add_dragon_bones_rotate_channels(channels, timeline.get(flight::String("rotateFrame")).value(), bone_index, frame_rate, diagnostics);
-  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")).value(), bone_index, flight::types::skeleton_2d_animation_path->scale, frame_rate, diagnostics);
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(diagnostics, timeline.get(flight::String("frame")).value(), flight::String("dragonbones.legacy-bone-frame-unsupported"));
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("translateFrame")).value_or(flight::Any(flight::undefined)), bone_index, flight::types::skeleton_2d_animation_path->translation, frame_rate, diagnostics);
+  add_dragon_bones_rotate_channels(channels, timeline.get(flight::String("rotateFrame")).value_or(flight::Any(flight::undefined)), bone_index, frame_rate, diagnostics);
+  add_dragon_bones_vector_channel(channels, timeline.get(flight::String("scaleFrame")).value_or(flight::Any(flight::undefined)), bone_index, flight::types::skeleton_2d_animation_path->scale, frame_rate, diagnostics);
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(diagnostics, timeline.get(flight::String("frame")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.legacy-bone-frame-unsupported"));
 }
 
 

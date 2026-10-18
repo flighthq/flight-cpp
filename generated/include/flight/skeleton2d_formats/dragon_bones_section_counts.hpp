@@ -23,11 +23,11 @@ namespace flight::skeleton2d_formats {
 using flight::shortcut::parse;
 
 inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_fee4bf3fb73047fb(flight::Record<flight::String, flight::Any> record) {
-  return flight::is_array(record.get(flight::String("armature")).value());
+  return flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined)));
 }
 
 inline void count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
-  auto value = record.get(json_key).value();
+  auto value = record.get(json_key).value_or(flight::Any(flight::undefined));
   if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }
@@ -54,11 +54,11 @@ inline void count_animation_timelines_flight_value_function_count_u000041_nimati
         continue;
       }
       flight::NamedProperties anim = flight::named_properties(anim_entry);
-      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("bone")).value(), flight::types::dragon_bones_timeline_kind->bone);
-      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("slot")).value(), flight::types::dragon_bones_timeline_kind->slot);
-      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ffd")).value(), flight::types::dragon_bones_timeline_kind->deform);
-      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ik")).value(), flight::types::dragon_bones_timeline_kind->ik);
-      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("zOrder")).value(), flight::types::dragon_bones_timeline_kind->zorder);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("bone")), flight::types::dragon_bones_timeline_kind->bone);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("slot")), flight::types::dragon_bones_timeline_kind->slot);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ffd")), flight::types::dragon_bones_timeline_kind->deform);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("ik")), flight::types::dragon_bones_timeline_kind->ik);
+      tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(counts, anim.get(flight::String("zOrder")), flight::types::dragon_bones_timeline_kind->zorder);
     }
   }
 }

@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
+#include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -94,14 +96,14 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
             (v += 1.0);
           }
         }
-        std::function<std::optional<flight::Array<double>>(double)> rebase = [=](double v) -> std::optional<flight::Array<double>> {
+        std::function<std::optional<flight::Array<double>>(double)> rebase = flight::Function<std::optional<flight::Array<double>>(double)>{[=](double v) -> std::optional<flight::Array<double>> {
   const double from = timeline->values.element(((i_capture.read_binding() * values) + v));
   const double rise = (timeline->values.element((((i_capture.read_binding() + 1.0) * values) + v)) - from);
   if ((rise == 0.0)) {
     return std::nullopt;
   }
   return std::optional<flight::Array<double>>{flight::Array<double>{((points.value().element((v * 4.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 1.0)) - from) / rise), ((points.value().element(((v * 4.0) + 2.0)) - timeline->times.element(i_capture.read_binding())) / span), ((points.value().element(((v * 4.0) + 3.0)) - from) / rise)}};
-};
+}};
         std::optional<flight::Array<double>> won = ((winner < 0.0) ? std::nullopt : rebase(winner));
         if (won.has_value()) {
           {
@@ -152,7 +154,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
     }
   }
   if ((divergent > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.per-component-curve-easing-unsupported"), flight::String("buildSpineBinarySegmentEasings"), {{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, divergent}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.per-component-curve-easing-unsupported"), flight::String("buildSpineBinarySegmentEasings"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, divergent}}});
   }
   return (curved ? std::optional<flight::Array<std::optional<std::function<double(double)>>>>{easings} : std::nullopt);
 }

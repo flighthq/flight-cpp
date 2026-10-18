@@ -46,12 +46,12 @@ inline double parse_dragon_bones_color(flight::Any raw, std::optional<flight::Ar
     return 4294967295.0;
   }
   flight::NamedProperties color = flight::named_properties(raw);
-  const double r = color_channel(color.get(flight::String("rM")).value());
-  const double g = color_channel(color.get(flight::String("gM")).value());
-  const double b = color_channel(color.get(flight::String("bM")).value());
-  const double a = color_channel(color.get(flight::String("aM")).value());
-  if (((((flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("rO")).value(), 0.0) != 0.0) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("gO")).value(), 0.0) != 0.0)) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("bO")).value(), 0.0) != 0.0)) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("aO")).value(), 0.0) != 0.0))) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.color-offset-unsupported"), flight::String("parseDragonBonesColor"), {{flight::String("slots"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
+  const double r = color_channel(color.get(flight::String("rM")));
+  const double g = color_channel(color.get(flight::String("gM")));
+  const double b = color_channel(color.get(flight::String("bM")));
+  const double a = color_channel(color.get(flight::String("aM")));
+  if (((((flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("rO")), 0.0) != 0.0) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("gO")), 0.0) != 0.0)) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("bO")), 0.0) != 0.0)) || (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(color.get(flight::String("aO")), 0.0) != 0.0))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.color-offset-unsupported"), flight::String("parseDragonBonesColor"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("slots"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
   }
   return flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(r, 24.0), flight::left_shift(g, 16.0)), flight::left_shift(b, 8.0)), a), 0.0);
 }
@@ -69,9 +69,9 @@ inline flight::Array<flight::Ref<flight::types::Slot2D>> parse_dragon_bones_slot
         continue;
       }
       flight::NamedProperties slot = flight::named_properties(entry);
-      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = slot.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
-      const double bone_index = ((slot.get(flight::String("parent")).value().type_of() == flight::String("string")) ? ([&]() -> double { auto nullish_coalesce_left = bone_index_by_name.get(slot.get(flight::String("parent")).value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()) : -1.0);
-      const double display_index = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(slot.get(flight::String("displayIndex")).value(), 0.0), 0.0);
+      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = slot.get(flight::String("name")); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
+      const double bone_index = ((slot.get(flight::String("parent")).type_of() == flight::String("string")) ? ([&]() -> double { auto nullish_coalesce_left = bone_index_by_name.get(slot.get(flight::String("parent"))); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()) : -1.0);
+      const double display_index = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(slot.get(flight::String("displayIndex")), 0.0), 0.0);
       std::optional<flight::Ref<flight::types::Attachment2D>> attachment = std::nullopt;
       if ((name.has_value() && (display_index >= 0.0))) {
         std::optional<flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>> displays = skin.get(name.value());
@@ -79,14 +79,14 @@ inline flight::Array<flight::Ref<flight::types::Slot2D>> parse_dragon_bones_slot
           (attachment = displays.value().element(display_index));
         }
       }
-      slots.push(flight::make_ref<flight::types::Slot2D>(flight::types::Slot2D{.attachment = ([&]() -> std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined> { auto contextual_union_source = attachment; if (!contextual_union_source.has_value()) return std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Attachment2D>>, contextual_union_source.value()}; }()), .bone_index = bone_index, .color = std::optional<double>{parse_dragon_bones_color(slot.get(flight::String("color")).value(), diagnostics)}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_2 = name; if (!contextual_union_source_2.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_2.value()}; }())}));
+      slots.push(flight::make_ref<flight::types::Slot2D>(flight::types::Slot2D{.attachment = ([&]() -> std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined> { auto contextual_union_source = attachment; if (!contextual_union_source.has_value()) return std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Attachment2D>>, contextual_union_source.value()}; }()), .bone_index = bone_index, .color = std::optional<double>{parse_dragon_bones_color(slot.get(flight::String("color")), diagnostics)}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source_2 = name; if (!contextual_union_source_2.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source_2.value()}; }())}));
     }
   }
   return slots;
 }
 
 inline void dragon_bones_slots_section_handler(flight::Ref<flight::types::DragonBonesSectionContext> context) {
-  flight::Array<flight::Ref<flight::types::Slot2D>> slots = parse_dragon_bones_slots(context->armature.get(flight::String("slot")).value(), context->bone_index_by_name, context->display_table, context->diagnostics);
+  flight::Array<flight::Ref<flight::types::Slot2D>> slots = parse_dragon_bones_slots(context->armature.get(flight::String("slot")).value_or(flight::Any(flight::undefined)), context->bone_index_by_name, context->display_table, context->diagnostics);
   for (auto slot : slots) {
     context->slots.push(slot);
   }

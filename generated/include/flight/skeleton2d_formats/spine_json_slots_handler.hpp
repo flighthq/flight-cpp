@@ -67,14 +67,14 @@ inline flight::Ref<attachment_names_slots_9b172de1015cc14d> parse_spine_slots(fl
         continue;
       }
       flight::NamedProperties slot = flight::named_properties(entry);
-      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = slot.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
+      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = slot.get(flight::String("name")); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
       double bone_index = -1.0;
-      if ((slot.get(flight::String("bone")).value().type_of() == flight::String("string"))) {
+      if ((slot.get(flight::String("bone")).type_of() == flight::String("string"))) {
         {
           double i = 0.0;
           while ((i < static_cast<double>(bones.size()))) {
             {
-              if ((([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property = bones.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property)}; }()) == slot.get(flight::String("bone")).value())) {
+              if ((([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property = bones.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property)}; }()) == slot.get(flight::String("bone")))) {
                 (bone_index = i);
                 break;
               }
@@ -83,15 +83,15 @@ inline flight::Ref<attachment_names_slots_9b172de1015cc14d> parse_spine_slots(fl
           }
         }
       }
-      attachment_names.push(([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_2 = slot.get(flight::String("attachment")).value(); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_2.as_string()}; return std::nullopt; }()));
-      slots.push(flight::make_ref<flight::types::Slot2D>(flight::types::Slot2D{.attachment = std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, .bone_index = bone_index, .color = std::optional<double>{flight::skeleton2d_formats::parse_spine_color(slot.get(flight::String("color")).value())}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = name; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())}));
+      attachment_names.push(([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier_2 = slot.get(flight::String("attachment")); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier_2.as_string()}; return std::nullopt; }()));
+      slots.push(flight::make_ref<flight::types::Slot2D>(flight::types::Slot2D{.attachment = std::variant<flight::Ref<flight::types::Attachment2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, .bone_index = bone_index, .color = std::optional<double>{flight::skeleton2d_formats::parse_spine_color(slot.get(flight::String("color")))}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = name; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())}));
     }
   }
   return flight::make_ref<attachment_names_slots_9b172de1015cc14d>(attachment_names_slots_9b172de1015cc14d{.attachment_names = attachment_names, .slots = slots});
 }
 
 inline void spine_json_slots_section_handler(flight::Ref<flight::types::SpineJsonSectionContext> context) {
-  auto object_pattern_value = parse_spine_slots(context->doc.get(flight::String("slots")).value(), context->bones);
+  auto object_pattern_value = parse_spine_slots(context->doc.get(flight::String("slots")).value_or(flight::Any(flight::undefined)), context->bones);
   flight::Array<std::optional<flight::String>> attachment_names = object_pattern_value->attachment_names;
   flight::Array<flight::Ref<flight::types::Slot2D>> slots = object_pattern_value->slots;
   for (auto slot : slots) {

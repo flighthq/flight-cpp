@@ -48,7 +48,7 @@ inline const flight::String dragonbones_blend_tree_type = flight::String("tree")
 inline flight::Array<flight::Array<flight::String>> dragonbones_timeline_key_map = flight::Array<flight::Array<flight::String>>{flight::Array<flight::String>{flight::String("bone"), flight::types::dragon_bones_timeline_kind->bone}, flight::Array<flight::String>{flight::String("slot"), flight::types::dragon_bones_timeline_kind->slot}, flight::Array<flight::String>{flight::String("ffd"), flight::types::dragon_bones_timeline_kind->deform}, flight::Array<flight::String>{flight::String("ik"), flight::types::dragon_bones_timeline_kind->ik}, flight::Array<flight::String>{flight::String("zOrder"), flight::types::dragon_bones_timeline_kind->zorder}};
 
 inline void dragon_bones_animations_section_handler(flight::Ref<flight::types::DragonBonesSectionContext> context) {
-  auto raw = context->armature.get(flight::String("animation")).value();
+  auto raw = context->armature.get(flight::String("animation")).value_or(flight::Any(flight::undefined));
   if (!flight::is_array(raw)) {
     return;
   }
@@ -63,10 +63,10 @@ inline void dragon_bones_animations_section_handler(flight::Ref<flight::types::D
         continue;
       }
       flight::NamedProperties animation = flight::named_properties(entry);
-      if ((animation.get(flight::String("type")).value() == dragonbones_blend_tree_type)) {
+      if ((animation.get(flight::String("type")) == dragonbones_blend_tree_type)) {
         blend_trees++;
       }
-      const flight::String name = ([&]() -> flight::String { const auto& erased_typeof_carrier = animation.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return default_dragonbones_animation_name; }());
+      const flight::String name = ([&]() -> flight::String { const auto& erased_typeof_carrier = animation.get(flight::String("name")); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return default_dragonbones_animation_name; }());
       flight::Ref<flight::types::DragonBonesTimelineContext> timeline_context = flight::make_ref<flight::types::DragonBonesTimelineContext>(flight::types::DragonBonesTimelineContext{.channels = flight::Array<flight::Ref<flight::types::AnimationChannel>>{}, .section = context, .unmodeled_timeline_counts = flight::Map<flight::String, double>(), .unresolved_bone_count = 0.0, .unregistered_timeline_counts = flight::Map<flight::types::DragonBonesTimelineKind, double>()});
       for (auto array_pattern_value : dragonbones_timeline_key_map) {
         const flight::String json_key = array_pattern_value.element(0.0);
@@ -86,7 +86,7 @@ inline void dragon_bones_animations_section_handler(flight::Ref<flight::types::D
       for (auto array_pattern_value_2 : timeline_context->unregistered_timeline_counts) {
         const flight::String kind = std::get<0>(array_pattern_value_2);
         const double count = std::get<1>(array_pattern_value_2);
-        flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(kind) + flight::String("-timeline-unregistered"), flight::String("dragonBonesAnimationsSectionReader"), {{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
+        flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(kind) + flight::String("-timeline-unregistered"), flight::String("dragonBonesAnimationsSectionReader"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
       }
       (total_unresolved_bones += timeline_context->unresolved_bone_count);
       for (auto array_pattern_value_3 : timeline_context->unmodeled_timeline_counts) {
@@ -94,20 +94,20 @@ inline void dragon_bones_animations_section_handler(flight::Ref<flight::types::D
         const double count_2 = std::get<1>(array_pattern_value_3);
         total_unmodeled_timelines.set(kind_2, (([&]() -> double { auto nullish_coalesce_left = total_unmodeled_timelines.get(kind_2); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + count_2));
       }
-      const double duration = (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(animation.get(flight::String("duration")).value(), 0.0) / context->frame_rate);
+      const double duration = (flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(animation.get(flight::String("duration")), 0.0) / context->frame_rate);
       context->animations.push(flight::make_ref<flight::types::Skeleton2DImportAnimation>(flight::types::Skeleton2DImportAnimation{.clip = flight::animation::create_animation_clip(timeline_context->channels, ((std::isfinite(duration) && (duration > 0.0)) ? std::optional<double>{duration} : std::nullopt), std::nullopt), .name = name}));
     }
   }
   if ((blend_trees > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.blend-tree-animation-unsupported"), flight::String("parseDragonBonesSkeleton"), {{flight::String("animations"), std::variant<bool, double, flight::String>{std::in_place_type<double>, blend_trees}}});
+    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.blend-tree-animation-unsupported"), flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("animations"), std::variant<bool, double, flight::String>{std::in_place_type<double>, blend_trees}}});
   }
   for (auto array_pattern_value_4 : total_unmodeled_timelines) {
     const flight::String kind_3 = std::get<0>(array_pattern_value_4);
     const double count_3 = std::get<1>(array_pattern_value_4);
-    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(kind_3) + flight::String("-timeline-unsupported"), flight::String("parseDragonBonesSkeleton"), {{flight::String("timelines"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count_3}}});
+    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("dragonbones.") + flight::to_string(kind_3) + flight::String("-timeline-unsupported"), flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("timelines"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count_3}}});
   }
   if ((total_unresolved_bones > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.animation-bone-unresolved"), flight::String("parseDragonBonesSkeleton"), {{flight::String("bones"), std::variant<bool, double, flight::String>{std::in_place_type<double>, total_unresolved_bones}}});
+    flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("dragonbones.animation-bone-unresolved"), flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bones"), std::variant<bool, double, flight::String>{std::in_place_type<double>, total_unresolved_bones}}});
   }
 }
 

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -95,7 +96,7 @@ inline void skip_crumb_spine_timeline_group(std::optional<flight::Array<flight::
     }
   }
   if ((count > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, kind, flight::String("parseSpineAnimations"), {{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, kind, flight::String("parseSpineAnimations"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("count"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
   }
 }
 
@@ -114,7 +115,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
     const auto i_capture = flight::make_binding_cell(double{0.0});
     while ((i_capture.read_binding() < segments)) {
       {
-        auto curve = keys.element(i_capture.read_binding()).get(flight::String("curve")).value();
+        auto curve = keys.element(i_capture.read_binding()).get(flight::String("curve")).value_or(flight::Any(flight::undefined));
         const double span = (times.element((i_capture.read_binding() + 1.0)) - times.element(i_capture.read_binding()));
         if ((!flight::is_array(curve) || (span <= 0.0))) {
           easings.push(std::nullopt);
@@ -138,7 +139,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
             (c += 1.0);
           }
         }
-        std::function<std::optional<flight::Array<double>>(double)> rebase = [=](double c) -> std::optional<flight::Array<double>> {
+        std::function<std::optional<flight::Array<double>>(double)> rebase = flight::Function<std::optional<flight::Array<double>>(double)>{[=](double c) -> std::optional<flight::Array<double>> {
   const double from = values.element(((i_capture.read_binding() * components) + c));
   const double rise = (values.element((((i_capture.read_binding() + 1.0) * components) + c)) - from);
   if ((rise == 0.0)) {
@@ -146,7 +147,7 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
   }
   const double offset = (c * 4.0);
   return std::optional<flight::Array<double>>{flight::Array<double>{((number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(curve[static_cast<size_t>(offset)], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(curve[static_cast<size_t>((offset + 1.0))], 0.0) - from) / rise), ((number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(curve[static_cast<size_t>((offset + 2.0))], 0.0) - times.element(i_capture.read_binding())) / span), ((number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(curve[static_cast<size_t>((offset + 3.0))], 0.0) - from) / rise)}};
-};
+}};
         std::optional<flight::Array<double>> won = ((winner < 0.0) ? std::nullopt : rebase(winner));
         bool diverged = false;
         if (won.has_value()) {
@@ -204,10 +205,10 @@ inline std::optional<flight::Array<std::optional<std::function<double(double)>>>
     }
   }
   if ((clamped_segments > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("spine.curve-time-overshoot-clamped"), flight::String("buildSpineSegmentEasings"), {{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, clamped_segments}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("spine.curve-time-overshoot-clamped"), flight::String("buildSpineSegmentEasings"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, clamped_segments}}});
   }
   if ((divergent_segments > 0.0)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.per-component-curve-easing-unsupported"), flight::String("buildSpineSegmentEasings"), {{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, divergent_segments}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.per-component-curve-easing-unsupported"), flight::String("buildSpineSegmentEasings"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("segments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, divergent_segments}}});
   }
   return (curved ? std::optional<flight::Array<std::optional<std::function<double(double)>>>>{easings} : std::nullopt);
 }

@@ -30,7 +30,7 @@ using flight::types::Skeleton2DDrawOrderTimeline;
 using flight::types::Slot2D;
 
 inline void spine_json_draw_order_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  (context->draw_order = flight::skeleton2d_formats::parse_spine_draw_order_timeline(anim_entry.get(flight::String("drawOrder")).value(), context->section->slots, context->section->diagnostics));
+  (context->draw_order = flight::skeleton2d_formats::parse_spine_draw_order_timeline(anim_entry.get(flight::String("drawOrder")).value_or(flight::Any(flight::undefined)), context->section->slots, context->section->diagnostics));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_draw_order_timeline_reader = spine_json_draw_order_timeline_handler;

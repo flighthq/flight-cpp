@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/json.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -111,9 +112,9 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>> pa
         continue;
       }
       flight::NamedProperties frame = flight::named_properties(entry);
-      std::optional<flight::Array<double>> ordering = resolve_spine_draw_order(frame.get(flight::String("offsets")).value(), slots);
+      std::optional<flight::Array<double>> ordering = resolve_spine_draw_order(frame.get(flight::String("offsets")), slots);
       if (!ordering.has_value()) {
-        flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spine.draworder-keyframe-unresolved"), flight::String("parseSpineDrawOrderTimeline"), {{flight::String("time"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(flight::named_properties(entry).get(flight::String("time")), 0.0)}}});
+        flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spine.draworder-keyframe-unresolved"), flight::String("parseSpineDrawOrderTimeline"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("time"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(flight::named_properties(entry).get(flight::String("time")), 0.0)}}});
         continue;
       }
       times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(flight::named_properties(entry).get(flight::String("time")), 0.0));
@@ -124,7 +125,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>> pa
 }
 
 inline void resolve_spine_setup_attachments(flight::Array<flight::Ref<flight::types::Slot2D>> slots, flight::Array<std::optional<flight::String>> attachment_names, flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> skins) {
-  auto setup = ([&]() -> flight::Ref<flight::types::AttachmentSkin2D> { auto nullish_coalesce_left = skins.find([=](flight::Ref<flight::types::AttachmentSkin2D> skin) { return (skin->name == flight::skeleton2d_formats::spine_default_skin_name); }); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return skins.element(0.0); }());
+  auto setup = ([&]() -> flight::Ref<flight::types::AttachmentSkin2D> { auto nullish_coalesce_left = skins.find(flight::Function<bool(flight::Ref<flight::types::AttachmentSkin2D>)>{[=](flight::Ref<flight::types::AttachmentSkin2D> skin) { return (skin->name == flight::skeleton2d_formats::spine_default_skin_name); }}); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return skins.element(0.0); }());
   if (false) {
     return;
   }

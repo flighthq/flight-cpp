@@ -260,6 +260,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 231 | `undeclared-identifier-b9b0cd9f` | 1 | ANIM | compiler | after the erased length/index lowering, the analyzer advances to the retained call of the refused `censusDragonBones` |
 | 232 | `undeclared-identifier-e93a570c` | 1 | ANIM | compiler | the erased-array display loop advances to the retained call of the refused `parseDragonBonesRegionDisplay` |
 | 233 | `undeclared-identifier-be04e46c` | 1 | ANIM | compiler | the erased length/index lowering advances the skins module to the retained call of the refused `parseSpineMeshAttachment` |
+| 234 | `undeclared-identifier-d8c9373d` | 1 | ANIM | compiler | the binary skins module advances to the retained call of the refused `readSpineBinaryAttachment` |
 
 ## Carry clusters
 
@@ -5555,6 +5556,21 @@ Measured progression after the `optional<Any>` receiver fix: the header no longe
 - example: `use of undeclared identifier 'parse_spine_mesh_attachment'`
 
 The skins module still refuses several attachment helpers; the erased-read first error is gone and the header now names the next omitted callee. No declaration-only body is carried.
+
+
+### 234. `undeclared-identifier-d8c9373d` — 1 header(s)
+
+- cause: after the erased-array and typed-Record lowering, `spine_binary_skins_handler.hpp` advances to a retained call of the refused `readSpineBinaryAttachment`
+- lanes: ANIM
+- fix route: compiler — [retained calls](compiler-requests/retained-declaration-calls-omitted-callee.md)
+- first failure at: `flight/skeleton2d_formats/spine_binary_skins_handler.hpp:274`
+- example: `use of undeclared identifier 'read_spine_binary_attachment'`
+
+The erased-read first error is gone and the header names the next omitted callee. No declaration-only body is carried.
+
+### G2 typed-Record missing-key generation outcome
+
+The typed Record missing-key fix (`compiler-typed-record-missing-key`, view branch keyed) was generated into `skeleton2d-formats`: 35 headers changed, 50/59 modules, and the scoped `-j2` compile then passed **10/35** — `dragon_bones_parse`, `dragon_bones_registry`, `dragon_bones_section_counts`, `spine_binary_draw_order_timeline_handler`, `spine_binary_registry`, `spine_binary_slots_handler`, `spine_binary_versioned`, `spine_json_registry`, `spine_json_stub_handlers`, `spine_parse_helpers` (override) — with no `value_or`/named-view regressions. Both public consumers pass: the DragonBones counter with missing/present-undefined/null/empty/non-array/tally cases, and clampUnit against the re-derived Spine override. The remaining 25 headers keep distinct roots (`NamedProperties`/`Record`, `optional<Record>`, timeline value_type, and the next omitted callees). No 35/29 reduction claim: the four newly passing non-override headers are the measured gain.
 
 
 ## Scoped G2 PBR registry follow-up

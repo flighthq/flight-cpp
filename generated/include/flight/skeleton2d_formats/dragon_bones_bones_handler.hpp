@@ -55,7 +55,7 @@ inline bool bool_or(flight::Any value, bool fallback) {
 }
 
 inline flight::Ref<flight::types::TransformInherit2D> dragon_bones_transform_mode(flight::Record<flight::String, flight::Any> bone) {
-  return flight::make_ref<flight::types::TransformInherit2D>(flight::types::TransformInherit2D{.reflection = bool_or(bone.get(flight::String("inheritReflection")).value(), true), .rotation = bool_or(bone.get(flight::String("inheritRotation")).value(), true), .scale = bool_or(bone.get(flight::String("inheritScale")).value(), true), .translation = bool_or(bone.get(flight::String("inheritTranslation")).value(), true)});
+  return flight::make_ref<flight::types::TransformInherit2D>(flight::types::TransformInherit2D{.reflection = bool_or(bone.get(flight::String("inheritReflection")).value_or(flight::Any(flight::undefined)), true), .rotation = bool_or(bone.get(flight::String("inheritRotation")).value_or(flight::Any(flight::undefined)), true), .scale = bool_or(bone.get(flight::String("inheritScale")).value_or(flight::Any(flight::undefined)), true), .translation = bool_or(bone.get(flight::String("inheritTranslation")).value_or(flight::Any(flight::undefined)), true)});
 }
 
 
@@ -138,7 +138,7 @@ inline flight::Ref<flight::types::TransformInherit2D> dragon_bones_transform_mod
 // erased value, cast it, or materialize a replacement array
 
 inline void dragon_bones_bones_section_handler(flight::Ref<flight::types::DragonBonesSectionContext> context) {
-  auto object_pattern_value = parse_dragon_bones_bones(context->armature.get(flight::String("bone")).value(), context->diagnostics);
+  auto object_pattern_value = parse_dragon_bones_bones(context->armature.get(flight::String("bone")).value_or(flight::Any(flight::undefined)), context->diagnostics);
   flight::Array<flight::Ref<flight::types::Bone2D>> bones = object_pattern_value->bones;
   flight::Array<double> raw_index_to_output = object_pattern_value->raw_index_to_output;
   for (auto bone : bones) {

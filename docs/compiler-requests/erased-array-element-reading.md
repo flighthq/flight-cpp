@@ -766,4 +766,6 @@ remaining changed headers keep distinct roots (`NamedProperties`/`Record`, `opti
 next omitted callees, and the value_type/variant timeline roots). The emitted Record read's absent-key throw is a separate typed-read root, now carried by
 [the typed Record missing-key request](typed-record-missing-key-read.md) and source patch
 `compiler-typed-record-missing-key` (present undefined and null stay engaged; only a missing key
-reads undefined). No 96-load claim.
+reads undefined). Measured together: the generation changed 35 headers and the -j2 compile passed
+10/35 (four non-override headers newly pass), and both public consumers (counter with missing keys,
+clampUnit via the re-derived override) pass. No 96-load claim.

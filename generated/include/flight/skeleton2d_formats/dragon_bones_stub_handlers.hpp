@@ -22,25 +22,25 @@ namespace flight::skeleton2d_formats {
 using flight::types::ImportDiagnostic;
 
 inline void dragon_bones_deform_timeline_handler(flight::Ref<flight::types::DragonBonesTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("ffd")).value(), flight::String("dragonbones.deform-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("ffd")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.deform-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::DragonBonesTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> dragon_bones_deform_timeline_reader = dragon_bones_deform_timeline_handler;
 
 inline void dragon_bones_ik_constraints_section_handler(flight::Ref<flight::types::DragonBonesSectionContext> context) {
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->diagnostics, context->armature.get(flight::String("ik")).value(), flight::String("dragonbones.ik-constraint-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->diagnostics, context->armature.get(flight::String("ik")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.ik-constraint-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::DragonBonesSectionContext>)> dragon_bones_ik_constraints_section_reader = dragon_bones_ik_constraints_section_handler;
 
 inline void dragon_bones_ik_timeline_handler(flight::Ref<flight::types::DragonBonesTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("ik")).value(), flight::String("dragonbones.ik-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("ik")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.ik-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::DragonBonesTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> dragon_bones_ik_timeline_reader = dragon_bones_ik_timeline_handler;
 
 inline void dragon_bones_zorder_timeline_handler(flight::Ref<flight::types::DragonBonesTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("zOrder")).value(), flight::String("dragonbones.zorder-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_dragon_bones_group(context->section->diagnostics, anim_entry.get(flight::String("zOrder")).value_or(flight::Any(flight::undefined)), flight::String("dragonbones.zorder-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::DragonBonesTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> dragon_bones_zorder_timeline_reader = dragon_bones_zorder_timeline_handler;

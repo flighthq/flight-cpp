@@ -56,7 +56,7 @@ inline void add_dragon_bones_display_channel(flight::Array<flight::Ref<flight::t
   flight::Array<double> times = flight::skeleton2d_formats::dragon_bones_frame_times(frames, frame_rate);
   flight::Array<double> values = flight::Array<double>{};
   for (auto frame : frames) {
-    const double index = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("value")).value(), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("displayIndex")).value(), 0.0)), 0.0);
+    const double index = flight::bitwise_or(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("value")).value_or(flight::Any(flight::undefined)), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_3d5ae070dfe4e3ac(frame.get(flight::String("displayIndex")).value_or(flight::Any(flight::undefined)), 0.0)), 0.0);
     values.push(((((index >= 0.0) && (index < static_cast<double>(displays.size()))) && ([&]() { const auto& presence_operand = displays.get(index); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) ? index : -1.0));
   }
   auto track = flight::animation::create_animation_track(([&]() { auto object_member_components = std::optional<double>{1.0}; auto object_member_interpolation = std::optional<flight::String>{flight::types::animation_interpolation_step}; auto object_member_times = times; auto object_member_values = values; return flight::make_ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042>(times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042{.times = object_member_times, .values = object_member_values, .components = object_member_components, .interpolation = object_member_interpolation}); }()));
@@ -114,17 +114,17 @@ inline void parse_dragon_bones_slot_timelines(flight::Array<flight::Ref<flight::
         continue;
       }
       flight::NamedProperties timeline = flight::named_properties(entry);
-      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = timeline.get(flight::String("name")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
+      const std::optional<flight::String> name = ([&]() -> std::optional<flight::String> { const auto& erased_typeof_carrier = timeline.get(flight::String("name")); if (erased_typeof_carrier.type_of() == flight::String("string")) return std::optional<flight::String>{erased_typeof_carrier.as_string()}; return std::nullopt; }());
       const double slot_index = (!name.has_value() ? -1.0 : ([&]() -> double { auto nullish_coalesce_left = slot_order.get(name.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()));
       if ((slot_index < 0.0)) {
         unmodeled.set(flight::String("slot"), (([&]() -> double { auto nullish_coalesce_left = unmodeled.get(flight::String("slot")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
         continue;
       }
-      flight::Array<flight::Record<flight::String, flight::Any>> display_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("displayFrame")).value(), std::nullopt);
+      flight::Array<flight::Record<flight::String, flight::Any>> display_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("displayFrame")), std::nullopt);
       if ((static_cast<double>(display_frames.size()) > 0.0)) {
         add_dragon_bones_display_channel(channels, display_frames, slot_index, ([&]() -> flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>> { auto nullish_coalesce_left = display_table.get((name.has_value() ? name.value() : flight::String(""))); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<std::optional<flight::Ref<flight::types::Attachment2D>>>{}; }()), frame_rate);
       }
-      flight::Array<flight::Record<flight::String, flight::Any>> color_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("colorFrame")).value(), std::nullopt);
+      flight::Array<flight::Record<flight::String, flight::Any>> color_frames = flight::skeleton2d_formats::dragon_bones_frames(timeline.get(flight::String("colorFrame")), std::nullopt);
       if ((static_cast<double>(color_frames.size()) > 0.0)) {
         add_dragon_bones_slot_color_channel(channels, color_frames, slot_index, frame_rate);
       }
@@ -133,7 +133,7 @@ inline void parse_dragon_bones_slot_timelines(flight::Array<flight::Ref<flight::
 }
 
 inline void dragon_bones_slot_timeline_handler(flight::Ref<flight::types::DragonBonesTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  parse_dragon_bones_slot_timelines(context->channels, anim_entry.get(flight::String("slot")).value(), context->section->slot_order, context->section->display_table, context->section->frame_rate, context->unmodeled_timeline_counts);
+  parse_dragon_bones_slot_timelines(context->channels, anim_entry.get(flight::String("slot")).value_or(flight::Any(flight::undefined)), context->section->slot_order, context->section->display_table, context->section->frame_rate, context->unmodeled_timeline_counts);
 }
 
 inline std::function<void(flight::Ref<flight::types::DragonBonesTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> dragon_bones_slot_timeline_reader = dragon_bones_slot_timeline_handler;

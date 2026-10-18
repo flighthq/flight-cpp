@@ -6,6 +6,7 @@
 //   missing: function censusDragonBones -- source line 87
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/json.hpp>
 #include <flight/map.hpp>
 #include <flight/record.hpp>
@@ -39,11 +40,11 @@ struct Skeleton2DJsonAnalyzerEntry : public flight::ReferenceEnabled {
 };
 
 inline bool is_spine_json_flight_value_function_is_u000053_pine_u00004a_son_flight_private_d18be3a31005ef47(flight::Record<flight::String, flight::Any> record) {
-  return ((flight::is_array(record.get(flight::String("bones")).value()) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")).value(); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).value().type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature")).value()));
+  return ((flight::is_array(record.get(flight::String("bones")).value_or(flight::Any(flight::undefined))) || (([&]() { const auto& presence_operand = record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)); return !presence_operand.is_null(); }()) && (record.get(flight::String("skeleton")).value_or(flight::Any(flight::undefined)).type_of() == flight::String("object")))) && !flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined))));
 }
 
 inline bool is_dragon_bones_flight_value_function_is_u000044_ragon_u000042_ones_flight_private_d18be3a31005ef47(flight::Record<flight::String, flight::Any> record) {
-  return flight::is_array(record.get(flight::String("armature")).value());
+  return flight::is_array(record.get(flight::String("armature")).value_or(flight::Any(flight::undefined)));
 }
 
 inline void count_array_or_object(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
@@ -75,8 +76,8 @@ inline flight::Map<flight::String, double> census_spine_json(flight::Record<flig
   count_array_or_object(counts, record, flight::String("ik"), flight::String("ikConstraints"));
   count_array_or_object(counts, record, flight::String("path"), flight::String("pathConstraints"));
   count_array_or_object(counts, record, flight::String("transform"), flight::String("transformConstraints"));
-  if ((([&]() { const auto& presence_operand = record.get(flight::String("animations")).value(); return !presence_operand.is_null(); }()) && (record.get(flight::String("animations")).value().type_of() == flight::String("object")))) {
-    flight::Array<flight::String> keys = ([&]() { const auto named_view_2 = flight::named_properties(record.get(flight::String("animations")).value()); const auto named_keys_2 = named_view_2.keys(); return flight::Array<flight::String>(named_keys_2.begin(), named_keys_2.end()); }());
+  if ((([&]() { const auto& presence_operand = record.get(flight::String("animations")).value_or(flight::Any(flight::undefined)); return !presence_operand.is_null(); }()) && (record.get(flight::String("animations")).value_or(flight::Any(flight::undefined)).type_of() == flight::String("object")))) {
+    flight::Array<flight::String> keys = ([&]() { const auto named_view_2 = flight::named_properties(record.get(flight::String("animations")).value_or(flight::Any(flight::undefined))); const auto named_keys_2 = named_view_2.keys(); return flight::Array<flight::String>(named_keys_2.begin(), named_keys_2.end()); }());
     if ((static_cast<double>(keys.size()) > 0.0)) {
       counts.set(flight::String("animations"), static_cast<double>(keys.size()));
     }
@@ -85,7 +86,7 @@ inline flight::Map<flight::String, double> census_spine_json(flight::Record<flig
 }
 
 inline void count_array(flight::Map<flight::String, double> counts, flight::Record<flight::String, flight::Any> record, flight::String json_key, flight::String kind) {
-  auto value = record.get(json_key).value();
+  auto value = record.get(json_key).value_or(flight::Any(flight::undefined));
   if ((!flight::is_array(value) || (static_cast<double>(value.array_size()) == 0.0))) {
     return;
   }
@@ -122,7 +123,7 @@ inline void count_array(flight::Map<flight::String, double> counts, flight::Reco
 inline flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>> analyzers = flight::Array<flight::Ref<Skeleton2DJsonAnalyzerEntry>>{};
 
 inline bool unregister_skeleton_2d_json_analyzer(flight::String format) {
-  const double index = analyzers.find_index([=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); });
+  const double index = analyzers.find_index(flight::Function<bool(flight::Ref<Skeleton2DJsonAnalyzerEntry>)>{[=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); }});
   if ((index == -1.0)) {
     return false;
   }
@@ -133,7 +134,7 @@ inline bool unregister_skeleton_2d_json_analyzer(flight::String format) {
 inline double next_order = 0.0;
 
 inline void register_skeleton_2d_json_analyzer(flight::String format, std::function<bool(flight::Record<flight::String, flight::Any>)> detect, std::function<flight::Map<flight::String, double>(flight::Record<flight::String, flight::Any>)> census) {
-  const double existing = analyzers.find_index([=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); });
+  const double existing = analyzers.find_index(flight::Function<bool(flight::Ref<Skeleton2DJsonAnalyzerEntry>)>{[=](flight::Ref<Skeleton2DJsonAnalyzerEntry> entry) { return (entry->format == format); }});
   flight::Ref<Skeleton2DJsonAnalyzerEntry> entry = flight::make_ref<Skeleton2DJsonAnalyzerEntry>(Skeleton2DJsonAnalyzerEntry{.census = census, .detect = detect, .format = format, .order = ((existing >= 0.0) ? analyzers.element(existing)->order : next_order++)});
   if ((existing >= 0.0)) {
     (analyzers.element(existing) = entry);

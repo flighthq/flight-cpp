@@ -84,7 +84,7 @@ inline void initialize_region_attachment_2d_flight_value_function_initialize_u00
 
 inline flight::Ref<flight::types::RegionAttachment2D> parse_spine_region_attachment(flight::String name, flight::Record<flight::String, flight::Any> raw) {
   flight::types::EntityConstruction<flight::Ref<flight::types::RegionAttachment2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RegionAttachment2D>>();
-  initialize_region_attachment_2d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_6eb195e713f5308b(out, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("height")).value(), 0.0), flight::types::region_attachment_2d_kind, std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, name}, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("rotation")).value(), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("scaleX")).value(), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("scaleY")).value(), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("width")).value(), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("x")).value(), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("y")).value(), 0.0));
+  initialize_region_attachment_2d_flight_value_function_initialize_u000052_egion_u000041_ttachment2_u000044__flight_private_6eb195e713f5308b(out, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("height")).value_or(flight::Any(flight::undefined)), 0.0), flight::types::region_attachment_2d_kind, std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, name}, flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("rotation")).value_or(flight::Any(flight::undefined)), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("scaleX")).value_or(flight::Any(flight::undefined)), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("scaleY")).value_or(flight::Any(flight::undefined)), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("width")).value_or(flight::Any(flight::undefined)), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(raw.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 0.0));
   return flight::entity::finish_entity<flight::Ref<flight::types::RegionAttachment2D>>(out);
 }
 
@@ -202,14 +202,14 @@ inline flight::Ref<flight::types::RegionAttachment2D> parse_spine_region_attachm
 // value, cast it, or materialize a replacement array
 
 inline std::optional<flight::Ref<flight::types::Attachment2D>> parse_spine_attachment(flight::String name, flight::Record<flight::String, flight::Any> raw, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = raw.get(flight::String("type")).value(); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("region"); }());
+  const flight::String type = ([&]() -> flight::String { const auto& erased_typeof_carrier = raw.get(flight::String("type")).value_or(flight::Any(flight::undefined)); if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return flight::String("region"); }());
   if ((type == flight::String("region"))) {
     return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_region_attachment(name, raw)};
   }
   if ((type == flight::String("mesh"))) {
     return std::optional<flight::Ref<flight::types::Attachment2D>>{parse_spine_mesh_attachment(name, raw, diagnostics)};
   }
-  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineAttachment"), {{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineAttachment"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<double>, 1.0}}});
   return std::nullopt;
 }
 
@@ -225,7 +225,7 @@ inline flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> parse_spine_s
           continue;
         }
         flight::NamedProperties s = flight::named_properties(skin);
-        named.push(std::make_tuple(([&]() -> flight::String { const auto& erased_typeof_carrier_2 = s.get(flight::String("name")).value(); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return erased_typeof_carrier_2.as_string(); return flight::String("default"); }()), s.get(flight::String("attachments")).value()));
+        named.push(std::make_tuple(([&]() -> flight::String { const auto& erased_typeof_carrier_2 = s.get(flight::String("name")); if (erased_typeof_carrier_2.type_of() == flight::String("string")) return erased_typeof_carrier_2.as_string(); return flight::String("default"); }()), s.get(flight::String("attachments"))));
       }
     }
   }
@@ -270,7 +270,7 @@ inline flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> parse_spine_s
 }
 
 inline void spine_json_skins_section_handler(flight::Ref<flight::types::SpineJsonSectionContext> context) {
-  for (auto skin : parse_spine_skins(context->doc.get(flight::String("skins")).value(), context->slots, context->diagnostics)) {
+  for (auto skin : parse_spine_skins(context->doc.get(flight::String("skins")).value_or(flight::Any(flight::undefined)), context->slots, context->diagnostics)) {
     context->skins.push(skin);
   }
 }

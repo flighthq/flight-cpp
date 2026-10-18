@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/any.hpp>
 #include <flight/array.hpp>
+#include <flight/callable.hpp>
 #include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
@@ -65,11 +66,11 @@ inline void add_spine_bone_channel(flight::Array<flight::Ref<flight::types::Anim
       }
       flight::NamedProperties k = flight::named_properties(key);
       keys.push(k);
-      times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")).value(), 0.0));
+      times.push(flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("time")), 0.0));
       for (auto component : extract(k)) {
         values.push(component);
       }
-      if ((k.get(flight::String("curve")).value() != flight::String("stepped"))) {
+      if ((k.get(flight::String("curve")) != flight::String("stepped"))) {
         (all_stepped = false);
       }
     }
@@ -92,11 +93,11 @@ struct identity_key_path_9e60546ba237e1c7 : public flight::ReferenceEnabled {
 inline flight::Array<flight::Ref<identity_key_path_9e60546ba237e1c7>> spine_bone_axis_timelines = flight::Array<flight::Ref<identity_key_path_9e60546ba237e1c7>>{flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 0.0, .key = flight::String("translatex"), .path = flight::types::skeleton_2d_animation_path->translation_x}), flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 0.0, .key = flight::String("translatey"), .path = flight::types::skeleton_2d_animation_path->translation_y}), flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 1.0, .key = flight::String("scalex"), .path = flight::types::skeleton_2d_animation_path->scale_x}), flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 1.0, .key = flight::String("scaley"), .path = flight::types::skeleton_2d_animation_path->scale_y}), flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 0.0, .key = flight::String("shearx"), .path = flight::types::skeleton_2d_animation_path->shear_x}), flight::make_ref<identity_key_path_9e60546ba237e1c7>(identity_key_path_9e60546ba237e1c7{.identity = 0.0, .key = flight::String("sheary"), .path = flight::types::skeleton_2d_animation_path->shear_y})};
 
 inline void spine_json_bone_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  if ((([&]() { const auto& presence_operand = anim_entry.get(flight::String("bones")).value(); return presence_operand.is_null(); }()) || (anim_entry.get(flight::String("bones")).value().type_of() != flight::String("object")))) {
+  if ((([&]() { const auto& presence_operand = anim_entry.get(flight::String("bones")).value_or(flight::Any(flight::undefined)); return presence_operand.is_null(); }()) || (anim_entry.get(flight::String("bones")).value_or(flight::Any(flight::undefined)).type_of() != flight::String("object")))) {
     return;
   }
   flight::Array<flight::Ref<flight::types::Bone2D>> bones = context->section->bones;
-  for (auto array_pattern_value : ([&]() { const auto named_view = flight::named_properties(anim_entry.get(flight::String("bones")).value()); flight::Array<std::tuple<flight::String, flight::Any>> named_entries; for (const auto& named_key : named_view.keys()) { named_entries.push(std::tuple<flight::String, flight::Any>(named_key, named_view.get(named_key))); } return named_entries; }())) {
+  for (auto array_pattern_value : ([&]() { const auto named_view = flight::named_properties(anim_entry.get(flight::String("bones")).value_or(flight::Any(flight::undefined))); flight::Array<std::tuple<flight::String, flight::Any>> named_entries; for (const auto& named_key : named_view.keys()) { named_entries.push(std::tuple<flight::String, flight::Any>(named_key, named_view.get(named_key))); } return named_entries; }())) {
     const flight::String bone_name = std::get<0>(array_pattern_value);
     auto timelines_entry = std::get<1>(array_pattern_value);
     const double bone_index = flight::skeleton2d_formats::index_of_bone(bones, bone_name);
@@ -104,12 +105,12 @@ inline void spine_json_bone_timeline_handler(flight::Ref<flight::types::SpineJso
       continue;
     }
     flight::NamedProperties timelines = flight::named_properties(timelines_entry);
-    add_spine_bone_channel(context->channels, timelines.get(flight::String("rotate")).value(), bone_index, flight::types::skeleton_2d_animation_path->rotation, 1.0, [=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("value")).value(), 0.0)}; }, context->section->diagnostics);
-    add_spine_bone_channel(context->channels, timelines.get(flight::String("translate")).value(), bone_index, flight::types::skeleton_2d_animation_path->translation, 2.0, [=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value(), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value(), 0.0)}; }, context->section->diagnostics);
-    add_spine_bone_channel(context->channels, timelines.get(flight::String("scale")).value(), bone_index, flight::types::skeleton_2d_animation_path->scale, 2.0, [=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value(), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value(), 1.0)}; }, context->section->diagnostics);
-    add_spine_bone_channel(context->channels, timelines.get(flight::String("shear")).value(), bone_index, flight::types::skeleton_2d_animation_path->shear, 2.0, [=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value(), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value(), 0.0)}; }, context->section->diagnostics);
+    add_spine_bone_channel(context->channels, timelines.get(flight::String("rotate")), bone_index, flight::types::skeleton_2d_animation_path->rotation, 1.0, flight::Function<flight::Array<double>(flight::Record<flight::String, flight::Any>)>{[=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("value")).value_or(flight::Any(flight::undefined)), 0.0)}; }}, context->section->diagnostics);
+    add_spine_bone_channel(context->channels, timelines.get(flight::String("translate")), bone_index, flight::types::skeleton_2d_animation_path->translation, 2.0, flight::Function<flight::Array<double>(flight::Record<flight::String, flight::Any>)>{[=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 0.0)}; }}, context->section->diagnostics);
+    add_spine_bone_channel(context->channels, timelines.get(flight::String("scale")), bone_index, flight::types::skeleton_2d_animation_path->scale, 2.0, flight::Function<flight::Array<double>(flight::Record<flight::String, flight::Any>)>{[=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 1.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 1.0)}; }}, context->section->diagnostics);
+    add_spine_bone_channel(context->channels, timelines.get(flight::String("shear")), bone_index, flight::types::skeleton_2d_animation_path->shear, 2.0, flight::Function<flight::Array<double>(flight::Record<flight::String, flight::Any>)>{[=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 0.0), flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 0.0)}; }}, context->section->diagnostics);
     for (auto axis : spine_bone_axis_timelines) {
-      add_spine_bone_channel(context->channels, timelines.get(axis->key), bone_index, axis->path, 1.0, [=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("value")).value(), axis->identity)}; }, context->section->diagnostics);
+      add_spine_bone_channel(context->channels, timelines.get(axis->key), bone_index, axis->path, 1.0, flight::Function<flight::Array<double>(flight::Record<flight::String, flight::Any>)>{[=](flight::Record<flight::String, flight::Any> k) { return flight::Array<double>{flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(k.get(flight::String("value")).value_or(flight::Any(flight::undefined)), axis->identity)}; }}, context->section->diagnostics);
     }
   }
 }

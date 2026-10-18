@@ -53,3 +53,15 @@ keep the strict read.
 `skeleton2dJsonAnalyzer.ts` (typed Record reads of erased values). Carried by source patch
 `compiler-typed-record-missing-key`; the consumer case lives in
 `tests/generated_skeleton2d_formats_dragon_bones_section_counts_test.cpp`.
+
+## Measured outcome
+
+Scoped generation of `@flighthq/skeleton2d-formats` with the corrected patch changed 35 headers
+(50/59 modules); the scoped `-j2` compile passed 10/35. Four non-override headers newly pass on this
+root (`dragon_bones_parse`, `spine_binary_draw_order_timeline_handler`, `spine_binary_slots_handler`,
+`spine_binary_versioned`) alongside `dragon_bones_section_counts`; the rest keep distinct roots. The
+committed counter consumer passes with missing, present-undefined, present-null, empty and non-array
+keys all setting no counter, a present array counting its live length, the timeline tally, and the
+animation walk. The named-view branch was corrected during this work: a cast binding lowers to
+`flight::NamedProperties`, so its read keeps the keyed `.get(...)` (the view returns Any) and neither
+takes `value_or` nor falls back to a member access. No 35/29 reduction claim.

@@ -22,7 +22,7 @@ namespace flight::skeleton2d_formats {
 using flight::types::ImportDiagnostic;
 
 inline void spine_json_deform_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("deform")).value(), flight::String("spine.deform-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("deform")).value_or(flight::Any(flight::undefined)), flight::String("spine.deform-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_deform_timeline_reader = spine_json_deform_timeline_handler;
@@ -33,7 +33,7 @@ inline void spine_json_events_section_handler(flight::Ref<flight::types::SpineJs
 inline std::function<void(flight::Ref<flight::types::SpineJsonSectionContext>)> spine_json_events_section_reader = spine_json_events_section_handler;
 
 inline void spine_json_event_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("events")).value(), flight::String("spine.event-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("events")).value_or(flight::Any(flight::undefined)), flight::String("spine.event-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_event_timeline_reader = spine_json_event_timeline_handler;
@@ -44,7 +44,7 @@ inline void spine_json_ik_constraints_section_handler(flight::Ref<flight::types:
 inline std::function<void(flight::Ref<flight::types::SpineJsonSectionContext>)> spine_json_ik_constraints_section_reader = spine_json_ik_constraints_section_handler;
 
 inline void spine_json_ik_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("ik")).value(), flight::String("spine.ik-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("ik")).value_or(flight::Any(flight::undefined)), flight::String("spine.ik-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_ik_timeline_reader = spine_json_ik_timeline_handler;
@@ -55,7 +55,7 @@ inline void spine_json_path_constraints_section_handler(flight::Ref<flight::type
 inline std::function<void(flight::Ref<flight::types::SpineJsonSectionContext>)> spine_json_path_constraints_section_reader = spine_json_path_constraints_section_handler;
 
 inline void spine_json_path_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("path")).value(), flight::String("spine.path-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("path")).value_or(flight::Any(flight::undefined)), flight::String("spine.path-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_path_timeline_reader = spine_json_path_timeline_handler;
@@ -66,7 +66,7 @@ inline void spine_json_transform_constraints_section_handler(flight::Ref<flight:
 inline std::function<void(flight::Ref<flight::types::SpineJsonSectionContext>)> spine_json_transform_constraints_section_reader = spine_json_transform_constraints_section_handler;
 
 inline void spine_json_transform_timeline_handler(flight::Ref<flight::types::SpineJsonTimelineContext> context, flight::String anim_name, flight::Record<flight::String, flight::Any> anim_entry) {
-  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("transform")).value(), flight::String("spine.transform-timeline-unsupported"));
+  flight::skeleton2d_formats::skip_crumb_spine_timeline_group(context->section->diagnostics, anim_entry.get(flight::String("transform")).value_or(flight::Any(flight::undefined)), flight::String("spine.transform-timeline-unsupported"));
 }
 
 inline std::function<void(flight::Ref<flight::types::SpineJsonTimelineContext>, flight::String, flight::Record<flight::String, flight::Any>)> spine_json_transform_timeline_reader = spine_json_transform_timeline_handler;
