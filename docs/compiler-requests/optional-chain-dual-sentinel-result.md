@@ -61,7 +61,44 @@ collapsed.
 - **Everything else unchanged.** The chain is still the ordinary optional form for every other
   destination; only the dual-sentinel contextual construction is routed to this reconstruction.
 
+## A callee that itself declares both sentinels
+
+The callback's declared return can itself be `Node2D | null | undefined`. Then its emitted result is
+already the destination carrier, and the only extra state the chain adds is the absent link's
+`undefined`. The lowering therefore evaluates the link test and returns the callee's result unchanged;
+turning it into an optional first would collapse a **returned** `undefined` into `null`, which the
+source distinguishes. For a callee that returns only `Node2D | null`, the empty result is the callee's
+`null` and is reconstructed as such.
+
+A receiver link whose property type is itself nullable (`instantiate?: Instantiate | null`) is not
+silently mishandled: it is refused by the existing
+`cpp-dual-sentinel-optional-chain-projection-unproven` rule, which reports that several value
+alternatives cannot be projected through one nullish guard. That refusal is unchanged and is not
+claimed here; the SWF shape's `instantiate?` is undefined-only.
+
 ## Evidence
+
+The fixture is a complete source module (`first(handlers: Handler[], parsed)` returning the chain
+directly) emitted by the backend as a whole header, not a hand-copied expression. A consumer compiled
+and linked against the pinned runtime calls the emitted function over `flight::Array<flight::Ref<...>>`
+owners and asserts, matching a JavaScript oracle run over the same source:
+
+| case | emitted result | callback calls |
+| --- | --- | --- |
+| absent `instantiate` link | `Undefined` | 0 |
+| present link, missing callable | `Undefined` | 0 |
+| callee returns `undefined` | `Undefined` (not `Null`) | 1 |
+| callee returns `null` | `Null` (not `Undefined`) | 1 |
+| callee returns a node | the same `Ref`, live cell | 1 |
+| callee throws | the exact exception/message propagates | 1 |
+
+The consumer printed `undefined-link=1 undefined-callable=1 returned-undefined=1 returned-null=1
+present=1 identity=1 throw=callee-threw calls=4` and exited 0; the oracle printed
+`undefined-link=undefined undefined-callable=undefined returned-undefined=undefined
+returned-null=null present=node identity=true throw=callee-threw calls=4` and exited 0. Focused
+compiler tests cover the dual-sentinel reconstruction, the one-sentinel control, and the tri-state
+callee pass-through (3 tests). The fixture's `instantiate` is a data property, so there is no getter
+to throw; a throwing **callee** is covered, and the absent/missing cases prove the call is lazy.
 
 - Focused compiler test `cppOptionalChainResultVariant.test.ts`: 2 pass — the dual-sentinel form
   carries both sentinel constructions, one receiver evaluation and one callback read; a one-sentinel

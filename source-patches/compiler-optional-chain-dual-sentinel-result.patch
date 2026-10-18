@@ -1,8 +1,8 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index d010a9f..9bb8f1e 100644
+index 45cdf59..f055d02 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -23536,6 +23536,15 @@ function emitContextualUnionExpressionInContextCpp(
+@@ -23568,6 +23568,15 @@ function emitContextualUnionExpressionInContextCpp(
    if (expression.kind === 'call' && isCppExactImportedCarrierCallResultCpp(expression, union, context)) {
      return emitExpression(expression, context, undefined, false);
    }
@@ -18,7 +18,7 @@ index d010a9f..9bb8f1e 100644
    if (
      (expression.kind === 'call' && (expression.optional || expression.semantics.optionalChain)) ||
      (expression.kind === 'element' && (expression.optional || expression.semantics.optionalChain)) ||
-@@ -37091,6 +37100,48 @@ function getCppErasedExternalCallBoundResultTypeCpp(
+@@ -37148,6 +37157,65 @@ function getCppErasedExternalCallBoundResultTypeCpp(
    return { kind: 'named', reference: { kind: 'ambient', name: sources[0]!.sourceName }, typeArguments: [] };
  }
  
@@ -51,6 +51,23 @@ index d010a9f..9bb8f1e 100644
 +  const invocation = getCppCallableObjectIrTypeCpp(receiverType, context, new Set())
 +    ? `(*${receiverProjection.value})(${arguments_})`
 +    : `${receiverProjection.value}(${arguments_})`;
++  // The callee may itself declare both sentinels (`Node2D | null | undefined`). Then its result is
++  // already the destination carrier, and a returned `undefined` is the CALLEE's sentinel rather than
++  // the absent link's: the link test supplies one `undefined`, and everything after it is the callee's
++  // own result passed through unchanged. Turning that result into an optional first would collapse a
++  // returned `undefined` into `null`.
++  const arbitraryCallable = getCppCallableObjectIrTypeCpp(receiverType, context, new Set());
++  const calleeReturns =
++    arbitraryCallable?.callable.returns ?? getCppClosedCallableType(receiverType, context, new Set())?.returns;
++  const calleeReturnsUnion = calleeReturns ? getIrUnionTypeCpp(calleeReturns, context, new Set()) : undefined;
++  const calleeReturnsPlan = calleeReturnsUnion
++    ? getCppUnionRepresentationPlan(calleeReturnsUnion, context)
++    : undefined;
++  if (calleeReturnsPlan?.kind === 'dualSentinelVariant') {
++    const resultType = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(union, context), context);
++    const undefinedSentinel = emitCppUnionSentinelConstruction('undefined', union, plan.kind, context);
++    return `([&]() -> ${resultType} { auto optional_chain_receiver = ${callee}; if (${receiverProjection.absent}) return ${undefinedSentinel}; return ${invocation}; }())`;
++  }
 +  const resultType = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(union, context), context);
 +  const slot = plan.valueSlots[0]!;
 +  const targetType = qualifyCppDeclaringModuleTypeCpp(slot.targetType, context);
@@ -69,10 +86,10 @@ index d010a9f..9bb8f1e 100644
    context: EmitContext,
 diff --git a/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts b/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts
 new file mode 100644
-index 0000000..62489b3
+index 0000000..3340461
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppOptionalChainResultVariant.test.ts
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,92 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -144,4 +161,24 @@ index 0000000..62489b3
 +  `);
 +  expect(output).toContain('std::optional<flight::Ref<Node2D>> node = ([&]() -> std::optional<');
 +  expect(output).not.toContain('std::in_place_type<flight::Undefined>');
++});
++
++it('passes a callee that itself declares both sentinels through unchanged after the link test', () => {
++  const output = emit(`
++    interface Node2D { x: number }
++    interface Instantiate { createPlacementNode?(parsed: number): Node2D | null | undefined }
++    interface Handler { instantiate?: Instantiate }
++    export function first(handlers: Handler[], parsed: number): Node2D | null | undefined {
++      for (const handler of handlers) {
++        return handler.instantiate?.createPlacementNode?.(parsed);
++      }
++      return undefined;
++    }
++  `);
++  // A callee returning `Node2D | null | undefined` already carries both sentinels. The link test
++  // supplies its own undefined, and everything after it is the callee's own result: turning that into
++  // an optional first would collapse a RETURNED undefined into null.
++  expect(output).toContain('if (!optional_chain_receiver.has_value()) return std::variant<');
++  expect(output).toContain('return optional_chain_receiver.value()(parsed);');
++  expect(output).not.toContain('optional_chain_result');
 +});
