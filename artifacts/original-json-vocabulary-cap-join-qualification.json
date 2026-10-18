@@ -1,0 +1,620 @@
+{
+  "schema": "flight-original-json-vocabulary-cap-join-qualification/1",
+  "authority": "foreman-3069f25d",
+  "status": "COMPLETE: source-derived vocabulary and original cap/join proof preparation. Final compiler137/current native dependency compile, link and22checks PASS. No normal output or SDK promotion.",
+  "pins": {
+    "compiler": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "flight": "a62784923f3be814463286c9fb28edfe6ab15789"
+  },
+  "sourceInputs": {
+    "qualifiedComposition": {
+      "compilerPatchCount": 137,
+      "flightPatchCount": 208,
+      "total": 345,
+      "rawClean": true,
+      "compilerBackendSha256": "67aec1c6b4fc52480e614666011f7cfa9802816ed907867ebc92e119e776a312"
+    },
+    "compilerManagedReverseRawCleanReapply": "PASS",
+    "flightManagedReverseRawCleanReapply": "PASS",
+    "productionCompilerStrict": "PASS",
+    "sourcePatchAutomation": "2PASS0FAIL0SKIP",
+    "savedDeclarationGraph": {
+      "modules": 1467,
+      "flightPatchCount": 203,
+      "sha256": "444b596533712492fa6d4ccf27d44d24d5d4d2f5605f94f4919605667b3f2d9c",
+      "constraint": "Saved graph, not a refreshed Flight208 graph; selected original bodies unchanged by later unrelated patches."
+    },
+    "patchDigestRecord": "current-compiler-inputs.json in qualification archive",
+    "headers137": [
+      {
+        "header": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+        "sha256": "df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/node/node.hpp",
+        "sha256": "cb4a43905fc77c74187cbcd475b3053b22761feec209b9b921b6fb779f28984b",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/node/revision.hpp",
+        "sha256": "7e71dc2880fb4c1be4f86b84642dba1380570c5188295c19639f7179ed5ede45",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_document.hpp",
+        "sha256": "0dacdd19e3b666791db899d3589f21499f4fa04e3cdc11b99e6beaf5a6e8f42e",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+        "sha256": "2457c324588deeb3f5f978cd673538b22b0640556a377fa09a8003365ceff8ff",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_image_layer.hpp",
+        "sha256": "f5805ac47ce943239dda050a5eb32dae9e05cb25ff897481f6e63755e101fffb",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+        "sha256": "b412e5f0fce67d04f592fbc315544a97303d0962529a8461650543c5d16bc6df",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+        "sha256": "7fd6d8e7ea7d56596a6cd4d868c64de3f3f4afb1d90ddc136ec8718cc1875140",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_text_layer.hpp",
+        "sha256": "5b85057c90ac089ebe12dc15b23e09b2f7b581acff821410dc33930373ceb9fd",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/types/import_diagnostic.hpp",
+        "sha256": "fa74b665ef0f4be08f599e0ded55cf5640c0ff7aebc1e7aa5254ff98ee20e56c",
+        "byteIdenticalToActualNativeInput": true
+      }
+    ],
+    "wholeOriginalBodies": true,
+    "omittedBodies": 0,
+    "emissionRepairs": {
+      "applied": [
+        {
+          "appliesTo": "flight/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp",
+            "flight/node/revision.hpp"
+          ],
+          "id": "respell-reference-alias-node"
+        },
+        {
+          "appliesTo": "flight/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp",
+            "flight/node/revision.hpp",
+            "flight/scene2d_formats/lottie_text_layer.hpp"
+          ],
+          "id": "respell-reference-alias-noderuntime"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp",
+            "flight/node/revision.hpp"
+          ],
+          "id": "node-node-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp"
+          ],
+          "id": "node-nodesignals-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp",
+            "flight/node/revision.hpp"
+          ],
+          "id": "node-noderuntime-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp"
+          ],
+          "id": "node-nodetraits-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp"
+          ],
+          "id": "node-allocate-entity-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp"
+          ],
+          "id": "node-finish-entity-using-declaration"
+        },
+        {
+          "appliesTo": "flight/node/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/node/node.hpp"
+          ],
+          "id": "node-create-signal-using-declaration"
+        },
+        {
+          "appliesTo": "flight/scene2d_formats/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/scene2d_formats/lottie_document.hpp",
+            "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+            "flight/scene2d_formats/lottie_image_layer.hpp",
+            "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+            "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+            "flight/scene2d_formats/lottie_text_layer.hpp"
+          ],
+          "id": "scene2d-formats-unqualified-types-names"
+        },
+        {
+          "appliesTo": "flight/",
+          "expectedWhen": "always",
+          "files": [
+            "flight/scene2d_formats/lottie_document.hpp"
+          ],
+          "id": "math-power-runtime-call-namespace-collision"
+        }
+      ],
+      "aliases": {
+        "files": [
+          "flight/scene2d_formats/lottie_document.hpp",
+          "flight/scene2d_formats/lottie_text_layer.hpp"
+        ],
+        "structs": [
+          "k_4676b95d8bf2f899",
+          "times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042"
+        ]
+      },
+      "providers": [
+        "flight/types/import_diagnostic.hpp",
+        "flight/types/lottie_document.hpp",
+        "flight/animation/animation_track.hpp",
+        "flight/animation/animation_clip.hpp"
+      ]
+    },
+    "repairConstraint": "Only declared normal repairs and the existing exact duplicate-name/body provider proof; no different-name holder alias or copied body."
+  },
+  "vocabulary": {
+    "renderer": "scripts/structuralMembers.mjs: structuralMemberTable, same renderer used by scripts/packageScope.mjs over the merged normal tree",
+    "report": {
+      "schema": "flight-selected-original-source-vocabulary/1",
+      "base": "d5adda33",
+      "scope": "pure normal structuralMemberTable renderer in scratch only; installed emitted header tree plus exactly10qualified137 original header replacements and actual override headers; no package generation, metadata hand edit, new SDK inventory or normal writes",
+      "inputHeaderFiles": 3152,
+      "overrideHeaderFiles": 226,
+      "selectedHeaderReplacements": 10,
+      "previousKeys": 2523,
+      "derivedKeys": 2542,
+      "addedKeys": [
+        "f",
+        "fc",
+        "g",
+        "ir",
+        "is",
+        "j",
+        "lc",
+        "lh",
+        "lj",
+        "lottieApply",
+        "ml",
+        "ml2",
+        "or",
+        "os",
+        "p",
+        "pt",
+        "r",
+        "sy",
+        "tr"
+      ],
+      "removedKeys": [],
+      "computedNames": [
+        "entity_runtime_key",
+        "invalid_flight_document_value",
+        "parse_failure",
+        "quad_batch_signals_slot",
+        "scene_3d_resource_resolver_runtime_key",
+        "tilemap_signals_slot"
+      ],
+      "sha256": "dc518d5bd064155cda28ad263103a4f89161fe7211627def2a3204432e8a0190"
+    },
+    "nineAndTenReplacementTablesByteIdentical": true,
+    "handwrittenKeyTable": false,
+    "normalOutputWritten": false,
+    "meaning": "The19 keys are derived from actual whole-original format bodies. A Types-only pass cannot contribute keys still hidden in omitted format headers.",
+    "qualification": "Scratch-only dependency evidence.3152 installed headers were inputs to the pure renderer, not a new SDK inventory or output claim.",
+    "previous136TenReplacementReport": {
+      "schema": "flight-selected-original-source-vocabulary/1",
+      "base": "78dd6146",
+      "scope": "pure normal structuralMemberTable renderer in scratch only; installed emitted header tree plus exactly10qualified136 original header replacements and actual override headers; no package generation, metadata hand edit, new SDK inventory or normal writes",
+      "inputHeaderFiles": 3152,
+      "overrideHeaderFiles": 226,
+      "selectedHeaderReplacements": 10,
+      "previousKeys": 2523,
+      "derivedKeys": 2542,
+      "addedKeys": [
+        "f",
+        "fc",
+        "g",
+        "ir",
+        "is",
+        "j",
+        "lc",
+        "lh",
+        "lj",
+        "lottieApply",
+        "ml",
+        "ml2",
+        "or",
+        "os",
+        "p",
+        "pt",
+        "r",
+        "sy",
+        "tr"
+      ],
+      "removedKeys": [],
+      "computedNames": [
+        "entity_runtime_key",
+        "invalid_flight_document_value",
+        "parse_failure",
+        "quad_batch_signals_slot",
+        "scene_3d_resource_resolver_runtime_key",
+        "tilemap_signals_slot"
+      ],
+      "sha256": "dc518d5bd064155cda28ad263103a4f89161fe7211627def2a3204432e8a0190"
+    },
+    "current137TableByteIdenticalToNativeInput": true
+  },
+  "frozenThreeHeaderGate": {
+    "composition": "136compiler208Flight344; native before class-field activation; actual SDL; serial one worker",
+    "report": {
+      "schema": "flight-sdk-header-compilation/2",
+      "compiler": {
+        "command": "/tmp/builder5-json-exact21-128/cxx-hostcache",
+        "version": "clang version 22.1.8"
+      },
+      "generated": {
+        "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+        "sourceRevisions": [
+          "a62784923f3be814463286c9fb28edfe6ab15789"
+        ]
+      },
+      "run": {
+        "complete": true,
+        "elapsedSeconds": 374.7,
+        "headerSelection": "explicit",
+        "jobs": 1
+      },
+      "summary": {
+        "attemptedHeaders": 3,
+        "failedHeaders": 2,
+        "passedHeaders": 1,
+        "totalHeaders": 3,
+        "unattemptedHeaders": 0
+      },
+      "failures": [
+        {
+          "diagnostic": "no member named 'map_lottie_line_cap' in namespace 'flight::scene2d_formats'",
+          "header": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+          "location": "/tmp/builder5-json-exact21-128/candidate136-qualified/include/flight/scene2d_formats/lottie_gradient_shape_items.hpp:70"
+        },
+        {
+          "diagnostic": "no viable conversion from returned value of type 'flight::Ref<k_4676b95d8bf2f899>' (aka 'std::shared_ptr<flight::types::k_4676b95d8bf2f899>') to function return type 'std::optional<flight::Ref<k_dbbad269ab148d65>>' (aka 'std::optional<std::shared_ptr<flight::scene2d_formats::k_dbbad269ab148d65>>')",
+          "header": "flight/scene2d_formats/lottie_text_layer.hpp",
+          "location": "/tmp/builder5-json-exact21-128/candidate136-qualified/include/flight/scene2d_formats/lottie_text_layer.hpp:122"
+        }
+      ],
+      "passed": [
+        "flight/scene2d_formats/lottie_polystar_shape_item.hpp"
+      ],
+      "unattempted": []
+    },
+    "interpretation": "Derived table clears the previous missing-key cause. Polystar passes; gradient exposes an omitted original Stroke dependency; text exposes its actual d.k member owner conversion. This report retains1PASS2FAIL."
+  },
+  "originalStrokeDependency": {
+    "source": "packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+    "sourceSha256": "58a6922d7f4a281f9af47bb6b37bdbd5f6c55fec00a1006f34caf6ed3143b9b0",
+    "header": "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+    "headerSha256": "7fd6d8e7ea7d56596a6cd4d868c64de3f3f4afb1d90ddc136ec8718cc1875140",
+    "includes": [
+      "mapLottieLineCap",
+      "mapLottieLineJoin",
+      "complete original stroke handler"
+    ],
+    "omittedBodies": 0,
+    "normalRepair": "scene2d-formats-unqualified-types-names",
+    "replacementBody": false,
+    "sourceOracle": {
+      "schema": "flight-original-lottie-cap-join-source/1",
+      "rawPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "rawSourceSha256": "58a6922d7f4a281f9af47bb6b37bdbd5f6c55fec00a1006f34caf6ed3143b9b0",
+      "patchedSourceSha256": "58a6922d7f4a281f9af47bb6b37bdbd5f6c55fec00a1006f34caf6ed3143b9b0",
+      "wholeOriginalModule": true,
+      "replacementBodies": false,
+      "loadedModuleCounts": [
+        1270,
+        1276
+      ],
+      "scope": "Two original exported cap/join maps, complete original Stroke module loaded. No native whole-handler execution claimed.",
+      "summary": {
+        "cases": 11,
+        "functionChecks": 22,
+        "pass": 11,
+        "fail": 0
+      },
+      "cases": [
+        {
+          "label": "undefined",
+          "cpp": "std::nullopt",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "negative-infinity",
+          "cpp": "-std::numeric_limits<double>::infinity()",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "negative-one",
+          "cpp": "-1.0",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "negative-zero",
+          "cpp": "-0.0",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "zero",
+          "cpp": "0.0",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "one",
+          "cpp": "1.0",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "two",
+          "cpp": "2.0",
+          "raw": {
+            "caps": "round",
+            "joints": "round"
+          },
+          "patched": {
+            "caps": "round",
+            "joints": "round"
+          },
+          "equal": true
+        },
+        {
+          "label": "three",
+          "cpp": "3.0",
+          "raw": {
+            "caps": "square",
+            "joints": "bevel"
+          },
+          "patched": {
+            "caps": "square",
+            "joints": "bevel"
+          },
+          "equal": true
+        },
+        {
+          "label": "four",
+          "cpp": "4.0",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "infinity",
+          "cpp": "std::numeric_limits<double>::infinity()",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        },
+        {
+          "label": "nan",
+          "cpp": "std::numeric_limits<double>::quiet_NaN()",
+          "raw": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "patched": {
+            "caps": "none",
+            "joints": "miter"
+          },
+          "equal": true
+        }
+      ]
+    },
+    "fixtureData": {
+      "path": "lottie-cap-join-source-cases.inc",
+      "sha256": "9c735458e2d26dbf425095154ebefcf402162f944f9046006d8840c0b81f3ea6",
+      "byteIdenticalAfter137Rerun": true,
+      "generatedContent": "Expected values only, obtained by executing the whole original module. No emitted function implementation generated by the oracle."
+    }
+  },
+  "native": {
+    "consumer": "artifacts/lottie-cap-join-native-consumer.cpp",
+    "includedCompleteOriginalHeaders": [
+      "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+      "flight/scene2d_formats/lottie_stroke_shape_item.hpp"
+    ],
+    "previous136": {
+      "compileLink": "PASS",
+      "checks": 22,
+      "failures": 0,
+      "runtimeBase": "78dd6146",
+      "afterActivationComparison": "All10 emitted137 headers and expected fixture bytes equal actual136 native inputs; runtime/generated/overrides b41bb9d9 vs78dd6146 unchanged."
+    },
+    "current137": {
+      "compileLink": "PASS",
+      "runtimeBase": "d5adda33",
+      "reasonForRefresh": "New base changes generated/flight/shape/shape_stroke.hpp after prior native freeze; repeat combined consumer with actual compiler137 headers and current native inputs.",
+      "checks": 22,
+      "failures": 0,
+      "compilerVersion": "clang22.1.8",
+      "actualSDL": "SDL3-3.4.10",
+      "command": "cap-join-native137-command.sh in qualification archive",
+      "buildLog": "cap-join-native137-build.log",
+      "runLog": "cap-join-native137-run.log",
+      "shapeStrokeSha256": "6e39ccb584678977ebd140465f0ff7885d1a609b4f4b979fe9986d8bbe4c5fb6",
+      "binarySha256": "b26fa68bbaa42d764fda4662030eda29cd94888d5ff8597050c0e6e8413e1cc5"
+    },
+    "executed": "Actual original emitted cap/join functions;11 source inputs,22 native comparisons.",
+    "limits": [
+      "Complete gradient and Stroke handler bodies are compiled, but those handlers are not executed.",
+      "No whole Lottie/native Bezier/image consumer or package shippability claim.",
+      "Frozen three-header gate and historical Exact21 denominator are not rewritten by the separate consumer."
+    ]
+  },
+  "remainingBoundaries": {
+    "text": {
+      "module": "lottieTextLayer.ts",
+      "firstFailureAfterVocabulary": "Ref<flight::types::k_4676b95d8bf2f899> cannot convert to optional<Ref<flight::scene2d_formats::k_dbbad269ab148d65>> at emitted line122.",
+      "bodyComparison": "Both holder bodies contain k: Array<Ref<LottieKeyframe<Ref<LottieTextDocument>>>>, differing only namespace qualification; anonymous names still differ.",
+      "needed": "Source-derived declaration/member owner resolution and a coherent normal Types snapshot, not a different-name alias or copied fields.",
+      "soleTypesWriter": "Builder2; no duplicate Types/output implementation here."
+    },
+    "image": {
+      "owner": "Builder4 Sprite options factory; Builder2 Types/Sprite",
+      "header": "FAIL at create_sprite(options) on default-only partial factory",
+      "fullOriginalConsumer": "NOT RUN"
+    },
+    "bezier": {
+      "owner": "Builder3 raw-value/return/storage design and proof",
+      "builder5SourceCases": 20,
+      "builder5NativeOwnerControls": 8,
+      "originalModuleNative": "Refused at cpp-erased-value-assertion-unrepresented; no native original Bezier PASS.",
+      "counterexample": "Original flatten returns string or object coordinate values through unknown; getter order, original referent and later storage/callable results must survive.",
+      "latestPeerDesign": "docs/compiler-requests/lottie-bezier-raw-return-design.md; added return/iterator/storage observations, no product implementation."
+    }
+  },
+  "normalOutputSequence": [
+    {
+      "owner": "Builder2",
+      "packages": [
+        "@flighthq/types",
+        "@flighthq/importdiagnostics"
+      ],
+      "condition": "Only the agreed grouped snapshot after qualified B/floor and normal-output authority. This first pair does not itself produce the format-helper vocabulary."
+    },
+    {
+      "owner": "Foreman-coordinated later writer",
+      "package": "@flighthq/scene2d-formats",
+      "modules": [
+        "lottieDocument.ts",
+        "lottieGradientShapeItems.ts",
+        "lottiePolystarShapeItem.ts",
+        "lottieTextLayer.ts",
+        "lottieImageLayer.ts",
+        "lottieStrokeShapeItem.ts"
+      ],
+      "condition": "Correct source-derived bodies plus original Stroke dependency in the merged normal tree. Then the existing package metadata renderer derives actual helper keys. Bezier, text and image native boundaries remain independently qualified or refused."
+    },
+    {
+      "packages": [
+        "@flighthq/node",
+        "@flighthq/scene2d-resources"
+      ],
+      "condition": "Conditional on actual source-derived dependency/output differences and explicit later authority. No new writer or output run authorized by this proof."
+    }
+  ],
+  "historicalEvidence": {
+    "exact21": "0PASS21FAIL unchanged",
+    "originalLottie32": "Prior220checks keep their original frozen composition, not recertified137.",
+    "compilerTexture136": "Prior40 compiler native checks,33 texture native checks and50 whole-original texture JS cases retain136 freeze."
+  },
+  "repoScope": "Proof scripts, consumers, artifacts and compiler-request documentation only; no product compiler/runtime patch, generated header, override or normal output change in this arc.",
+  "qualificationArchive": {
+    "file": "builder5-vocabulary-capjoin137-preparation.tgz",
+    "index": "evidence-index.json",
+    "scope": "Source/patch inputs,10complete emitted headers,normal-rendered table,source cases,consumer,commands/logs and prior frozen proof references. Archive hash supplied in handoff."
+  }
+}

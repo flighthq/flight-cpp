@@ -5,9 +5,10 @@
     "foreman-4d38e36e",
     "foreman-02615c01",
     "foreman-59356c7a",
-    "foreman-1d695b70"
+    "foreman-1d695b70",
+    "foreman-3069f25d"
   ],
-  "status": "Coherent compiler136/texture/source-getter preparation complete; actual original image header remains FAIL at the separately assigned source-faithful Sprite options factory; full image consumer NOT RUN. Vocabulary/Bezier remain working scope, no normal SDK promotion.",
+  "status": "COMPLETE: source-derived vocabulary plus whole-original cap/join preparation handed off for integration. Compiler137/current dependency native consumer22PASS; coherent136 compiler/texture prep already landed. Text owner,image options factory and Bezier raw storage remain explicit; no normal output or SDK promotion.",
   "authority": {
     "scope": "existing selected original Lottie/resource public header closure only, with ordinary same-cause compiler fixes",
     "excluded": [
@@ -25,7 +26,7 @@
   "inputs": {
     "historicalExact21": "0PASS21FAIL; unchanged",
     "initialDiagnosticComposition": "128 compiler +203 Flight =331; original freeze retained",
-    "currentCorrectedComposition": {
+    "frozenPreparation136": {
       "compilerPatchCount": 136,
       "flightPatchCount": 208,
       "total": 344,
@@ -578,7 +579,7 @@
         }
       ]
     },
-    "currentBase": "41f31e43",
+    "frozenPreparation136Base": "41f31e43",
     "sourceGraph": {
       "path": "/tmp/builder5-lottie-body/node-candidate-graph.json.gz",
       "sha256": "444b596533712492fa6d4ccf27d44d24d5d4d2f5605f94f4919605667b3f2d9c",
@@ -1131,7 +1132,17 @@
       "ownCompilerQualification": "133compiler205Flight338; source graph remains saved203 and no later SWF module emitted",
       "correctiveTextureSource": "133compiler206Flight339; two additional Flight entries are unrelated SWF patches",
       "note": "early scratch orchestration scripts hardcoded Flight203 after base advance; compiler counts/hashes and selected headers were actual, cumulative totals corrected here",
-      "currentQualification": "136compiler208Flight344, dynamically counted; compiler marker136, Flight marker208, both reverse/raw-clean/reapply PASS"
+      "frozenPreparation136": "136compiler208Flight344, dynamically counted; compiler marker136, Flight marker208, both reverse/raw-clean/reapply PASS",
+      "qualifiedProof137": "137compiler208Flight345;137reverse/raw-clean/reapply, productionstrict and10byte-identical emitted headers."
+    },
+    "qualifiedProof137": {
+      "compilerPatchCount": 137,
+      "flightPatchCount": 208,
+      "total": 345,
+      "rawClean": true,
+      "compilerBackendSha256": "67aec1c6b4fc52480e614666011f7cfa9802816ed907867ebc92e119e776a312",
+      "patchDigestRecord": "current-compiler-inputs.json in vocabulary/cap-join qualification archive",
+      "runtimeBase": "d5adda33"
     }
   },
   "focusedReproduction": {
@@ -1348,7 +1359,9 @@
         "guard only object/non-null and presence of v",
         "{v:7} returns the same object before any caller field validation",
         "an array wrapper returns its original first element",
-        "original cell mutation and escaped owner lifetime must remain visible"
+        "original cell mutation and escaped owner lifetime must remain visible",
+        "original flatten can return string/object coordinates through unknown despite number[] annotation",
+        "getter reads and errors occur in original source order, not during the presence guard"
       ],
       "requiredCapability": "retain erased assertion owner and lazy raw nested member/array projection, preserving source absence and exception timing",
       "unapprovedShortcuts": [
@@ -1356,7 +1369,9 @@
         "native LottieShapePath fabrication",
         "eager nested-array copy",
         "stub or copied replacement body"
-      ]
+      ],
+      "owner": "Builder3 raw-value/return/storage design and proof perForeman3069f25d; Builder5 reduction handed off.",
+      "evidence": "artifacts/lottie-bezier-carrier-boundary.json;20 whole-original JS cases and8 existing-runtime owner controls. Peer design in docs/compiler-requests/lottie-bezier-raw-return-design.md."
     },
     {
       "module": "packages/scene2d-formats/src/lottieImageLayer.ts",
@@ -1369,13 +1384,15 @@
     },
     {
       "module": "packages/scene2d-formats/src/lottieTextLayer.ts",
-      "finding": "Whole original body emits. Focused corrected132 native header first fails at missing source-derived structural row vocabulary f/fc/j/lh/tr; downstream owner ABI remains unqualified until the vocabulary is emitted. Earlier anonymous d.k failure is historical, not the current first failure.",
-      "constraint": "do not alias different anonymous names or copy fields merely because their visible bodies match; require source-derived member storage ownership"
+      "finding": "Ref<flight::types::k_4676b95d8bf2f899> cannot convert to optional<Ref<flight::scene2d_formats::k_dbbad269ab148d65>> at emitted line122.",
+      "constraint": "do not alias different anonymous names or copy fields merely because their visible bodies match; require source-derived member storage ownership",
+      "bodyComparison": "Both holder bodies contain k: Array<Ref<LottieKeyframe<Ref<LottieTextDocument>>>>, differing only namespace qualification; anonymous names still differ.",
+      "action": "Source-derived declaration/member owner resolution and a coherent normal Types snapshot, not a different-name alias or copied fields."
     },
     {
       "module": "packages/scene2d-formats/src/lottieGradientShapeItems.ts",
-      "finding": "corrected whole original native header now reaches structural-row schema missing-property assertion; helper source keys absent from installed vocabulary include g/lc/lj/ml/ml2/r",
-      "action": "regenerate source-derived shared structural member metadata in sole coordinated Types/output pass; do not add runtime name heuristics or hand-edit table"
+      "finding": "With normally derived vocabulary, frozen3header gate reaches omitted map_lottie_line_cap. Whole original Stroke dependency now emits and both original gradient+Stroke headers compile/link in the separate22-check native consumer.",
+      "action": "Later normal formats slice includes lottieStrokeShapeItem.ts; shared keys derive from the actual merged corrected headers, not the Types-only pass."
     }
   ],
   "coordinatedRegenerationPlan": {
@@ -1387,7 +1404,7 @@
         "modules": [
           "ImportDiagnostic.ts"
         ],
-        "need": "original diagnostic context/details carrier and shared member metadata; other changed Types declarations remain B-owned"
+        "need": "Original diagnostic context/details declarations; other Types declarations remain Builder2-owned. Helper vocabulary derives later from actual format bodies in the merged normal tree."
       },
       {
         "package": "@flighthq/importdiagnostics",
@@ -1403,7 +1420,8 @@
           "lottieGradientShapeItems.ts",
           "lottiePolystarShapeItem.ts",
           "lottieTextLayer.ts",
-          "lottieImageLayer.ts"
+          "lottieImageLayer.ts",
+          "lottieStrokeShapeItem.ts"
         ],
         "need": "whole original bodies and original native callee identities; Bezier assertion capability and residual native owner/ABI boundaries must be resolved or honestly remain refused"
       },
@@ -1592,11 +1610,12 @@
         }
       ],
       "constraint": "selected static comparison only, not a new inventory; absence from installed vocabulary is not by itself proof a particular key is instantiated",
-      "action": "normal coordinated source-derived structural table regeneration; no hand-written member bindings"
+      "action": "Existing source-derived renderer over the merged actual corrected formats headers, including complete original Stroke dependency; no hand bindings. A Types-only pass does not add uses hidden in omitted format bodies.",
+      "qualification": "artifacts/original-json-vocabulary-cap-join-qualification.json:19derivedkeys/no removals,9/10replacement tables byte-identical; frozen3gate1PASS2FAIL and separate cap/join consumer."
     },
     "normalDiagnosticSnapshot": {
       "available": false,
-      "asOf": "Delivered base41f31e43; normal pair still unchanged from dc4ba1c0",
+      "asOf": "Delivered d5adda33; no matching normal pair has landed. Builder2 status remains B HELD with7 unmerged commits/493 files as of2026-10-18T19:58:50.631Z.",
       "normalTypesSha256": "3eed0241998872b997acf46f202e2f22b9105539fbd0910a9673254c2602a1f8",
       "normalCollectorSha256": "b65779e7bbf718844a30f067cbad7e419b97b8461049fd45367e41685e8bdba8",
       "actualDifference": "normal pair still uses Record detail, qualified original scratch pair ReadonlyRecordView",
@@ -1618,7 +1637,7 @@
           "@flighthq/node"
         ],
         "conditionalPackage": "@flighthq/scene2d-resources",
-        "condition": "Actual matching normal diagnostic pair plus vocabulary/Bezier/image factory boundaries qualified, then explicit later output authority"
+        "condition": "Actual matching normal diagnostic pair and source-derived text/image/Bezier boundary qualification or explicit refusal; later corrected formats headers include original Stroke. Shared renderer derives helper keys only after these bodies join the normal merged tree. Explicit later output authority remains required."
       }
     ]
   },
@@ -1730,7 +1749,7 @@
     "sourcePatchAutomation": "2PASS0FAIL0SKIP",
     "existingReadonlyPresenceControls": "9PASS0FAIL0SKIP on132 before disjoint b696 optional chain result peer addition",
     "nativeFixtureRetry": "8PASS0FAIL0SKIP; 30nativechecks",
-    "current136": {
+    "frozen136": {
       "managedReverseRawCleanReapply": "PASS",
       "backendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
       "productionStrict": "PASS",
@@ -1745,6 +1764,15 @@
       "textureNativeChecks": 33,
       "textureNativeFailures": 0,
       "textureCTest": "1PASS0FAIL --no-tests=error"
+    },
+    "proof137": {
+      "managedCompilerReverseRawCleanReapply": "PASS",
+      "managedFlight208ReverseRawCleanReapply": "PASS",
+      "productionStrict": "PASS",
+      "sourcePatchAutomation": "2PASS0FAIL0SKIP",
+      "allTenEmittedHeadersByteEqualToActual136NativeInputs": true,
+      "capJoinSourceFixtureDataByteEqual": true,
+      "nativeRefresh": "PASS compile/link and22nativechecks0FAIL on delivered d5adda33 with actualSDL; complete original gradient+Stroke headers, maps executed, whole handlers not executed."
     }
   },
   "correctedWholeHelperHeaderGate": {
@@ -1795,7 +1823,8 @@
       }
     ],
     "passed": [],
-    "unattempted": []
+    "unattempted": [],
+    "proofFreeze": "Historical132/133 missing-key/image boundary; unchanged report, superseded cause observations are recorded separately."
   },
   "textureDependency": {
     "authority": [
@@ -1963,5 +1992,64 @@
     "bytes": 5284111,
     "files": 96,
     "scope": "96 immutable source/input/header/report/command/log entries; all stored bytes individually hash-verified; no SDK output in repo"
-  }
+  },
+  "freshWholeModules137": {
+    "orderedComposition": "137compiler208Flight345; saved1467-module declaration graph203",
+    "headers": [
+      {
+        "header": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+        "sha256": "df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/node/node.hpp",
+        "sha256": "cb4a43905fc77c74187cbcd475b3053b22761feec209b9b921b6fb779f28984b",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/node/revision.hpp",
+        "sha256": "7e71dc2880fb4c1be4f86b84642dba1380570c5188295c19639f7179ed5ede45",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_document.hpp",
+        "sha256": "0dacdd19e3b666791db899d3589f21499f4fa04e3cdc11b99e6beaf5a6e8f42e",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+        "sha256": "2457c324588deeb3f5f978cd673538b22b0640556a377fa09a8003365ceff8ff",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_image_layer.hpp",
+        "sha256": "f5805ac47ce943239dda050a5eb32dae9e05cb25ff897481f6e63755e101fffb",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+        "sha256": "b412e5f0fce67d04f592fbc315544a97303d0962529a8461650543c5d16bc6df",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+        "sha256": "7fd6d8e7ea7d56596a6cd4d868c64de3f3f4afb1d90ddc136ec8718cc1875140",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/scene2d_formats/lottie_text_layer.hpp",
+        "sha256": "5b85057c90ac089ebe12dc15b23e09b2f7b581acff821410dc33930373ceb9fd",
+        "byteIdenticalToActualNativeInput": true
+      },
+      {
+        "header": "flight/types/import_diagnostic.hpp",
+        "sha256": "fa74b665ef0f4be08f599e0ded55cf5640c0ff7aebc1e7aa5254ff98ee20e56c",
+        "byteIdenticalToActualNativeInput": true
+      }
+    ],
+    "allTenByteIdenticalToActual136NativeInput": true,
+    "omittedBodies": 0,
+    "repairs": "Existing normal declared repairs and exact duplicate-name/body provider proof only."
+  },
+  "vocabularyCapJoinQualification": "artifacts/original-json-vocabulary-cap-join-qualification.json"
 }
