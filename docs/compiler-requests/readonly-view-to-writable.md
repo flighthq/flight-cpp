@@ -356,3 +356,11 @@ cells including signed zero and NaN, replacement attachments, single evaluation,
 and an exception's exact owner. Compiler Vitest and Oxlint executables and the static-check launcher
 are unavailable locally; no upstream unit/lint/static gate pass is claimed. Original Canvas headers
 and their real public consumer still require scoped normal regeneration and qualification.
+
+The later full 70-compiler-patch composition applies and reverts cleanly, builds, and passes the same
+13 controls against its preceding 69-patch source baseline. The four emitted native function headers
+remain byte-identical to their qualified version, so that native check is not repeated. A separate
+origin spotcheck transpiles the raw `806d257` backend source on the same fixture IR: it already emits
+the invalid writable intermediate before any repair, and applying the complete declared repair set
+leaves that return unchanged. This isolates the real emitter defect; it does not claim a full raw
+compiler build or replace the pending original Canvas consumer qualification.
