@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <functional>
+#include <initializer_list>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -75,7 +76,7 @@ inline std::optional<flight::Array<flight::Ref<flight::types::ShapeStrokeRegion>
   if (((!style_capture.read_binding().has_value() || !centerline_capture.read_binding().has_value()) || (static_cast<double>(centerline_capture.read_binding().value()->commands.size()) == 0.0))) {
     return;
   }
-  regions.push(([&]() { auto object_member_path = centerline_capture.read_binding().value(); auto object_member_style = style_capture.read_binding().value(); auto object_member_color = color_capture.read_binding(); auto object_member_alpha = alpha_capture.read_binding(); return flight::make_ref<flight::types::ShapeStrokeRegion>(flight::types::ShapeStrokeRegion{.path = object_member_path, .color = object_member_color, .alpha = object_member_alpha, .style = object_member_style}); }()));
+  regions.push(([&]() { auto object_member_path = centerline_capture.read_binding().value(); auto object_member_style = style_capture.read_binding().value(); auto object_member_color = color_capture.read_binding(); auto object_member_alpha = alpha_capture.read_binding(); auto intersection_value = flight::mark_constructed_own_named_properties(flight::make_ref<flight::types::ShapeStrokeRegion>(flight::types::ShapeStrokeRegion{.style = object_member_style}), std::initializer_list<flight::ConstructedOwnKey>{{flight::String("path"), flight::ConstructedKeySentinel::Value}, {flight::String("style"), flight::ConstructedKeySentinel::Value}, {flight::String("color"), flight::ConstructedKeySentinel::Value}, {flight::String("alpha"), flight::ConstructedKeySentinel::Value}}); intersection_value->path = object_member_path; intersection_value->color = object_member_color; intersection_value->alpha = object_member_alpha; return intersection_value; }()));
 };
   double i = 0.0;
   while ((i < static_cast<double>(commands.size()))) {

@@ -588,6 +588,27 @@ void stroke_outline_regions_and_fallbacks() {
                                  flight::String("bevel"), 4.0);
   shape::append_shape_move_to(open, 0.0, 0.0);
   shape::append_shape_line_to(open, 20.0, 0.0);
+  const auto centerlines = shape::get_shape_stroke_regions(open->data->commands);
+  check(centerlines.has_value() && centerlines->size() == 1,
+        "original stroke collector constructs the required centerline region");
+  if (centerlines && !centerlines->empty()) {
+    const auto region = centerlines->element(0);
+    flight::Ref<types::ShapeFillRegion> base = region;
+    check(base.get() == region.get() && !base.owner_before(region) &&
+              !region.owner_before(base),
+          "stroke and fill views retain the original allocation and control block");
+    check(&base->path == &region->path && &base->color == &region->color &&
+              &base->alpha == &region->alpha,
+          "inherited stroke initialization uses the base path/color/alpha cells");
+    const auto original_path = region->path;
+    check(original_path && !original_path->commands.empty() && region->style,
+          "required stroke path and style are initialized from the original collector");
+    base->color = 0x123456;
+    base->alpha = 0.25;
+    check(region->color == 0x123456 && region->alpha == 0.25 &&
+              region->path == original_path,
+          "legal base writes stay live without replacing the stroke path owner");
+  }
   const auto open_regions =
       shape::get_shape_stroke_outline_regions(open->data->commands);
   check(open_regions.has_value() && open_regions->size() == 1 &&
