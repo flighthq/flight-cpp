@@ -90,8 +90,17 @@ class JsonScalarCell final {
     return present_ ? flight::to_string(value_) : flight::String("undefined");
   }
 
+  // A member that is not present reads as `undefined`, exactly like a member whose value is
+  // `undefined`. Presence is what separates them for `in`; equality is a question about the value,
+  // so the two must compare equal here and nowhere else.
+  [[nodiscard]] bool evaluates_to_undefined() const noexcept {
+    return !present_ || value_.is_undefined();
+  }
+
   [[nodiscard]] bool strict_equals(const JsonScalarCell& other) const {
-    if (!present_ || !other.present_) return present_ == other.present_;
+    if (evaluates_to_undefined() || other.evaluates_to_undefined()) {
+      return evaluates_to_undefined() && other.evaluates_to_undefined();
+    }
     return value_.strict_equals(other.value_);
   }
 

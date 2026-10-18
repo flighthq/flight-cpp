@@ -4533,6 +4533,15 @@ static void test_json_scalar_cell() {
   check(null_value.loose_equals(absent) && !null_value.strict_equals(absent),
         "null == undefined is true while strict equality is false");
 
+  // A missing member and a member whose value is undefined are the same value in JavaScript. Presence
+  // still separates them for `in`, but equality asks about the value, so both directions agree here.
+  const JsonScalarCell present_undefined{Any(flight::undefined)};
+  check(!present_undefined.is_absent() && present_undefined.is_present() && present_undefined.is_nullish() &&
+            std::isnan(present_undefined.to_number()) && present_undefined.strict_equals(absent) &&
+            absent.strict_equals(present_undefined) && present_undefined.loose_equals(absent) &&
+            !present_undefined.strict_equals(null_value),
+        "a present undefined equals an absent member while presence still separates them");
+
   const JsonScalarCell number{Any(2.0)};
   check(number.type_of() == "number" && number.to_boolean() && number.to_number() == 2.0 &&
             number.as_native_number() == 2.0,
