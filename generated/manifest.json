@@ -5550,7 +5550,7 @@
     },
     {
       "dependency": "flight-compiler",
-      "digest": "ca88fa5120a78ce14fef43f803c1be1a0201fb82f84cc271aa85abd0f2d7f80e",
+      "digest": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c",
       "id": "compiler-regexp-capture-member-presence",
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/scene2d-formats"
@@ -5560,6 +5560,13 @@
       "digest": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c",
       "id": "compiler-defaulted-nullable-present-storage",
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppDefaultedNullableBinding.test.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100",
+      "id": "compiler-json-assertion-scalar-row",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {
