@@ -122,3 +122,9 @@ direct-read, optional-receiver, multi-payload and object-payload counterexamples
 byte-identical output or the same refusal. This is a bounded storage correction;
 other independent missing-key/nullable payload boundaries in this request remain open.
 Declared-stack and normal original public consumers are still being qualified.
+
+The ordered 79-compiler/201-Flight stack now applies with byte-exact tested source, builds,
+passes all 14 focused tests and reverses both pins cleanly. The selected existing groups
+are 16 pass/1 unchanged failure on both the preceding 77 stack and this candidate. The
+full compiler check retains the same four failing gates and five foreign fixture errors,
+with no new fixture errors. Normal generation and final original consumers remain pending.
