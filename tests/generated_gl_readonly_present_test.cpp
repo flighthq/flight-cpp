@@ -35,8 +35,40 @@ static_assert(std::is_same_v<decltype(&render_gl::present_gl_render_target), voi
 static_assert(std::is_same_v<decltype(&render_gl::draw_gl_linear_to_srgb_pass), void (*)(State, SourceView, std::optional<DestView>)>);
 
 int failures = 0;
+int target_heritage_checks = 0;
 void check(bool condition, const char* message) {
   if (!condition) { std::cerr << "FAIL: " << message << '\n'; ++failures; }
+}
+
+template <typename Target>
+void check_target_base_cells(const flight::Ref<Target>& target) {
+  // The pending Types snapshot adds this heritage. Keep the same public consumer
+  // buildable on the preceding flat declarations as well as that snapshot.
+  if constexpr (std::is_base_of_v<types::GlRenderTarget, Target>) {
+    flight::Ref<types::GlRenderTarget> base = target;
+    check(!base.owner_before(target) && !target.owner_before(base) &&
+              &base->entity_runtime_key == &target->entity_runtime_key &&
+              &base->gl == &target->gl && &base->width == &target->width &&
+              &base->height == &target->height &&
+              &base->framebuffer == &target->framebuffer &&
+              &base->color_attachments == &target->color_attachments &&
+              &base->color_space == &target->color_space,
+          "render target base view replaced its allocation or physical cells");
+    const auto width = base->width;
+    base->width += 1;
+    check(target->width == width + 1, "render target hid a legal base width write");
+    base->width = width;
+    const auto framebuffer = base->framebuffer;
+    base->framebuffer = std::nullopt;
+    const auto storage = flight::make_ref<render_gl::GlTextureRenderTargetStorage>(
+        render_gl::GlTextureRenderTargetStorage{.framebuffer = target->framebuffer});
+    check(!target->framebuffer.has_value() && !storage->framebuffer,
+          "render target storage unwrapped or replaced an absent base framebuffer");
+    base->framebuffer = framebuffer;
+    check(target->framebuffer == framebuffer,
+          "render target lost the original framebuffer identity through its base cell");
+    ++target_heritage_checks;
+  }
 }
 
 void check_rederived_program_and_callbacks(const State& state) {
@@ -214,6 +246,13 @@ void run() {
   flight::host_sdl::GlApplication app({.title="Flight readonly present", .width=16, .height=12, .hidden=true});
   const auto gl = app.context();
   const auto state = render_gl::create_gl_render_state(gl);
+  const auto screen = render_gl::create_gl_screen_render_target(gl);
+  check(screen->width == gl.drawing_buffer_width() &&
+            screen->height == gl.drawing_buffer_height() &&
+            screen->gl == gl && screen->color_attachments == 1 &&
+            screen->color_space == flight::String("srgb"),
+        "screen target factory lost its original context, dimensions or defaults");
+  check_target_base_cells(screen);
   check_rederived_program_and_callbacks(state);
   check_custom_source_handoff(state);
   const auto runtime = render_gl::get_gl_render_state_runtime(state);
@@ -250,6 +289,7 @@ void run() {
       flight::row_field<flight::RowKey<"depth">>(flight::String("none")),
       flight::row_field<flight::RowKey<"sampleCount">>(1.0));
   const auto source = render_gl::create_gl_texture_render_target(state, descriptor);
+  check_target_base_cells(source);
   const auto alternate = render_gl::create_gl_texture_render_target(state, descriptor);
   const auto output = render_gl::create_gl_texture_render_target(state, descriptor);
   const auto pass = render_gl::acquire_gl_render_pass_handle(gl, state, output);
@@ -371,7 +411,8 @@ int main() {
   try {
     run();
     if (failures) return 1;
-    std::cout << "readonly present checks passed: eleven real draws, copy/OETF RGBA, nominal/view sources, target/canvas destinations, live owner cells and cached program identity\n";
+    std::cout << "readonly present checks passed: eleven real draws, copy/OETF RGBA, nominal/view sources, target/canvas destinations, live owner cells and cached program identity; "
+              << target_heritage_checks << " inherited target owner/cell groups\n";
     return 0;
   } catch (const std::exception& e) {
     std::cerr << "readonly present failed: " << e.what() << '\n'; return 1;

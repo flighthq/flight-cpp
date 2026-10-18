@@ -48,7 +48,9 @@ struct GlTextureRenderTargetStorage : public flight::ReferenceEnabled {
   double sample_count;
   flight::types::RenderTargetDepth depth;
   RenderTargetColorSpace color_space;
-  flight::host_sdl::WebGlFramebuffer framebuffer;
+  // Keep the actual cell carrier: the inherited base permits the default
+  // framebuffer; the preceding flat declaration used a required handle.
+  decltype(GlTextureRenderTarget::framebuffer) framebuffer;
   std::optional<flight::host_sdl::WebGlFramebuffer> resolve_framebuffer;
   flight::Array<flight::host_sdl::WebGlTexture> textures;
   std::optional<flight::host_sdl::WebGlTexture> depth_texture;
@@ -57,14 +59,15 @@ struct GlTextureRenderTargetStorage : public flight::ReferenceEnabled {
 };
 
 inline flight::Ref<GlScreenRenderTarget> create_gl_screen_render_target(GlContext gl) {
-  return flight::make_ref<GlScreenRenderTarget>(GlScreenRenderTarget{
-      .entity_runtime_key = std::nullopt,
-      .height = static_cast<double>(gl.drawing_buffer_height()),
-      .width = static_cast<double>(gl.drawing_buffer_width()),
-      .gl = gl,
-      .framebuffer = flight::null,
-      .color_attachments = 1.0,
-      .color_space = flight::String("srgb")});
+  auto target = flight::make_ref<GlScreenRenderTarget>();
+  target->entity_runtime_key = std::nullopt;
+  target->gl = gl;
+  target->framebuffer = flight::null;
+  target->width = static_cast<double>(gl.drawing_buffer_width());
+  target->height = static_cast<double>(gl.drawing_buffer_height());
+  target->color_attachments = 1.0;
+  target->color_space = flight::String("srgb");
+  return target;
 }
 
 inline void destroy_gl_texture_render_target(
@@ -388,33 +391,25 @@ inline flight::Ref<GlTextureRenderTarget> make_gl_texture_render_target(
           .color_renderbuffers = {},
           .depth_stencil_renderbuffer = std::nullopt});
   const auto texture = allocate_gl_texture_render_target_storage(state, storage);
-  auto target = flight::make_ref<GlTextureRenderTarget>(GlTextureRenderTarget{
-      .entity_runtime_key = std::nullopt,
-      .height = storage->height,
-      .width = storage->width,
-      .gl = gl,
-      .framebuffer = storage->framebuffer,
-      .color_attachments = storage->color_attachments,
-      .color_space = storage->color_space,
-      .requested_axes = flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
-          .width = requested->width,
-          .height = requested->height,
-          .format = requested->format,
-          .color_attachments = requested->color_attachments,
-          .color_formats = requested->color_formats.slice(),
-          .sample_count = requested->sample_count,
-          .depth = requested->depth,
-          .color_space = requested->color_space}),
-      .format = storage->format,
-      .color_formats = storage->color_formats.slice(),
-      .depth = storage->depth,
-      .sample_count = storage->sample_count,
-      .resolve_framebuffer = storage->resolve_framebuffer,
-      .textures = storage->textures,
-      .texture = texture,
-      .depth_texture = storage->depth_texture,
-      .color_renderbuffers = storage->color_renderbuffers,
-      .depth_stencil_renderbuffer = storage->depth_stencil_renderbuffer});
+  auto target = flight::make_ref<GlTextureRenderTarget>();
+  target->entity_runtime_key = std::nullopt;
+  target->gl = gl;
+  target->requested_axes = copy_render_target_axes(requested);
+  target->width = storage->width;
+  target->height = storage->height;
+  target->format = storage->format;
+  target->color_attachments = storage->color_attachments;
+  target->color_formats = storage->color_formats.slice();
+  target->depth = storage->depth;
+  target->color_space = storage->color_space;
+  target->sample_count = storage->sample_count;
+  target->framebuffer = storage->framebuffer;
+  target->resolve_framebuffer = storage->resolve_framebuffer;
+  target->textures = storage->textures;
+  target->texture = texture;
+  target->depth_texture = storage->depth_texture;
+  target->color_renderbuffers = storage->color_renderbuffers;
+  target->depth_stencil_renderbuffer = storage->depth_stencil_renderbuffer;
   const auto runtime = get_gl_render_state_runtime(state);
   gl.bind_framebuffer(gl.framebuffer, runtime->current_framebuffer);
   bind_gl_texture_realization(state, std::nullopt);
