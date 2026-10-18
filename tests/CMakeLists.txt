@@ -1464,7 +1464,7 @@ target_include_directories(
 )
 target_link_libraries(flight_cpp_generated_loader_factory_progress_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_loader_factory_progress COMMAND flight_cpp_generated_loader_factory_progress_tests)
-flight_cpp_package_test_labels(flight_cpp.generated_loader_factory_progress loader types entity)
+flight_cpp_package_test_labels(flight_cpp.generated_loader_factory_progress loader types)
 
 add_executable(flight_cpp_generated_physics2d_abi_tests generated_physics2d_abi_test.cpp)
 target_include_directories(
