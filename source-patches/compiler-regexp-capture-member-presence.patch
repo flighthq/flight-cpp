@@ -1,7 +1,20 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -4303,7 +4303,8 @@
+@@ -4003,6 +4003,12 @@
+   denseArrayLengthInitialized = false,
+ ): string {
+   if (expectedType && getCppRuntimeProfile(context.options) === 'flight-cpp') {
++    if (
++      expression.kind === 'element' &&
++      hasCppRegExpCaptureUnionStorageCpp(expectedType, context) &&
++      hasCppRegExpExecArrayIndexedReceiverCpp(expression, context)
++    )
++      return emitOptionalExpressionCpp(expression, context, expectedType);
+     const voidValueConversion = emitCppContextualVoidValueCpp(expression, expectedType, context);
+     if (voidValueConversion) return voidValueConversion;
+     const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
+@@ -4367,7 +4373,8 @@
            (expression.left.optional === true ||
              expression.left.semantics.optionalChain !== undefined ||
              (leftCallee?.kind === 'property' &&
@@ -11,7 +24,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          if (
            leftType &&
            !union &&
-@@ -4555,7 +4556,7 @@
+@@ -4619,7 +4626,7 @@
            // member spelling a general name map produces (`text.to_string()`) names nothing.
            isIrStringTypeEvidenceCpp(getIrExpressionTypeEvidenceCpp(expression.callee.object, context)))
        ) {
@@ -20,7 +33,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          if (expression.arguments.length === 1) {
            if (getCppRuntimeProfile(context.options) !== 'flight-cpp') {
              emissionError(context, 'radix-bearing number toString requires a downstream runtime mapping');
-@@ -4594,7 +4595,7 @@
+@@ -4658,7 +4665,7 @@
          );
          if (binding && binding.kind === 'sizeMethod') {
            assertCppPresentOptionalStorageMemberReceiverCpp(expression.callee, context);
@@ -29,7 +42,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
            return `static_cast<double>(${receiver}${memberOp(expression.callee.object, context)}${binding.targetName}())`;
          }
          if (binding && binding.kind === 'method') {
-@@ -4607,7 +4608,7 @@
+@@ -4671,7 +4678,7 @@
              cppArraySelfReturningMethods.has(expression.callee.member.name)
                ? expectedType
                : undefined;
@@ -38,7 +51,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
              expression.callee.object,
              context,
              receiverExpectedType,
-@@ -6678,7 +6679,7 @@
+@@ -6751,7 +6758,7 @@
        if (memberEvidence && !isCppExpressionVariantUnionCpp(expression.object, context)) {
          const binding = getCompilerCppAmbientMemberBinding(memberEvidence, getCppRuntimeProfile(context.options));
          if (binding && binding.kind === 'sizeMethod') {
@@ -47,7 +60,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
            return `static_cast<double>(${receiver}${memberOp(expression.object, context)}${binding.targetName}())`;
          }
          if (binding && binding.kind === 'sizeProperty') {
-@@ -14837,11 +14838,107 @@
+@@ -14936,11 +14943,117 @@
  // storage even when their TypeScript annotation names only the payload. Require control-flow evidence
  // before crossing that boundary, and require one present runtime domain so a resolved member cannot be
  // applied to a heterogeneous carrier merely because one alternative happens to provide it.
@@ -55,24 +68,34 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +// A String member access on undefined throws at the member read, before evaluating call arguments.
 +// Keep the optional capture carrier for guards/coalesces and check only this operation; do not invent
 +// a presence proof or coerce an absent capture to an empty string at a typed function boundary.
++function hasCppRegExpCaptureUnionStorageCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  return (
++    plan?.kind === 'optionalSingle' &&
++    plan.sentinels.undefined === 'optionalAbsence' &&
++    plan.valueSlots.length === 1 &&
++    plan.valueSlots[0]?.targetType === 'flight::String'
++  );
++}
++
 +function getCppRegExpCaptureStorageCpp(receiver: Readonly<IrExpression>, context: EmitContext): string | undefined {
 +  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
 +  if (receiver.kind === 'element' && hasCppRegExpExecArrayIndexedReceiverCpp(receiver, context)) {
 +    return emitOptionalExpressionCpp({ ...receiver, presence: undefined }, context, undefined);
 +  }
-+  if (
-+    receiver.kind === 'identifier' &&
-+    receiver.reference.kind === 'binding' &&
-+    context.arrayElementBindingIds.has(receiver.reference.binding.id)
-+  ) {
-+    const initializer = context.bindingInitializers.get(receiver.reference.binding.id);
++  if (receiver.kind === 'identifier' && receiver.reference.kind === 'binding') {
++    const bindingId = receiver.reference.binding.id;
++    const type = context.bindingTypes.get(bindingId);
++    if (!context.arrayElementBindingIds.has(bindingId) && (!type || !hasCppRegExpCaptureUnionStorageCpp(type, context)))
++      return undefined;
++    const initializer = context.bindingInitializers.get(bindingId);
 +    if (initializer?.kind === 'element' && hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context)) {
 +      return emitIdentifierReference(receiver.reference, context);
 +    }
 +  }
 +  return undefined;
 +}
-+
 +function getCppRegExpCaptureMemberStorageCpp(
 +  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
 +  context: EmitContext,
@@ -155,7 +178,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (!hasCppAbsenceStorageCpp(receiver, context)) return;
    if (!hasCppPresentExpressionStorageProofCpp(receiver, context)) {
      emissionError(
-@@ -14942,6 +15039,13 @@
+@@ -15041,6 +15154,13 @@
    // stores a sentinel as optional absence, the inner layer is that sentinel. A binding initialized by such
    // a read keeps the same carrier. Testing only the outer layer would report a null element as present and
    // a miss as null, so both layers are inspected here, in the order the source comparison asks.
@@ -169,7 +192,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const indexedElement = getCppIndexedNullableElementPresencePlanCpp(operand, context);
    if (indexedElement) {
      context.includes.add('optional');
-@@ -23568,7 +23672,8 @@
+@@ -23667,7 +23787,8 @@
      // bare unknown; lookalike methods never produce `recovered` and retain their recorded callable result.
      const returns = recovered ?? callableReturns;
      if (returns && returns.kind !== 'unknown') {
@@ -179,7 +202,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          ? { kind: 'union', types: [returns, { kind: 'undefined' }] }
          : returns;
      }
-@@ -28287,7 +28392,8 @@
+@@ -28386,7 +28507,8 @@
    const runtimeMemberType = getCppRuntimeMemberPropertyTypeEvidenceCpp(expression, context);
    const valueType =
      recordedNarrowedType ?? reconstructedType ?? recordedLiteralType ?? recordedAliasedMemberType ?? runtimeMemberType;
@@ -189,7 +212,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    return createIrTypeEvidenceUnionCpp([valueType, { kind: 'undefined' }]);
  }
  
-@@ -28882,6 +28988,7 @@
+@@ -28981,20 +29103,33 @@
        // the source is, not how it is stored.
        const carriesAbsence =
          initializer.semantics.receivers.includes('array') ||
@@ -197,18 +220,46 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          Boolean(
            getCppRecordTypeArgumentsCpp(getIrExpressionTypeEvidenceCpp(initializer.object, context), context, new Set()),
          );
-@@ -28891,7 +28998,9 @@
+       if (!carriesAbsence) return;
++      // RegExp's undefined capture is already represented by an explicit undefined union.
++      // Unlike indexed nullable arrays, capture storage adds no second absence domain.
++      if (
++        hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context) &&
++        variable.type &&
++        hasCppRegExpCaptureUnionStorageCpp(variable.type, context)
++      )
++        return;
+       candidates.add(variable.binding.id);
+     },
    });
    const result = new Set<string>();
    for (const id of candidates) {
 -    if (absenceObserved.has(id)) result.add(id);
 +    const initializer = context.bindingInitializers.get(id);
-+    if (absenceObserved.has(id) || (initializer?.kind === 'element' &&
-+        hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context))) result.add(id);
++    if (
++      absenceObserved.has(id) ||
++      (initializer?.kind === 'element' && hasCppRegExpExecArrayIndexedReceiverCpp(initializer, context))
++    )
++      result.add(id);
    }
    return result;
  }
-@@ -31804,7 +31913,20 @@
+-
+ // `Array::get` adds index absence outside the element carrier. A loop that starts its numeric index at
+ // zero, preserves that nonnegative integer by increments, checks `i < sameArray.length`, and immediately
+ // reads `sameArray[i]` proves that outer layer cannot be observed. For `(T | null)[]`, retain exactly the
+@@ -31683,6 +31818,10 @@
+   context: EmitContext,
+   expectedType: Readonly<IrType> | undefined,
+ ): string {
++  if (expression.kind === 'identifier') {
++    const capture = getCppRegExpCaptureStorageCpp(expression, context);
++    if (capture) return capture;
++  }
+   if (expression.kind === 'property' && getCppPrimitiveRecordReadStorageTypeCpp(expression, context)) {
+     const record = getCppRecordTypeArgumentsCpp(
+       getIrExpressionTypeEvidenceCpp(expression.object, context),
+@@ -31876,7 +32015,20 @@
    // domain supports the call.
    const contextualArray = getCppFreshMappedArrayContextualResultTypeCpp(expression, expectedType, context);
    const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
@@ -230,7 +281,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      return emitExpression({ ...expression, callee: { ...callee, optional: false } }, context, contextualArray);
    }
    const primitiveMemberCall = emitCppOptionalPrimitiveMemberCallCpp(
-@@ -31827,7 +31949,7 @@
+@@ -31899,7 +32051,7 @@
          : `optional property call ${callee.name} requires callable result evidence`,
        'cpp-optional-property-call-missing-callable-result',
      );
@@ -239,7 +290,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const memberOperator = hasFlightReferenceRepresentationCpp(receiverType, context) ? '->' : '.';
    // Optional invocation changes whether the callee runs, not the callee's parameter ABI. Its present
    // branch therefore uses the same omitted-argument completion as a direct call; otherwise a source
-@@ -32314,11 +32436,18 @@
+@@ -32386,11 +32538,18 @@
  ): string {
    const semantics = expression.optionalChain;
    if (!semantics) emissionError(context, 'optional property access lacks neutral optional-chain evidence');
@@ -259,7 +310,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      const guarded = emitCppDeclaredPresentReferenceChainCpp(expression, context);
      if (guarded) return guarded;
      return emitExpression({ ...expression, optional: false }, context);
-@@ -32337,7 +32466,7 @@
+@@ -32409,7 +32568,7 @@
        ? (resolvedPropertyType ?? contextualValueType ?? semantics.valueType)
        : semantics.valueType;
    const payload = emitOptionalChainPayloadTypeCpp(valueType, context);
@@ -268,7 +319,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
    const memberOperator = hasFlightReferenceRepresentationCpp(receiverType, context) ? '->' : '.';
    let projected: string;
-@@ -32348,7 +32477,7 @@
+@@ -32420,7 +32579,7 @@
    } else if (expression.member) {
      const binding = getCompilerCppAmbientMemberBinding(expression.member, getCppRuntimeProfile(context.options));
      if (binding?.kind === 'sizeMethod') {
@@ -306,7 +357,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.te
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
-@@ -0,0 +1,213 @@
+@@ -0,0 +1,249 @@
 +import { execFileSync } from 'node:child_process';
 +import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 +import { tmpdir } from 'node:os';
@@ -317,7 +368,6 @@ new file mode 100644
 +import { describe, expect, it } from 'vitest';
 +
 +import {
-+  collectCppRuntimeIncludeDirectories,
 +  createCppExecutableArguments,
 +  findCppCompilerToolchain,
 +  getCppExecutableName,
@@ -328,7 +378,7 @@ new file mode 100644
 +
 +const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 +const toolchain = findCppCompilerToolchain();
-+const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const includes = [path.join(resolveDependency(root, 'flight-cpp').directory, 'include')];
 +const source = String.raw`
 +export function direct(value: string): string[] {
 +  const match = /([^{}]+)\{([^{}]*)\}/.exec(value);
@@ -420,6 +470,32 @@ new file mode 100644
 +  if (match === null) return -1;
 +  return match?.[1].length;
 +}
++export function localOptional(value: string): string {
++  const match = /(a)?b/.exec(value);
++  const capture = match?.[1];
++  return capture ?? 'missing';
++}
++export function localTyped(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const capture: string | undefined = match[1];
++  return capture ?? 'missing';
++}
++export function localOptionalLength(value: string): number {
++  const match = /(a)?b/.exec(value);
++  const capture = match?.[1];
++  return capture?.length ?? -1;
++}
++export function localTypedMember(value: string): number {
++  const match = /(a)?b/.exec(value);
++  const capture: string | undefined = match?.[1];
++  return capture!.length;
++}
++export function localEmpty(value: string): string {
++  const match = /(a)?(b*)/.exec(value);
++  const capture: string | undefined = match?.[2];
++  return capture ?? 'missing';
++}
 +`;
 +
 +function emit(text = source): string {
@@ -490,6 +566,17 @@ new file mode 100644
 +  try { static_cast<void>(fixture::guarded_continuation("b")); }
 +  catch (const flight::TypeError&) { guardedMissing = true; }
 +  if (!guardedMissing) return fail(15);
++  if (fixture::local_optional("ab") != String("a") || fixture::local_optional("b") != String("missing") ||
++      fixture::local_optional("z") != String("missing")) return fail(16);
++  if (fixture::local_typed("ab") != String("a") || fixture::local_typed("b") != String("missing") ||
++      fixture::local_typed("z") != String("none")) return fail(17);
++  if (fixture::local_optional_length("ab") != 1 || fixture::local_optional_length("b") != -1 ||
++      fixture::local_optional_length("z") != -1) return fail(18);
++  if (fixture::local_empty("") != String("")) return fail(19);
++  bool typedMissing = false;
++  try { static_cast<void>(fixture::local_typed_member("b")); }
++  catch (const flight::TypeError&) { typedMissing = true; }
++  if (!typedMissing || fixture::local_typed_member("ab") != 1) return fail(20);
 +  bool continuationMissing = false;
 +  try { static_cast<void>(fixture::continuation("b")); }
 +  catch (const flight::TypeError&) { continuationMissing = true; }
