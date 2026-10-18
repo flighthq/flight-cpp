@@ -1,0 +1,112 @@
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -8796,13 +8796,40 @@
+ // guard that merely removed absence stays on the presence lane rather than being restated as a variant
+ // choice, and exactly one declared alternative may answer the flow's name -- a flow that still names
+ // several of them selected nothing, and one that names none selected nothing this rule can name.
++// The written property union, read from the member's own type node. A receiver whose type was
++// inferred (an awaited call result, a destructured shape) arrives as a checker-collapsed object shape
++// in which `T | unknown` IS `unknown`; the declaration still states the alternatives the carrier
++// stores, and lowering each union member on its own keeps that spelling instead of re-collapsing it.
++function getTypeScriptWrittenUnionDeclarationEvidence(
++  node: ts.PropertyAccessExpression,
++  context: LoweringContext,
++): Readonly<Extract<IrType, { kind: 'union' }>> | undefined {
++  const symbol = context.checker.getSymbolAtLocation(node.name);
++  const declaration = symbol ? getTypeScriptPreferredSymbolDeclaration(symbol, context) : undefined;
++  if (
++    !declaration ||
++    !(ts.isPropertySignature(declaration) || ts.isPropertyDeclaration(declaration)) ||
++    declaration.type === undefined ||
++    !ts.isUnionTypeNode(declaration.type)
++  ) {
++    return undefined;
++  }
++  const [first, second, ...rest] = declaration.type.types.map((member) =>
++    lowerTypeScriptTypeNodeEvidence(member, context),
++  );
++  if (first === undefined || second === undefined) return undefined;
++  const types: [IrType, IrType, ...IrType[]] = [first, second, ...rest];
++  if (declaration.questionToken) types.push({ kind: 'undefined' });
++  return { kind: 'union', types };
++}
++
+ function getTypeScriptWrittenUnionNarrowedType(
+   node: ts.PropertyAccessExpression,
+   flow: ts.Type,
+   context: LoweringContext,
+ ): { narrowedType?: IrType } {
+   const written = getTypeScriptExpressionBindingTypeEvidence(node, context);
+-  const union = written?.kind === 'union' ? written : undefined;
++  const union = written?.kind === 'union' ? written : getTypeScriptWrittenUnionDeclarationEvidence(node, context);
+   if (!union) return {};
+   const present = union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
+   const memberName = (member: Readonly<IrType>): string | undefined => {
+@@ -9662,7 +9689,14 @@
+     }
+     if (receiver?.kind === 'object') {
+       const property = receiver.properties.find((candidate) => candidate.name === expression.name.text);
+-      if (property) return property.optional ? addIrTypeBindingPatternUndefined(property.type) : property.type;
++      if (property) {
++        const propertyType = property.optional ? addIrTypeBindingPatternUndefined(property.type) : property.type;
++        // An inferred receiver shape is the CHECKER's view, and the checker collapses `T | unknown`
++        // to `unknown`. The member's own declaration still states the written union, which is what a
++        // guard compares against, so an `unknown` member type falls through to that declaration
++        // instead of ending the search here.
++        if (propertyType.kind !== 'unknown') return propertyType;
++      }
+     }
+     // The member's own declaration carries the written type, which a receiver named by a reference
+     // does not: resolving the reference would mean resolving every alias the source went through.
+@@ -9684,7 +9718,15 @@
+         if (instantiated) return instantiated;
+       }
+       const written = lowerTypeScriptTypeNodeEvidence(declaration.type, context);
+-      return declaration.questionToken ? { kind: 'union', types: [written, { kind: 'undefined' }] } : written;
++      // A written `T | unknown` union is `unknown` to the checker, and lowering the union node as a
++      // whole re-collapses it the same way. The carrier stores the written alternatives, so lower
++      // each member on its own and keep that spelling rather than ending at `unknown`.
++      const recovered =
++        written.kind === 'unknown' && ts.isUnionTypeNode(declaration.type)
++          ? getTypeScriptWrittenUnionDeclarationEvidence(expression, context)
++          : undefined;
++      const evidence = recovered ?? written;
++      return declaration.questionToken ? { kind: 'union', types: [evidence, { kind: 'undefined' }] } : evidence;
+     }
+     if (declaration && (ts.isMethodSignature(declaration) || ts.isMethodDeclaration(declaration))) {
+       const externalTypeParameter = [declaration.type, ...declaration.parameters.map((parameter) => parameter.type)]
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -30041,6 +30041,30 @@
+     expect(emitted).toContain('finish_entity<flight::Ref<flighthq_types::PublicLoader>>(');
+   });
+ 
++  it('projects an instanceOf-guarded written union member through an inferred receiver', () => {
++    const source = `interface Response { ok: boolean; body: string | unknown | ArrayBuffer | null }
++      async function send(): Promise<Response> {
++        return { ok: true, body: null };
++      }
++      export function fromParameter(response: Response): Uint8Array | null {
++        return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++      }
++      export async function fromAwait(): Promise<Uint8Array | null> {
++        const response = await send();
++        if (response.body instanceof ArrayBuffer) return new Uint8Array(response.body);
++        return null;
++      }`;
++    const emitted = emitIrModuleCpp(lower('net-written-union-member-flight.ts', source).module, {
++      runtimeProfile: 'flight-cpp',
++    });
++
++    // Both receivers project the alternative the instanceof guard proved. The awaited receiver is
++    // inferred as a checker-collapsed object shape where `string | unknown | ArrayBuffer | null` IS
++    // unknown, so the written union comes from the member's own declaration.
++    expect(emitted.contents.match(/union_kind_or_throw<flight::ArrayBuffer>\(response->body\)/gu)).toHaveLength(2);
++    expect(emitted.contents).not.toContain('Uint8Array(response->body)');
++  });
++
+   it('preserves entity construction through a generic node initializer', () => {
+     const entityTypes = ts.createSourceFile(
+       '/flight/packages/types/src/Entity.ts',

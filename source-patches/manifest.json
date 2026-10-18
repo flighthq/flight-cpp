@@ -4962,6 +4962,23 @@
       "unblocks": "The unknown-kind contract of effects normalizeEffect/getEffectDefaults (returns false / {}), qualifying the effect_defaults membership consumer.",
       "expires": "when upstream reads a missing key of a non-erased typed Record as absent before a falsiness guard.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-inferred-member-written-union",
+      "dependency": "flight-compiler",
+      "patch": "compiler-inferred-member-written-union.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+      "package": "@flighthq/compiler-semantic",
+      "answers": "diagnostic",
+      "refusal": "emitted loader header diagnostic: no matching conversion for functional-style cast from 'NetResponseBody' (aka 'std::optional<std::variant<ArrayBuffer, Blob, String, Any>>') to 'flight::Uint8Array' at load.hpp:53 -- new Uint8Array(response.body) under an instanceof ArrayBuffer guard",
+      "rewrite": "A member whose declared type is a written union containing `unknown` arrives as a checker-collapsed object shape when its receiver was inferred (an awaited call result). Lowering the union node as a whole re-collapses it to `unknown`, so the guard's written-union narrowing and the member's binding evidence both lost the alternatives the carrier stores. The semantic lowering now lowers each union member of the member declaration on its own and keeps that spelling, both in the binding-type evidence and in the guard narrowing fallback.",
+      "equivalence": "The evidence is the type the author wrote: each alternative is lowered exactly as the declaration spells it, with `unknown` kept as the erased alternative the carrier stores (Any). No alternative is added, dropped, widened or narrowed, and no value is converted; the emitter's existing checked projection (union_kind_or_throw) then recovers the alternative the instanceof guard proved.",
+      "whyNotUpstreamFirst": "The declared property type already states the union; the loss is in this compiler's evidence recovery for inferred receivers. docs/compiler-requests/inferred-member-written-union.md records the request.",
+      "unblocks": "@flighthq/loader load.ts's arraybuffer branch, and the _internal_index/contract/load headers that reach it",
+      "expires": "when inferred receiver shapes retain the member's written union without this member-wise lowering, or upstream lowers the member type node without collapsing `T | unknown`",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppCompilerBackend test 'projects an instanceOf-guarded written union member through an inferred receiver': parameter and awaited receivers both emit union_kind_or_throw<flight::ArrayBuffer>(response->body) and never the unprojected form. Regression parity measured across typeScriptSemanticLowering.test.ts + cppCompilerBackend.test.ts: 82 failures with and 82 without the patch, identical titles. Patch applies and reverts at its stack position."
     }
   ]
 }

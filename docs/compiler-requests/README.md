@@ -48,6 +48,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 | [`compiler-nullable-element-dual-sentinel.patch`](../../source-patches/compiler-nullable-element-dual-sentinel.patch) | [A nullable array element written into a dual-sentinel slot](nullable-array-element-into-dual-sentinel-slot.md) |
 | [`compiler-structural-member-view-assertion.patch`](../../source-patches/compiler-structural-member-view-assertion.patch) | [An interface assertion between flattened owners must read the same owner's recorded cells](structural-member-view-interface-assertion.md) |
 | [`compiler-finish-entity-construction-owner.patch`](../../source-patches/compiler-finish-entity-construction-owner.patch) | [finishEntity must specialize from its construction, not from the expected return type](finish-entity-construction-owner.md) |
+| [`compiler-inferred-member-written-union.patch`](../../source-patches/compiler-inferred-member-written-union.patch) | [A member's written union must survive an inferred receiver](inferred-member-written-union.md) |
 | [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch) | [Runtime-declared Error members and their presence tests](compiler-error-stack-cause-presence.md) |
 | [`compiler-exact-variant-owner-priority.patch`](../../source-patches/compiler-exact-variant-owner-priority.patch) | [Exact variant owners must outrank shape matches](compiler-exact-variant-owner-priority.md) |
 | [`compiler-external-optional-result-widening.patch`](../../source-patches/compiler-external-optional-result-widening.patch) | [External optional result widening](compiler-external-optional-result-widening.md) |
@@ -564,6 +565,8 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   loader's progress body; the runtime's StructuralMemberView/MemberValue read the object's own recorded cells, with absence distinct from stored false/0.
 - [finishEntity must specialize from its construction, not from the expected return type](finish-entity-construction-owner.md) —
   loader's createResourceLoader finished the public base and aborted on exact-owner recovery; the finish now names the construction owner and the return widens the same reference.
+- [A member's written union must survive an inferred receiver](inferred-member-written-union.md) —
+  loader's arraybuffer branch: an awaited receiver arrives as a checker-collapsed shape where `T | unknown` is unknown; the declaration's written union is recovered member-wise.
 - [An object literal passed to an optional `Record` parameter must be constructed before the optional](object-literal-into-optional-record-argument.md) —
   diagnostic details in five format packages; shared compiler materialization and original 3DS consumer qualified; existing detail-local patches retained for expiry audit.
 - [Owning arrays, readonly-row arrays and number buffers need conversions where they meet](animation-readonly-row-array-carriers.md) —
