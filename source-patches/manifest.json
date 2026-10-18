@@ -4846,6 +4846,23 @@
       "verification": "Compiler worktree at 806d257 with the 69-patch stack plus this patch: all 70 apply sequentially with plain git apply. compiler-semantic tsc 0 errors; compiler-backend-cpp tsc 5 errors, identical without this patch (other patches' tests). New cppMembershipTest.test.ts 6 pass. Full compiler-backend-cpp + compiler-semantic vitest: 78 failed / 3004 passed / 33 skipped, the identical 78-failure set as the stack without this patch (0 new, 0 fixed). Emitted Record and row lowerings compiled with g++ 15.2 against this runtime plus the SDK structural member table and run: Mesh-through-Node row true, plain Node false, Record own key true, absent false, toString true."
     },
     {
+      "id": "compiler-regexp-capture-member-presence",
+      "dependency": "flight-compiler",
+      "patch": "compiler-regexp-capture-member-presence.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "refusal",
+      "refusal": "collectCssRules refuses String.split on RegExpExecArray indexed storage because capture absence has no member-operation projection.",
+      "rewrite": "Keep RegExp capture locals in one optional storage layer, including inferred and declared undefined unions; project direct and local captures through the checked runtime regexp_capture_value only when evaluating an ambient String member. Retain guards, nullish coalescing and optional-chain capture access. Retain the authored versus inherited optional-chain guard distinction, and preserve undefined-only capture storage in strict comparisons and optional-member result evidence.",
+      "equivalence": "The runtime check occurs at the original String member operation. Participating empty captures are present; an unmatched or out-of-range capture remains undefined and throws TypeError on member access before call arguments run. Receiver and index are evaluated once in source order. No regex, collector, source schema, public parameter domain or unrelated Array/Record presence restriction is changed.",
+      "whyNotUpstreamFirst": "This is a pin-bound compiler correction for the shared runtime capture carrier, with an executable compiler fixture; the original Flight collector remains unchanged.",
+      "unblocks": "Original collectCssRules and the same capture String-member operations in applicable source roots; does not imply full SVG import or full RegExp syntax support.",
+      "expires": "when upstream projects RegExp capture String members through a checked undefined-preserving operation and retains optional capture local storage.",
+      "appliedOn": "2026-10-18",
+      "verification": "Ordered combined86 compiler patches apply (84 base, capture85, exact qualified Matrix86); reversing/reapplying opposite order preserves all five candidate source/test files. Production compiler buildPASS. Combined28/28focusedPASS (19Matrix/readonly and9capture/semantic) including one real emitted native executable with20failure checkpoints: direct/local/guarded/optional/coalesced/returned captures, inferred and typed optional locals without double wrapping or missing-to-empty coercion, empty/unmatched/strict-null controls, authored versus inherited chain guards, guarded and required-match owners, length/toString, receiver/key/argument order and TypeError timing. Three prior capture and three semantic controls pass; unrelated Array/Record restrictions retained. Runtime2/2CTestPASS including31capture/UTF16/iteration checks, existing emitted RegExp source differentialPASS, new collector package label1/1PASS. Raw applicability audit36exec calls/11packages; cached paired five-module diagnostic clears collector only and preserves remaining definitions/refusals. Final normal SDK/public32source-case consumer qualification pending."
+    },
+    {
       "id": "compiler-defaulted-nullable-present-storage",
       "dependency": "flight-compiler",
       "patch": "compiler-defaulted-nullable-present-storage.patch",
