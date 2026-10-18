@@ -1,0 +1,438 @@
+{
+  "schema": "flight-sprite-runtime-carrier-abi-design/1",
+  "authority": [
+    "foreman-ca66f8df",
+    "foreman-8e7c52a0"
+  ],
+  "status": "DESIGN REDUCTION: measured old-slot counterexample20checks and exact-slot/common-view/callback-owner components25checks. No product Types/runtime/factory/SDK change or native original consumer qualification.",
+  "sourcePin": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "ownership": {
+    "types": "Builder2 sole writer; any override adjustment belongs to a later coherent pass, not held B.",
+    "factory": "Builder4 source-faithful factory, currently paused while it does independent GLtarget repair.",
+    "builder5": "This source/layout/native counterexample and minimal mapping proposal only."
+  },
+  "inputs": [
+    {
+      "label": "installedSpriteOverride",
+      "sha256": "145a1165fa86930c80b36e2293f82dcbbf1bb6c652307730a8a288208888cb97",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/overrides/include/flight/types/sprite.hpp"
+    },
+    {
+      "label": "installedNodeOverride",
+      "sha256": "9d4573e078b363cc2177e7c63bdae1fca59aef8e16a4e4989f175a97778d8d48",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/overrides/include/flight/types/node.hpp"
+    },
+    {
+      "label": "installedNode2D",
+      "sha256": "59f0d60133afe1e94994e5279c80d8c509f1de7eb465e164cec85f4483e10794",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include/flight/types/node_2d.hpp"
+    },
+    {
+      "label": "installedGeneratedExactSprite",
+      "sha256": "20c2631d4fa530c3f9f4afb2b6b0921bdf35a3180145574bb01333471f26f835",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include/flight/types/sprite.hpp"
+    },
+    {
+      "label": "nativeAccessor",
+      "sha256": "2de1d292500a05278424a4c96283b8cac602215d7a9e756724e1487b0617eb0f",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/include/flight/node/native_node2d_access.hpp"
+    },
+    {
+      "label": "standardMemberTable",
+      "sha256": "976adaef779ac509b0430c27b08e650ef60b6b66e57943840c6512e0582bdbc4",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include/flight/sdk/structural_members.hpp"
+    },
+    {
+      "label": "provided75aSpriteOverride",
+      "sha256": "764a80422b53df41389a117389a276eb04308a75624fa3a61bae0e17c32a7f72",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/overrides/include/flight/types/sprite.hpp"
+    },
+    {
+      "label": "provided75aNodeOverride",
+      "sha256": "989800edde294cedac4717ec895b644e56d4d9ddc7cf0da687a89ad3a4633e2e",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/overrides/include/flight/types/node.hpp"
+    },
+    {
+      "label": "providedBNode2D",
+      "sha256": "10d543c0e479ae856562c21683980c63376369b6f29c1b48545e9e2226bbb5ff",
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-sprite-runtime-carrier-inputs/generated/include/flight/types/node_2d.hpp"
+    }
+  ],
+  "builder4Evidence": {
+    "sourceProofArchive": {
+      "file": "builder5-sprite-runtime-input-builder4.tgz",
+      "sha256": "5f0f967df7554742088383e580c1b09617f6e3a4074582ab5173f901561d7d0d",
+      "members": 56,
+      "copiedToOwnImmutableScratch": true
+    },
+    "carrierSupplement": {
+      "file": "builder5-sprite-runtime-carrier-inputs.tgz",
+      "sha256": "68898e023f5f79ca0c0f1229c39635a39b46dd0ed828475640067f635ba4bf23",
+      "snapshot": {
+        "sourceParcel": "builder2-27328c05",
+        "immutableCommit": "75a37e81354f8806c4d68cbab3f69e92db7746b1",
+        "scope": "Eight nonGL overrides materialized and hashes matched only. Still-running WGPU output and full B not accepted. Not applied to root, not SDK run. Actual helper body and B heritage remain owned2 prerequisites.",
+        "files": [
+          {
+            "header": "flight/render/render_target.hpp",
+            "overrideSha256": "294545bcecc1b798df6e7607874e5fb706d423452167a8095634806ddd12c7e3",
+            "generatedBSourceSha256": "7b762c350450601cc0581ed0501adbc56164ecc48818cac04284702b3dbb44e7"
+          },
+          {
+            "header": "flight/render/scene_render.hpp",
+            "overrideSha256": "8bee7e7592dcf51cabdbb6ffddef9aa8c29a6431dd62c212d88813c55141a45c",
+            "generatedBSourceSha256": "ed6f2542ebc317a26a41c8d8520f944e2642f4d8d70efb6f8ca9f2fa043e3ac1"
+          },
+          {
+            "header": "flight/render/render_proxy.hpp",
+            "overrideSha256": "8cce0c20916e0e2aca00cc3d54600a2ea4daf519a730f583e652c38e64ab50e3",
+            "generatedBSourceSha256": "d0167c9f7ed23481270e8ffb2dad54433b1fbb22a921c5795553f185acc654a3"
+          },
+          {
+            "header": "flight/render/render_state.hpp",
+            "overrideSha256": "31ed9f6e1dff7b5cd541fd06cdb2d585e710d9989fc7fee9df68fb274c9e6734",
+            "generatedBSourceSha256": "d441cf0dba508b4729b984ea8740e232b59d5adb14b18b88a9d9b76565e75874"
+          },
+          {
+            "header": "flight/types/node.hpp",
+            "overrideSha256": "989800edde294cedac4717ec895b644e56d4d9ddc7cf0da687a89ad3a4633e2e",
+            "generatedBSourceSha256": "b002699f6584492e6c7c8da472fd347edc393a90a9c62c8dbf8ab99695af0784"
+          },
+          {
+            "header": "flight/types/sprite.hpp",
+            "overrideSha256": "764a80422b53df41389a117389a276eb04308a75624fa3a61bae0e17c32a7f72",
+            "generatedBSourceSha256": "71433c8a122b14c940a6d7e33f7c9932295a9b5c0031a3a6f45d2d585b378163"
+          },
+          {
+            "header": "flight/types/text_label.hpp",
+            "overrideSha256": "cda2fd418618bc25982e7a56ed91015e3b4e42986c6c55e6827593ba620b3358",
+            "generatedBSourceSha256": "6da757b85df7c5944d5ff41defa15e25c992a5af4b12dbe8872af922d9c7b06e"
+          },
+          {
+            "header": "flight/types/log.hpp",
+            "overrideSha256": "f6da9b90deb5e78be29dfbb4731a92acbd94d46d852d8a93d55a54e6701294fa",
+            "generatedBSourceSha256": "406f842212007590eaac224d0ca048dcee9f7609acd46ff0f5ef52a58963468e"
+          }
+        ]
+      },
+      "suppliedOverrideHashesActuallyVerified": 2
+    },
+    "sourceControls": "39 original raw and39 qualified-effective controls PASS,14actual source modules per run. Recorded by Builder4 in artifacts/sprite-factory-source-controls.json; not rerun by this native mechanism probe.",
+    "original136Refusals": [
+      "createSprite callback/data domain",
+      "createSpriteRuntime base allocation assertion",
+      "initializeSpriteRendererData NodeAny recovery",
+      "isSpriteRendererDirty NodeAny recovery"
+    ],
+    "unqualifiedGenericExperiment": "Three transpiled JavaScript token streams unchanged and39source controls PASS; createSprite/createSpriteRuntime emit, dependent createNodeRuntime/createNode2D remain refused;220strictdiagnostics baseline/candidate, not native/strict/product qualification."
+  },
+  "builder2HeldFacts": {
+    "peerStatusAtStart": "9 unmerged commits/499files, B HELD; render-wgpu regen exited0 at5f79108f, aggregate comparison and diagnostic canvas pending.",
+    "directQuestion": "Asked for exact held SpriteRuntime fix/headers; no duplication or Types edits started.",
+    "authoritativeClarification": "Foreman8e7c52a0 relays Builder2 actualfacts2503ddd1: generated B Types/Sprite5f79108f already exact optional Ref<SpriteRuntime>,flat owner. Generic slot/native Node2DData base/unwrapped traits are preserved legacy override constraints, not B constraints.",
+    "generatedBTypesSpriteSha256": "71433c8a122b14c940a6d7e33f7c9932295a9b5c0031a3a6f45d2d585b378163",
+    "limit": "Full direct held B was not compiled or accepted. The component uses explicitly listed installed generated exact Sprite header plus provided75a Node and B Node2D headers."
+  },
+  "sourceAndLayout": {
+    "source": "Raw SpriteRuntime extends Node2DRuntime and adds only localBoundsTexture/localBoundsTextureVersion. Qualified effective Sprite narrows its one EntityRuntimeKey slot to SpriteRuntime|undefined; initialization invokes the runtime factory once and assigns that one symbol.",
+    "legacySlot": "optional<Ref<NodeRuntime<Ref<Node2DTraits>>>> in the existing Sprite override; native_node_2d_runtime returns that generic pointer.",
+    "generatedSlot": "optional<Ref<SpriteRuntime>>. This exact slot already exists in installed generated output and is confirmed in B.",
+    "flatRuntime": "SpriteRuntime has41direct fields and no NodeRuntime/Node2DRuntime C++ base. Installed old Node2DRuntime is also flat; provided B Node2DRuntime really inherits NodeRuntime and names flight_native_base.",
+    "callbackDifference": "Sprite and Node2D compute/validity callbacks have distinct recursive anonymous readonly receiver schemas. Shared traits and child callback types are actually equal in the native measurement; textual Ref spelling alone is not a type difference.",
+    "allocationConstraint": "The source factory allocation must retain its real exact owner before escape; a generic NodeRuntime allocation cannot later be recovered as SpriteRuntime. This proposal does not fix or reclassify Builder4 original factory refusals."
+  },
+  "nativeCounterexample": {
+    "source": "artifacts/sprite-runtime-carrier-counterexample.cpp",
+    "compileLink": "PASS",
+    "checks": 20,
+    "failures": 0,
+    "inputScope": "Installed old override tree on4653b8dd with documentation-only c13d0d15; source commit21e03d6a before rebase.",
+    "findings": [
+      "Exact flat SpriteRuntime cannot assign the legacy generic pointer slot.",
+      "Writing an incompatible exact runtime through row_set attaches another typed value while the physical slot and legacy helper still answer the old generic runtime.",
+      "The same split occurs in a real NodeRuntime->EntityRuntime C++ inheritance control: C++ pointer covariance alone does not adapt typed symbol cells.",
+      "Existing exact allocation recovery and ErasedRef declared-real-base controls preserve owner identity; they do not create a base subobject for an unrelated flat runtime."
+    ],
+    "meaning": "Counterexample to a proposed wrong-type store, not a product implementation or native original Sprite factory pass.",
+    "binarySha256": "3bb3e196bb7b131615f76cfb18553abd07e22ca62b44ac9d2ded72d70a7474d1"
+  },
+  "exactSlotComponent": {
+    "source": "artifacts/sprite-runtime-base-view-probe.cpp",
+    "compileLink": "PASS",
+    "checks": 25,
+    "failures": 0,
+    "composition": "Actual installed generated exact Sprite header SHA20c2631d, plus Builder4 supplied75a Node override/B Node2D declaration, actual remaining runtime/override/generated tree. Selected mechanism composition, not a coherent B or SDK qualification.",
+    "findings": [
+      "Exact symbol writes/replacement/undefined reach the one physical slot and create no dynamic shadow.",
+      "Existing GeneratedRowWidening permits writable StructuralRef<RowOf<Ref<NodeRuntime<Node2DTraits>>>> over flat SpriteRuntime; same native allocation, RowOwner, live parent/callback/member cells.",
+      "The common view shared_object() is empty: no generic C++ subobject exists, so legacy pointer-arrow operations cannot be retained.",
+      "Distinct Sprite/Node2D callback receiver schemas both accept readonly views of the same actual Sprite owner; four fixture callback invocations retain that exact owner without converting stored function types.",
+      "Own-presence and value engagement remain distinct after undefined assignment."
+    ],
+    "initialAttempt": {
+      "checks": 20,
+      "failures": 1,
+      "cause": "Probe incorrectly used row_has engagement for JavaScript own presence. Existing runtime comments and generated_symbol_own_presence tests require row_has_own_property. Corrected the probe only and kept the initial failed receipt."
+    },
+    "limits": [
+      "Fixture callbacks only: original factory, bounds computation/validity bodies and renderers are not executed.",
+      "Callback schema-only constructibility does not prove every possible member read through that schema; actual source callback operations still need their own consumer qualification.",
+      "No fabricated native object, copied runtime fields, shadow storage or forced inheritance is a proposed implementation."
+    ],
+    "binarySha256": "8a7060145d4395e337545d388e68d00760286f5cc1ec8fb0dcfd7ba0b52e2ee7"
+  },
+  "minimalMappingProposal": {
+    "physicalStorage": "Builder2 later source-rederives Sprite override to its actual generated exact optional Ref<SpriteRuntime> slot and source-derived data base. Retain one physical symbol cell; do not write a second dynamic value to work around a type mismatch.",
+    "exactRead": "Read the slot at its physical exact type. Build readonly/writable StructuralRef over that exact runtime as the operation requires; exact recovery remains the original SpriteRuntime.",
+    "commonReadWrite": "For common NodeRuntime fields, use the already-proven StructuralRef<RowWritable/RowReadonly<RowOf<Ref<NodeRuntime<Ref<Node2DTraits>>>>>>> view of that SAME runtime. Use row_get/row_set and retain parent/children/callback cells directly; no shared_ptr cast, materialized NodeRuntime or new family.",
+    "boundsCallbacks": "Keep each runtime owner original stored compute/validity callable signature and identity. At a call site form that signature readonly receiver from the ORIGINAL source row and invoke the callable in place. Do not assign Node2D std::function into Sprite std::function, alias anonymous native runtime objects, or copy callback state. Component proves receiver-owner delivery only; whole original bounds/callback bodies remain a later check.",
+    "legacyAccessorDecision": {
+      "fact": "A function returning shared_ptr<NodeRuntime<...>> cannot return a flat SpriteRuntime as a real base pointer. A structural view has no generic operator-arrow subobject.",
+      "recommended": "Introduce a distinct existing-family common-runtime view accessor and migrate the closed consumer set to row operations. Keep the legacy pointer-owner alias separate for any still-approved construction ABI. The old pointer-only accessor must remain explicitly partial at a flat exact-owner boundary or be deliberately retired/retyped in the later coherent pass.",
+      "requiresConcreteDecision": "Foreman/Builder2 choose the local accessor migration/compatibility surface before product edits. Do not disguise this as a harmless return alias replacement or change a global scalar/object ABI."
+    },
+    "factoryLimit": "Exact source allocation/generic factory prerequisites and NodeAny renderer recovery remain Builder4/Builder2 follow-through. Neither this common view nor existing recover_owner can convert a previously allocated generic Node object into a fresh exact Sprite."
+  },
+  "legacyConsumerMatches": [
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 8,
+      "code": "using NativeNode2DRuntimeOwner = std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 9,
+      "code": "inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 35,
+      "code": "inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source) {"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 39,
+      "code": "return flight::row_get<NativeNode2DRuntimeOwner>(source, flight::types::entity_runtime_key);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 43,
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 47,
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 51,
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 58,
+      "code": "auto runtime = native_node_2d_runtime(*current);"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 151,
+      "code": "return flight::node::native_node_2d_runtime(source);"
+    },
+    {
+      "file": "overrides/include/flight/text/text_label.hpp",
+      "line": 45,
+      "code": "static_cast<flight::node::NativeNode2DRuntimeOwner::element_type&>(*out) = *flight::scene2d::create_node_2d_runtime();"
+    },
+    {
+      "file": "overrides/include/flight/render/render_proxy.hpp",
+      "line": 83,
+      "code": "auto nr = flight::node::native_node_2d_runtime(current);"
+    },
+    {
+      "file": "overrides/include/flight/render/render_proxy.hpp",
+      "line": 231,
+      "code": "auto children = flight::node::native_node_2d_runtime(node)->children;"
+    },
+    {
+      "file": "overrides/include/flight/scene2d_gl/gl_mesh_shape_renderer.hpp",
+      "line": 36,
+      "code": "auto version = flight::node::native_node_2d_runtime(proxy->source)->local_content_id;"
+    },
+    {
+      "file": "overrides/include/flight/scene2d_gl/gl_node_2d.hpp",
+      "line": 37,
+      "code": "auto children = flight::node::native_node_2d_runtime(current)->children;"
+    },
+    {
+      "file": "overrides/include/flight/node/node_transform2d.hpp",
+      "line": 268,
+      "code": "auto runtime = flight::node::native_node_2d_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 496,
+      "code": "auto tr = native_node_2d_runtime(target), cr = native_node_2d_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 507,
+      "code": "auto tr = native_node_2d_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 511,
+      "code": "for (auto parent = tr->parent; parent; parent = native_node_2d_runtime(*parent)->parent) if (*parent == child) throw flight::TypeError(flight::String(\"An ancestor cannot be added as a child of its descendant\"));"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 514,
+      "code": "auto cr = native_node_2d_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 515,
+      "code": "if (tr->node_signals || cr->node_signals || (cr->parent && native_node_2d_runtime(*cr->parent)->node_signals)) throw std::logic_error(\"Native Node2D hierarchy signal owner binding is unavailable\");"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 534,
+      "code": "auto children = native_node_2d_runtime(target)->children;"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 41,
+      "code": "auto parent_runtime = flight::node::native_node_2d_runtime(parent);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 42,
+      "code": "auto child_runtime = flight::node::native_node_2d_runtime(child);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 43,
+      "code": "auto next_runtime = flight::node::native_node_2d_runtime(next_parent);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 89,
+      "code": "auto unsupported_runtime = flight::node::native_node_2d_runtime(unsupported);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 101,
+      "code": "!flight::node::native_node_2d_runtime(detached)->parent,"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 46,
+      "code": "flight::node::native_node_2d_runtime(sprite_view) == sprite->entity_runtime_key.value() &&"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 155,
+      "code": "auto other_runtime = flight::node::native_node_2d_runtime(other);"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 198,
+      "code": "flight::node::native_node_2d_runtime(label_view) == label_runtime &&"
+    }
+  ],
+  "boundsOperationMatches": [
+    {
+      "file": "overrides/include/flight/text/text_label.hpp",
+      "line": 58,
+      "code": "out->compute_local_bounds_rectangle = [](auto rectangle, auto source) {"
+    },
+    {
+      "file": "overrides/include/flight/tilemap/tilemap.hpp",
+      "line": 264,
+      "code": "runtime->compute_local_bounds_rectangle = [](auto out, auto source) {"
+    },
+    {
+      "file": "overrides/include/flight/tilemap/tilemap.hpp",
+      "line": 267,
+      "code": "runtime->is_local_bounds_rectangle_valid = std::nullopt;"
+    },
+    {
+      "file": "overrides/include/flight/quadbatch/quad_batch.hpp",
+      "line": 743,
+      "code": "runtime->compute_local_bounds_rectangle = {};"
+    },
+    {
+      "file": "overrides/include/flight/quadbatch/quad_batch.hpp",
+      "line": 744,
+      "code": "runtime->is_local_bounds_rectangle_valid = std::nullopt;"
+    },
+    {
+      "file": "overrides/include/flight/selection/marquee_selection.hpp",
+      "line": 38,
+      "code": "(!runtime->is_local_bounds_rectangle_valid.has_value() ||"
+    },
+    {
+      "file": "overrides/include/flight/selection/marquee_selection.hpp",
+      "line": 39,
+      "code": "runtime->is_local_bounds_rectangle_valid.value()(source));"
+    },
+    {
+      "file": "overrides/include/flight/selection/marquee_selection.hpp",
+      "line": 44,
+      "code": "runtime->compute_local_bounds_rectangle(runtime->local_bounds_rectangle.value(), source);"
+    },
+    {
+      "file": "overrides/include/flight/selection/lasso_selection.hpp",
+      "line": 42,
+      "code": "(!runtime->is_local_bounds_rectangle_valid.has_value() ||"
+    },
+    {
+      "file": "overrides/include/flight/selection/lasso_selection.hpp",
+      "line": 43,
+      "code": "runtime->is_local_bounds_rectangle_valid.value()(source));"
+    },
+    {
+      "file": "overrides/include/flight/selection/lasso_selection.hpp",
+      "line": 48,
+      "code": "runtime->compute_local_bounds_rectangle(runtime->local_bounds_rectangle.value(), source);"
+    },
+    {
+      "file": "generated/include/flight/node/stage_fit.hpp",
+      "line": 124,
+      "code": "if (flight::row_get<flight::RowKey<\"computeLocalBoundsRectangle\">>(runtime).has_value()) {"
+    },
+    {
+      "file": "generated/include/flight/node/stage_fit.hpp",
+      "line": 129,
+      "code": "flight::row_get<flight::RowKey<\"computeLocalBoundsRectangle\">>(runtime).value()(temp_rectangle, flight::structural_ref_cast<flight::types::BoundsNode<Traits>>(flight::row_get<flight::RowKey<\"root\">>(scene2d).value()));"
+    },
+    {
+      "file": "generated/include/flight/node/has_bounds_rectangle.hpp",
+      "line": 89,
+      "code": "(target->compute_local_bounds_rectangle = ([&]() -> std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_4e93072101129c4d<Traits>>>>>>)> { auto nullish_coalesce_left = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>> { auto optional_chain_receiver = methods; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<\"computeLocalBoundsRectangle\">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_compute_local_bounds_rectangle; }()));"
+    },
+    {
+      "file": "generated/include/flight/node/has_bounds_rectangle.hpp",
+      "line": 90,
+      "code": "(target->is_local_bounds_rectangle_valid = ([&]() -> std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>> { auto nullish_coalesce_left = ([&]() -> std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>, flight::Null, flight::Undefined> { auto optional_chain_receiver = methods; if (!optional_chain_receiver.has_value()) return std::variant<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<\"isLocalBoundsRectangleValid\">>(optional_chain_receiver.value()); }()); if (const auto* alternative = std::get_if<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<flight::node::entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>>(&nullish_coalesce_left)) return std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<flight::node::entity_runtime_key_4e93072101129c4d<Traits>>>>>>)>>{*alternative}; return std::nullopt; }()));"
+    },
+    {
+      "file": "generated/include/flight/node/bounds_rectangle.hpp",
+      "line": 95,
+      "code": "return ((runtime->local_bounds_using_local_bounds_id == runtime->local_bounds_id) && ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = runtime->is_local_bounds_rectangle_valid; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(target); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }()));"
+    },
+    {
+      "file": "generated/include/flight/node/bounds_rectangle.hpp",
+      "line": 135,
+      "code": "runtime->compute_local_bounds_rectangle(runtime->local_bounds_rectangle.value(), target);"
+    }
+  ],
+  "consumerLimits": "Bounded searches for the named legacy accessor/type alias and the two bounds callable operations, not a new SDK inventory. Declaration-only/refused generated paths remain unqualified; no result row is promoted.",
+  "historicalResults": "Image create_sprite(options) header still FAIL and full original image native consumer NOT RUN. Existing source39, prior cap22/Lottie220 and Exact210PASS21FAIL retain their frozen scopes.",
+  "repoScope": "Two native design probes, this receipt and the compiler-request proposal only; no Types/SDK/override/runtime/sourcepatch/provider edit.",
+  "qualificationArchive": {
+    "file": "builder5-sprite-runtime-design-proof.tgz",
+    "index": "evidence-index.json",
+    "scope": "Input archives/source controls,exact selected headers/layouts,20+25 native probe source/build/run receipts,initial probe correction,closed consumer mapping and proposal. Hash supplied in handoff."
+  }
+}
