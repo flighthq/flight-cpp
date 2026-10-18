@@ -26,11 +26,11 @@ int main() {
   Cells object_result;
   {
     const auto input = flight::Json::parse(R"([{"value":1},2])");
-    const auto object = input.array_get(0)->object_owner(); lifetime = object;
+    const auto object = input.as_array()[0].object_owner(); lifetime = object;
     const auto raw = flight::Any(input);
     const auto sequence = flight::SequenceView<flight::JsonScalarCell>::from_erased_array(raw, project);
     object_result.push(sequence[0]);
-    check(object_result[0].raw().identity() == flight::Any(input.array_get(0).value()).identity());
+    check(object_result[0].raw().identity() == flight::Any(input.as_array()[0]).identity());
     object->set("value", flight::JsonValue(9.0));
     check(flight::read_json_scalar_property(object_result[0].raw(), "value").as_native_number() == 9);
   }
