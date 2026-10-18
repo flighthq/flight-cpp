@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 460a08d..383f05c 100644
+index 460a08d..6a2a44e 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -5552,7 +5552,16 @@ function emitExpression(
@@ -20,20 +20,17 @@ index 460a08d..383f05c 100644
        }
        const closedKeys = getCppClosedElementKeyNamesCpp(expression, context);
        if (closedKeys) return emitCppClosedKeyElementSelectionCpp(expression, closedKeys, context);
-@@ -6747,8 +6756,19 @@ function emitExpression(
-         const record = receiverEvidence
+@@ -6748,7 +6757,17 @@ function emitExpression(
            ? getCppRecordTypeArgumentsCpp(receiverEvidence, context, new Set())
            : undefined;
--        if (record && emitType(record.key, context) === 'flight::String') {
+         if (record && emitType(record.key, context) === 'flight::String') {
 -          return `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)})).value()`;
-+        if (
-+          record &&
-+          emitType(record.key, context) === 'flight::String' &&
-+          !getCppNamedPropertiesViewExpressionCpp(expression.object, context)
-+        ) {
 +          const lookup = `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)}))`;
-+          // Same rule as the indexed read: a missing own key is `undefined` for an erased value type,
-+          // not an absent carrier, so the read keeps the erased value and answers undefined.
++          // A `flight::NamedProperties` view's get already returns the erased value, so the read ends
++          // there; only a `flight::Record` dictionary returns an optional. A missing key in the
++          // dictionary is `undefined` for an erased value type (a present undefined or null stays
++          // engaged); a concrete value type keeps the strict read.
++          if (getCppNamedPropertiesViewExpressionCpp(expression.object, context)) return lookup;
 +          if (isCppAliasResolvedErasedDynamicValueTypeCpp(record.value, context)) {
 +            context.includes.add('flight/any.hpp');
 +            return `${lookup}.value_or(flight::Any(flight::undefined))`;
@@ -44,10 +41,10 @@ index 460a08d..383f05c 100644
        return `${emitExpression(expression.object, context)}${memberOp(expression.object, context)}${safeCppName(expression.name)}`;
 diff --git a/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts b/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts
 new file mode 100644
-index 0000000..045a197
+index 0000000..53e7355
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,69 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -84,6 +81,27 @@ index 0000000..045a197
 +  expect(output).toContain('record.get(key).value_or(flight::Any(flight::undefined))');
 +  expect(output).toContain('record.get(flight::String("armature")).value_or(flight::Any(flight::undefined))');
 +  expect(output).not.toContain('record.get(key).value()');
++});
++
++it('reads a named-properties view with the keyed lookup, not a member access', () => {
++  const output = emit(`
++    export function tallyAnimations(raw: unknown): number {
++      if (!Array.isArray(raw)) return 0;
++      let count = 0;
++      for (const entry of raw) {
++        if (entry === null || typeof entry !== 'object') continue;
++        const anim = entry as Record<string, unknown>;
++        if (Array.isArray(anim.bones)) count += 1;
++      }
++      return count;
++    }
++  `);
++
++  // The cast binding lowers to a flight::NamedProperties view whose get already returns Any; it must
++  // use that keyed read, not a member access the view does not have, and not value_or.
++  expect(output).toContain('anim.get(flight::String("bones"))');
++  expect(output).not.toContain('anim.bones');
++  expect(output).not.toContain('.get(flight::String("bones")).value_or');
 +});
 +
 +it('keeps the strict read for a concrete record value type', () => {
