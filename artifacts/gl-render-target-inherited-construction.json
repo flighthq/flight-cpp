@@ -1,0 +1,197 @@
+{
+  "kind": "Source-derived compatibility repair for inherited GL screen and texture target constructors",
+  "BHead": "5f79108f",
+  "qualifiedNativeCommit": "d8bd5bc7998b999ccb315b26fdf688ac5604daea",
+  "declarationScope": "Exact B GlRenderTarget leaf over current root remaining dependencies; not all B types or B aggregate qualification",
+  "sourceVerification": {
+    "sourceSha256": "c2641e8732c409d9200837091d7388dbdfda576623b517ab9c8d3b35e3fe34fc",
+    "BTargetTypeSha256": "37905030ad33336baf35dcbcedc1b3a04551ed43bc1256e51bbad555ef2ab71b",
+    "constructors": [
+      {
+        "function": "create_gl_screen_render_target",
+        "orderedCells": [
+          "entity_runtime_key",
+          "gl",
+          "framebuffer",
+          "width",
+          "height",
+          "color_attachments",
+          "color_space"
+        ],
+        "allocations": 1
+      },
+      {
+        "function": "make_gl_texture_render_target",
+        "orderedCells": [
+          "entity_runtime_key",
+          "gl",
+          "requested_axes",
+          "width",
+          "height",
+          "format",
+          "color_attachments",
+          "color_formats",
+          "depth",
+          "color_space",
+          "sample_count",
+          "framebuffer",
+          "resolve_framebuffer",
+          "textures",
+          "texture",
+          "depth_texture",
+          "color_renderbuffers",
+          "depth_stencil_renderbuffer"
+        ],
+        "allocations": 1
+      }
+    ],
+    "unchangedBodyOutsideConstructorsAndFramebufferCarrier": true,
+    "foreignManifestEntriesUnchanged": true,
+    "derivedFromStillMatches": true,
+    "moduleStatus": "partial"
+  },
+  "changes": [
+    "Allocate each original target once and assign source cells in original order",
+    "Use the declared screen framebuffer carrier to initialize source null",
+    "Use the declared texture framebuffer carrier in private storage to preserve both legacy required-handle ABI and B optional absence"
+  ],
+  "checksExpected": {
+    "actualAffectedHeader": "flight/scene3d_gl/gl_shaded_built_in_modifiers.hpp",
+    "nativeTest": "flight_cpp.generated_gl_readonly_present",
+    "BInheritedGroups": 2,
+    "legacyInheritedGroups": 0,
+    "drawsEach": 11
+  },
+  "failureHistory": [
+    "Initial new fixture used nondeducible flight::Ref<T> alias parameter; corrected to std::shared_ptr<T> with all checks retained",
+    "Initial CMake B-labelled runs selected the legacy declaration because CMake includes preceded CXXFLAGS; rejected as B evidence",
+    "Actual isolated B header gate exposed screen flight::Null to optional framebuffer assignment; fixed with declared-carrier empty construction",
+    "Obsolete B native compilation was stopped after that gate proved the same screen defect"
+  ],
+  "broaderContextLimit": "Full B Types plus old held GL runtime preparation failed first at RenderRegistries.color_adjustment_feature; held refined-owner dependency remains outside this repair. No full B or public registry/helper acceptance.",
+  "status": "PASS bounded exact-B-target leaf and legacy native GL controls; not full B qualification",
+  "ownedInputHashes": {
+    "overrides/include/flight/render_gl/gl_render_target.hpp": "ce59c3fb89b845bb19929571335ba30c6e41dc4d2b91d9b2a6cb778cffa6bd03",
+    "tests/generated_gl_readonly_present_test.cpp": "bb04cf362fe1743e94177f8e33d6194ebbc0bcd5564883bd6f39a737dd59a582"
+  },
+  "actualAffectedHeader": {
+    "command": "CXX=build/tooling/zig-c++ CXXFLAGS=\"-g0 -I../.scratch-archive/builder4-gl-target-B-native-context/target-B-only/include\" FLIGHT_CPP_COMPILE_JOBS=1 node scripts/sdkHeaderCompile.mjs --headers=flight/scene3d_gl/gl_shaded_built_in_modifiers.hpp --report=/tmp/builder4-gl-target-B/final-target-isolated-report.json",
+    "exitCode": 0,
+    "compiler": "clang version 22.1.8",
+    "summary": {
+      "attemptedHeaders": 1,
+      "failedHeaders": 0,
+      "passedHeaders": 1,
+      "totalHeaders": 1,
+      "unattemptedHeaders": 0
+    },
+    "elapsedSeconds": 363.7,
+    "reportSha256": "89a3ed1e3bfc5f55776702d8ef085934ecbdf282a4eb0e967f40a2723c03c5f9"
+  },
+  "native": {
+    "B": {
+      "buildCommand": "cmake --build build/gl-target-B-regression --target flight_cpp_generated_gl_readonly_present_tests -j1",
+      "buildExitCode": 0,
+      "ctestCommand": "ctest --test-dir build/gl-target-B-regression --output-on-failure -V -R '^flight_cpp\\.generated_gl_readonly_present$'",
+      "ctestExitCode": 0,
+      "passedTests": 1,
+      "failedTests": 0,
+      "actualInheritedGroups": 2,
+      "newChecksPerBGroup": 5,
+      "actualGlDraws": 11,
+      "environment": {
+        "SDL_VIDEODRIVER": "offscreen",
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "declarationSha256": "37905030ad33336baf35dcbcedc1b3a04551ed43bc1256e51bbad555ef2ab71b",
+      "actualDependencyLogSha256": "64d9b406c4442e84ec2d0c703675b15041c4d1b30effd3827005869df378bafa",
+      "ctestLogSha256": "77f031a3845603bca5b4bfdbe3de42f6a54563d08d23dd852ef224dfae90452f",
+      "debugSymbols": "-g0; standard project warnings and fp-contract=off retained"
+    },
+    "legacy": {
+      "buildCommand": "cmake --build build/camera-regression-checks --target flight_cpp_generated_gl_readonly_present_tests -j1",
+      "buildExitCode": 0,
+      "ctestCommand": "ctest --test-dir build/camera-regression-checks --output-on-failure -V -R '^flight_cpp\\.generated_gl_readonly_present$'",
+      "ctestExitCode": 0,
+      "passedTests": 1,
+      "failedTests": 0,
+      "actualInheritedGroups": 0,
+      "newChecksPerBGroup": 5,
+      "actualGlDraws": 11,
+      "environment": {
+        "SDL_VIDEODRIVER": "offscreen",
+        "LIBGL_ALWAYS_SOFTWARE": "1"
+      },
+      "declarationSha256": "7e5839be5a45d5778f53fa84e74f7a02eede8131b133f3c944569801015ec752",
+      "actualDependencyLogSha256": "274d6fbc1ceb4361c3b6c05c14a6bb78722f94e01d0569c261c6c899776a3492",
+      "ctestLogSha256": "e31b7845ac8c4f0d34c49d671d6298a24c4ccce57c0c9a862b8ff57cc815a060",
+      "debugSymbols": "-g0; standard project warnings and fp-contract=off retained"
+    }
+  },
+  "overridesCheck": {
+    "command": "npm run overrides:check",
+    "exitCode": 0,
+    "matchingOverrides": 226,
+    "logSha256": "ad50228af81f9606115c39e2b087dbfd56e3a82b369298756af5e4de57728c38"
+  },
+  "scope": {
+    "sourceFilesChanged": 0,
+    "generatedFilesChanged": 0,
+    "TypesOverridesChanged": 0,
+    "newSdkRuns": 0,
+    "foreignManifestRowsChanged": 0,
+    "statusRetained": "partial"
+  },
+  "proofArchive": {
+    "sha256": "dcff0e7d8a58bab9d365b8590058f5c2a1be4cd14ab67a8ad92e1e3c1a56ed44",
+    "bytes": 227700,
+    "members": 44,
+    "scope": "Frozen target declarations/source/override/fixture, source audit and actual successful/failed build/header/runtime logs; no held B inventory or normal/atlas/GL diff"
+  },
+  "proofFiles": [
+    "authored-construction.json",
+    "source-rederivation.json",
+    "capture-authored-construction.mjs",
+    "verify-source.py",
+    "qualified-input-hashes.json",
+    "frozen-owned-inputs.json",
+    "final-frozen-owned-inputs.json",
+    "observed-exits.json",
+    "proof-plan.json",
+    "final-active-compiler-inputs.json",
+    "native-root-dependency-freeze.json",
+    "B-leaf-launcher.sh",
+    "prepend-B-native-command.txt",
+    "active-native-B-compiler-arguments.json",
+    "baseline-target-isolated-report.json",
+    "baseline-target-isolated.log",
+    "baseline-consumer-report.json",
+    "baseline-consumer.log",
+    "screen-null-first-fixed-target-isolated-report.json",
+    "screen-null-first-fixed-target-isolated.log",
+    "fixed-B-native-build.log",
+    "fixed-legacy-native-build.log",
+    "corrected-B-native-build.log",
+    "corrected-legacy-native-build.log",
+    "misconfigured-B-native-ctest.log",
+    "misconfigured-B-native-deps.log",
+    "prepend-B-native-build.log",
+    "configure-prepend-B-leaf.log",
+    "final-B-native-build.log",
+    "final-legacy-native-build.log",
+    "final-target-isolated-report.json",
+    "final-target-isolated.log",
+    "final-overrides-check.log",
+    "B-final-native-ctest.log",
+    "legacy-final-native-ctest.log",
+    "B-final-native-deps.log",
+    "legacy-final-native-deps.log",
+    "inputs/source-glRenderTarget.ts",
+    "inputs/old-native-gl_render_target.hpp",
+    "inputs/B-gl_render_target.hpp",
+    "inputs/legacy-gl_render_target.hpp",
+    "inputs/generated-render_gl-gl_render_target.hpp",
+    "inputs/fixed-render_gl-gl_render_target.hpp",
+    "inputs/generated_gl_readonly_present_test.cpp"
+  ]
+}
