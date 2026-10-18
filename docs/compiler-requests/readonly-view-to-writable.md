@@ -364,3 +364,31 @@ origin spotcheck transpiles the raw `806d257` backend source on the same fixture
 the invalid writable intermediate before any repair, and applying the complete declared repair set
 leaves that return unchanged. This isolates the real emitter defect; it does not claim a full raw
 compiler build or replace the pending original Canvas consumer qualification.
+
+## G3 readonly argument source projection
+
+The historical batch-two membership is exactly 16 Scene3D GL rows: 14 routed through the guarded
+helper request and two through the readonly-to-writable request. The package declares no
+`flight.environment`, so all 16 are applicable; these historical failures are not a measured gain.
+
+The raw pinned backend independently reproduces a shared cause before repairs: when flow evidence
+names a nominal subject but a contextual helper parameter is readonly, the general conversion first
+constructs a writable view of that subject. The actual native active-program slot already retains a
+readonly view, so that intermediate claims authority it does not hold. A readonly helper needs only
+a readonly source projection. The original nominal source slot and the effective native readonly
+slot remain distinct provenance, as described above.
+
+[`compiler-readonly-contextual-source-projection.patch`](../../source-patches/compiler-readonly-contextual-source-projection.patch)
+requests that readonly source view before the existing structural conversion. It preserves the
+source expression's single evaluation, the original owner and live cells, destination shape/storage
+checks, guard and absence behavior. Writable destinations keep their existing path. Builder3's
+already-landed exact present-readonly return/binding fast path remains unchanged. No runtime
+relaxation, nominal recovery, caller cast, copied owner or narrowed source domain is introduced.
+
+Five focused backend groups pass, including imported calls, guarded nominal slots, base reads,
+single evaluation and distinct readonly/writable contexts. The four existing present-readonly-return
+groups pass. The independently transpiled raw `806d257` backend and a separately built preceding
+72-patch backend reproduce the writable intermediate on the same frontend IR; this is an emitter
+origin spotcheck, not a full raw compiler build. Writable and invalid-readonly-call controls retain
+byte-identical output. Normal generation and the actual previously blocked public consumer remain
+required; no header, renderer or package promotion is claimed by this preparation.
