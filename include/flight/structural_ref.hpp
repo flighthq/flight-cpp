@@ -2392,7 +2392,7 @@ template <typename Object>
 
 // `key in value` for an erased value, as JavaScript answers it: a non-object throws TypeError; an object
 // has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
-// Object.prototype. No value is read and no getter runs. What this runtime cannot see -- an array, a
+// Object.prototype. No value is read and no getter runs. What this runtime cannot see -- a
 // function or external value, an object whose type never reached the row machinery, a class whose
 // subclasses its stored type does not rule out -- raises OutOfProfileError instead of answering.
 [[nodiscard]] inline bool has_property(const Any& value, const String& key) {
@@ -2405,7 +2405,21 @@ template <typename Object>
     default:
       throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in a non-object"));
   }
-  if (value.is_array()) throw OutOfProfileError("`in` on an erased array: its index and length keys are not modelled here");
+  if (value.is_array()) {
+    if (key == String("length")) return true;
+    if (const auto index = detail::record_array_index(key)) return *index < value.array_size();
+    // These represented ordinary arrays retain the standard Array/Object prototype chain.
+    static constexpr std::string_view names[] = {
+        "at", "concat", "copyWithin", "fill", "find", "findIndex", "findLast", "findLastIndex",
+        "lastIndexOf", "pop", "push", "reverse", "shift", "unshift", "slice", "sort", "splice",
+        "includes", "indexOf", "join", "keys", "entries", "values", "forEach", "filter", "flat",
+        "flatMap", "map", "every", "some", "reduce", "reduceRight", "toReversed", "toSorted",
+        "toSpliced", "with",
+    };
+    const auto text = key.to_utf8();
+    for (const auto name : names) if (text == name) return true;
+    return is_object_prototype_property(key);
+  }
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
   if (view.has(key)) return true;
