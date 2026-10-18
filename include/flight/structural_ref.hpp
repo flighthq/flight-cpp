@@ -2428,6 +2428,9 @@ class NamedProperties final {
   // spelling is a different property and is not reported here.
   [[nodiscard]] bool has(const String& key) const {
     if (owner_ == nullptr) return false;
+    // An authored own key is present even when no native/SDK cell is bound for it; the read then
+    // fails explicitly instead of silence.
+    if (owner_->named_own_marked()) return owner_->named_own_contains(key.to_utf8());
     const auto cell = owner_->string_key_cell(key);
     return cell != nullptr && cell->present();
   }
@@ -2460,7 +2463,11 @@ class NamedProperties final {
         if (*sentinel == ConstructedKeySentinel::Null) return Any(nullptr);
         if (*sentinel == ConstructedKeySentinel::Undefined) return Any(undefined);
       }
-      if (!unmasked) return Any(undefined);
+      if (!unmasked) {
+        // The literal authored this key but no native/SDK cell exists to read it. Fail explicitly
+        // rather than silently answering undefined.
+        throw UnrepresentedProperty(key.to_utf8(), typeid(void));
+      }
       if (!current) throw UnrepresentedProperty(key.to_utf8(), unmasked->value_type());
       return *std::move(current);
     }

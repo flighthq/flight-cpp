@@ -4868,6 +4868,23 @@ static void test_constructed_own_keys() {
                                                         flight::String("10"), flight::String("a"),
                                                         flight::String("b")},
         "a later string key appends after the authored string keys");
+
+  // An authored key with no bound native/SDK cell: keys and has agree, and reading it fails
+  // explicitly instead of silently answering undefined.
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("garnetQuantum47"),
+                                         flight::ConstructedKeySentinel::Value}});
+  properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("garnetQuantum47")} &&
+            properties.has(flight::String("garnetQuantum47")),
+        "an authored but unbound key is own in both keys and has");
+  bool unrepresented = false;
+  try {
+    (void)properties.get(flight::String("garnetQuantum47"));
+  } catch (const flight::UnrepresentedProperty&) {
+    unrepresented = true;
+  }
+  check(unrepresented, "reading an authored but unbound key fails explicitly");
 }
 
 
