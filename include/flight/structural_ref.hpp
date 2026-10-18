@@ -305,6 +305,8 @@ class RowOwner {
   template <typename Value>
   void set_named_value(std::string_view key, Value value) {
     using Stored = std::remove_cvref_t<Value>;
+    // A typed named write makes a declared member own on a constructed object (same owner).
+    mark_named_own_key(key, ConstructedKeySentinel::Value);
     if (auto* target = named_value<Stored>(key)) {
       *target = std::move(value);
       return;
