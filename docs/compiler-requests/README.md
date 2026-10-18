@@ -76,6 +76,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 | [`compiler-catch-await-owned-carrier.patch`](../../source-patches/compiler-catch-await-owned-carrier.patch) | [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) |
 | [`compiler-promise-resolve-domain.patch`](../../source-patches/compiler-promise-resolve-domain.patch) | [A resolved task carries the literal it was given](task-resolved-value-domain-mismatch.md) |
 | [`compiler-callable-arity-adaptation.patch`](../../source-patches/compiler-callable-arity-adaptation.patch) | [A function with fewer parameters is assigned where a wider callable is expected](callable-fewer-parameters-adaptation.md) |
+| [`compiler-callable-value-identity.patch`](../../source-patches/compiler-callable-value-identity.patch) | [A locally declared handler needs callable identity](local-handler-callable-identity.md) |
 | `compiler-scoped-emission-semantic-context.patch` — retired at 806d257, the fix landed upstream | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | `compiler-sdk-lane-local-reexports.patch` — retired at 806d257, the fix landed upstream | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |

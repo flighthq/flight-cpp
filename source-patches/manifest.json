@@ -4521,6 +4521,23 @@
       "expires": "when contextual present optional readonly returns and matching contexts reuse their exact stored view without a manufactured writable intermediate (docs/compiler-requests/readonly-view-to-writable.md).",
       "appliedOn": "2026-10-18",
       "verification": "Ordered70compiler patch apply/revert and production buildPASS;13direct compiler controlsPASS against independently transpiled preceding69patch source (8exact projections,5byte/refusal-equivalent counterexamples). Four actual emitted native functions compile/link/runPASS for row/native owner identity, live cells/-0/NaN, attachment replacement, single evaluation, absence guards and exact thrown-owner preservation; emitted header unchanged through70stack, no native rerun. Baseline native fails exact writable roundtrip; fixed readonly result still rejects row_set. Raw806d257backend source on same fixture IR reproduces before any repair; declared repairs leave bad return unchanged, no full raw compiler build claim. Vitest/Oxlint/check launcher unavailable. Normal SDK/header/actual Canvas consumer pending6teardown-owner mechanism and granted slot; no whole-header or40gain claim."
+    },
+    {
+      "id": "compiler-callable-value-identity",
+      "dependency": "flight-compiler",
+      "patch": "compiler-callable-value-identity.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/shape",
+      "answers": "diagnostic",
+      "refusal": "Strict comparison of nullable callable values emits invalid variant/optional equality; closed source function literals lose their reference identity when stored in std::function.",
+      "rewrite": "Retain each synchronous closed contextual source function literal in the existing flight::Function identity state before its unchanged std::function ABI. For strict equality/inequality of compatible closed callable carriers, evaluate operands once in source order into one callable/null/undefined carrier and compare matching callable identities or exact sentinel alternatives.",
+      "equivalence": "The same original function literal body and captures execute with the same arguments. Copies share its one retained identity and original live captured owners; fresh evaluations create distinct function identities. Null and undefined remain distinct alternatives, each operand is evaluated once left-to-right, and an operand exception prevents evaluation of the next. Function signatures and public storage ABIs are unchanged. No lambda target-type equality, fabricated callback, copied owner, cast, invented default or narrowed source domain is introduced; generic or incompatible callable signatures retain their existing explicit boundary.",
+      "verification": "Original emitted fixture compiles/links/runs with same-versus-fresh closure identity, captured-owner mutation and escape, named function comparisons, both strict operators, null/undefined states, optional readonly registry slot and operand exception/order. Omitting only identity retention compiles but fails at runtime with unavailable erased callback identity; raw baseline also lacks the retained carrier. Current71patch ordered apply/revert and production buildPASS; selected existing regressions56PASS plus1render-owner refusal reproduced unchanged on preceding70patch baseline. Root static check reports existing peer fixture types/format/lint/order failures; own touched files lintPASS. Existing runtime CMake build+CTestPASS1/1. Original Shape registry qualification in progress; no native row promotion claimed.",
+      "whyNotUpstreamFirst": "This is a shared C++ emission defect, implemented in the compiler architecture and carried against the exact pin; the existing runtime identity carrier already preserves original function state through std::function. Existing request docs/compiler-requests/local-handler-callable-identity.md records the same loss and nullable registry comparison.",
+      "unblocks": "The strict nullable handler comparison in the original generic Shape bounds registry consumer, following checked generic K substitution and normal all-callback callee emission.",
+      "expires": "when upstream retains closed source function identity through callable storage and lowers strict callable/null/undefined equality without erasure or sentinel collapse (docs/compiler-requests/local-handler-callable-identity.md).",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

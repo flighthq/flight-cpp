@@ -124,3 +124,33 @@ This request closes when emitted function values that are compared by identity k
 when a `LogSink` parameter is emitted as a `flight::Function` rather than a `std::function`. Until then the
 override has to carry the REF spelling, and the ROW spelling the emitter produces is a second site of the same
 defect rather than a new one.
+
+## G3 Shape registry carry: retained literals and strict nullable comparison
+
+The original `registerDefaultShapeBoundsCommands` consumer reaches this defect after checked generic
+`K` substitution. `registerShapeBoundsCommand` compares `previous?.fillBounds` with the new command's
+nullable handler. The emitted variant/optional `==` fails to compile, and merely making those carriers
+comparable would still lose each original default arrow function's identity.
+
+[`compiler-callable-value-identity.patch`](../../source-patches/compiler-callable-value-identity.patch)
+retains synchronous closed contextual literals in the existing `flight::Function` state before their
+unchanged `std::function` ABI. Copies keep one function identity and its live captured owners; another
+evaluation of the same literal creates another identity. Compatible closed callable `===` and `!==`
+evaluate their operands once, left to right, into a callable/null/undefined union. Equal sentinel
+alternatives compare equal; the callable alternative uses `callable_identity_equal`.
+
+The existing runtime helper also distinguishes two represented categories: a declared function and
+an identity-bearing closure are different source objects. It continues to reject an arbitrary erased
+lambda whose identity was lost. No comparison of lambda target types or replacement owner is used.
+
+The original emitted regression compiles, links and runs with same/fresh closures, an escaped live
+captured owner, named functions, both strict operators, exact null/undefined states, a readonly optional
+registry slot, and a left operand throwing before the right is read. Independently executing the same
+TypeScript agrees. Omitting only identity retention still compiles, then fails with unavailable erased
+identity. The 71-patch production build and ordered apply/revert pass; selected existing regressions
+report 56 passes and one render-owner refusal reproduced on the preceding 70-patch baseline. The full
+static check still reports existing peer fixture types, formatting, lint and import-order failures.
+
+This is a bounded carry, not closure of every site above: generic or incompatible callable signatures,
+async literals, and ABI-changing adapters retain their existing boundaries. Original Shape public
+consumer and normal all-callback qualification remain pending; no header row is promoted by this proof.
