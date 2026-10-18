@@ -1,0 +1,75 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 95b7f7d..f4307d0 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -27483,6 +27483,29 @@ function emitCppMembershipTestCpp(
+       'cpp-membership-test-unrepresented',
+     );
+   }
++  // A nominal reference whose declared type lacks the key, while a type assignable to it declares it --
++  // `'device' in state` with `state: RenderState`. The object may be that subtype, so the answer is the
++  // allocation's EXACT type, which flight::make_ref records: the runtime reads that type's own members
++  // (naming the key as a RowKey is what puts it in the generated member table, so the binding is precise),
++  // then its registered prototype chain and Object.prototype, and refuses an allocation it has no record
++  // for, or an unset optional member whose presence the carrier cannot tell, rather than answering false.
++  if (
++    receiverCarrier.startsWith('flight::Ref<') &&
++    evidence.key.kind === 'string' &&
++    evidence.receiver === 'undeclared' &&
++    evidence.subtypes !== 'none' &&
++    !getCppStructuralRowExpressionPlanCpp(expression.right, context)
++  ) {
++    if (hasCppReceiverAssertionSyntaxCpp(expression.right)) {
++      emissionError(
++        context,
++        `${describe} probes a subtype key through an ASSERTED receiver: the assertion's checked recovery would throw for an object that is not that type, while the source asks the object itself`,
++        'cpp-membership-test-unrepresented',
++      );
++    }
++    context.includes.add('flight/structural_ref.hpp');
++    return `flight::has_own_named_property<flight::RowKey<${JSON.stringify(evidence.key.value)}>>(${receiver})`;
++  }
+   const row = getCppStructuralRowExpressionPlanCpp(expression.right, context);
+   if (!row) {
+     emissionError(
+diff --git a/packages/compiler-backend-cpp/src/cppNominalSubtypeMembership.test.ts b/packages/compiler-backend-cpp/src/cppNominalSubtypeMembership.test.ts
+new file mode 100644
+index 0000000..860dddd
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNominalSubtypeMembership.test.ts
+@@ -0,0 +1,35 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/nominalSubtypeMembership.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const states = `
++  export interface RenderState { allowSmoothing: boolean }
++  export interface WgpuRenderState extends RenderState { device: number }
++  export interface GlRenderState extends RenderState { gl: number }
++`;
++
++it('asks the allocation exact type when only a subtype declares the key', () => {
++  const output = emit(`${states}
++    export function isWgpu(state: RenderState): boolean { return 'device' in state; }
++  `);
++
++  expect(output).toContain('flight::has_own_named_property<flight::RowKey<"device">>(state)');
++  expect(output).not.toContain('"device" in state');
++});
++
++it('keeps a key no assignable type declares refused', () => {
++  expect(() =>
++    emit(`${states}
++      export function hasOther(state: RenderState): boolean { return 'other' in state; }
++    `),
++  ).toThrow(/"other" in receiver` probes a key flight::Ref<RenderState> does not declare/);
++});

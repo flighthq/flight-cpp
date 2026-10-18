@@ -319,3 +319,25 @@ Neither is faithful. Requested capability: the owner records that a computed cel
 query, under the same rule that every assignable declarer is required. The variant-receiver form
 (`wgpu_render_state`) needs none of this: `compiler-symbol-membership-variant-arm` (committed, inactive) gives it the
 single declaring arm's test.
+
+## Subtype keys on a nominal reference
+
+`'device' in state` with `state: RenderState`, where only `WgpuRenderState` declares `device`
+(`getRenderRegistriesMissMessage`), is the one SDK site of this shape. A nominal `flight::Ref<RenderState>`
+names the reference's static type, not the object's, so no static answer is sound. The emitter lowers it to
+`flight::has_own_named_property<flight::RowKey<"device">>(state)` (`source-patches/compiler-nominal-subtype-membership.patch`):
+the runtime asks the allocation's exact type, which `flight::make_ref` records. Naming the key as a `RowKey`
+puts it in the generated member table, so the exact type's binding answers precisely whether it declares the
+member.
+
+What it refuses instead of answering:
+- an allocation `make_ref` did not record;
+- an asserted receiver, whose checked recovery would throw;
+- a key no assignable type declares;
+- an unset optional member bound without a presence policy, where a written `null` and an omitted member
+  share one disengaged carrier.
+
+Still open (not covered here):
+- A registered class's own fields that are not member-table keys are refused by the erased `in`/`typeof`
+  queries. Registering field names would close it.
+- A receiver typed `object` is emitted as `flight::Ref<void>`, so `key in value` there is still raw text.
