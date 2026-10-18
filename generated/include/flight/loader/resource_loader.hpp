@@ -386,7 +386,7 @@ inline void initialize_resource_loader(flight::types::EntityConstruction<flight:
 inline flight::Ref<flight::types::ResourceLoader> create_resource_loader(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>> options = std::nullopt) {
   flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>> out = flight::entity::allocate_entity<flight::Ref<ResourceLoaderInternal>>();
   initialize_resource_loader(out, options);
-  return flight::entity::finish_entity<flight::Ref<flight::types::ResourceLoader>>(flight::structural_ref_cast<flight::types::EntityConstruction<flight::Ref<flight::types::ResourceLoader>>>(out));
+  return flight::entity::finish_entity<flight::Ref<ResourceLoaderInternal>>(out);
 }
 
 
