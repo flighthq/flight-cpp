@@ -285,7 +285,7 @@ new file mode 100644
 +    const dir = mkdtempSync(path.join(tmpdir(), 'flight-optional-literal-range-'));
 +    try {
 +      writeFileSync(path.join(dir, 'probe.hpp'), emit());
-+      const js = {} as { align: (document: { j?: number }) => string };
++      const js = {} as { align: (document: { j?: number | undefined }) => string };
 +      new Function(
 +        'exports',
 +        ts.transpileModule(source, {
@@ -410,7 +410,7 @@ new file mode 100644
 +                                      parameterType: {
 +                                        kind: 'named' as const,
 +                                        reference: { kind: 'ambient' as const, name: 'Readonly' },
-+                                        typeArguments: [{ kind: 'unknown' as const, source: 'unknown' }],
++                                        typeArguments: [{ kind: 'unknown' as const, source: 'unknown' as const }],
 +                                      },
 +                                    }),
 +                                  ),
