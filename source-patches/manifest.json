@@ -4538,6 +4538,23 @@
       "unblocks": "The strict nullable handler comparison in the original generic Shape bounds registry consumer, following checked generic K substitution and normal all-callback callee emission.",
       "expires": "when upstream retains closed source function identity through callable storage and lowers strict callable/null/undefined equality without erasure or sentinel collapse (docs/compiler-requests/local-handler-callable-identity.md).",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-optional-record-literal-materialization",
+      "dependency": "flight-compiler",
+      "patch": "compiler-optional-record-literal-materialization.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "A nonempty contextual Record literal passed directly into optional or union Record storage emits bare pair braces; C++ cannot construct the Record and optional/union from that untyped initializer list.",
+      "rewrite": "Name the existing contextual Record construction type around plain nonempty property entries, as the existing empty-literal path already does. External descriptor, structural row, computed key and spread paths keep their existing construction rules.",
+      "equivalence": "The source object literal already allocates one fresh Record. Naming that exact declared storage preserves its entries and original value owners, member evaluation order and abrupt completion, while allowing the existing optional/union constructor to retain it. Existing Record arguments are untouched and keep shared identity. Omitted arguments remain absent, empty objects remain present empty Records, and null, undefined, missing keys and explicit null/undefined values remain distinct. No copy of an existing owner, cast, default, source rewrite or domain restriction is introduced.",
+      "verification": "Raw806d257 backend and preceding71patch backend each fail both focused cases at the same six real optional/union Record calls. Candidate2/2PASS including emitted Clang compile/link/run with alias/fresh identity, live retained Owner mutation, empty versus absent, exact null/undefined and missing keys, left-to-right field order and exact thrown7 stopping the third field. Existing selected Record/optional/external controls23PASS; one imported Format owner refusal reproduces unchanged on preceding71stack. Scoped test lintPASS; production TypeScript build checkPASS. Root typecheck retains five existing peer fixture errors. Normal current-stack apply/build/revert and original SDK public consumer qualification pending; no header gain claimed.",
+      "whyNotUpstreamFirst": "This shared compiler correction is carried through the locked source-patch mechanism; the runtime already implements the required Record and optional/union storage.",
+      "unblocks": "The shared optional Record literal cause behind17 historical headers and newly exposed SVG gradient callers. Additional header blockers remain to be measured; SVG bounds missing get_shape_bounds is a separate cause.",
+      "expires": "when upstream materializes contextual nonempty Record literals before passing them through optional or union storage (docs/compiler-requests/optional-record-literal-not-materialized.md).",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

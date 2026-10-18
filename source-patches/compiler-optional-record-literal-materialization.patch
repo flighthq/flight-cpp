@@ -1,0 +1,145 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6103,7 +6103,7 @@
+           const key = emitCppRecordLiteralKey(member.name, record.key, context);
+           return `{${key}, ${emitExpression(member.value, context, record.value)}}`;
+         });
+-        return `{${entries.join(', ')}}`;
++        return `${emitType(constructionType, context)}{${entries.join(', ')}}`;
+       }
+       const structuralRow = context.referenceRepresentationPlanner.resolveStructuralRow(
+         constructionType,
+diff --git a/packages/compiler-backend-cpp/src/cppOptionalRecordLiteralMaterialization.test.ts b/packages/compiler-backend-cpp/src/cppOptionalRecordLiteralMaterialization.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppOptionalRecordLiteralMaterialization.test.ts
+@@ -0,0 +1,128 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++
++function emitRecordFixture(): string {
++  const source = `
++    export type Detail = Readonly<Record<string, boolean | number | string>>;
++    export interface Owner { value: number }
++    export function keep(detail?: Detail): Detail | undefined { return detail; }
++    export function supplied(value: number): Detail | undefined { return keep({ value, tag: 'literal', ready: true }); }
++    export function empty(): Detail | undefined { return keep({}); }
++    export function keepNullable(detail: Detail | null | undefined): Detail | null | undefined { return detail; }
++    export function nullable(kind: number): Detail | null | undefined {
++      if (kind === 0) return keepNullable(null);
++      if (kind === 1) return keepNullable(undefined);
++      return keepNullable({ value: 3, ready: false });
++    }
++    function keepOwner(detail?: Readonly<Record<string, Owner>>): Readonly<Record<string, Owner>> | undefined { return detail; }
++    export function ownerDetail(owner: Owner): Readonly<Record<string, Owner>> | undefined { return keepOwner({ kept: owner }); }
++    function keepUnknown(detail?: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> | undefined { return detail; }
++    export function absentValues(): Readonly<Record<string, unknown>> | undefined {
++      return keepUnknown({ present: 1, explicitUndefined: undefined, explicitNull: null });
++    }
++    let reads = 0;
++    function step(value: number): number { reads = reads * 10 + value; return value; }
++    function boom(): number { reads = reads * 10 + 2; throw 7; }
++    export function ordered(): Detail | undefined { reads = 0; return keep({ first: step(1), second: step(2) }); }
++    export function interrupted(): Detail | undefined { reads = 0; return keep({ first: step(1), second: boom(), third: step(3) }); }
++    export function readCount(): number { return reads; }
++  `;
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/math/src/optionalRecord.ts',
++        source,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('optional Record literal materialization', () => {
++  it('materializes a contextual nonempty Record before crossing optional argument storage', () => {
++    const cpp = emitRecordFixture();
++    expect(cpp).not.toContain('keep({{');
++    expect(cpp).not.toContain('keep_owner({{');
++    expect(cpp).not.toContain('keep_unknown({{');
++  });
++
++  it.skipIf(!toolchain || !includes.length)(
++    'compiles, links and runs original Record ownership, presence, member order and abrupt completion',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-optional-record-'));
++      try {
++        const source = path.join(directory, 'records.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'records'));
++        writeFileSync(
++          source,
++          emitRecordFixture() +
++            `
++int main() {
++  namespace fixture = flighthq_math;
++  auto first = fixture::supplied(8.0);
++  if (!first || first->size() != 3 || std::get<double>(first->get(flight::String("value")).value()) != 8.0 ||
++      std::get<flight::String>(first->get(flight::String("tag")).value()) != flight::String("literal") ||
++      !std::get<bool>(first->get(flight::String("ready")).value())) return 1;
++  auto alias = fixture::keep(first);
++  auto fresh = fixture::supplied(8.0);
++  if (!alias || !fresh || alias->identity() != first->identity() || fresh->identity() == first->identity()) return 2;
++  if (fixture::keep() || !fixture::empty() || !fixture::empty()->empty()) return 3;
++  if (!std::holds_alternative<flight::Null>(fixture::nullable(0)) ||
++      !std::holds_alternative<flight::Undefined>(fixture::nullable(1)) ||
++      !std::holds_alternative<fixture::Detail>(fixture::nullable(2))) return 4;
++  auto owner = flight::make_ref<fixture::Owner>();
++  owner->value = 5;
++  auto owners = fixture::owner_detail(owner);
++  if (!owners || owners->get(flight::String("kept")).value() != owner) return 5;
++  owner->value = 9;
++  if (owners->get(flight::String("kept")).value()->value != 9) return 6;
++  auto absent = fixture::absent_values();
++  if (!absent || absent->size() != 3 || absent->get(flight::String("missing")) ||
++      !absent->get(flight::String("explicitUndefined"))->is_undefined() ||
++      !absent->get(flight::String("explicitNull"))->is_null()) return 7;
++  auto ordered = fixture::ordered();
++  if (!ordered || fixture::read_count() != 12 || std::get<double>(ordered->get(flight::String("first")).value()) != 1 ||
++      std::get<double>(ordered->get(flight::String("second")).value()) != 2) return 8;
++  try { fixture::interrupted(); }
++  catch (double error) { return error == 7 && fixture::read_count() == 12 ? 0 : 9; }
++  return 10;
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, source, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});

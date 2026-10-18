@@ -1,6 +1,6 @@
 # An object literal passed to an `optional<Record<...>>` parameter is emitted as a bare braced pair list
 
-**Family.** Record construction inside an optional parameter slot. **Sites at this pin:** 16 headers across
+**Family.** Record construction inside an optional parameter slot. **Historical assigned sites:** 17 headers across
 scene2d-formats, scene3d-formats, skeleton2d-formats and swf (2D, 3D and ANIM lanes). **Route:** compiler.
 
 ## Reproduction
@@ -44,17 +44,35 @@ or ordering changes: the optional is engaged either way, and the Record is the s
 
 ## Sites
 
-The same shape appears in 16 headers, recorded in `docs/header-failures.md` as cause cluster
+The historical assigned shape appears in 17 headers, recorded in `docs/header-failures.md` as cause cluster
 `other-40da43f7` and in `generated/header-status.json` with the diagnostic above. They span
 `scene2d_formats/rive_skin`, `scene3d_formats/{md2_parse,obj_parse,three_ds_keyframe_handler,three_ds_material_handler,three_ds_mesh_handler,three_ds_parse}`,
-`skeleton2d_formats/{dragon_bones_parse,spine_binary_draw_order_timeline_handler,spine_binary_skins_handler,spine_binary_slots_handler,spine_binary_versioned}`
+`skeleton2d_formats/{dragon_bones_parse,spine_binary_bones_handler,spine_binary_draw_order_timeline_handler,spine_binary_skins_handler,spine_binary_slots_handler,spine_binary_versioned}`
 and `swf/{_internal_swf_tag_stream_test_helper,swf_all_tag_handlers,swf_bitmap_tag_family,swf_jpeg_bitmap_handler}`.
 
-## What we do meanwhile
+## Shared compiler correction
 
-Nothing. No repair, no override, no source patch: a source patch would have to rewrite the object literal at
-16 sites across six packages to work around one missing lowering, and the lowering is the defect. The sites
-stay failing and counted until the emitter names the storage.
+`compiler-optional-record-literal-materialization` names the existing contextual Record carrier around
+ordinary nonempty entries. The empty literal path already names that carrier, and computed/spread entries
+already use ordered construction. External descriptor construction stays on its earlier separate path.
+No TypeScript caller or runtime owner is replaced. Existing Record arguments keep their identity; fresh
+literals allocate once, including an engaged empty Record. Missing values, explicit null/undefined,
+field order and abrupt completion remain observable.
+
+The focused original emitted fixture fails at six calls under both the raw pinned backend and the
+preceding compiler stack. The corrected fixture compiles, links and runs its ownership, absence and
+ordering controls. Normal SDK regeneration and actual original public consumer qualification are pending;
+this compiler proof alone does not promote historical header rows.
+
+The current historical cluster has three later follow-ons (`spine_parse`, SWF `_internal_index` and
+`contract`) in addition to the assigned17. The newly exposed five `svg_gradient.hpp:106` callers are a
+separate observation set. The five `svg_bounds.hpp:114` callers currently stop on absent `get_shape_bounds`,
+which is a different cause. Keep these memberships separate and measure their current results rather
+than adding them into a claimed gain. Applicability follows the generated package environment declaration.
+
+Several existing Flight patches bind diagnostic details to typed locals as a local workaround, including
+the cases in the [related request](object-literal-into-optional-record-argument.md). Their other changes
+remain required until separately qualified; carrying this shared fix does not retire composite patches.
 
 ## G2 Rive clipping diagnostic detail
 

@@ -554,7 +554,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [Reading the elements of an erased array must use the runtime's exact array recovery](erased-array-element-reading.md) —
   14 skeleton2d-formats JSON parser modules; the runtime's `AnyArray` and `external_if<Array<T>>` already exist.
 - [An object literal passed to an optional `Record` parameter must be constructed before the optional](object-literal-into-optional-record-argument.md) —
-  diagnostic details in five format packages; carried per package by detail-local source patches.
+  diagnostic details in five format packages; shared compiler materialization patch carried, original consumer qualification pending; existing detail-local patches retained.
 - [Owning arrays, readonly-row arrays and number buffers need conversions where they meet](animation-readonly-row-array-carriers.md) —
   animation blend tree and crossfade; carried by their two overrides.
 - [A named function with fewer parameters must be adapted where a wider callable is expected](named-function-parameter-count-adapter.md) —
@@ -645,9 +645,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [Readonly video helper carriers](video-readonly-helper-carriers.md).
 - [Video frame advance asserted source and undefined callback argument](video-advance-asserted-host-source.md).
 - [An object literal passed to an `optional<Record<...>>` parameter is emitted as a bare braced pair list](optional-record-literal-not-materialized.md) —
-  16 headers across scene2d-formats, scene3d-formats, skeleton2d-formats and swf (cause cluster
-  `other-40da43f7`); the Record's contents are materialized but the Record itself is not named inside the
-  optional. No patch is carried.
+  17 historical assigned headers across scene2d-formats, scene3d-formats, skeleton2d-formats and swf (cause cluster
+  `other-40da43f7`); shared `compiler-optional-record-literal-materialization` names the existing Record.
+  Focused native controls pass; normal SDK and original public consumer qualification pending.
 - [A joint initializer is called with the construction view instead of the owner it wraps](entity-construction-view-passed-to-owner-parameter.md) —
   8 headers across physics2d, physics2d-abi and physics3d; a CONCRETE call, not the generic substitution case in
   `entity-construction-generic-call-inference.md`. No patch is carried.

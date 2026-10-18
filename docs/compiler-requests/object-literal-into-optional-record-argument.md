@@ -46,3 +46,10 @@ Still failing on it at `a627849`, uncarried: `@flighthq/skeleton2d-formats` `dra
 string-valued `{ version }` detail in `spineBinaryVersioned.ts`, which the number-locals patch does not touch (the
 first diagnostic of each header; the package has 41 object-literal detail calls across 21 modules, so more sit
 behind other blockers).
+
+## Shared correction
+
+The compiler source patch `compiler-optional-record-literal-materialization` now names the contextual
+Record at the literal allocation boundary. See the [shared cause and qualification](optional-record-literal-not-materialized.md#shared-compiler-correction).
+It preserves the full caller domain and existing owners. Local workarounds remain carried pending
+normal generation and separate expiry qualification; no header gain follows from compiler tests alone.
