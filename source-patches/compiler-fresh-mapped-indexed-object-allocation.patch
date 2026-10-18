@@ -93,7 +93,7 @@
 +    {
 +      packageName: '@flighthq/factory',
 +      name: 'factory/src/contract.ts',
-+      text: 'import type{A,B}from "@flighthq/domain/contract";export function make(read:()=>void):A;export function make(read:()=>void,kind:"b"):B;export function make(read:()=>void,kind?:"b"):A|B{read();if(kind===\'b\')return{other:\'b\'};return{value:7};}',
++      text: 'import type{A}from "@flighthq/domain/contract";export function make(read:()=>void):A;export function make(read:()=>void,kind:"a"):A;export function make(read:()=>void,kind?:"a"):A{read();return{value:7};}',
 +    },
 +    {
 +      packageName: '@flighthq/probe',
