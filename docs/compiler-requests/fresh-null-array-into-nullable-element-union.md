@@ -82,6 +82,9 @@ unannotated conditional/local shape above, fresh versus retained array/stop/colo
 missing and empty inheritance, receiver evaluation once, callback/property order and exact thrown owner.
 On the identical preceding 72-patch stack, the two positive groups fail at the anonymous array boundary
 and the five refusal controls remain unchanged. Production compiler build and touched-file lint pass.
-Normal declared stack application and original public SVG consumer/header qualification are pending;
-these focused checks do not promote any header or resolve the broader nullable-element request above.
+The normal declared 73-patch stack applies, builds and reverses to a clean pinned checkout; all seven
+focused groups and 17 selected existing map/optional-chain/nullish groups pass. The full compiler check
+retains its four known failing gates (format, lint, import order and five foreign fixture type errors).
+Original public SVG consumer/header qualification remains pending; these focused checks do not promote
+any header or resolve the broader nullable-element request above.
 The registry callback annotation remains carried pending its own expiry audit.
