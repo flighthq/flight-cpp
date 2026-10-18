@@ -1,0 +1,261 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8203,7 +8203,29 @@
+         }
+         const fields = expression.members.map((member) => {
+           if (member.kind !== 'property') throw new TypeError('expected structural-row property');
+-          const propertyType = getIrObjectPropertyTypeCpp(constructionType, member.name, context);
++          let propertyType = getIrObjectPropertyTypeCpp(constructionType, member.name, context);
++          // An explicitly supplied `value ?? null` cannot be undefined. Partial contributes omission
++          // at the row cell, while the native member keeps its declared nullable storage. Adding a
++          // second sentinel here would manufacture a variant incompatible with that original cell.
++          if (
++            isCppStructuralRowPropertyOptionalCpp(structuralRow) &&
++            member.value.kind === 'binary' &&
++            member.value.operator === '??' &&
++            member.value.right.kind === 'literal' &&
++            member.value.right.value === null
++          ) {
++            const subject = getCppStructuralRowObjectTypeCpp(structuralRow);
++            const declared = subject ? getIrObjectPropertyTypeCpp(subject, member.name, context) : undefined;
++            const declaredUnion = declared ? getIrUnionTypeCpp(declared, context, new Set()) : undefined;
++            const declaredPlan = declaredUnion ? getCppUnionRepresentationPlan(declaredUnion, context) : undefined;
++            if (
++              declared &&
++              declaredPlan?.kind === 'optionalSingle' &&
++              declaredPlan.sentinels.null === 'optionalAbsence' &&
++              declaredPlan.sentinels.undefined === 'absent'
++            )
++              propertyType = declared;
++          }
+           return `flight::row_field<flight::RowKey<${JSON.stringify(member.name)}>>(${emitExpression(member.value, context, propertyType)})`;
+         });
+         context.includes.add('flight/structural_ref.hpp');
+@@ -14479,9 +14501,6 @@
+         };
+         return qualifyCppDeclaringModuleTypeCpp(emitType(checkedOwner, ownerContext, representation), ownerContext);
+       }
+-      const typeParameters = context.anonymousStructTypeParameters.map(
+-        (parameter) => context.targetNames.get(parameter.binding.id) ?? pascalCase(parameter.binding.name),
+-      );
+       const storedProperties = type.properties.filter((property) => !isCppNonEmittingObjectPropertyCpp(property));
+       if (storedProperties.some((property) => property.optional)) context.includes.add('optional');
+       const emittedProperties = storedProperties.map((property) => ({
+@@ -14504,9 +14523,22 @@
+           'cpp-anonymous-object-property-missing-type-evidence',
+         );
+       }
++      // An anonymous shape depends only on parameters present in its stored field types. Capturing
++      // every enclosing generic changes the native owner of an otherwise non-generic imported options
++      // shape, even though no field refers to that generic. Keep every parameter the emitted storage
++      // actually names, including through a nested anonymous or named generic field.
++      const fieldTypeNames = new Set(
++        emittedProperties.flatMap((property) => property.type.match(/[A-Za-z_][A-Za-z0-9_]*/gu) ?? []),
++      );
++      const storedTypeParameters = context.anonymousStructTypeParameters.filter((parameter) =>
++        fieldTypeNames.has(context.targetNames.get(parameter.binding.id) ?? pascalCase(parameter.binding.name)),
++      );
++      const typeParameters = storedTypeParameters.map(
++        (parameter) => context.targetNames.get(parameter.binding.id) ?? pascalCase(parameter.binding.name),
++      );
+       // Literal discriminants can erase to one target scalar type while still requiring distinct
+       // variant alternatives. Key helpers by neutral structure, not only their emitted field types.
+-      const typeParameterKey = context.anonymousStructTypeParameters.map((parameter) => parameter.binding.id).join(',');
++      const typeParameterKey = storedTypeParameters.map((parameter) => parameter.binding.id).join(',');
+       const key = `${typeParameterKey}\0${normalizeCompilerStructuralValueCanonical(type)}`;
+       const existing = context.anonymousStructs.get(key);
+       if (existing) {
+@@ -26469,6 +26501,29 @@
+       : undefined;
+   const value = plan?.kind === 'optionalSingle' && plan.valueSlots.length === 1 ? plan.valueSlots[0] : undefined;
+   if (!value) return undefined;
++  const expectedArray = expectedType ? getIrArrayTypeCpp(expectedType, context, new Set()) : undefined;
++  const expectedElementRow = expectedArray
++    ? context.referenceRepresentationPlanner.resolveStructuralRow(expectedArray.element, context.module)
++    : undefined;
++  const sourceRow =
++    expression.left.kind === 'property' && !expression.left.optional
++      ? getCppStructuralRowExpressionPlanCpp(expression.left.object, context)
++      : undefined;
++  if (
++    expression.right.kind === 'array' &&
++    expression.right.elements.length === 0 &&
++    expectedArray?.readonly &&
++    expectedElementRow &&
++    isCppStructuralRowSchemaReadonlyCpp(expectedElementRow) &&
++    sourceRow &&
++    isCppStructuralRowSchemaReadonlyCpp(sourceRow) &&
++    getIrArrayTypeCpp(value.runtimeType, context, new Set())
++  ) {
++    const owner = getGeneratedTargetName('nullishArrayOwner', context);
++    context.includes.add('type_traits');
++    const read = emitOptionalExpressionCpp(expression.left, context, leftType);
++    return `([&]() { auto ${owner} = ${read}; if (${owner}.has_value()) return ${owner}.value(); using empty_array_type = typename std::remove_cvref_t<decltype(${owner})>::value_type; return empty_array_type{}; }())`;
++  }
+   const contextualArray = getCppFreshMappedArrayContextualResultTypeCpp(expression.left, expectedType, context);
+   const valueTarget = contextualArray ? emitType(contextualArray, context) : value.targetType;
+   const left = contextualArray
+@@ -32056,6 +32111,37 @@
+   target: Readonly<IrType>,
+   context: EmitContext,
+ ): string | undefined {
++  const presentTarget = getCppSinglePresentSourceTypeCpp(target, context);
++  if (
++    getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++    presentTarget &&
++    isCppErasedDynamicValueTypeCpp(presentTarget) &&
++    expression.kind === 'object'
++  ) {
++    const members = expression.members.filter((member) => member.kind === 'property');
++    if (
++      members.length === expression.members.length &&
++      members.every((member) => member.name !== '__proto__') &&
++      new Set(members.map((member) => member.name)).size === members.length
++    ) {
++      const properties = members.map((member) => {
++        const type = getIrExpressionTypeForUnionConstructionCpp(member.value, [], context);
++        return type ? { name: member.name, optional: false, readonly: false, type } : undefined;
++      });
++      if (properties.every((property) => property !== undefined)) {
++        const shape: IrType = { kind: 'object', properties: properties.map((property) => property!) };
++        if (hasFlightReferenceRepresentationCpp(shape, context)) {
++          context.includes.add('flight/any.hpp');
++          context.includes.add('flight/structural_ref.hpp');
++          const vocabulary = members
++            .map((member) => `static_cast<void>(sizeof(flight::RowKey<${JSON.stringify(member.name)}>));`)
++            .join(' ');
++          const made = emitExpression({ ...expression, type: shape }, context, shape);
++          return `(${context.namespaceScope ? '[]' : '[&]'}() { ${vocabulary} return flight::Any::object(${made}); }())`;
++        }
++      }
++    }
++  }
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || !isCppErasedDynamicValueTypeCpp(target)) {
+     return undefined;
+   }
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppReadonlyArrayAndFreshErasure.test.ts
+@@ -0,0 +1,123 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export interface Item { name: string }
++export interface Source { items?: readonly Readonly<Item>[] }
++export function selected(source:Readonly<Source>):readonly Readonly<Item>[] { return source.items ?? []; }
++export function count(source:Readonly<Source>):number { return selected(source).length; }
++export interface Box { data?: unknown }
++export function fresh(next:()=>number):unknown { return {duration:next()}; }
++export function forwarded(next:()=>number):Box { return {data:{duration:next()}}; }
++export interface NullableName { name:string|null }
++export function options(value:string|undefined):Readonly<Partial<NullableName>> { return {name:value??null}; }
++export function omitted():Readonly<Partial<NullableName>> { return {}; }
++function make(options:{values:readonly number[]}):number { return options.values.length; }
++export function generic<T>(unused:T,values:readonly number[]):number { return make({values}); }
++export function typed<T>(value:T):{value:T} { return {value}; }
++export function nested<T>(value:T):{data:{value:T}} { return {data:{value}}; }
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/filter.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++it('retains the actual readonly array payload for the lazy empty fallback', () => {
++  const output = emit();
++  expect(output).toContain('empty_array_type');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('boxes a fresh source object once at an optional unknown boundary', () => {
++  const output = emit();
++  expect(output).toContain('flight::Any::object(');
++  expect(output).toContain('RowKey<"duration">');
++});
++
++it('keeps the payload special case bounded to readonly row elements and receivers', () => {
++  for (const text of [
++    'export interface Item{name:string} export interface Source{items?:Item[]} export function selected(source:Source):Item[]{return source.items??[];}',
++    'export interface Item{name:string} export interface Source{items?:readonly Item[]} export function selected(source:Readonly<Source>):readonly Item[]{return source.items??[];}',
++  ])
++    expect(emit(text)).not.toContain('empty_array_type');
++});
++it('captures only the generics an anonymous native owner stores', () => {
++  const output = emit();
++  expect(output).toMatch(/struct values_[a-f0-9]+ : public flight::ReferenceEnabled/);
++  expect(output).not.toMatch(/struct values_[a-f0-9]+<T>/);
++  expect(output).toMatch(/template <typename T>\nstruct value_[a-f0-9]+/);
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles original array ownership and fresh erased literal evaluation',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-readonly-array-fresh-erasure-'));
++    try {
++      const header = emit();
++      const shape = /struct (duration_[a-f0-9]+) : public flight::ReferenceEnabled/.exec(header)?.[1];
++      expect(shape).toBeDefined();
++      writeFileSync(path.join(directory, 'fixture.hpp'), header);
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "fixture.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++auto source=flight::make_ref<probe::Source>();auto item=flight::make_ref<probe::Item>();item->name=flight::String("original");
++using Elements=typename decltype(source->items)::value_type;Elements original{item};source->items=original;
++auto selected=probe::selected(source);check(selected.identity()==original.identity());check(selected.size()==1);check(flight::row_get<flight::RowKey<"name">>(selected.element(0))==flight::String("original"));
++item->name=flight::String("changed");check(flight::row_get<flight::RowKey<"name">>(selected.element(0))==flight::String("changed"));original.push(item);check(selected.size()==2&&probe::count(source)==2);original.clear();check(selected.empty());
++source->items=std::nullopt;auto first=probe::selected(source);auto second=probe::selected(source);check(first.empty()&&second.empty());check(first.identity()!=second.identity());first.push(item);check(second.empty()&&!source->items.has_value());
++int calls=0;auto next=[&](){return static_cast<double>(++calls);};auto a=probe::fresh(next);check(calls==1);auto b=probe::fresh(next);check(calls==2&&a.identity()!=b.identity());auto object=a.object_if<probe::${shape}>();check(object&&object->duration==1);object->duration=7;check(a.object_if<probe::${shape}>()->duration==7);
++auto boxed=probe::forwarded(next);check(calls==3&&boxed->data.has_value());auto stored=boxed->data.value();check(stored.object_if<probe::${shape}>()->duration==3);boxed.reset();check(stored.object_if<probe::${shape}>()->duration==3);check(stored.identity()!=a.identity());
++bool threw=false;try{(void)probe::forwarded([&]()->double{++calls;throw flight::TypeError(flight::String("original failure"));});}catch(const flight::TypeError&){threw=true;}check(threw&&calls==4);
++check(probe::generic(7.0,flight::Array<double>{1,2})==2);check(probe::typed<double>(8)->value==8);check(probe::nested<double>(9)->data->value==9);
++auto named=probe::options(flight::String("kept"));check(flight::row_get<flight::RowKey<"name">>(named).value()==flight::String("kept"));auto nulled=probe::options(std::nullopt);check(!flight::row_get<flight::RowKey<"name">>(nulled)&&flight::row_has<flight::RowKey<"name">>(nulled));auto omitted=probe::omitted();check(!flight::row_has<flight::RowKey<"name">>(omitted));
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      try {
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++          { stdio: 'pipe' },
++        );
++      } catch (error) {
++        const failure = error as { status?: number; stderr?: Buffer; stdout?: Buffer };
++        throw Error(
++          `native compile status=${failure.status}: ${String(failure.stdout ?? '')}${String(failure.stderr ?? '')}`,
++        );
++      }
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('24 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

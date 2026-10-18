@@ -5522,6 +5522,23 @@
       "unblocks": "Readonly diagnostic detail parameter and escaped ImportDiagnostic field forwarding in original Lottie and shared diagnostic collector; coherent Types/collector output requires coordinated generation after current shared B.",
       "expires": "When upstream preserves equivalent explicit closed readonly Record views and rejects writable widening while retaining original storage ownership.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-original-lottie-array-and-object-carriers",
+      "dependency": "flight-compiler",
+      "patch": "compiler-original-lottie-array-and-object-carriers.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "Whole original Lottie emits mismatched readonly mask-array coalesce payload, bare optional Any marker data, generic native options owner with unused enclosing T, and a dual-sentinel initializer for an explicitly provided nullable Partial cell.",
+      "rewrite": "Retain the actual optional readonly-row array payload for a lazy authored empty fallback. Fresh plain unique-property object literals entering optional erased storage construct their exact inferred source shape once before ordinary Any boxing. Anonymous native shape templates capture only type parameters referenced by emitted field storage. An explicitly provided value ?? null for a nullable original Partial member uses that declared original cell domain without adding omission to the supplied value.",
+      "equivalence": "Preserve original array handle/live aliases and allocate each absent fallback freshly; preserve object allocation, evaluation order, effects, exceptions and lifetime; remove only unused native type parameters while retaining all dependent nested storage; distinguish missing row cell from explicitly provided null by original owner cell presence. No existing owner or array is copied, no native storage cast or global scalar ABI change, all original source bodies and domains retained.",
+      "verification": "PREPARATION prototype production+owned strict PASS and five focused tests including24native checks PASS. Current ordered composition, retained-suite baseline comparisons and whole original public native qualification pending;0/32native cases. No SDK or installed gain claimed.",
+      "whyNotUpstreamFirst": "Pinned compiler discards actual contextual storage at these original expression boundaries and captures unrelated enclosing generic parameters in fresh native owners. Existing runtime handles and checked boxing already provide the operations.",
+      "unblocks": "Original mask fallback, marker event payload, animation options and supplied nullable name construction; original Node mutable accessor callee boundary remains under investigation.",
+      "expires": "When upstream emits equivalent original array and fresh object carriers, minimal dependent anonymous templates and original supplied nullable row-cell storage with matching native controls.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
