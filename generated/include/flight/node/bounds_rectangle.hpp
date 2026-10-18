@@ -158,7 +158,7 @@ inline bool try_fast_recompute_world_bounds_rectangle(flight::types::Spatial2DNo
     const double d = object_pattern_value->d;
     const double tx = object_pattern_value->tx;
     const double ty = object_pattern_value->ty;
-    flight::node::ensure_node_world_matrix(target);
+    flight::node::ensure_node_world_matrix<Traits>(target);
     auto object_pattern_value_2 = runtime->world_matrix.value();
     const double a_2 = object_pattern_value_2->a;
     const double b_2 = object_pattern_value_2->b;
@@ -295,7 +295,7 @@ inline flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_r
 
 template <typename Traits>
 inline void ensure_node_local_bounds_rectangle(flight::types::BoundsNode<Traits> target) {
-  auto runtime = get_bounds_runtime(target);
+  auto runtime = get_bounds_runtime<Traits>(target);
   if (!is_node_local_bounds_rectangle_valid<Traits>(target, runtime)) {
     recompute_local_bounds_rectangle<Traits>(target, runtime);
   }
@@ -304,7 +304,7 @@ inline void ensure_node_local_bounds_rectangle(flight::types::BoundsNode<Traits>
 template <typename Traits>
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> get_node_local_bounds_rectangle(flight::types::BoundsNode<Traits> target) {
   ensure_node_local_bounds_rectangle<Traits>(target);
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_bounds_runtime(target)->local_bounds_rectangle.value()));
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_bounds_runtime<Traits>(target)->local_bounds_rectangle.value()));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_B197F87194E6D98D
@@ -344,7 +344,7 @@ inline void recompute_node_bounds_rectangle(flight::types::Spatial2DNode<Traits>
   if (!runtime->bounds_rectangle.has_value()) {
     (runtime->bounds_rectangle = std::optional<flight::Ref<flight::types::Rectangle>>{flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
   }
-  flight::geometry::matrix_transform_rectangle(runtime->bounds_rectangle.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_local_matrix(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(get_node_local_bounds_rectangle(target)));
+  flight::geometry::matrix_transform_rectangle(runtime->bounds_rectangle.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_local_matrix<Traits>(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(get_node_local_bounds_rectangle<Traits>(target)));
   (runtime->bounds_using_local_bounds_id = runtime->local_bounds_id);
   (runtime->bounds_using_local_transform_id = runtime->local_transform_id);
 }
@@ -393,8 +393,8 @@ inline flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_r
 
 template <typename Traits>
 inline void ensure_node_parent_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
-  auto runtime = get_spatial_2d_runtime(target);
-  if (((!is_node_local_bounds_rectangle_valid(target, runtime) || (runtime->bounds_using_local_bounds_id != runtime->local_bounds_id)) || (runtime->bounds_using_local_transform_id != runtime->local_transform_id))) {
+  auto runtime = get_spatial_2d_runtime<Traits>(target);
+  if (((!is_node_local_bounds_rectangle_valid<Traits>(target, runtime) || (runtime->bounds_using_local_bounds_id != runtime->local_bounds_id)) || (runtime->bounds_using_local_transform_id != runtime->local_transform_id))) {
     recompute_node_bounds_rectangle<Traits>(target, runtime);
   }
 }
@@ -501,9 +501,9 @@ inline void recompute_world_bounds_rectangle(flight::types::Spatial2DNode<Traits
 
 template <typename Traits>
 inline void ensure_node_world_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
-  auto runtime = get_spatial_2d_runtime(target);
-  const bool local_bounds_invalid = (!is_node_local_bounds_rectangle_valid(target, runtime) || (runtime->world_bounds_using_local_bounds_id != runtime->local_bounds_id));
-  const bool has_children = (flight::node::get_node_child_count(target) != 0.0);
+  auto runtime = get_spatial_2d_runtime<Traits>(target);
+  const bool local_bounds_invalid = (!is_node_local_bounds_rectangle_valid<Traits>(target, runtime) || (runtime->world_bounds_using_local_bounds_id != runtime->local_bounds_id));
+  const bool has_children = (flight::node::get_node_child_count<Traits>(target) != 0.0);
   bool force_recompute = false;
   if ((!has_children && !local_bounds_invalid)) {
     if (try_fast_recompute_world_bounds_rectangle<Traits>(target, runtime)) {
@@ -511,7 +511,7 @@ inline void ensure_node_world_bounds_rectangle(flight::types::Spatial2DNode<Trai
     }
     (force_recompute = true);
   }
-  flight::node::ensure_node_world_matrix(target);
+  flight::node::ensure_node_world_matrix<Traits>(target);
   const bool child_bounds_changed = (has_children && ensure_node_child_world_bounds_rectangles<Traits>(target));
   if ((((force_recompute || local_bounds_invalid) || child_bounds_changed) || (runtime->world_bounds_using_world_transform_id != runtime->world_transform_id))) {
     recompute_world_bounds_rectangle<Traits>(target, runtime);
@@ -521,7 +521,7 @@ inline void ensure_node_world_bounds_rectangle(flight::types::Spatial2DNode<Trai
 template <typename Traits>
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> get_node_world_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
   ensure_node_world_bounds_rectangle<Traits>(target);
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime(target)->world_bounds_rectangle.value()));
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime<Traits>(target)->world_bounds_rectangle.value()));
 }
 
 template <typename Traits>
@@ -536,7 +536,7 @@ inline bool ensure_node_child_world_bounds_rectangles(flight::types::Spatial2DNo
       continue;
     }
     flight::types::Spatial2DNode<Traits> child_node = flight::structural_ref_cast<flight::types::Spatial2DNode<Traits>>(child);
-    auto runtime = get_spatial_2d_runtime(child_node);
+    auto runtime = get_spatial_2d_runtime<Traits>(child_node);
     auto previous = runtime->world_bounds_rectangle;
     const std::optional<double> previous_x = ([&]() -> std::optional<double> { auto optional_chain_receiver = previous; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->x; }());
     const std::optional<double> previous_y = ([&]() -> std::optional<double> { auto optional_chain_receiver = previous; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->y; }());
@@ -556,7 +556,7 @@ inline void recompute_world_bounds_rectangle(flight::types::Spatial2DNode<Traits
   if (!runtime->world_bounds_rectangle.has_value()) {
     (runtime->world_bounds_rectangle = std::optional<flight::Ref<flight::types::Rectangle>>{flight::geometry::create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
   }
-  flight::geometry::matrix_transform_rectangle(runtime->world_bounds_rectangle.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_world_matrix(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(get_node_local_bounds_rectangle(target)));
+  flight::geometry::matrix_transform_rectangle(runtime->world_bounds_rectangle.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_world_matrix<Traits>(target)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(get_node_local_bounds_rectangle<Traits>(target)));
   std::optional<flight::Array<flight::types::NodeOf<Traits>>> children = flight::row_get<flight::RowKey<"children">>(flight::node::get_node_runtime<Traits>(target));
   if (children.has_value()) {
     for (auto child : children.value()) {
@@ -576,7 +576,7 @@ inline void recompute_world_bounds_rectangle(flight::types::Spatial2DNode<Traits
 template <typename Traits>
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> get_node_parent_bounds_rectangle(flight::types::Spatial2DNode<Traits> target) {
   ensure_node_parent_bounds_rectangle<Traits>(target);
-  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime(target)->bounds_rectangle.value()));
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(get_spatial_2d_runtime<Traits>(target)->bounds_rectangle.value()));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_BOUNDS_RECTANGLE_COMPUTE_LOCAL_BOUNDS_RECTANGLE_IS_LOCAL_BOUNDS_RECTANGLE_VALID_LOCAL_BOUNDS_RECTANGLE_WORLD_BOUNDS_RECTANGLE_LOCAL_MATRIX_ROTATION_ANGLE_ROTATION_COSINE_ROTATION_SINE_WORLD_MATRIX_FA3629BB778B9257
@@ -610,9 +610,9 @@ inline void compute_node_bounds_rectangle(flight::types::RectangleLike out, flig
     (target_coordinate_space = std::variant<flight::types::Spatial2DNode<Traits>, flight::Null, flight::Undefined>{std::in_place_type<flight::StructuralRef<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>, flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>, flight::RowOf<flight::Ref<flight::types::HasTransform2D>>, flight::RowOf<flight::Ref<entity_runtime_key_a6527de2d5de1d5e<Traits>>>>>>, source});
   }
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>> bounds;
-  if ((flight::node::get_node_child_count(source) == 0.0)) {
+  if ((flight::node::get_node_child_count<Traits>(source) == 0.0)) {
     if ((std::get<0>(target_coordinate_space) == source)) {
-      (bounds = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>{get_node_local_bounds_rectangle(source)});
+      (bounds = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>{get_node_local_bounds_rectangle<Traits>(source)});
     }
     else {
       if ((std::get<0>(target_coordinate_space) == flight::structural_ref_cast<flight::types::Spatial2DNode<Traits>>(flight::node::get_node_parent<Traits>(source).value()))) {
@@ -626,7 +626,7 @@ inline void compute_node_bounds_rectangle(flight::types::RectangleLike out, flig
   else {
     flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> world_bounds = get_node_world_bounds_rectangle<Traits>(source);
     auto transform = flight::geometry::acquire_matrix();
-    flight::geometry::inverse_matrix(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_world_matrix(std::get<0>(target_coordinate_space))));
+    flight::geometry::inverse_matrix(transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::node::get_node_world_matrix<Traits>(std::get<0>(target_coordinate_space))));
     flight::geometry::matrix_transform_rectangle(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(transform)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(world_bounds));
     flight::geometry::release_matrix(transform);
   }
@@ -725,7 +725,7 @@ struct entity_runtime_key_213b31777d333fdb : public flight::ReferenceEnabled {
 
 template <typename Traits>
 inline void merge_root_local_bounds(flight::types::RectangleLike out, flight::types::Spatial2DNode<Traits> node, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>> transform) {
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> local_bounds = get_node_local_bounds_rectangle(node);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> local_bounds = get_node_local_bounds_rectangle<Traits>(node);
   if (!transform.has_value()) {
     flight::geometry::copy_rectangle(root_local_node_bounds, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(local_bounds));
   }
@@ -742,7 +742,7 @@ inline void merge_root_local_bounds(flight::types::RectangleLike out, flight::ty
       continue;
     }
     auto child_transform = flight::geometry::acquire_matrix();
-    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> child_local = flight::node::get_node_local_matrix(flight::structural_ref_cast<flight::types::Spatial2DNode<Traits>>(child));
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> child_local = flight::node::get_node_local_matrix<Traits>(flight::structural_ref_cast<flight::types::Spatial2DNode<Traits>>(child));
     if (!transform.has_value()) {
       flight::geometry::copy_matrix(child_transform, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(child_local));
     }
@@ -767,8 +767,8 @@ inline void set_node_height(flight::types::Spatial2DNode<Traits> target, double 
   if ((flight::row_get<flight::RowKey<"scaleY">>(target) == 0.0)) {
     return;
   }
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> bounds = get_node_local_bounds_rectangle(target);
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> matrix = flight::node::get_node_local_matrix(target);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> bounds = get_node_local_bounds_rectangle<Traits>(target);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> matrix = flight::node::get_node_local_matrix<Traits>(target);
   const double scale_yfactor = std::abs((flight::row_get<flight::RowKey<"d">>(matrix) / flight::row_get<flight::RowKey<"scaleY">>(target)));
   const double local_height = std::abs(flight::row_get<flight::RowKey<"height">>(bounds));
   if (((scale_yfactor <= singular_axis_epsilon) || (local_height == 0.0))) {
@@ -780,7 +780,7 @@ inline void set_node_height(flight::types::Spatial2DNode<Traits> target, double 
     return;
   }
   flight::row_set<flight::RowKey<"scaleY">>(target, (flight::sign(flight::row_get<flight::RowKey<"scaleY">>(target)) * (adjustable_height / (scale_yfactor * local_height))));
-  flight::node::invalidate_node_local_transform(target);
+  flight::node::invalidate_node_local_transform<Traits>(target);
 }
 
 template <typename Traits>
@@ -788,8 +788,8 @@ inline void set_node_width(flight::types::Spatial2DNode<Traits> target, double v
   if ((flight::row_get<flight::RowKey<"scaleX">>(target) == 0.0)) {
     return;
   }
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> bounds = get_node_local_bounds_rectangle(target);
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> matrix = flight::node::get_node_local_matrix(target);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> bounds = get_node_local_bounds_rectangle<Traits>(target);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> matrix = flight::node::get_node_local_matrix<Traits>(target);
   const double scale_xfactor = std::abs((flight::row_get<flight::RowKey<"a">>(matrix) / flight::row_get<flight::RowKey<"scaleX">>(target)));
   const double local_width = std::abs(flight::row_get<flight::RowKey<"width">>(bounds));
   if (((scale_xfactor <= singular_axis_epsilon) || (local_width == 0.0))) {
@@ -801,7 +801,7 @@ inline void set_node_width(flight::types::Spatial2DNode<Traits> target, double v
     return;
   }
   flight::row_set<flight::RowKey<"scaleX">>(target, (flight::sign(flight::row_get<flight::RowKey<"scaleX">>(target)) * (adjustable_width / (scale_xfactor * local_width))));
-  flight::node::invalidate_node_local_transform(target);
+  flight::node::invalidate_node_local_transform<Traits>(target);
 }
 
 } // namespace flight::node

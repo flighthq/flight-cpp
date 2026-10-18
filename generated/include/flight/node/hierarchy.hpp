@@ -471,7 +471,7 @@ inline bool reparent_node(flight::types::Transform2DNode<Traits> child, flight::
     flight::row_set<flight::RowKey<"pivotY">>(child, pivot_y);
     flight::row_set<flight::RowKey<"x">>(child, (local_m->tx + ((local_m->a * pivot_x) + (local_m->c * pivot_y))));
     flight::row_set<flight::RowKey<"y">>(child, (local_m->ty + ((local_m->b * pivot_x) + (local_m->d * pivot_y))));
-    flight::node::invalidate_node_local_transform(child);
+    flight::node::invalidate_node_local_transform<Traits>(child);
   }
   catch (...) {
     finally_exception = std::current_exception();

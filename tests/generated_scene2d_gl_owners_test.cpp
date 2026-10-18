@@ -73,6 +73,10 @@ int main() {
     auto root = flight::scene2d::create_display_object();
     auto other = flight::scene2d::create_display_object();
     auto shape = flight::shape::create_shape();
+    flight::Ref<flight::types::Node2DData> shape_data_base = shape->data;
+    require(!shape->data->entity_runtime_key && shape_data_base.get() == shape->data.get() &&
+                &shape_data_base->entity_runtime_key == &shape->data->entity_runtime_key,
+            "ShapeData construction changed its inherited runtime cell or owner");
     auto child = flight::node::native_node_2d(shape);
     int created = 0, destroyed = 0;
     flight::Ref<Data> original_data;
@@ -183,6 +187,13 @@ int main() {
     auto label = flight::text::create_text_label(flight::text::TextLabelOptions{flight::text::TextLabelOptions::value_type(label_options)});
     auto label_view = flight::node::native_node_2d(label);
     auto label_runtime = flight::text::get_text_label_runtime(label);
+    flight::Ref<flight::types::Node2DData> label_data_base = label->data;
+    require(label_data_base.get() == label->data.get() &&
+                !label_data_base.owner_before(label->data) &&
+                !label->data.owner_before(label_data_base) &&
+                &label_data_base->entity_runtime_key == &label->data->entity_runtime_key,
+            "TextLabelData heritage duplicated its owner or runtime cell");
+
     require(label->data != data && label->data->text_format == format && label->x == 12 && label->scale_x == 1 &&
                 flight::node::native_node_2d_runtime(label_view) == label_runtime &&
                 flight::scene2d::get_node_2d_runtime(label_view) == label_runtime,

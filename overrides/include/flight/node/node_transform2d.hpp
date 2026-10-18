@@ -58,7 +58,7 @@ inline void get_node_transform_2d(flight::types::Transform2DLike out, flight::ty
 template <typename Traits>
 inline void set_node_local_matrix(flight::types::Transform2DNode<Traits> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>> source) {
   flight::geometry::decompose_matrix_to_transform_2d(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(source));
-  flight::node::invalidate_node_local_transform(target);
+  flight::node::invalidate_node_local_transform<Traits>(target);
 }
 
 template <typename Traits>
@@ -72,7 +72,7 @@ inline void set_node_transform_2d(flight::types::Transform2DNode<Traits> target,
   flight::row_set<flight::RowKey<"skewY">>(target, flight::row_get<flight::RowKey<"skewY">>(source));
   flight::row_set<flight::RowKey<"x">>(target, flight::row_get<flight::RowKey<"x">>(source));
   flight::row_set<flight::RowKey<"y">>(target, flight::row_get<flight::RowKey<"y">>(source));
-  flight::node::invalidate_node_local_transform(target);
+  flight::node::invalidate_node_local_transform<Traits>(target);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_NODE_BINDING_UID_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENTS_UNSUPPORTED_RESOLVED_COLOR_MATRIX_RESOLVED_COLOR_SCALE_BIAS_APPEARANCE_ID_BOUNDS_USING_LOCAL_BOUNDS_ID_BOUNDS_USING_LOCAL_TRANSFORM_ID_CAN_ADD_CHILD_CHILDREN_CHILDREN_ID_TRAITS_INTERACTION_SIGNALS_LOCAL_BOUNDS_ID_LOCAL_BOUNDS_USING_LOCAL_BOUNDS_ID_LOCAL_CONTENT_ID_LOCAL_TRANSFORM_ID_LOCAL_TRANSFORM_USING_LOCAL_TRANSFORM_ID_NODE_SIGNALS_INTERACTION_STATE_PARENT_PARENT_REFERENCE_ID_WORLD_BOUNDS_USING_LOCAL_BOUNDS_ID_WORLD_BOUNDS_USING_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_ID_WORLD_TRANSFORM_USING_LOCAL_TRANSFORM_ID_WORLD_TRANSFORM_USING_PARENT_TRANSFORM_ID_LOCAL_MATRIX_ROTATION_ANGLE_ROTATION_COSINE_ROTATION_SINE_WORLD_MATRIX_D932462C36A89E20
@@ -201,7 +201,7 @@ inline void recompute_world_transform_2d(flight::types::Transform2DNode<Traits> 
   else {
     flight::geometry::copy_matrix(runtime->world_matrix.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(runtime->local_matrix.value())));
   }
-  flight::node::compute_node_world_transform_revision(runtime, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> { auto contextual_union_source = parent_runtime; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowWritable<flight::RowOf<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix_rotation_angle_rotation_cosine_rotation_sine_world_matrix_b9984bbab578eefe<Traits>>>>>>(contextual_union_source.value()))}; }()));
+  flight::node::compute_node_world_transform_revision<Traits>(runtime, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> { auto contextual_union_source = parent_runtime; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowWritable<flight::RowOf<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix_rotation_angle_rotation_cosine_rotation_sine_world_matrix_b9984bbab578eefe<Traits>>>>>>(contextual_union_source.value()))}; }()));
 }
 
 struct Transform2DProbe : public flight::ReferenceEnabled {
@@ -235,7 +235,7 @@ inline void ensure_node_world_matrix(flight::types::Transform2DNode<Traits> targ
   double parent_world_transform_id = 0.0;
   if (parent.has_value()) {
     if (is_transform_2d_node<Traits>(parent.value())) {
-      ensure_node_world_matrix(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(parent.value())));
+      ensure_node_world_matrix<Traits>(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(parent.value())));
       (parent_runtime = std::optional<flight::Ref<binding_uid_color_adjustments_color_adjustments_unsupported_resolved_color_matrix_resolved_color_scale_bias_appearance_id_bounds_using_local_bounds_id_bounds_using_local_transform_id_can_add_child_children_children_id_traits_interaction_signals_local_bounds_id_local_bounds_using_local_bounds_id_local_content_id_local_transform_id_local_transform_using_local_transform_id_node_signals_interaction_state_parent_parent_reference_id_world_bounds_using_local_bounds_id_world_bounds_using_world_transform_id_world_transform_id_world_transform_using_local_transform_id_world_transform_using_parent_transform_id_local_matrix_rotation_angle_rotation_cosine_rotation_sine_world_matrix_14e8fc460f3c63ba<Traits>>>{get_transform_2d_runtime<Traits>(parent.value())});
       (parent_world_transform_id = parent_runtime.value()->world_transform_id);
     }

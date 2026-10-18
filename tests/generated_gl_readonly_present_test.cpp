@@ -44,6 +44,22 @@ void run() {
   context_base->uid = flight::String("gl-context-runtime-alias");
   check(context->uid == context_base->uid, "GL context reads the live inherited uid cell");
   context_base->uid = previous_uid;
+  auto identity = flight::node::transform3d_detail::fresh_matrix();
+  flight::Ref<types::Entity> matrix_base = identity;
+  check(!identity->entity_runtime_key && identity->m.size() == 16 &&
+            matrix_base.get() == identity.get() &&
+            &matrix_base->entity_runtime_key == &identity->entity_runtime_key,
+        "fresh inherited Matrix4 retains one owner and absent runtime");
+  for (std::size_t i = 0; i < 16; ++i)
+    check(identity->m[i] == (i % 5 == 0 ? 1.0F : 0.0F), "fresh Matrix4 remains identity");
+  const auto material = flight::scene3d_gl::default_material;
+  flight::Ref<types::Material> material_base = material;
+  check(material_base.get() == material.get() &&
+            &material_base->kind == &material->kind &&
+            material->kind == types::standard_material_kind && material->alpha_cutoff == 0.5 &&
+            material->alpha_mode == flight::String("opaque") &&
+            material->blend_mode == types::blend_mode->normal && !material->double_sided,
+        "default material preserves its inherited kind and authored fields");
   const auto descriptor = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<types::RenderTargetDescriptor>>>>(
       flight::row_field<flight::RowKey<"width">>(1.0), flight::row_field<flight::RowKey<"height">>(1.0),
       flight::row_field<flight::RowKey<"format">>(flight::String("rgba8")),
@@ -128,6 +144,23 @@ void run() {
   render_gl::present_gl_render_target(state,source_view,destination);
   expect(second,false,"live original texture cell");
   source->texture=original_texture;
+  const auto previous_axes = output->requested_axes;
+  render_gl::resize_gl_texture_render_target(state, output, 3.2, 2.1);
+  check(output->width == 4 && output->height == 3 && output->requested_axes != previous_axes &&
+            previous_axes->width == 1 && previous_axes->height == 1 &&
+            output->requested_axes->format == previous_axes->format &&
+            output->requested_axes->color_attachments == previous_axes->color_attachments &&
+            output->requested_axes->color_formats.size() == previous_axes->color_formats.size() &&
+            output->requested_axes->sample_count == previous_axes->sample_count &&
+            output->requested_axes->depth == previous_axes->depth &&
+            output->requested_axes->color_space == previous_axes->color_space,
+        "resize preserves inherited descriptor axes and the retained prior snapshot");
+  for (std::size_t i = 0; i < previous_axes->color_formats.size(); ++i)
+    check(output->requested_axes->color_formats.element(static_cast<double>(i)) ==
+              previous_axes->color_formats.element(static_cast<double>(i)),
+          "resize preserves each authored color format");
+  clear(output->framebuffer, first, 4, 3);
+  expect(first, false, "resized inherited descriptor backing");
   render_gl::destroy_gl_texture_render_target(source);
   render_gl::destroy_gl_texture_render_target(alternate);
   render_gl::destroy_gl_texture_render_target(output);
