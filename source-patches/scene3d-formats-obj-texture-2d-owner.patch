@@ -1,0 +1,30 @@
+diff --git a/packages/scene3d-formats/src/shared.ts b/packages/scene3d-formats/src/shared.ts
+--- a/packages/scene3d-formats/src/shared.ts
++++ b/packages/scene3d-formats/src/shared.ts
+@@ -2,3 +2,3 @@
+ import { CANONICAL_SKINNED_MESH_GEOMETRY_LAYOUT } from '@flighthq/mesh/contract';
+-import { createTexture } from '@flighthq/texture/contract';
++import { createTexture2D } from '@flighthq/texture/contract';
+ import type {
+@@ -90,3 +90,3 @@
+   }
+-  return createTexture({ resource });
++  return createTexture2D({ resource });
+ }
+@@ -113,3 +113,3 @@
+   }
+-  return createTexture({ resource });
++  return createTexture2D({ resource });
+ }
+diff --git a/packages/scene3d-formats/src/objMaterialHelpers.ts b/packages/scene3d-formats/src/objMaterialHelpers.ts
+--- a/packages/scene3d-formats/src/objMaterialHelpers.ts
++++ b/packages/scene3d-formats/src/objMaterialHelpers.ts
+@@ -1,2 +1,2 @@
+-import type { Scene3DDocument, Texture, TextureColorSpace } from '@flighthq/types/contract';
++import type { Scene3DDocument, Texture, Texture2D, TextureColorSpace } from '@flighthq/types/contract';
+ 
+@@ -14,3 +14,3 @@
+   if (uri === null) return null;
+-  const texture = createExternalTextureRef(uri, null, document.resources);
++  const texture = createExternalTextureRef(uri, null, document.resources) as Texture2D;
+   texture.colorSpace = colorSpace;
