@@ -257,59 +257,157 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    );
    return arguments_.every((argument): argument is Readonly<IrType> => argument !== undefined) ? arguments_ : undefined;
  }
+@@ -21708,19 +21715,17 @@
+     );
+     if (!binding || binding.imported === '*') return [];
+     return getCppResolvedImportModules(importItem.specifier, context).flatMap((module) => {
+-      const directBindingIds = new Set([
+-        ...module.declarations.flatMap((declaration) =>
+-          'binding' in declaration && declaration.exported && declaration.binding.name === binding.imported
+-            ? [declaration.binding.id]
+-            : [],
+-        ),
+-        ...module.exports.flatMap((exported) =>
+-          exported.kind === 'local' && exported.exported === binding.imported ? [exported.binding.id] : [],
+-        ),
+-      ]);
+-      return module.declarations.filter(
++      // An import route can be a facade. Reuse the exact declaration owner that supplies its emitted
++      // value name so generic parameters and contextual argument owners come from that same function.
++      const owners = getCppExportedValueBindingOwnersCpp(module, binding.imported, context, new Set());
++      const uniqueOwners = new Map(
++        owners.map((owner) => [`${getCppModuleIdentityKey(owner.module)}\0${owner.binding.id}`, owner]),
++      );
++      if (uniqueOwners.size !== 1) return [];
++      const owner = [...uniqueOwners.values()][0]!;
++      return owner.module.declarations.filter(
+         (declaration): declaration is IrFunctionDeclaration =>
+-          declaration.kind === 'function' && directBindingIds.has(declaration.binding.id),
++          declaration.kind === 'function' && declaration.binding.id === owner.binding.id,
+       );
+     });
+   });
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -20574,6 +20574,114 @@
+@@ -20574,6 +20574,182 @@
  });
  
  describe('emitIrModuleCpp', () => {
-+  it('uses resolved generic invocation arguments across an imported callee boundary', () => {
-+    const source = (name: string, text: string) =>
-+      ts.createSourceFile(`/flight/packages/${name}`, text, ts.ScriptTarget.Latest, true);
-+    const moduleResolution: CompilerModuleResolutionPlan = {
-+      schema: 'flight-compiler-module-resolution/1',
-+      edges: [
-+        {
-+          specifier: '@flighthq/commands/commands',
-+          target: { packageName: '@flighthq/commands', source: 'packages/commands/src/commands.ts' },
-+        },
-+      ],
-+    };
-+    const results = lowerTypeScriptSources(
-+      [
-+        {
-+          packageName: '@flighthq/commands',
-+          upstreamDirectory: '/flight',
-+          sourceFile: source(
-+            'commands/src/commands.ts',
-+            `
++  it.each(['direct', 'named', 'star', 'forwarded', 'diamond', 'cycle'])(
++    'uses resolved generic invocation arguments across an imported %s callee boundary',
++    (route) => {
++      const source = (name: string, text: string) =>
++        ts.createSourceFile(`/flight/packages/${name}`, text, ts.ScriptTarget.Latest, true);
++      const moduleResolution: CompilerModuleResolutionPlan = {
++        schema: 'flight-compiler-module-resolution/1',
++        edges: [
++          {
++            specifier: '@flighthq/commands/api',
++            target: {
++              packageName: '@flighthq/commands',
++              source: route === 'direct' ? 'packages/commands/src/commands.ts' : 'packages/commands/src/api.ts',
++            },
++          },
++        ],
++      };
++      const results = lowerTypeScriptSources(
++        [
++          {
++            packageName: '@flighthq/commands',
++            upstreamDirectory: '/flight',
++            sourceFile: source(
++              'commands/src/commands.ts',
++              `
 +        export interface Command<K extends string> { key: K; run: (value: number) => number }
 +        export function registerCommand<K extends string>(command: Command<K>): number { return command.run(1); }
 +      `,
-+          ),
-+        },
-+        {
-+          packageName: '@flighthq/math',
-+          upstreamDirectory: '/flight',
-+          sourceFile: source(
-+            'math/src/invoke.ts',
-+            `
-+        import { registerCommand } from '@flighthq/commands/commands';
++            ),
++          },
++          ...(route === 'direct'
++            ? []
++            : [
++                {
++                  packageName: '@flighthq/commands',
++                  upstreamDirectory: '/flight',
++                  sourceFile: source(
++                    'commands/src/api.ts',
++                    route === 'named'
++                      ? "export { registerCommand } from './commands';"
++                      : route === 'forwarded'
++                        ? "import { registerCommand } from './commands'; export { registerCommand };"
++                        : route === 'diamond'
++                          ? "export * from './left'; export * from './right';"
++                          : route === 'cycle'
++                            ? "export * from './loop'; export { registerCommand } from './commands';"
++                            : "export * from './commands';",
++                  ),
++                },
++              ]),
++          ...(route === 'diamond'
++            ? ['left', 'right'].map((name) => ({
++                packageName: '@flighthq/commands',
++                upstreamDirectory: '/flight',
++                sourceFile: source(`commands/src/${name}.ts`, "export * from './commands';"),
++              }))
++            : []),
++          ...(route === 'cycle'
++            ? [
++                {
++                  packageName: '@flighthq/commands',
++                  upstreamDirectory: '/flight',
++                  sourceFile: source('commands/src/loop.ts', "export * from './api';"),
++                },
++              ]
++            : []),
++          {
++            packageName: '@flighthq/math',
++            upstreamDirectory: '/flight',
++            sourceFile: source(
++              'math/src/invoke.ts',
++              `
++        import { registerCommand } from '@flighthq/commands/api';
 +        export function invoke(): number { return registerCommand({ key: 'vendor', run: (value) => value + 1 }); }
 +      `,
-+          ),
-+        },
-+      ],
-+      moduleResolution,
-+    );
-+    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
-+    const index = results.findIndex((result) => result.module.packageName === '@flighthq/math');
-+    const emitted = emitCppModuleCppSession(results, moduleResolution, index);
-+    const caller = emitted.slice(emitted.indexOf('inline double invoke()'));
-+    expect(caller).toContain('register_command<flight::String>');
-+    expect(caller).not.toContain('Command<K>');
-+  });
++            ),
++          },
++        ],
++        moduleResolution,
++      );
++      expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++      const index = results.findIndex((result) => result.module.packageName === '@flighthq/math');
++      const emitted = emitCppModuleCppSession(results, moduleResolution, index);
++      const caller = emitted.slice(emitted.indexOf('inline double invoke()'));
++      expect(caller).toContain('Command<flight::String>');
++      expect(caller).not.toContain('Command<K>');
++      if (route === 'named' && canCompileCpp) {
++        if (!cppToolchain) throw new Error('toolchain missing');
++        const session = createCppCompilerBackend().createEmissionSession!({
++          moduleResolution,
++          modules: results.map((result) => result.module),
++          options: { runtimeProfile: 'flight-cpp' },
++        });
++        const files = results.map((result) => session.emitModule(result.module)[0]!);
++        const directory = mkdtempSync(path.join(tmpdir(), 'flight-resolved-generic-call-'));
++        try {
++          for (const file of files) {
++            const outputPath = path.join(directory, file.path);
++            mkdirSync(path.dirname(outputPath), { recursive: true });
++            writeFileSync(outputPath, file.contents, 'utf8');
++          }
++          const arguments_ = createCppSyntaxOnlyArguments(cppToolchain, path.join(directory, files[index]!.path), [
++            directory,
++            ...cppRuntimeIncludeDirectories,
++          ]);
++          expect(() =>
++            execFileSync(cppToolchain.command, arguments_, { cwd: directory, encoding: 'utf8', stdio: 'pipe' }),
++          ).not.toThrow();
++        } finally {
++          rmSync(directory, { force: true, recursive: true });
++        }
++      }
++    },
++  );
 +
 +  it('uses resolved generic invocation arguments for a fresh named command owner', () => {
 +    const sourceFile = ts.createSourceFile(

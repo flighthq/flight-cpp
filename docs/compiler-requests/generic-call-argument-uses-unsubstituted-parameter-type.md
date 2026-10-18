@@ -131,3 +131,12 @@ Billboard and six scene2d-formats rows whose effective primary request is herita
 The other six command-trait rows and the separate out-of-trait-owner cluster are outside this scope.
 No header status or runtime capability is promoted until scoped compilation and an actual previously
 blocked original public consumer compile/link/run have been measured.
+
+The same carry now follows imported function declarations through the existing exact value-owner
+lookup used for emitted names. Named re-exports, local forwarding, star exports, diamonds and cycles
+therefore use the generic parameters of the actual declared function. Three facade cases construct an
+anonymous argument owner under the prior direct-only lookup and retain `Command<string>` with the fix;
+direct, star and diamond controls pass either way. The updated focused run passes **21 cases** (16 for
+this cause plus five existing owner/default/template regressions), including the emitted named-facade
+header graph compiled through its actual includes. Scoped SDK/public-consumer qualification remains
+pending in the now-granted generation slot.
