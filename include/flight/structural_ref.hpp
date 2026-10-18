@@ -2217,6 +2217,25 @@ template <typename Object>
   return NamedProperties(std::static_pointer_cast<RowOwner>(std::move(owner)));
 }
 
+// `key in object` for a string key on a NOMINAL reference, answered only from the allocation's recorded
+// provenance: the exact allocated type's own cells (through its exact-type owner), then that type's
+// registered class prototype chain, then Object.prototype. A reference typed as a base therefore sees the
+// derived object's own members. Without a make_ref record the exact type is unknown and the static type's
+// cells could miss derived members, so the query raises OutOfProfileMemberQuery -- an explicit partial
+// boundary -- rather than answering false. A null reference throws TypeError, as `in` on null does.
+template <typename Object>
+[[nodiscard]] bool has_own_named_property(const std::shared_ptr<Object>& object, const String& key) {
+  if (!object) throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in null"));
+  const auto identity = detail::recoverable_owner_identity(object);
+  if (!identity || identity->own_row_owner == nullptr) {
+    throw OutOfProfileMemberQuery("`in` on a nominal reference with no allocation provenance: its exact type is unknown");
+  }
+  const auto owner = std::static_pointer_cast<RowOwner>(identity->own_row_owner(identity->object));
+  if (owner && owner->has_named_cell(key.to_utf8())) return true;
+  if (find_inherited_member(identity->type, key.to_utf8()) != InheritedMemberKind::none) return true;
+  return is_object_prototype_property(key);
+}
+
 // `key in value` for an erased value, as JavaScript answers it: a non-object throws TypeError; an object
 // has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
 // Object.prototype. No value is read and no getter runs. What this runtime cannot see -- an array, a

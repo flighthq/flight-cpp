@@ -20,6 +20,15 @@
 
 namespace {
 
+// A base and a derived record with native heritage, so make_ref records the derived allocation.
+struct TestProvenanceBase : public flight::ReferenceEnabled {
+  double radius = 0.0;
+};
+struct TestProvenanceDerived : public TestProvenanceBase {
+  using flight_native_base = TestProvenanceBase;
+  double intensity = 1.0;
+};
+
 // A class-like aggregate with a prototype method and accessor, registered as the emitter registers an
 // emitted class, plus a base that an emitted class extends.
 struct TestPrototypeClass : public flight::ReferenceEnabled {
@@ -1079,6 +1088,32 @@ int main() {
         "and answering `in` over its own string keys only");
   check(erased_view.get(flight::String("intensity")).kind() == flight::AnyKind::undefined,
         "an optional member that holds nothing reads as undefined, not as a missing key");
+
+  // NOMINAL PRESENCE FROM ALLOCATION PROVENANCE. A base-typed reference to a recorded derived allocation
+  // answers from the exact type; without a record it refuses rather than answering from the base.
+  {
+    const flight::Ref<TestProvenanceBase> recorded = flight::make_ref<TestProvenanceDerived>();
+    check(flight::has_own_named_property(recorded, flight::String("intensity")) &&
+              flight::has_own_named_property(recorded, flight::String("radius")) &&
+              !flight::has_own_named_property(recorded, flight::String("absent")) &&
+              flight::has_own_named_property(recorded, flight::String("toString")),
+          "a recorded allocation reached through its base reports the derived object's own members");
+    bool unrecorded_refused = false;
+    try {
+      const flight::Ref<TestProvenanceBase> unrecorded = std::make_shared<TestProvenanceDerived>();
+      static_cast<void>(flight::has_own_named_property(unrecorded, flight::String("intensity")));
+    } catch (const flight::OutOfProfileMemberQuery&) {
+      unrecorded_refused = true;
+    }
+    check(unrecorded_refused, "an allocation make_ref did not record is refused, never answered false");
+    bool null_threw = false;
+    try {
+      static_cast<void>(flight::has_own_named_property(flight::Ref<TestProvenanceBase>(), flight::String("x")));
+    } catch (const flight::TypeError&) {
+      null_threw = true;
+    }
+    check(null_threw, "`in` on a null reference throws TypeError");
+  }
 
   // ERASED PRESENCE AND TYPEOF THROUGH THE PROTOTYPE CHAIN. `key in value` and `typeof value.key` on an
   // erased object ask its own cells, then its registered class prototype, then Object.prototype.
