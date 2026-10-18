@@ -107,3 +107,27 @@ The retained [mask family](retained-declaration-calls-omitted-callee.md#g2-lotti
 still requires the omitted callback during global initialization. Its original one-header check is
 **0/1 pass**, and a scratch exact declaration fails the unused positive link on this same handler.
 No declaration, owner copy, fake mask/handler/body, source rewrite or narrowed mask domain is carried.
+
+## G3 shared compiler substitution carry (qualification pending)
+
+[`compiler-inferred-invocation-type-arguments.patch`](../../source-patches/compiler-inferred-invocation-type-arguments.patch)
+retains the checker's complete resolved type arguments on each invocation, separately from explicit
+source syntax. Missing C++ substitutions use that checked list before a source-declared generic
+default. Existing direct native-owner inference remains first, preserving named callable-result owners
+rather than manufacturing their expanded structural shapes. Overload implementation positions are not
+assumed to match the selected signature; incomplete checked lists are omitted entirely.
+
+The focused regression has a concrete owner inheriting `Node<Extra>`, a distinct declared `Fallback`,
+and a caller-local `Caller`. Without the patch it emits free `Callee` or chooses `Fallback`; with the
+patch it retains `Extra` and the exact lexical `Caller` binding. Fresh local/imported command literals,
+explicit and nongeneric calls, type traversal, malformed evidence and foreign lexical bindings are
+also checked. All **11 cases pass**, including three native syntax fixtures; a pin-only control fails
+nine. Root strict TypeScript, focused format/lint, composition with the existing 67 compiler patches,
+and that composed production build pass.
+
+This initial carry claims compiler evidence only. SDK generation awaits an explicit Foreman capacity
+grant. Assigned qualification is **51 historical rows**: 30 `Traits`, six `K`, four Movieclip, five
+Billboard and six scene2d-formats rows whose effective primary request is heritage argument deduction.
+The other six command-trait rows and the separate out-of-trait-owner cluster are outside this scope.
+No header status or runtime capability is promoted until scoped compilation and an actual previously
+blocked original public consumer compile/link/run have been measured.

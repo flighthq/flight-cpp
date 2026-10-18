@@ -1,0 +1,473 @@
+diff --git a/packages/compiler-types/src/compilerAccessSemanticIntermediateRepresentation.ts b/packages/compiler-types/src/compilerAccessSemanticIntermediateRepresentation.ts
+--- a/packages/compiler-types/src/compilerAccessSemanticIntermediateRepresentation.ts
++++ b/packages/compiler-types/src/compilerAccessSemanticIntermediateRepresentation.ts
+@@ -40,6 +40,9 @@
+ }
+ 
+ export interface IrInvocationSemantics {
++  // Checked instantiations belong to each invocation, independently of explicitly authored syntax.
++  // Preserve the caller's lexical type parameters and exact named owners; never store a partial list.
++  readonly resolvedTypeArguments?: readonly IrType[] | undefined;
+   // Construction through a source-declared construct signature invokes its represented factory slot;
+   // ambient and concrete class constructors retain their target-specific constructor mappings.
+   readonly construction?: 'factory' | undefined;
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -2383,11 +2383,24 @@
+   context: LoweringContext,
+ ): IrInvocationSemantics {
+   return {
++    ...getTypeScriptResolvedInvocationTypeArguments(node, context),
+     ...getTypeScriptDefaultParameterInvocationSemantics(node, signature, context),
+     ...getTypeScriptInvocationSignatureSemantics(node, signature),
+     ...getTypeScriptOptionalParameterInvocationSemantics(node, signature, context),
+     ...getTypeScriptOverloadImplementationInvocationSemantics(signature),
+   };
++}
++
++function getTypeScriptResolvedInvocationTypeArguments(
++  node: ts.CallExpression | ts.NewExpression,
++  context: LoweringContext,
++): Pick<IrInvocationSemantics, 'resolvedTypeArguments'> {
++  const signature = context.checker.getResolvedSignature(node);
++  const arguments_ = signature ? context.checker.getTypeArgumentsForResolvedSignature(signature) : undefined;
++  if (!arguments_?.length) return {};
++  const resolved = arguments_.map((type) => getTypeScriptCheckerTypeEvidence(type, context, 0, true, node));
++  if (!resolved.every((type): type is Readonly<IrType> => type !== undefined)) return {};
++  return { resolvedTypeArguments: resolved };
+ }
+ 
+ function getTypeScriptOptionalParameterInvocationSemantics(
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.test.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.test.ts
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.test.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.test.ts
+@@ -8006,6 +8006,129 @@
+ });
+ 
+ describe('lowerTypeScriptSources', () => {
++  it.each([
++    {
++      name: 'fresh literal key',
++      source: `interface Command<K extends string> { key: K; run: (v: number) => number }
++      function register<K extends string>(command: Command<K>): number { return command.run(1); }
++      export function invoke(): number { return register({ key: 'vendor', run: (v) => v + 1 }); }`,
++      expected: [{ kind: 'literal', value: 'vendor' }],
++    },
++    {
++      name: 'two distinct generic domains',
++      source: `function pair<A, B>(a: A, b: B): void {}
++      export function invoke(): void { pair(2, 'two'); }`,
++      expected: [
++        { kind: 'primitive', name: 'number' },
++        { kind: 'primitive', name: 'string' },
++      ],
++    },
++    {
++      name: 'source generic default',
++      source: `function empty<T = string>(): T | null { return null; }
++      export function invoke(): string | null { return empty(); }`,
++      expected: [{ kind: 'primitive', name: 'string' }],
++    },
++  ])('records resolved generic invocation arguments for $name', ({ source, expected }) => {
++    const sourceFile = ts.createSourceFile(
++      '/flight/packages/math/src/generic.ts',
++      source,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const [result] = lowerTypeScriptSources([
++      { packageName: '@flighthq/math', sourceFile, upstreamDirectory: '/flight' },
++    ]);
++    expect(result!.diagnostics).toEqual([]);
++    const declaration = result!.module.declarations.find(
++      (value) => value.kind === 'function' && value.binding.name === 'invoke',
++    );
++    if (declaration?.kind !== 'function') throw new Error('invoke missing');
++    const statement = declaration.body[0];
++    const call =
++      statement?.kind === 'return'
++        ? statement.expression
++        : statement?.kind === 'expression'
++          ? statement.expression
++          : undefined;
++    if (call?.kind !== 'call') throw new Error('call missing');
++    expect(call.typeArguments).toEqual([]);
++    expect(call.semantics.resolvedTypeArguments).toEqual(expected);
++  });
++
++  it('records resolved generic invocation trait owners and caller-local type parameters', () => {
++    const sourceFile = ts.createSourceFile(
++      '/flight/packages/math/src/traits.ts',
++      `
++      interface Base { value: number }
++      interface Extra { extra: number }
++      type View<T extends object> = Base & T;
++      function read<Callee extends object>(node: View<Callee>): number { return node.value; }
++      export function invoke(node: Base & Extra): number { return read(node); }
++      export function forward<Caller extends object>(node: View<Caller>): number { return read(node); }
++    `,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const [result] = lowerTypeScriptSources([
++      { packageName: '@flighthq/math', sourceFile, upstreamDirectory: '/flight' },
++    ]);
++    expect(result!.diagnostics).toEqual([]);
++    const extra = result!.module.declarations.find(
++      (value) => value.kind === 'interface' && value.binding.name === 'Extra',
++    );
++    if (extra?.kind !== 'interface') throw new Error('trait interface missing');
++    for (const name of ['invoke', 'forward']) {
++      const declaration = result!.module.declarations.find(
++        (value) => value.kind === 'function' && value.binding.name === name,
++      );
++      if (declaration?.kind !== 'function') throw new Error('function missing');
++      const statement = declaration.body[0];
++      const call = statement?.kind === 'return' ? statement.expression : undefined;
++      if (call?.kind !== 'call') throw new Error('call missing');
++      const argument = call.semantics.resolvedTypeArguments?.[0];
++      expect(argument).toMatchObject({
++        kind: 'named',
++        reference: {
++          kind: 'binding',
++          binding: name === 'invoke' ? extra!.binding : declaration.typeParameters[0]!.binding,
++        },
++      });
++      expect(call.typeArguments).toEqual([]);
++    }
++  });
++
++  it('keeps explicit and nongeneric syntax separate from resolved generic invocation evidence', () => {
++    const sourceFile = ts.createSourceFile(
++      '/flight/packages/math/src/explicit.ts',
++      `
++      function identity<T>(value: T): T { return value; }
++      function ordinary(value: number): number { return value; }
++      export function explicit(): number { return identity<number>(3); }
++      export function nongeneric(): number { return ordinary(3); }
++    `,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const [result] = lowerTypeScriptSources([
++      { packageName: '@flighthq/math', sourceFile, upstreamDirectory: '/flight' },
++    ]);
++    expect(result!.diagnostics).toEqual([]);
++    for (const name of ['explicit', 'nongeneric']) {
++      const declaration = result!.module.declarations.find(
++        (value) => value.kind === 'function' && value.binding.name === name,
++      );
++      if (declaration?.kind !== 'function') throw new Error('function missing');
++      const statement = declaration.body[0];
++      const call = statement?.kind === 'return' ? statement.expression : undefined;
++      if (call?.kind !== 'call') throw new Error('call missing');
++      expect(call.typeArguments).toEqual(name === 'explicit' ? [{ kind: 'primitive', name: 'number' }] : []);
++      expect(call.semantics.resolvedTypeArguments).toEqual(
++        name === 'explicit' ? [{ kind: 'primitive', name: 'number' }] : undefined,
++      );
++    }
++  });
++
+   it('returns no module results for an empty source graph', () => {
+     expect(lowerTypeScriptSources([])).toEqual([]);
+   });
+diff --git a/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.ts b/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.ts
+--- a/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.ts
++++ b/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.ts
+@@ -428,6 +428,10 @@
+   observer: Readonly<CompilerIrTraversalObserver>,
+   path: CompilerIrTraversalPath,
+ ): void {
++  semantics.resolvedTypeArguments?.forEach((type, index) =>
++    analyzeIrTypeTraversal(type, observer, createIrTraversalPath(path, 'resolvedTypeArguments', index)),
++  );
++
+   semantics.defaultParameters?.provided.forEach((provided, index) => {
+     const providedPath = createIrTraversalPath(path, 'defaultParameters', 'provided', index);
+     analyzeIrTypeTraversal(provided.argumentType, observer, createIrTraversalPath(providedPath, 'argumentType'));
+diff --git a/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.test.ts b/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.test.ts
+--- a/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.test.ts
++++ b/packages/compiler-ir-traversal/src/compilerIntermediateRepresentationTraversal.test.ts
+@@ -630,6 +630,32 @@
+   });
+ });
+ describe('analyzeIrExpressionSubtreeTraversal', () => {
++  it('visits resolved generic invocation arguments without changing authored syntax or input', () => {
++    const expression: IrExpression = {
++      kind: 'call',
++      callee: { kind: 'identifier', reference: { kind: 'ambient', name: 'callee' } },
++      arguments: [],
++      optional: false,
++      typeArguments: [],
++      semantics: {
++        resultType: { kind: 'primitive', name: 'number' },
++        resolvedTypeArguments: [{ kind: 'array', element: { kind: 'primitive', name: 'string' }, readonly: true }],
++      },
++    };
++    const before = structuredClone(expression);
++    const observed: Array<{ kind: string; path: readonly (number | string)[] }> = [];
++    analyzeIrExpressionSubtreeTraversal(expression, {
++      type(type, path) {
++        if (path.includes('resolvedTypeArguments')) observed.push({ kind: type.kind, path });
++      },
++    });
++    expect(observed).toEqual([
++      { kind: 'array', path: ['semantics', 'resolvedTypeArguments', 0] },
++      { kind: 'primitive', path: ['semantics', 'resolvedTypeArguments', 0, 'element'] },
++    ]);
++    expect(expression).toEqual(before);
++  });
++
+   it('walks one expression and stops when an observer returns false', () => {
+     const expression: IrExpression = {
+       kind: 'binary',
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -20929,6 +20929,11 @@
+   const declaration = getCppFunctionDeclarationForBindingCpp(expression.callee.reference.binding.id, context);
+   if (!declaration || declaration.typeParameters.length === 0) return undefined;
+   const parameterIds = new Set(declaration.typeParameters.map((parameter) => parameter.binding.id));
++  const resolvedTypeArguments = expression.semantics.resolvedTypeArguments;
++  const checkedTypeArguments =
++    declaration.overloads.length === 0 && resolvedTypeArguments?.length === declaration.typeParameters.length
++      ? resolvedTypeArguments
++      : undefined;
+   let argumentSubstitutions = new Map<string, Readonly<IrType>>();
+   expression.arguments.forEach((argument, index) => {
+     const parameter = declaration.parameters[index];
+@@ -20986,7 +20991,8 @@
+       return undefined;
+     }
+     const arguments_ = declaration.typeParameters.map(
+-      (parameter) => substitutions.get(parameter.binding.id) ?? parameter.default,
++      (parameter, index) =>
++        substitutions.get(parameter.binding.id) ?? checkedTypeArguments?.[index] ?? parameter.default,
+     );
+     return arguments_.every((argument): argument is Readonly<IrType> => argument !== undefined)
+       ? arguments_
+@@ -21001,7 +21007,8 @@
+   const semantic = fromCandidate(expression.semantics.resultType);
+   if (semantic) return semantic;
+   const arguments_ = declaration.typeParameters.map(
+-    (parameter) => argumentSubstitutions.get(parameter.binding.id) ?? parameter.default,
++    (parameter, index) =>
++      argumentSubstitutions.get(parameter.binding.id) ?? checkedTypeArguments?.[index] ?? parameter.default,
+   );
+   return arguments_.every((argument): argument is Readonly<IrType> => argument !== undefined) ? arguments_ : undefined;
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -20574,6 +20574,114 @@
+ });
+ 
+ describe('emitIrModuleCpp', () => {
++  it('uses resolved generic invocation arguments across an imported callee boundary', () => {
++    const source = (name: string, text: string) =>
++      ts.createSourceFile(`/flight/packages/${name}`, text, ts.ScriptTarget.Latest, true);
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      schema: 'flight-compiler-module-resolution/1',
++      edges: [
++        {
++          specifier: '@flighthq/commands/commands',
++          target: { packageName: '@flighthq/commands', source: 'packages/commands/src/commands.ts' },
++        },
++      ],
++    };
++    const results = lowerTypeScriptSources(
++      [
++        {
++          packageName: '@flighthq/commands',
++          upstreamDirectory: '/flight',
++          sourceFile: source(
++            'commands/src/commands.ts',
++            `
++        export interface Command<K extends string> { key: K; run: (value: number) => number }
++        export function registerCommand<K extends string>(command: Command<K>): number { return command.run(1); }
++      `,
++          ),
++        },
++        {
++          packageName: '@flighthq/math',
++          upstreamDirectory: '/flight',
++          sourceFile: source(
++            'math/src/invoke.ts',
++            `
++        import { registerCommand } from '@flighthq/commands/commands';
++        export function invoke(): number { return registerCommand({ key: 'vendor', run: (value) => value + 1 }); }
++      `,
++          ),
++        },
++      ],
++      moduleResolution,
++    );
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    const index = results.findIndex((result) => result.module.packageName === '@flighthq/math');
++    const emitted = emitCppModuleCppSession(results, moduleResolution, index);
++    const caller = emitted.slice(emitted.indexOf('inline double invoke()'));
++    expect(caller).toContain('register_command<flight::String>');
++    expect(caller).not.toContain('Command<K>');
++  });
++
++  it('uses resolved generic invocation arguments for a fresh named command owner', () => {
++    const sourceFile = ts.createSourceFile(
++      '/flight/packages/math/src/command.ts',
++      `
++      interface Command<K extends string> { key: K; run: (value: number) => number }
++      function registerCommand<K extends string>(command: Command<K>): number { return command.run(1); }
++      export function invoke(): number { return registerCommand({ key: 'vendor', run: (value) => value + 1 }); }
++    `,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const [result] = lowerTypeScriptSources([
++      { packageName: '@flighthq/math', sourceFile, upstreamDirectory: '/flight' },
++    ]);
++    expect(result!.diagnostics).toEqual([]);
++    const emitted = emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++    const caller = emitted.slice(emitted.indexOf('inline double invoke()'));
++    expect(caller).toContain('register_command<flight::String>');
++    expect(caller).not.toContain('Command<K>');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'generic-inferred-command');
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
++
++  it.each(['', ' = Fallback'])(
++    'uses resolved generic invocation arguments for concrete and forwarded intersection traits with default%s',
++    (defaultType) => {
++      const sourceFile = ts.createSourceFile(
++        '/flight/packages/math/src/traits.ts',
++        `
++      interface Node<T extends object> { value: number; payload: T }
++      interface Extra { extra: number }
++      interface Fallback { fallback: boolean }
++      interface Concrete extends Node<Extra>, Extra {}
++      type View<T extends object> = Node<T> & NoInfer<T>;
++      function read<Callee extends object${defaultType}>(node: View<Callee>): number { return node.value; }
++      export function invoke(node: Concrete): number { return read(node); }
++      export function forward<Caller extends object>(node: View<Caller>): number { return read(node); }
++    `,
++        ts.ScriptTarget.Latest,
++        true,
++      );
++      const [result] = lowerTypeScriptSources([
++        { packageName: '@flighthq/math', sourceFile, upstreamDirectory: '/flight' },
++      ]);
++      expect(result!.diagnostics).toEqual([]);
++      const emitted = emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++      const caller = emitted.slice(emitted.indexOf('inline double invoke('));
++      expect(caller).toContain('read<flight::Ref<Extra>>');
++      expect(caller).toContain('read<Caller>');
++      expect(caller).not.toContain('View<Callee>');
++      if (cppSyntaxGate.available) {
++        const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'generic-inferred-traits');
++        expect(syntax.diagnostic).toBe('');
++        expect(syntax.ok).toBe(true);
++      }
++    },
++  );
++
+   it('places an emission refusal at the declaration being emitted', () => {
+     const result = lower(
+       'placed-refusal.ts',
+diff --git a/packages/compiler-ir-validation/src/compilerIrModuleStructure.ts b/packages/compiler-ir-validation/src/compilerIrModuleStructure.ts
+--- a/packages/compiler-ir-validation/src/compilerIrModuleStructure.ts
++++ b/packages/compiler-ir-validation/src/compilerIrModuleStructure.ts
+@@ -573,6 +573,7 @@
+     case 'call':
+       validateIrOptionalChainEvidence(expression.optional, expression.semantics.optionalChain, path, state);
+       visitType(expression.semantics.resultType, `${path}.semantics.resultType`, state);
++      validateIrResolvedInvocationTypeArguments(expression, path, state);
+       validateIrInvocationSignatureEvidence(expression, path, state);
+       validateIrDefaultParameterInvocationEvidence(expression, path, state);
+       validateIrExtraArgumentErasureEvidence(expression, path, state);
+@@ -595,6 +596,7 @@
+       );
+       break;
+     case 'new':
++      validateIrResolvedInvocationTypeArguments(expression, path, state);
+       validateIrInvocationSignatureEvidence(expression, path, state);
+       validateIrDefaultParameterInvocationEvidence(expression, path, state);
+       validateIrOptionalParameterInvocationEvidence(expression, path, state);
+@@ -845,6 +847,26 @@
+ function hasIrTypeUndefinedOptionDomain(type: Readonly<IrType>): boolean {
+   if (type.kind !== 'union' || !type.types.some((member) => member.kind === 'undefined')) return false;
+   return type.types.some((member) => member.kind !== 'null' && member.kind !== 'undefined');
++}
++
++function validateIrResolvedInvocationTypeArguments(
++  expression: Readonly<IrInvocationExpression>,
++  path: string,
++  state: IrModuleValidationState,
++): void {
++  const arguments_ = expression.semantics.resolvedTypeArguments;
++  if (arguments_ === undefined) return;
++  const evidencePath = `${path}.semantics.resolvedTypeArguments`;
++  if (!Array.isArray(arguments_) || arguments_.length === 0) {
++    addFailure(
++      'invalid-node-shape',
++      evidencePath,
++      'resolved invocation type arguments require a nonempty type list',
++      state,
++    );
++    return;
++  }
++  arguments_.forEach((type, index) => visitType(type, `${evidencePath}[${String(index)}]`, state));
+ }
+ 
+ function validateIrInvocationSignatureEvidence(
+diff --git a/packages/compiler-ir-validation/src/compilerIrModuleStructure.test.ts b/packages/compiler-ir-validation/src/compilerIrModuleStructure.test.ts
+--- a/packages/compiler-ir-validation/src/compilerIrModuleStructure.test.ts
++++ b/packages/compiler-ir-validation/src/compilerIrModuleStructure.test.ts
+@@ -650,6 +650,46 @@
+     }
+   });
+ 
++  it('validates resolved generic invocation arguments and rejects foreign lexical parameters', () => {
++    const valid = lower(
++      'resolved-call.ts',
++      `
++      function identity<Callee>(value: Callee): Callee { return value; }
++      export function invoke<Caller>(value: Caller): Caller { return identity(value); }
++    `,
++    );
++    const invoke = valid.declarations.find((value) => value.kind === 'function' && value.binding.name === 'invoke');
++    const identity = valid.declarations.find((value) => value.kind === 'function' && value.binding.name === 'identity');
++    if (invoke?.kind !== 'function' || identity?.kind !== 'function') throw new Error('functions missing');
++    const statement = invoke.body[0];
++    const call = statement?.kind === 'return' ? statement.expression : undefined;
++    if (call?.kind !== 'call') throw new Error('call missing');
++    expect(validateIrModuleStructure(valid)).toEqual({ kind: 'valid' });
++    for (const replacement of ['not-a-list', null, [], ['not-a-type'], [{ kind: 'future-type' }]]) {
++      (call.semantics as { resolvedTypeArguments: unknown }).resolvedTypeArguments = replacement;
++      expect(validateIrModuleStructure(valid)).toMatchObject({
++        kind: 'invalid',
++        failures: [expect.objectContaining({ path: expect.stringContaining('.semantics.resolvedTypeArguments') })],
++      });
++    }
++    (call.semantics as { resolvedTypeArguments: unknown }).resolvedTypeArguments = [
++      {
++        kind: 'named',
++        reference: { kind: 'binding', binding: identity.typeParameters[0]!.binding, path: [] },
++        typeArguments: [],
++      },
++    ];
++    expect(validateIrModuleStructure(valid)).toMatchObject({
++      kind: 'invalid',
++      failures: [
++        expect.objectContaining({
++          code: 'out-of-scope-binding-reference',
++          path: expect.stringContaining('.semantics.resolvedTypeArguments'),
++        }),
++      ],
++    });
++  });
++
+   it('validates exact default-parameter call arity, ordering, and omissions', () => {
+     const valid = lower(
+       'default-call.ts',
