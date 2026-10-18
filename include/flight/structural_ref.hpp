@@ -2017,7 +2017,9 @@ concept row_materializes_from = !std::is_void_v<To> && !std::is_void_v<From> &&
 template <typename To, typename Schema>
 [[nodiscard]] StructuralRef<RowWritable<RowOf<Ref<To>>>> materialize_row(
     const StructuralRef<Schema>& source) {
-  auto object = std::make_shared<To>();
+  // The finished object is a make_ref allocation, so it carries the provenance of the type it becomes:
+  // an entity built through allocateEntity/finishEntity is recorded as that entity type.
+  auto object = make_ref<To>();
   auto owner = detail::owner_for(object);
   if (const auto& from = source.shared_owner()) {
     // A member the new object answers for itself wins the CELL -- it reads and writes the real

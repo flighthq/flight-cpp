@@ -2,7 +2,6 @@
 
 #include <concepts>
 #include <iterator>
-#include <map>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -12,9 +11,13 @@
 #include <unordered_map>
 #include <utility>
 
+#include <flight/out_of_profile.hpp>
+
 namespace flight {
 
-// Marks generated object and class shapes while preserving aggregate initialization.
+// Marks generated object and class shapes while preserving aggregate initialization. It stays EMPTY: the
+// exact-allocation provenance make_ref records lives in the shared_ptr control block (see
+// detail::AllocationRecordingDeleter), not in the object.
 struct ReferenceEnabled {};
 
 // Opt-in: this type can recover its own owning reference from `this`.
@@ -133,9 +136,8 @@ using Ref =
     typename detail::reference_shape<Value, decltype(detail::complete_probe<Value>(0))::value>::type;
 namespace detail {
 
-// A record emitted with native interface heritage names its one primary base as `flight_native_base`.
-// Only such records are recoverable owners: a base-only allocation has no derived owner to recover, so it
-// is never registered and its lookups answer empty, which is the exact answer for it.
+// A record emitted with native interface heritage names its one primary base as `flight_native_base`. The
+// edge only extends the CAST chain recover_owner can walk; every make_ref allocation is recorded regardless.
 template <typename Value>
 concept has_native_base = requires { typename Value::flight_native_base; };
 
@@ -151,61 +153,54 @@ void* native_owner_cast(Value* object, std::type_index target) noexcept {
   }
 }
 
-// Keyed by SHARED OWNERSHIP, not by address: a reference converted to a base, or aliased to a member,
-// still shares the allocation's control block, so `owner_less` finds the allocation whatever pointer the
-// caller holds. Weak, like the self-reference registry: remembering an owner never keeps it alive.
-// Row metadata for a recoverable owner's EXACT type, without naming RowOwner here. The primary reports
-// none; flight/structural_ref.hpp supplies the real answer by a constrained partial specialization, the
-// same shape AnyRowOwnerFactory uses. `view` builds an UNREGISTERED owner for one read (no registry write),
-// and `own` returns the registered owner a write must go through. Both are erased to void.
+// Row metadata for an allocation's EXACT type, without naming RowOwner here. The primary reports none;
+// flight/structural_ref.hpp supplies the real answer by a constrained partial specialization, the same
+// shape AnyRowOwnerFactory uses. `view` builds an UNREGISTERED owner for one read (no registry write), and
+// `own` returns the registered owner a write must go through. Both are erased to void.
 template <typename Object>
 struct RecoverableRowOwnerFactory {
   [[nodiscard]] static std::shared_ptr<void> view(const std::shared_ptr<void>&) { return nullptr; }
   [[nodiscard]] static std::shared_ptr<void> own(const std::shared_ptr<void>&) { return nullptr; }
 };
 
-struct RecoverableOwnerEntry final {
-  void* object{nullptr};
-  void* (*cast)(void*, std::type_index) noexcept {nullptr};
-  std::type_index type{typeid(void)};
-  std::shared_ptr<void> (*view_row_owner)(const std::shared_ptr<void>&){nullptr};
-  std::shared_ptr<void> (*own_row_owner)(const std::shared_ptr<void>&){nullptr};
+// The static description of one exact allocated type. One instance per type, never per object.
+//
+// It is CONSTANT-initialized, and that is load-bearing: generated headers call make_ref from namespace-scope
+// initializers (a `const` built by a factory), and a dynamically initialized descriptor could still be
+// zero when such an initializer runs in another translation unit's order. Every field is a constant
+// expression -- the address of a type_info, function pointers -- so the descriptor exists before any code.
+struct AllocationDescriptor final {
+  const std::type_info* type;
+  // From the complete object to the subobject of `target` along the declared native base chain, or null.
+  void* (*cast)(void*, std::type_index) noexcept;
+  std::shared_ptr<void> (*view_row_owner)(const std::shared_ptr<void>&);
+  std::shared_ptr<void> (*own_row_owner)(const std::shared_ptr<void>&);
 };
-
-struct RecoverableOwnerRegistry final {
-  std::mutex mutex;
-  std::map<std::weak_ptr<void>, RecoverableOwnerEntry, std::owner_less<std::weak_ptr<void>>> entries;
-  std::size_t sweep_threshold{64};
-};
-
-[[nodiscard]] inline RecoverableOwnerRegistry& recoverable_owner_registry() {
-  static RecoverableOwnerRegistry registry;
-  return registry;
-}
 
 template <typename Value>
-void remember_recoverable_owner(const std::shared_ptr<Value>& reference) {
-  auto& registry = recoverable_owner_registry();
-  const std::lock_guard lock(registry.mutex);
-  if (registry.entries.size() >= registry.sweep_threshold) {
-    for (auto entry = registry.entries.begin(); entry != registry.entries.end();) {
-      entry = entry->first.expired() ? registry.entries.erase(entry) : std::next(entry);
-    }
-    registry.sweep_threshold = registry.entries.size() * 2 + 64;
-  }
-  registry.entries.insert_or_assign(
-      std::weak_ptr<void>(std::static_pointer_cast<void>(reference)),
-      RecoverableOwnerEntry{static_cast<void*>(reference.get()),
-                            [](void* object, std::type_index target) noexcept -> void* {
-                              return native_owner_cast<Value>(static_cast<Value*>(object), target);
-                            },
-                            std::type_index(typeid(Value)),
-                            &RecoverableRowOwnerFactory<Value>::view,
-                            &RecoverableRowOwnerFactory<Value>::own});
-}
+inline constexpr AllocationDescriptor allocation_descriptor{
+    &typeid(Value),
+    [](void* object, std::type_index target) noexcept -> void* {
+      return native_owner_cast<Value>(static_cast<Value*>(object), target);
+    },
+    &RecoverableRowOwnerFactory<Value>::view,
+    &RecoverableRowOwnerFactory<Value>::own};
 
-// The exact allocated type and the complete object behind a recoverable reference, as the SAME
-// allocation (an aliasing reference to the most-derived object). Empty for anything not registered.
+// The deleter make_ref allocates every record with. It deletes as the exact type, and it is also where the
+// allocation's provenance lives: the static descriptor of the type allocated, and the complete object.
+// std::get_deleter finds it from ANY Ref sharing the control block -- a base conversion, an aliasing
+// reference -- and finds nothing for a Ref that make_ref did not create.
+struct AllocationRecordingDeleter final {
+  const AllocationDescriptor* descriptor{nullptr};
+  void* object{nullptr};
+  template <typename Value>
+  void operator()(Value* value) const noexcept {
+    delete value;
+  }
+};
+
+// The exact allocated type and the complete object behind a reference, as the SAME allocation (an aliasing
+// reference sharing the original control block). Empty when the object was not allocated by make_ref.
 struct RecoverableOwnerIdentity final {
   std::shared_ptr<void> object;
   std::type_index type{typeid(void)};
@@ -215,18 +210,15 @@ struct RecoverableOwnerIdentity final {
 
 template <typename Source>
 [[nodiscard]] std::optional<RecoverableOwnerIdentity> recoverable_owner_identity(const std::shared_ptr<Source>& source) {
-  if (!source) return std::nullopt;
-  auto& registry = recoverable_owner_registry();
-  const std::lock_guard lock(registry.mutex);
-  const auto found = registry.entries.find(std::weak_ptr<void>(std::static_pointer_cast<void>(source)));
-  if (found == registry.entries.end()) return std::nullopt;
-  auto owner = found->first.lock();
-  if (!owner) {
-    registry.entries.erase(found);
-    return std::nullopt;
-  }
-  return RecoverableOwnerIdentity{std::shared_ptr<void>(std::move(owner), found->second.object), found->second.type,
-                                  found->second.view_row_owner, found->second.own_row_owner};
+  const auto* record = std::get_deleter<AllocationRecordingDeleter>(source);
+  if (record == nullptr || record->descriptor == nullptr) return std::nullopt;
+  return RecoverableOwnerIdentity{std::shared_ptr<void>(source, record->object), std::type_index(*record->descriptor->type),
+                                  record->descriptor->view_row_owner, record->descriptor->own_row_owner};
+}
+
+[[nodiscard]] inline const AllocationDescriptor* allocation_descriptor_of(const std::shared_ptr<void>& source) {
+  const auto* record = std::get_deleter<AllocationRecordingDeleter>(source);
+  return record == nullptr ? nullptr : record->descriptor;
 }
 
 } // namespace detail
@@ -250,12 +242,11 @@ template <typename Value, typename... Arguments>
   } else if constexpr (std::same_as<Ref<Value>, Value>) {
     return Value(std::forward<Arguments>(arguments)...);
   } else {
-    auto reference = std::make_shared<Value>(std::forward<Arguments>(arguments)...);
+    auto* raw = new Value(std::forward<Arguments>(arguments)...);
+    std::shared_ptr<Value> reference(raw, detail::AllocationRecordingDeleter{&detail::allocation_descriptor<Value>,
+                                                                             static_cast<void*>(raw)});
     if constexpr (std::derived_from<Value, SelfReferencing>) {
       detail::remember_self_reference(reference);
-    }
-    if constexpr (detail::has_native_base<Value>) {
-      detail::remember_recoverable_owner(reference);
     }
     return reference;
   }
@@ -286,23 +277,22 @@ template <typename Value>
 // never a cast, and an empty answer is the caller's to act on.
 template <typename Target, typename Source>
 [[nodiscard]] Ref<Target> recover_owner(const std::shared_ptr<Source>& source) {
-  if (!source) return {};
-  auto& registry = detail::recoverable_owner_registry();
-  std::shared_ptr<void> owner;
-  void* object = nullptr;
-  {
-    const std::lock_guard lock(registry.mutex);
-    const auto found = registry.entries.find(std::weak_ptr<void>(std::static_pointer_cast<void>(source)));
-    if (found == registry.entries.end()) return {};
-    owner = found->first.lock();
-    if (!owner) {
-      registry.entries.erase(found);
-      return {};
-    }
-    object = found->second.cast(found->second.object, std::type_index(typeid(Target)));
-  }
+  const auto identity = detail::recoverable_owner_identity(source);
+  if (!identity) return {};
+  const auto* descriptor = detail::allocation_descriptor_of(source);
+  void* object = descriptor->cast(identity->object.get(), std::type_index(typeid(Target)));
   if (object == nullptr) return {};
-  return Ref<Target>(std::move(owner), static_cast<Target*>(object));
+  return Ref<Target>(identity->object, static_cast<Target*>(object));
+}
+
+// The escape form of recover_owner, for a native boundary that REQUIRES the derived owner: the same
+// allocation as `Target`, or the shared out-of-profile error naming what the object really is. It never
+// answers with a copy, an empty reference, or a default.
+template <typename Target, typename Source>
+[[nodiscard]] Ref<Target> require_owner(const std::shared_ptr<Source>& source) {
+  if (auto owner = recover_owner<Target>(source)) return owner;
+  const auto identity = detail::recoverable_owner_identity(source);
+  throw NativeScalarEscapeError(identity ? identity->type.name() : "an object not allocated by flight::make_ref");
 }
 
 template <typename Value>
