@@ -1,0 +1,538 @@
+{
+  "kind": "bounded-native-runtime-accessor-reachability-audit",
+  "atCommit": "46a2e1c75694f329ca74a0562f682a94dc363320",
+  "scope": [
+    "include",
+    "src",
+    "overrides",
+    "tests",
+    "examples"
+  ],
+  "trackedFilesSearched": 652,
+  "symbols": [
+    "native_node_2d_runtime",
+    "get_node_2d_runtime",
+    "get_display_object_runtime",
+    "get_gizmo_node_runtime",
+    "NativeNode2DRuntimeOwner"
+  ],
+  "countConvention": "A reference is one whole-symbol token occurrence; matched-line counts are separate. The earlier 29 references were 29 matching lines for native getter/alias only, not a transitive inventory.",
+  "initial": {
+    "matchedLines": 29,
+    "files": 10
+  },
+  "final": {
+    "matchedLines": 49,
+    "tokenOccurrences": 52,
+    "files": 14
+  },
+  "byFile": {
+    "examples/upstream/camera2d.cpp": 2,
+    "examples/upstream/font_host.cpp": 1,
+    "include/flight/node/native_node2d_access.hpp": 10,
+    "overrides/include/flight/gizmo/gizmo_state.hpp": 9,
+    "overrides/include/flight/node/hierarchy.hpp": 7,
+    "overrides/include/flight/node/node_transform2d.hpp": 1,
+    "overrides/include/flight/render/render_proxy.hpp": 2,
+    "overrides/include/flight/scene2d/display_object.hpp": 6,
+    "overrides/include/flight/scene2d_gl/gl_mesh_shape_renderer.hpp": 1,
+    "overrides/include/flight/scene2d_gl/gl_node_2d.hpp": 1,
+    "overrides/include/flight/text/text_label.hpp": 1,
+    "tests/generated_scene2d_display_object_test.cpp": 2,
+    "tests/generated_scene2d_formats_svg_appearance_test.cpp": 5,
+    "tests/generated_scene2d_gl_owners_test.cpp": 4
+  },
+  "additionalFiles": {
+    "examples/upstream/camera2d.cpp": 2,
+    "examples/upstream/font_host.cpp": 1,
+    "overrides/include/flight/gizmo/gizmo_state.hpp": 9,
+    "tests/generated_scene2d_display_object_test.cpp": 2
+  },
+  "rows": [
+    {
+      "file": "examples/upstream/camera2d.cpp",
+      "line": 485,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto root_children = flight::node::native_node_2d_runtime(root_)->children;"
+    },
+    {
+      "file": "examples/upstream/camera2d.cpp",
+      "line": 497,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto hud_children=flight::node::native_node_2d_runtime(hud_container_)->children;"
+    },
+    {
+      "file": "examples/upstream/font_host.cpp",
+      "line": 173,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "if (flight::node::native_node_2d_runtime(node) != runtime)"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 8,
+      "symbols": [
+        "NativeNode2DRuntimeOwner"
+      ],
+      "code": "using NativeNode2DRuntimeOwner = std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>;"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 9,
+      "symbols": [
+        "NativeNode2DRuntimeOwner",
+        "native_node_2d_runtime"
+      ],
+      "code": "inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 35,
+      "symbols": [
+        "NativeNode2DRuntimeOwner",
+        "native_node_2d_runtime"
+      ],
+      "code": "inline NativeNode2DRuntimeOwner native_node_2d_runtime(flight::types::Node2D source) {"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 39,
+      "symbols": [
+        "NativeNode2DRuntimeOwner"
+      ],
+      "code": "return flight::row_get<NativeNode2DRuntimeOwner>(source, flight::types::entity_runtime_key);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 43,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 47,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 51,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto runtime = native_node_2d_runtime(source);"
+    },
+    {
+      "file": "include/flight/node/native_node2d_access.hpp",
+      "line": 58,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto runtime = native_node_2d_runtime(*current);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 227,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "inline auto get_gizmo_node_runtime(const flight::types::Node2D& source) {"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 232,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "return flight::scene2d::get_node_2d_runtime(source);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 238,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto target_runtime = get_gizmo_node_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 239,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto child_runtime = get_gizmo_node_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 267,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto target_runtime = get_gizmo_node_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 268,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto child_runtime = get_gizmo_node_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 292,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "return get_gizmo_node_runtime(source)->parent;"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 722,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto runtime = get_gizmo_node_runtime(node);"
+    },
+    {
+      "file": "overrides/include/flight/gizmo/gizmo_state.hpp",
+      "line": 732,
+      "symbols": [
+        "get_gizmo_node_runtime"
+      ],
+      "code": "auto runtime = get_gizmo_node_runtime(node);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 496,
+      "symbols": [
+        "native_node_2d_runtime",
+        "native_node_2d_runtime"
+      ],
+      "code": "auto tr = native_node_2d_runtime(target), cr = native_node_2d_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 507,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto tr = native_node_2d_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 511,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "for (auto parent = tr->parent; parent; parent = native_node_2d_runtime(*parent)->parent) if (*parent == child) throw flight::TypeError(flight::String(\"An ancestor cannot be added as a child of its descendant\"));"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 514,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto cr = native_node_2d_runtime(child);"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 515,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "if (tr->node_signals || cr->node_signals || (cr->parent && native_node_2d_runtime(*cr->parent)->node_signals)) throw std::logic_error(\"Native Node2D hierarchy signal owner binding is unavailable\");"
+    },
+    {
+      "file": "overrides/include/flight/node/hierarchy.hpp",
+      "line": 534,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto children = native_node_2d_runtime(target)->children;"
+    },
+    {
+      "file": "overrides/include/flight/node/node_transform2d.hpp",
+      "line": 268,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto runtime = flight::node::native_node_2d_runtime(target);"
+    },
+    {
+      "file": "overrides/include/flight/render/render_proxy.hpp",
+      "line": 83,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto nr = flight::node::native_node_2d_runtime(current);"
+    },
+    {
+      "file": "overrides/include/flight/render/render_proxy.hpp",
+      "line": 231,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto children = flight::node::native_node_2d_runtime(node)->children;"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 150,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "inline Node2DRuntimeOwner get_node_2d_runtime(const Node2D& source) {"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 151,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "return flight::node::native_node_2d_runtime(source);"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 154,
+      "symbols": [
+        "get_display_object_runtime"
+      ],
+      "code": "inline Node2DRuntimeOwner get_display_object_runtime("
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 156,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "return get_node_2d_runtime(source);"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 167,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "const auto runtime = get_node_2d_runtime(node);"
+    },
+    {
+      "file": "overrides/include/flight/scene2d/display_object.hpp",
+      "line": 175,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "if (const auto runtime = get_node_2d_runtime(source)) {"
+    },
+    {
+      "file": "overrides/include/flight/scene2d_gl/gl_mesh_shape_renderer.hpp",
+      "line": 36,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto version = flight::node::native_node_2d_runtime(proxy->source)->local_content_id;"
+    },
+    {
+      "file": "overrides/include/flight/scene2d_gl/gl_node_2d.hpp",
+      "line": 37,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto children = flight::node::native_node_2d_runtime(current)->children;"
+    },
+    {
+      "file": "overrides/include/flight/text/text_label.hpp",
+      "line": 45,
+      "symbols": [
+        "NativeNode2DRuntimeOwner"
+      ],
+      "code": "static_cast<flight::node::NativeNode2DRuntimeOwner::element_type&>(*out) = *flight::scene2d::create_node_2d_runtime();"
+    },
+    {
+      "file": "tests/generated_scene2d_display_object_test.cpp",
+      "line": 24,
+      "symbols": [
+        "get_display_object_runtime"
+      ],
+      "code": "const auto first_runtime = flight::scene2d::get_display_object_runtime(first);"
+    },
+    {
+      "file": "tests/generated_scene2d_display_object_test.cpp",
+      "line": 25,
+      "symbols": [
+        "get_display_object_runtime"
+      ],
+      "code": "const auto second_runtime = flight::scene2d::get_display_object_runtime(second);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 41,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto parent_runtime = flight::node::native_node_2d_runtime(parent);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 42,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto child_runtime = flight::node::native_node_2d_runtime(child);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 43,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto next_runtime = flight::node::native_node_2d_runtime(next_parent);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 89,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto unsupported_runtime = flight::node::native_node_2d_runtime(unsupported);"
+    },
+    {
+      "file": "tests/generated_scene2d_formats_svg_appearance_test.cpp",
+      "line": 101,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "!flight::node::native_node_2d_runtime(detached)->parent,"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 46,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "flight::node::native_node_2d_runtime(sprite_view) == sprite->entity_runtime_key.value() &&"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 155,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "auto other_runtime = flight::node::native_node_2d_runtime(other);"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 198,
+      "symbols": [
+        "native_node_2d_runtime"
+      ],
+      "code": "flight::node::native_node_2d_runtime(label_view) == label_runtime &&"
+    },
+    {
+      "file": "tests/generated_scene2d_gl_owners_test.cpp",
+      "line": 199,
+      "symbols": [
+        "get_node_2d_runtime"
+      ],
+      "code": "flight::scene2d::get_node_2d_runtime(label_view) == label_runtime,"
+    }
+  ],
+  "forwardingEdges": [
+    {
+      "fromSymbol": "native_node_2d_runtime",
+      "toSymbol": "get_node_2d_runtime",
+      "returnAbi": "shared_ptr<NodeRuntime<Ref<Node2DTraits>>>",
+      "action": "add common getter and migrate all callers before retiring legacy"
+    },
+    {
+      "fromSymbol": "get_node_2d_runtime",
+      "toSymbol": "get_display_object_runtime",
+      "returnAbi": "Node2DRuntimeOwner = shared_ptr<NodeRuntime<Ref<Node2DTraits>>>",
+      "action": "return same-owner common StructuralRef, preserve construction alias separately"
+    },
+    {
+      "fromSymbol": "get_node_2d_runtime",
+      "toSymbol": "get_gizmo_node_runtime",
+      "returnAbi": "auto; Shape branch deduces shared_ptr<NodeRuntime<Ref<Node2DTraits>>>",
+      "action": "both branches must return same common StructuralRef; migrate seven local consumers"
+    },
+    {
+      "fromSymbol": "get_gizmo_node_runtime",
+      "toSymbol": "get_gizmo_node_parent",
+      "returnAbi": "optional<Node2D>",
+      "action": "read live parent field through row; return ABI unchanged"
+    }
+  ],
+  "fixedPoint": "No runtime-returning forwarder beyond the four getter names. get_gizmo_node_parent returns optional<Node2D>, not a runtime; its local overlay consumer and tests/generated_gizmo_test.cpp:340 retain that return ABI. No getter address-taking, using-import alias, or further runtime-returning wrapper was found by tracked whole-repo symbol search.",
+  "fileHashes": {
+    "examples/upstream/camera2d.cpp": "de8ca4a719d39f24bb14c0fd8ab0b69da70ece810f3bd6e6fccdb44f4c560d13",
+    "examples/upstream/font_host.cpp": "75ffb993fd2e96c3a25458a356ae81dfed44c922572384cb7a2e240f6aa4071a",
+    "include/flight/node/native_node2d_access.hpp": "2de1d292500a05278424a4c96283b8cac602215d7a9e756724e1487b0617eb0f",
+    "overrides/include/flight/gizmo/gizmo_state.hpp": "bc753a4041cc5ad6e7c5d2af5e3a4c62e4e178d1aea20a4efee4218add5fb3d1",
+    "overrides/include/flight/node/hierarchy.hpp": "839e5d1b71e90458c4214d16ee9a2b19165ff585cdc4f3d4fed7a46a6143ea88",
+    "overrides/include/flight/node/node_transform2d.hpp": "5a72a6ec2b07a8357b1f6f953bea51da3a911506a59202f632ed88e5a0905bdd",
+    "overrides/include/flight/render/render_proxy.hpp": "8cce0c20916e0e2aca00cc3d54600a2ea4daf519a730f583e652c38e64ab50e3",
+    "overrides/include/flight/scene2d/display_object.hpp": "dd54f7a836e7afea757fbc0acfd6127a7bb7c5ce4ee951164f0854eed67e37d9",
+    "overrides/include/flight/scene2d_gl/gl_mesh_shape_renderer.hpp": "28550a2f6caf4f84b2e28ef845e7931e92364946c95b278ea003ca0d32d5500c",
+    "overrides/include/flight/scene2d_gl/gl_node_2d.hpp": "a2692065417d0c55292a93464a40c28ff759f2c7e142967d9f24790800db52c7",
+    "overrides/include/flight/text/text_label.hpp": "2fe4dd09bfc255abd38c53b247fc2bf694b9356b6a2a284d6817d6c191d55cdc",
+    "tests/generated_scene2d_display_object_test.cpp": "3ba6643c7cfa06f5df2329e394dac7336b789fe3550800b1ac07641c1e9b8cee",
+    "tests/generated_scene2d_formats_svg_appearance_test.cpp": "c647f91eb158fd9e76ad4cad45d39d94fe43ab95225204e2cdd18a4c6d7106cb",
+    "tests/generated_scene2d_gl_owners_test.cpp": "21063e79681022ac41a8e060ced81ce984f2e5ccf60b582951ec7bf708a8aa31"
+  },
+  "historicalArtifact": {
+    "file": "artifacts/sprite-runtime-carrier-counterexample.cpp",
+    "line": 46,
+    "classification": "Frozen legacy-input counterexample; not an active product consumer. Preserve as frozen evidence or make future reproduction select its immutable legacy input. Do not silently rewrite its failed/oldslot premise."
+  },
+  "migrationPlan": [
+    "Use existing writable StructuralRef common runtime row; exact physical slot lookup first; preserve exact allocation and field cells; no fake generic native base.",
+    "Replace pointer field access at all listed active sites with row reads/writes and identity() comparisons; children/parent/signal member values retain their existing types.",
+    "Add/migrate both scene2d forwarding APIs and both gizmo branches; get_gizmo_node_parent keeps optional<Node2D>.",
+    "Migrate camera2d children reads and font_host runtime identity check; no external rendering behavior changes.",
+    "Keep Node2DRuntimeOwner construction alias in scene2d; retire NativeNode2DRuntimeOwner legacy accessor alias after closed migration. TextLabel native-base construction still uses its actual declared generic base.",
+    "Run component, affected native tests/examples and Builder4 actual factory/image39; Builder2 alone owns source-derived Types override/manifest/derivedFrom checks."
+  ],
+  "downstream": {
+    "status": "UNRESOLVED: no downstream usage scan available",
+    "searchScope": [
+      "tracked repo README.md/docs/artifacts/include/src/overrides/tests/examples/CMakeLists.txt/bindings",
+      "received and processed mailbox file inventory",
+      "three copied Sprite proof/input archives and extracted source/compiler proof graphs",
+      "local .dependencies sibling inventory; only flight and flight-compiler"
+    ],
+    "availableEvidence": [
+      {
+        "file": "docs/header-failures.md",
+        "line": 915,
+        "relevance": "Historical flight-hx blocker report about skeleton2d parser. No accessor use inventory."
+      },
+      {
+        "file": ".dependencies/flight-compiler/agents/flight-hx-adoption.md",
+        "relevance": "Historical Haxe emission/adoption register. No current C++ runtime accessor consumer scan; no available downstream checkout."
+      },
+      {
+        "file": "../scratch-archives/builder5-sprite-runtime-input-builder4.tgz",
+        "relevance": "Original Flight TS and emitted/compiler proof inputs, not flight-hx consumer corpus."
+      },
+      {
+        "file": "../scratch-archives/builder5-sprite-runtime-carrier-inputs.tgz",
+        "relevance": "Types source/emission carrier snapshot, not downstream corpus."
+      },
+      {
+        "file": "../scratch-archives/builder5-sprite-runtime-design-proof.tgz",
+        "relevance": "Own frozen native mechanism evidence, not downstream corpus."
+      }
+    ],
+    "conclusion": "Missing flight-hx checkout is not no-use evidence. Before land, Foreman needs an existing downstream usage report or host-side audit; any consumer use requires Manager public ABI escalation."
+  },
+  "activation": "STOP until explicit expanded-set approval and downstream condition resolved"
+}
