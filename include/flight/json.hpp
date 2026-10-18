@@ -611,7 +611,7 @@ class JsonParser {
     double value = 0.0;
     // The grammar above admits only ASCII here. from_chars supplies correctly rounded finite
     // values, but reports range loss where JSON.parse produces infinity or signed zero.
-    const std::string text(source_.begin() + begin, source_.begin() + position_);
+    const std::string text(source_.data() + begin, source_.data() + position_);
     const auto converted = std::from_chars(text.data(), text.data() + text.size(), value);
     if (converted.ptr != text.data() + text.size()) throw JsonSyntaxError();
     if (converted.ec == std::errc::result_out_of_range) {
@@ -683,7 +683,7 @@ class JsonParser {
     position_ += expected.size();
   }
 
-  void expect(char expected) {
+  void expect(char16_t expected) {
     if (!take(expected)) throw JsonSyntaxError();
   }
 

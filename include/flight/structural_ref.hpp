@@ -2040,7 +2040,8 @@ class RecordReadRowOwner final : public RowOwner {
     return keys_;
   }
   [[nodiscard]] std::optional<std::vector<String>> enumerable_string_keys() const override {
-    return record_.enumerable_keys();
+    const auto keys = record_.enumerable_keys();
+    return std::vector<String>(keys.begin(), keys.end());
   }
  private:
   Record<String, Any> record_;
