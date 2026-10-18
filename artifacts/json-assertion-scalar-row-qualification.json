@@ -1,0 +1,79 @@
+{
+  "schema": "flight-cpp-json-assertion-scalar-row-qualification/1",
+  "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+  "compilerPatches": 109,
+  "orderedApplyFromRawClean": "pass",
+  "strictBuild": "pass",
+  "focused": {
+    "files": 8,
+    "pass": 125,
+    "fail": 0,
+    "skipped": 0,
+    "ownedFixtureTests": 3,
+    "includesFourthPrivateJsonGraph": true
+  },
+  "sameFloorBackendParity": {
+    "baselineCompilerPatches": 108,
+    "candidateCompilerPatches": 109,
+    "selector": "JSON|json|scalar|structural row|structural assertion",
+    "timeoutMs": 120000,
+    "selected": 28,
+    "baselinePass": 27,
+    "baselineFail": 1,
+    "candidatePass": 27,
+    "candidateFail": 1,
+    "unselected": 1548,
+    "assertionOccurrences": 1576,
+    "sameOccurrenceNamesAndStatuses": true,
+    "changes": [],
+    "failedTitles": [
+      "createCppCompilerBackend unwraps a proven-present optional property before receiver and structural assertion use"
+    ],
+    "newFailures": 0,
+    "coldControlsByteIdentical": 7
+  },
+  "nativeProbe": {
+    "typeSource": "packages/types/src/LottieDocument.ts",
+    "typeSourceWhole": true,
+    "typeSourceSha256": "4d1373d7941abc68f464af06a8464433723166db9ab5e5107aa78f06fbce9ebb",
+    "runtimeSha256": "6270a343dd6a892279569da30141f68e9d7daf701c221e15c827210f0068ee95",
+    "operationSource": "Controlled TypeScript operation probes using the complete raw original LottieDocument schema; not the original public Lottie parser body.",
+    "fieldCases": 24,
+    "rootKinds": 9,
+    "nativeSinkKinds": [
+      "parameter",
+      "return",
+      "field",
+      "array element"
+    ],
+    "compile": "pass",
+    "link": "pass",
+    "run": "pass",
+    "checks": 586,
+    "failures": 0,
+    "initialCompositeCounterexampleFailures": 30,
+    "counterexampleDisposition": "Consumed already-owned builder6 parsed-JSON ToPrimitive runtime correction; source input matrix unchanged.",
+    "sourceOracleSha256": "36830bd5a2a66c2d807742e64a3e4c73b6b23f0878a474b08435230e20b52014"
+  },
+  "sourcePatchSha256": "62eaf403e486abbbf895a6d370f5dc7abc08d5ee5797ad82b99bb507ab94c906",
+  "semantics": "Exact named JSON-asserted schemas only; existing StructuralRef ABI and original owner/root retained. Raw scalar cells retain typeof, truth/nullish, operation-specific coercion, concatenation, UTF16 relations and strict/loose equality. Native scalar sinks explicitly use shared out-of-profile errors. No schema copies/global scalar ABI or original Flight body edits.",
+  "negativeControls": [
+    "unrelated equal-shape row keeps row_get",
+    "nominal native owner unchanged",
+    "structured members keep current path",
+    "unknown members keep current path",
+    "seven unrelated controls byte-identical"
+  ],
+  "currentReadiness": "Qualified focused compiler preparation; original public Lottie/Aseprite consumers and exact21 header qualification pending one coordinated scoped run after actual slot check.",
+  "sdkGeneration": "not run",
+  "originalPublicConsumer": "pending",
+  "headerRowsChanged": 0,
+  "headerPromotions": 0,
+  "remainingPartialBoundaries": [
+    "structured JSON member operations",
+    "Aseprite two-owner nominal union assertion",
+    "unsupported scalar/native escape shapes not exercised by the focused capability"
+  ],
+  "globalOrPackagePassClaim": false
+}

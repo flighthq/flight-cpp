@@ -659,3 +659,46 @@ Two routes, and only these:
 The first is the only route that matches the source's own shape: one function serves both owners, so its reads
 must be owner-agnostic. Worth settling before the backend patch, because the second route cannot be made
 sound here and the first changes which expressions the operation lane must cover.
+
+
+## Qualified lazy-row and scalar compiler preparation
+
+At Flight `a627849` / compiler `806d257`, the declared
+`compiler-json-assertion-scalar-row` patch elects only original named schemas
+reached by JSON assertions. Assertions produce the existing `StructuralRef` ABI
+over the original parsed owner; primitive and null roots retain their raw kind.
+Declared scalar reads on those schemas use the shared presence-aware cell.
+Unrelated equal-shape rows, nominal owners, structured members and unknown
+members retain their existing paths. The three earlier private JSON lanes, the
+new private graph lane, their predicates and the declared carrier rules remain.
+
+The backend retains scalar locals and lowers operations at their source use:
+`typeof`, noncoercing finite/NaN predicates, truth/nullish selection, unary and
+numeric operations, string-sensitive addition, UTF-16 relational comparison,
+strict/loose equality and templates. Native parameter, return, field and array
+boundaries explicitly escape through the shared out-of-profile error family.
+This changes no global scalar ABI and copies no document schema or source body.
+
+All **109 patches apply from a clean raw pin**, the strict build passes and
+**125/125 focused tests** pass across eight files, including the three-test
+portable native oracle. A separate probe imports the **complete original raw
+LottieDocument type module** and emits controlled TypeScript operation functions;
+it is not an original public Lottie parser execution. Its unchanged 24 field
+cases, nine roots and four native boundaries compile, link and pass **586/586
+checks**. The first run's 30 composite-value failures remain recorded; builder6's
+already-owned JSON ToPrimitive runtime correction resolves them without narrowing
+the input matrix. Seven unrelated emission controls remain byte-identical.
+
+The bounded existing-backend comparison selects 28 JSON/scalar/row-assertion
+tests on both the 108-patch baseline and 109-patch candidate: **27 pass / 1 fail**
+on each, with 1548 unselected. All 1576 assertion occurrence names and statuses
+match; no new failure or timeout occurs. The retained failure unwraps a
+proven-present optional property before receiver and structural assertion use.
+
+This is qualified compiler preparation. One coordinated scoped Lottie run still
+requires a confirmed free slot; the original public consumers and exact 21
+headers must then be measured. Structured JSON reads and Aseprite's two-owner
+nominal union remain separate partial boundaries. No installed header promotion,
+fully faithful parser/package result or global sweep follows from these fixture
+results. Compact evidence is in
+[the qualification record](../../artifacts/json-assertion-scalar-row-qualification.json).
