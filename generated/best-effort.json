@@ -27333,15 +27333,15 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts"
       ],
       "declarationFingerprints": [
-        "sha256:1697998f53918ce15e017dfd2e2ae6135b1966fe26e3de5aae5064beb25b704d",
         "sha256:45f485605cb2f4d005aa0e5ee4db94cd7d50c3a52172cb8365724832f62fdc3f",
         "sha256:47012e177207be215ea393489bd1afa630251e7e091f3cde71ff365fc206ba07",
+        "sha256:48dea0cc3f903b9bee031498b27d0d3d032ec30d4647b916c2ece865f1fe5b50",
         "sha256:7c243d3c3979462a3ea1111ad39ac903b78071c04a903f1e6c1a55e11cd20ffe",
         "sha256:aad67f5feb7aefda2969cd218f25a450d49414635dbc38e10c10ad80e66c05b2",
         "sha256:b6a11ddaa6b428c78c7ea210507fe8ae0f2368c56e5485aab51714ad93baa5d1",
+        "sha256:ca9e13c52e94dc80618ed69f1f31929abf4e8ea708f58c425ef126c362638198",
         "sha256:d4e8e9abc879e2a861f9d2c74f0bada8cbe7a7262165c87382a6c07acdf0e180",
-        "sha256:d6b60bb9538767c0202084059aba3591d5ef8da9481589b0ce663c1b2d1ba157",
-        "sha256:f1f941d7fd931f186828bace60ec3e2e75cea37c1abfc9a2fa591afed2317616"
+        "sha256:d6b60bb9538767c0202084059aba3591d5ef8da9481589b0ce663c1b2d1ba157"
       ],
       "module": {
         "name": "SvgStyle",

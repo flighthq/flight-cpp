@@ -4,7 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function registerRiveAssetHandlers -- source line 99
+#include <flight/callable.hpp>
 #include <flight/optional_variant.hpp>
+#include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -50,17 +52,17 @@ using flight::types::RiveImportRegistry;
 using flight::types::RiveProperty;
 
 inline std::optional<flight::Uint8Array> read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); }});
   return ((!property.has_value() || !(flight::union_kind_if<flight::Uint8Array>(property.value()->value) != nullptr)) ? std::nullopt : std::optional<flight::Uint8Array>{std::get<0>(property.value()->value)});
 }
 
 inline double read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, double fallback) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); }});
   return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : std::get<1>(property.value()->value));
 }
 
 inline flight::String read_rive_text_flight_value_function_read_u000052_ive_u000054_ext_flight_private_c3a6f49ed54e0962(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, flight::String fallback) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); }});
   return ((!property.has_value() || !(std::holds_alternative<flight::String>(property.value()->value))) ? fallback : std::get<2>(property.value()->value));
 }
 
@@ -113,7 +115,7 @@ inline flight::Array<flight::Ref<flight::types::RiveFileAsset>> create_rive_file
       continue;
     }
     if ((static_cast<double>(assets.size()) == 0.0)) {
-      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.asset-contents-unowned"), flight::String("createRiveFileAssets"), {{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(object, rive_asset_bytes); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())}}});
+      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.asset-contents-unowned"), flight::String("createRiveFileAssets"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(object, rive_asset_bytes); if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())}}});
       continue;
     }
     (assets.element((static_cast<double>(assets.size()) - 1.0))->bytes = read_rive_bytes_flight_value_function_read_u000052_ive_u000042_ytes_flight_private_c3a6f49ed54e0962(object, rive_asset_bytes));

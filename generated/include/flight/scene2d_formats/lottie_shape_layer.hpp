@@ -34,6 +34,7 @@ namespace flight::types { struct LottieStrokeShapeItem; }
 namespace flight::types { struct LottieTransform; }
 namespace flight::types { struct LottieTransformShapeItem; }
 namespace flight::types { struct LottieTrimPathShapeItem; }
+namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct Shape; }
 

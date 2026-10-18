@@ -774,7 +774,6 @@
         "flight/render/enable_scene_render_guards.hpp",
         "flight/render_gl/enable_gl_render_state_guards.hpp",
         "flight/render_wgpu/enable_wgpu_texture_resolver_guards.hpp",
-        "flight/scene2d_formats/lottie_test_fixtures.hpp",
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
         "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
         "flight/scene3d/enable_scene_3d_guards.hpp",
@@ -5408,17 +5407,17 @@
       "package": "@flighthq/layout"
     },
     {
-      "dependency": "flight",
-      "digest": "123a1e9ecded618e022c2d436d7d65fedff5b2d1ddae2360683c7f93389bbfc1",
-      "id": "rive-object-graph-fresh-diagnostic-record",
-      "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
+      "dependency": "flight-compiler",
+      "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
+      "id": "compiler-nullable-map-get-nullish-projection",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {
-      "dependency": "flight",
-      "digest": "98f7aae5b4f798dde31c50fd1d5ada718a274b7a7b3ce20ee3693be79dbce64b",
-      "id": "scene2d-formats-lottie-frame-rate-narrowed-local",
-      "module": "packages/scene2d-formats/src/lottieCounts.ts",
+      "dependency": "flight-compiler",
+      "digest": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1",
+      "id": "compiler-contextual-optional-map-owner",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppContextualFreshMapOwner.test.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {
@@ -5436,10 +5435,10 @@
       "package": "@flighthq/scene3d-formats"
     },
     {
-      "dependency": "flight-compiler",
-      "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
-      "id": "compiler-nullable-map-get-nullish-projection",
-      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "dependency": "flight",
+      "digest": "123a1e9ecded618e022c2d436d7d65fedff5b2d1ddae2360683c7f93389bbfc1",
+      "id": "rive-object-graph-fresh-diagnostic-record",
+      "module": "packages/scene2d-formats/src/riveObjectGraph.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {
@@ -5454,6 +5453,13 @@
       "digest": "ac8441e622c1d0d90582f68b11c0bd8e7f6c52e1de960fef114c1ce7de995f03",
       "id": "scene2d-svg-declarations-string-prototype-key",
       "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "98f7aae5b4f798dde31c50fd1d5ada718a274b7a7b3ce20ee3693be79dbce64b",
+      "id": "scene2d-formats-lottie-frame-rate-narrowed-local",
+      "module": "packages/scene2d-formats/src/lottieCounts.ts",
       "package": "@flighthq/scene2d-formats"
     },
     {

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -84,7 +85,7 @@ inline flight::Ref<alphas_colors_ratios_d0c520c13bc9e57d> parse_lottie_gradient(
       (index += 2.0);
     }
   }
-  opacity_stops.sort([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>> right) { return (flight::row_get<flight::RowKey<"offset">>(left) - flight::row_get<flight::RowKey<"offset">>(right)); });
+  opacity_stops.sort(flight::Function<double(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>>)>{[=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>> left, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<alpha_offset_b2405ccf7a7d227b>>>> right) { return (flight::row_get<flight::RowKey<"offset">>(left) - flight::row_get<flight::RowKey<"offset">>(right)); }});
   flight::Array<double> alphas = flight::Array<double>{};
   {
     double index_2 = 0.0;

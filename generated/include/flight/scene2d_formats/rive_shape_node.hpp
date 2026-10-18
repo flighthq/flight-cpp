@@ -5,6 +5,8 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function rebuildRiveShapes -- source line 55
 //   missing: function importRiveShapeComponent -- source line 42
+#include <flight/callable.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -115,13 +117,13 @@ inline const double rive_nsliced_node = 508.0;
 inline const double rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_62e72f9eacdc5a12 = 4.0;
 
 inline flight::String read_rive_shape_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_62e72f9eacdc5a12); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == rive_name_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u00004e__u000041__u00004d__u000045__flight_private_62e72f9eacdc5a12); }});
   return ((!property.has_value() || !(std::holds_alternative<flight::String>(property.value()->value))) ? flight::String("") : std::get<2>(property.value()->value));
 }
 
 inline std::optional<flight::types::DisplayObject> import_rive_nsliced_node_component(flight::Ref<flight::types::RiveArtboardImportContext> context, double index) {
   auto object = context->artboard->objects.element(index);
-  flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("rive.nine-slice-substituted"), flight::String("importRiveNSlicedNodeComponent"), {{flight::String("substitutedAs"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("container")}}, {flight::String("typeKey"), std::variant<bool, double, flight::String>{std::in_place_type<double>, object->type_key}}});
+  flight::importdiagnostics::report_import_diagnostic(context->diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("rive.nine-slice-substituted"), flight::String("importRiveNSlicedNodeComponent"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("substitutedAs"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("container")}}, {flight::String("typeKey"), std::variant<bool, double, flight::String>{std::in_place_type<double>, object->type_key}}});
   return std::optional<flight::types::DisplayObject>{flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, read_rive_shape_name(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)))})))};
 }
 

@@ -6,6 +6,7 @@
 //   missing: function lottiePolystarShapeItemHandler -- source line 77
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -60,9 +61,9 @@ inline flight::Ref<flight::types::Path> create_lottie_polystar_path(double kind,
       (index += 1.0);
     }
   }
-  if (handles.every([=](double handle) {
+  if (handles.every(flight::Function<bool(double)>{[=](double handle) {
   return (handle == 0.0);
-})) {
+}})) {
     flight::path::append_path_polygon(path, vertices);
     return path;
   }

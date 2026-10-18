@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function handleLottieGradientItem -- source line 24
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -164,12 +165,12 @@ using flight::types::Shape;
 // target's members from it, or declare the slot as this target where the concrete type is known
 
 inline flight::types::LottieShapePainter gradient_fill_painter(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieGradientPaint>>>> paint) {
-  return [=](flight::Ref<flight::types::Shape> shape, flight::Array<flight::Ref<flight::types::Path>> paths) {
+  return flight::Function<void(flight::Ref<flight::types::Shape>, flight::Array<flight::Ref<flight::types::Path>>)>{[=](flight::Ref<flight::types::Shape> shape, flight::Array<flight::Ref<flight::types::Path>> paths) {
   auto gradient = flight::scene2d_formats::parse_lottie_gradient(flight::row_get<flight::RowKey<"values">>(paint), flight::row_get<flight::RowKey<"count">>(paint), flight::row_get<flight::RowKey<"opacity">>(paint));
   flight::shape::append_shape_begin_gradient_fill(shape, ((flight::row_get<flight::RowKey<"shape">>(paint) == 2.0) ? flight::String("radial") : flight::String("linear")), gradient->colors, gradient->alphas, gradient->ratios, ([&]() -> std::optional<flight::Ref<flight::types::Matrix>> { const auto& erased_value = flight::scene2d_formats::create_lottie_gradient_matrix(flight::row_get<flight::RowKey<"start">>(paint), flight::row_get<flight::RowKey<"end">>(paint)); if (static_cast<bool>(erased_value.object_if<flight::types::Matrix>())) return std::optional<flight::Ref<flight::types::Matrix>>{erased_value.object_if<flight::types::Matrix>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }()), std::nullopt, std::nullopt, std::nullopt);
   flight::scene2d_formats::append_lottie_shape_paths(paths, shape, std::optional<flight::String>{flight::row_get<flight::RowKey<"winding">>(paint)});
   flight::shape::append_shape_end_fill(shape);
-};
+}};
 }
 
 inline void lottie_gradient_fill_shape_item_handler(flight::Ref<flight::types::LottieShapeItemContext> context) {
@@ -177,12 +178,12 @@ inline void lottie_gradient_fill_shape_item_handler(flight::Ref<flight::types::L
 }
 
 inline flight::types::LottieShapePainter gradient_stroke_painter(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieGradientPaint>>>> paint) {
-  return [=](flight::Ref<flight::types::Shape> shape, flight::Array<flight::Ref<flight::types::Path>> paths) {
+  return flight::Function<void(flight::Ref<flight::types::Shape>, flight::Array<flight::Ref<flight::types::Path>>)>{[=](flight::Ref<flight::types::Shape> shape, flight::Array<flight::Ref<flight::types::Path>> paths) {
   auto gradient = flight::scene2d_formats::parse_lottie_gradient(flight::row_get<flight::RowKey<"values">>(paint), flight::row_get<flight::RowKey<"count">>(paint), flight::row_get<flight::RowKey<"opacity">>(paint));
   flight::shape::append_shape_line_style(shape, flight::row_get<flight::RowKey<"width">>(paint), 255.0, 1.0, false, flight::String("normal"), flight::row_get<flight::RowKey<"caps">>(paint), flight::row_get<flight::RowKey<"joints">>(paint), flight::row_get<flight::RowKey<"miterLimit">>(paint));
   flight::shape::append_shape_line_gradient_style(shape, ((flight::row_get<flight::RowKey<"shape">>(paint) == 2.0) ? flight::String("radial") : flight::String("linear")), gradient->colors, gradient->alphas, gradient->ratios, ([&]() -> std::optional<flight::Ref<flight::types::Matrix>> { const auto& erased_value_2 = flight::scene2d_formats::create_lottie_gradient_matrix(flight::row_get<flight::RowKey<"start">>(paint), flight::row_get<flight::RowKey<"end">>(paint)); if (static_cast<bool>(erased_value_2.object_if<flight::types::Matrix>())) return std::optional<flight::Ref<flight::types::Matrix>>{erased_value_2.object_if<flight::types::Matrix>()}; if (erased_value_2.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }()), std::nullopt, std::nullopt, std::nullopt);
   flight::scene2d_formats::append_lottie_dashed_shape_paths(paths, shape, std::nullopt, flight::row_get<flight::RowKey<"dash">>(paint), flight::row_get<flight::RowKey<"dashOffset">>(paint));
-};
+}};
 }
 
 inline void lottie_gradient_stroke_shape_item_handler(flight::Ref<flight::types::LottieShapeItemContext> context) {

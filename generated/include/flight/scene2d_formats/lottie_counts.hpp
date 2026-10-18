@@ -22,12 +22,12 @@ namespace flight::scene2d_formats {
 
 using flight::types::Shape;
 
-inline bool is_lottie_document(flight::Record<flight::String, flight::Any> record) {
-  if (!flight::is_array(record.get(flight::String("layers")).value())) {
+inline bool is_lottie_document(flight::NamedProperties record) {
+  if (!flight::is_array(record.get(flight::String("layers")))) {
     return false;
   }
-  auto fr = record.get(flight::String("fr")).value();
-  return ((((fr.type_of() == flight::String("number")) && (fr.as_number() > 0.0)) && (record.get(flight::String("ip")).value().type_of() == flight::String("number"))) && (record.get(flight::String("op")).value().type_of() == flight::String("number")));
+  auto fr = record.get(flight::String("fr"));
+  return ((((fr.type_of() == flight::String("number")) && (fr.as_number() > 0.0)) && (record.get(flight::String("ip")).type_of() == flight::String("number"))) && (record.get(flight::String("op")).type_of() == flight::String("number")));
 }
 
 inline flight::Map<double, flight::String> lottie_layer_features = flight::Map<double, flight::String>({{flight::types::lottie_layer_kind->image, flight::String("layer.image")}, {flight::types::lottie_layer_kind->null, flight::String("layer.null")}, {flight::types::lottie_layer_kind->precomposition, flight::String("layer.precomposition")}, {flight::types::lottie_layer_kind->shape, flight::String("layer.shape")}, {flight::types::lottie_layer_kind->solid, flight::String("layer.solid")}, {flight::types::lottie_layer_kind->text, flight::String("layer.text")}});
@@ -53,7 +53,7 @@ inline void tally_masks(flight::Map<flight::String, double> counts, flight::Any 
         continue;
       }
       flight::NamedProperties mask = flight::named_properties(entry);
-      auto mode = mask.get(flight::String("mode")).value();
+      auto mode = mask.get(flight::String("mode"));
       if (((mode.type_of() != flight::String("string")) || (mode.as_string() == flight::types::lottie_mask_kind->none))) {
         continue;
       }
@@ -62,7 +62,7 @@ inline void tally_masks(flight::Map<flight::String, double> counts, flight::Any 
       if (kind.has_value()) {
         counts.set(kind.value(), (([&]() -> double { auto nullish_coalesce_left = counts.get(kind.value()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
       }
-      if ((mask.get(flight::String("inv")).value() == true)) {
+      if ((mask.get(flight::String("inv")) == true)) {
         counts.set(lottie_mask_inverted, (([&]() -> double { auto nullish_coalesce_left = counts.get(lottie_mask_inverted); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) + 1.0));
       }
     }
@@ -90,7 +90,7 @@ inline void tally_shape_items(flight::Map<flight::String, double> counts, flight
         continue;
       }
       flight::NamedProperties item = flight::named_properties(entry);
-      auto ty = item.get(flight::String("ty")).value();
+      auto ty = item.get(flight::String("ty"));
       if ((ty.type_of() == flight::String("string"))) {
         const std::optional<flight::String> kind = lottie_shape_item_features.get(ty.as_string());
         if (kind.has_value()) {
@@ -98,7 +98,7 @@ inline void tally_shape_items(flight::Map<flight::String, double> counts, flight
         }
       }
       if ((ty == flight::String("gr"))) {
-        tally_shape_items(counts, item.get(flight::String("it")).value());
+        tally_shape_items(counts, item.get(flight::String("it")));
       }
     }
   }

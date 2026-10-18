@@ -7,7 +7,9 @@
 //   missing: function registerRiveClippingHandlers -- source line 110
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -74,12 +76,12 @@ using flight::types::RivePathRecord;
 using flight::types::RiveProperty;
 
 inline double read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, double fallback) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); }});
   return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : std::get<1>(property.value()->value));
 }
 
 inline bool read_rive_flag_flight_value_function_read_u000052_ive_u000046_lag_flight_private_6321ae4334e1497f(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, bool fallback) {
-  auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
+  auto property = flight::row_get<flight::RowKey<"properties">>(source).find(flight::Function<bool(flight::Ref<flight::types::RiveProperty>)>{[=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); }});
   return ((!property.has_value() || !(std::holds_alternative<double>(property.value()->value))) ? fallback : (std::get<1>(property.value()->value) != 0.0));
 }
 
@@ -228,7 +230,7 @@ inline void apply_rive_clipping(flight::StructuralRef<flight::RowReadonly<flight
         const double source = read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_6321ae4334e1497f(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), rive_clip_source_id, -1.0);
         std::optional<flight::Array<flight::Ref<flight::types::RivePathRecord>>> paths = shape_paths.get(source);
         if ((!paths.has_value() || (static_cast<double>(paths.value().size()) == 0.0))) {
-          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.unresolved-clipping-source"), flight::String("applyRiveClipping"), {{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("source"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source}}});
+          flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.unresolved-clipping-source"), flight::String("applyRiveClipping"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("index"), std::variant<bool, double, flight::String>{std::in_place_type<double>, index}}, {flight::String("source"), std::variant<bool, double, flight::String>{std::in_place_type<double>, source}}});
           {
             (index += 1.0);
             continue;

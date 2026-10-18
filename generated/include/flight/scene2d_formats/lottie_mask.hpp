@@ -63,7 +63,8 @@ using flight::types::Path;
 //   
 // cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual C++ union conversion
 // requires equivalent source union evidence: target optionalVariant carriers
-// [flight::Ref<LottieAnimatedProperty<T>>, flight::Ref<LottieStaticProperty<T>>] from property source
+// [flight::Ref<LottieAnimatedProperty<flight::Ref<flight::types::LottieShapePath>>>,
+// flight::Ref<LottieStaticProperty<flight::Ref<flight::types::LottieShapePath>>>] from property source
 // multiVariant carriers [flight::Ref<LottieAnimatedProperty<flight::Ref<LottieShapePath>>>,
 // flight::Ref<LottieStaticProperty<flight::Ref<LottieShapePath>>>]. The alternatives match uniquely, but no
 // checked target-runtime conversion exists between their C++ carriers. Keep both sides on the same declared

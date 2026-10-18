@@ -277,7 +277,7 @@ inline std::optional<flight::Ref<flight::types::RiveDocument>> parse_rive_docume
     return std::nullopt;
   }
   if ((header.value()->major_version != rive_supported_major_version)) {
-    report_rive_reject(diagnostics, flight::String("rive.unsupported-version"), {{flight::String("major"), header.value()->major_version}, {flight::String("supported"), rive_supported_major_version}});
+    report_rive_reject(diagnostics, flight::String("rive.unsupported-version"), flight::Record<flight::String, double>{{flight::String("major"), header.value()->major_version}, {flight::String("supported"), rive_supported_major_version}});
     return std::nullopt;
   }
   flight::Map<double, double> field_types = flight::Map<double, double>();
@@ -292,7 +292,7 @@ inline std::optional<flight::Ref<flight::types::RiveDocument>> parse_rive_docume
         report_rive_reject(diagnostics, flight::String("rive.truncated-object-stream"), std::nullopt);
       }
       else {
-        report_rive_reject(diagnostics, flight::String("rive.unknown-property-width"), {{flight::String("propertyKey"), cursor->unknown_property_key}});
+        report_rive_reject(diagnostics, flight::String("rive.unknown-property-width"), flight::Record<flight::String, double>{{flight::String("propertyKey"), cursor->unknown_property_key}});
       }
       return std::nullopt;
     }

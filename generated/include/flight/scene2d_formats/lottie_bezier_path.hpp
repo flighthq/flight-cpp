@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function toLottieShapePath -- source line 58
 #include <cmath>
+#include <flight/callable.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -85,7 +86,7 @@ inline flight::Array<double> flatten_lottie_shape_path(flight::StructuralRef<fli
 
 inline flight::Ref<flight::types::LottieShapePath> unflatten_lottie_shape_path(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapePath>>>> template_, flight::Array<double> values) {
   const double count = static_cast<double>(flight::row_get<flight::RowKey<"v">>(template_).size());
-  std::function<flight::Array<flight::Array<double>>(double)> read_points = [=](double offset) {
+  std::function<flight::Array<flight::Array<double>>(double)> read_points = flight::Function<flight::Array<flight::Array<double>>(double)>{[=](double offset) {
   flight::Array<flight::Array<double>> out = flight::Array<flight::Array<double>>{};
   {
     double index = 0.0;
@@ -97,7 +98,7 @@ inline flight::Ref<flight::types::LottieShapePath> unflatten_lottie_shape_path(f
     }
   }
   return out;
-};
+}};
   return flight::make_ref<flight::types::LottieShapePath>(flight::types::LottieShapePath{.c = flight::row_get<flight::RowKey<"c">>(template_), .i = read_points((count * 2.0)), .o = read_points((count * 4.0)), .v = read_points(0.0)});
 }
 
