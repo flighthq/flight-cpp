@@ -1946,3 +1946,10 @@ cc_test(
     size = "small",
     deps = ["//:cpp", "//:sdk_preview"],
 )
+
+cc_test(
+    name = "gl_cell_view_test",
+    srcs = ["gl_cell_view_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)

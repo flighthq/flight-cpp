@@ -6,6 +6,7 @@
 #include <string_view>
 #include <utility>
 
+#include <flight/out_of_profile.hpp>
 #include <flight/reference.hpp>
 #include <flight/structural_ref.hpp>
 
@@ -36,6 +37,32 @@ class NominalOrStructuralView final {
     view.nominal_ = recover_owner<Nominal>(object);
     view.object_ = std::move(object);
     return view;
+  }
+
+  // These projections read and write the caller's physical BASE cell. The view is the value of a
+  // source read, so later replacement is observed by reading the cell again; a previously read value
+  // keeps its original object, just as an ordinary JavaScript local does.
+  [[nodiscard]] static NominalOrStructuralView read_cell(const Ref<Base>& cell) { return of(cell); }
+  [[nodiscard]] static std::optional<NominalOrStructuralView> read_cell(const std::optional<Ref<Base>>& cell) {
+    if (!cell) return std::nullopt;
+    return of(*cell);
+  }
+
+  static NominalOrStructuralView write_cell(Ref<Base>& cell, NominalOrStructuralView value) {
+    cell = value.object();
+    return value;
+  }
+  static std::optional<NominalOrStructuralView> write_cell(
+      std::optional<Ref<Base>>& cell, std::optional<NominalOrStructuralView> value) {
+    cell = value ? std::optional<Ref<Base>>{value->object()} : std::nullopt;
+    return value;
+  }
+
+  // The partial native escape is explicit. Carrying, storing, comparing, or reading the object by
+  // name never requires a nominal allocation. Only a native operation requiring Nominal does.
+  [[nodiscard]] Ref<Nominal> native() const {
+    if (!nominal_) throw NativeScalarEscapeError(object_ ? "object" : "undefined");
+    return nominal_;
   }
 
   [[nodiscard]] const Ref<Base>& object() const noexcept { return object_; }
