@@ -1126,7 +1126,7 @@ int main() {
     const flight::Ref<TestProvenanceBase> recorded = flight::make_ref<TestProvenanceDerived>();
     check(flight::has_own_named_property(recorded, flight::String("intensity")) &&
               flight::has_own_named_property(recorded, flight::String("radius")) &&
-              !flight::has_own_named_property(recorded, flight::String("absent")) &&
+              !flight::has_own_named_property<flight::RowKey<"blurX">>(recorded) &&
               flight::has_own_named_property(recorded, flight::String("toString")),
           "a recorded allocation reached through its base reports the derived object's own members");
     bool unrecorded_refused = false;
@@ -1137,6 +1137,13 @@ int main() {
       unrecorded_refused = true;
     }
     check(unrecorded_refused, "an allocation make_ref did not record is refused, never answered false");
+    bool unbound_refused = false;
+    try {
+      static_cast<void>(flight::has_own_named_property(recorded, flight::String("notATableKey")));
+    } catch (const flight::OutOfProfileError&) {
+      unbound_refused = true;
+    }
+    check(unbound_refused, "the String form refuses a key the exact type's owner does not bind, never answering absent");
     bool null_threw = false;
     try {
       static_cast<void>(flight::has_own_named_property(flight::Ref<TestProvenanceBase>(), flight::String("x")));
@@ -1158,8 +1165,15 @@ int main() {
               flight::member_typeof(value, flight::String("visible")) == flight::String("boolean") &&
               flight::member_typeof(value, flight::String("child")) == flight::String("object"),
           "typeof reads each present cell's own value kind");
-    check(flight::member_typeof(value, flight::String("duration")) == flight::String("undefined"),
-          "an unset optional cell is typeof undefined");
+    // An optional carrier bound without a presence policy and left disengaged may be a required nullable
+    // holding null (typeof "object") or an omitted source-optional member (typeof "undefined"): refused.
+    bool unset_optional_refused = false;
+    try {
+      static_cast<void>(flight::member_typeof(value, flight::String("duration")));
+    } catch (const flight::OutOfProfileError&) {
+      unset_optional_refused = true;
+    }
+    check(unset_optional_refused, "typeof of an unset optional member with no presence policy is refused, not guessed");
     check(flight::has_property(value, flight::String("count")) && flight::has_property(value, flight::String("visible")) &&
               flight::has_property(value, flight::String("hasOwnProperty")),
           "`in` reports bound cells and Object.prototype names");
@@ -1230,12 +1244,16 @@ int main() {
   // ERASED PRESENCE AND TYPEOF THROUGH THE PROTOTYPE CHAIN. `key in value` and `typeof value.key` on an
   // erased object ask its own cells, then its registered class prototype, then Object.prototype.
   {
-    check(flight::has_property(erased, flight::String("intensity")) &&
-              flight::has_property(erased, flight::String("toString")),
-          "an erased plain object answers its bound own keys and Object.prototype names");
-    check(flight::member_typeof(erased, flight::String("intensity")) == flight::String("undefined") &&
+    check(flight::has_property(erased, flight::String("toString")) &&
               flight::member_typeof(erased, flight::String("toString")) == flight::String("function"),
-          "typeof reads the own value and an inherited Object.prototype method");
+          "an erased plain object answers Object.prototype names and their typeof");
+    bool unset_in_refused = false;
+    try {
+      static_cast<void>(flight::has_property(erased, flight::String("intensity")));
+    } catch (const flight::OutOfProfileError&) {
+      unset_in_refused = true;
+    }
+    check(unset_in_refused, "`in` on an unset optional member with no presence policy is refused, not guessed");
     // A native row binds only the members the generated table names, so a key it lacks may be a declared
     // field: answering "absent" would be a false negative, so it is refused.
     bool unbound_refused = false;

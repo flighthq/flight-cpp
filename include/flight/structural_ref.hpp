@@ -175,6 +175,11 @@ class RowCell {
   // (the payload is never inspected). This is engagement, not a value filter.
   [[nodiscard]] virtual bool present() const noexcept { return true; }
 
+  // Whether present() is a guess: an optional carrier bound without an explicit presence policy, now
+  // disengaged, may be a required nullable holding null (an own key) or a source-optional member that was
+  // omitted (not one). A membership query must refuse rather than pick either.
+  [[nodiscard]] virtual bool presence_ambiguous() const noexcept { return false; }
+
   // The erased reading of this cell's value, or nothing when the runtime has none for its type.
   [[nodiscard]] virtual std::optional<Any> as_any() const = 0;
 
@@ -263,6 +268,13 @@ class NativeRowCell final : public TypedRowCell<Value> {
 
   [[nodiscard]] Value& get() override { return *address_; }
   void set(Value value) override { *address_ = std::move(value); }
+
+  [[nodiscard]] bool presence_ambiguous() const noexcept override {
+    if constexpr (detail::is_std_optional<Value>::value) {
+      return presence_ == MemberPresence::Required && !const_cast<NativeRowCell*>(this)->get().has_value();
+    }
+    return false;
+  }
 
   [[nodiscard]] bool present() const noexcept override {
     if (presence_ == MemberPresence::SourceOptional) {
@@ -2408,6 +2420,13 @@ class NamedProperties final {
   // question about such a key has no answer here, not the answer "absent".
   [[nodiscard]] bool knows_every_key() const { return owner_ && owner_->enumerable_string_keys().has_value(); }
 
+  // Whether this key's own presence is a guess (see RowCell::presence_ambiguous).
+  [[nodiscard]] bool presence_ambiguous(const String& key) const {
+    if (!owner_) return false;
+    const auto cell = owner_->string_key_cell(key);
+    return cell && cell->presence_ambiguous();
+  }
+
   // Own enumerable string keys, in source declaration order.
   [[nodiscard]] std::vector<String> keys() const {
     if (!owner_) return {};
@@ -2637,17 +2656,65 @@ template <typename Object>
 // derived object's own members. Without a make_ref record the exact type is unknown and the static type's
 // cells could miss derived members, so the query raises OutOfProfileError -- an explicit partial
 // boundary -- rather than answering false. A null reference throws TypeError, as `in` on null does.
+//
+// An own cell counts only while it is present: a disengaged optional member was omitted, which is the
+// runtime's representation of an absent own key. "Absent" needs the exact type's FULL own key set, and a
+// native owner binds only the members the generated member table names. So this String form refuses a key
+// the owner does not bind; the RowKey form below answers it, because naming the key as a RowKey in emitted
+// code is exactly what puts it in that table, where the binding for every exact type is precise.
+namespace detail {
+
 template <typename Object>
-[[nodiscard]] bool has_own_named_property(const std::shared_ptr<Object>& object, const String& key) {
+[[nodiscard]] std::shared_ptr<RowOwner> exact_row_owner_for_membership(const std::shared_ptr<Object>& object,
+                                                                       const String& key) {
   if (!object) throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in null"));
-  const auto identity = detail::recoverable_owner_identity(object);
+  const auto identity = recoverable_owner_identity(object);
   if (!identity || identity->own_row_owner == nullptr) {
     throw OutOfProfileError("`in` on a nominal reference with no allocation provenance: its exact type is unknown");
   }
-  const auto owner = std::static_pointer_cast<RowOwner>(identity->own_row_owner(identity->object));
-  if (owner && owner->has_named_cell(key.to_utf8())) return true;
-  if (find_inherited_member(identity->type, key.to_utf8()) != InheritedMemberKind::none) return true;
-  return is_object_prototype_property(key);
+  return std::static_pointer_cast<RowOwner>(identity->own_row_owner(identity->object));
+}
+
+template <typename Object>
+[[nodiscard]] std::type_index exact_type_for_membership(const std::shared_ptr<Object>& object) {
+  return recoverable_owner_identity(object)->type;
+}
+
+// Present own cell, registered prototype member, or Object.prototype name; nullopt when none of them.
+[[nodiscard]] inline std::optional<bool> nominal_membership_hit(const std::shared_ptr<RowOwner>& owner,
+                                                                std::type_index exact_type, const String& key) {
+  const auto name = key.to_utf8();
+  if (owner) {
+    if (const auto cell = owner->named_cell(name)) {
+      if (cell->presence_ambiguous()) {
+        throw OutOfProfileError("`in` on an unset optional member bound without a presence policy: null and omitted are not distinguished");
+      }
+      if (cell->present()) return true;
+    }
+  }
+  if (find_inherited_member(exact_type, name) != InheritedMemberKind::none) return true;
+  if (is_object_prototype_property(key)) return true;
+  return std::nullopt;
+}
+
+} // namespace detail
+
+template <typename Object>
+[[nodiscard]] bool has_own_named_property(const std::shared_ptr<Object>& object, const String& key) {
+  const auto owner = detail::exact_row_owner_for_membership(object, key);
+  if (const auto hit = detail::nominal_membership_hit(owner, detail::exact_type_for_membership(object), key)) return *hit;
+  if (owner && owner->has_named_cell(key.to_utf8())) return false;  // a bound, omitted optional member
+  throw OutOfProfileError("`in` on a nominal reference for a key its exact type's owner does not bind");
+}
+
+// The emitted form: `Key` is named as a RowKey, so it is a generated member-table key and the exact type's
+// binding answers precisely whether that type declares it.
+template <typename Key, typename Object>
+[[nodiscard]] bool has_own_named_property(const std::shared_ptr<Object>& object) {
+  const auto key = String::from_utf8(Key::name.view());
+  const auto owner = detail::exact_row_owner_for_membership(object, key);
+  if (const auto hit = detail::nominal_membership_hit(owner, detail::exact_type_for_membership(object), key)) return *hit;
+  return false;
 }
 
 // `key in value` for an erased value, as JavaScript answers it: a non-object throws TypeError; an object
@@ -2683,6 +2750,9 @@ template <typename Object>
   }
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
+  if (view.presence_ambiguous(key)) {
+    throw OutOfProfileError("`in` on an unset optional member bound without a presence policy: null and omitted differ");
+  }
   if (view.has(key)) return true;
   if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
   if (is_object_prototype_property(key)) return true;
@@ -2710,6 +2780,9 @@ template <typename Object>
   if (value.is_array()) throw OutOfProfileError("typeof of a member of an erased array");
   const auto view = named_properties(value);
   if (!view) throw OutOfProfileError("typeof of a member of an object whose type never reached the row machinery");
+  if (view.presence_ambiguous(key)) {
+    throw OutOfProfileError("typeof of an unset optional member bound without a presence policy: null and omitted differ");
+  }
   if (view.has(key)) return view.get(key).type_of();
   switch (find_inherited_member(value.held_type(), key.to_utf8())) {
     case InheritedMemberKind::method:
