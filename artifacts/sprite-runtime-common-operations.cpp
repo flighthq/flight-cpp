@@ -23,13 +23,14 @@ flight::Ref<flight::types::Sprite> create_sprite(flight::StructuralRef<flight::R
 // Local adapter metadata for declared native cells absent from the frozen SDK key vocabulary.
 // The SDK table stays unchanged; each binding below names the original physical field.
 namespace flight::detail {
-template<> struct schema_member<RowKey<"worldBoundsUsingWorldTransformId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+using ComponentGenericRow = RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>;
+template<> struct schema_member<RowKey<"worldBoundsUsingWorldTransformId">, ComponentGenericRow> {
   using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_bounds_using_world_transform_id);
 };
-template<> struct schema_member<RowKey<"worldBoundsUsingLocalBoundsId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+template<> struct schema_member<RowKey<"worldBoundsUsingLocalBoundsId">, ComponentGenericRow> {
   using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_bounds_using_local_bounds_id);
 };
-template<> struct schema_member<RowKey<"worldTransformUsingParentTransformId">, RowOf<Ref<types::NodeRuntime<Ref<types::Node2DTraits>>>>>> {
+template<> struct schema_member<RowKey<"worldTransformUsingParentTransformId">, ComponentGenericRow> {
   using type = decltype(types::NodeRuntime<Ref<types::Node2DTraits>>::world_transform_using_parent_transform_id);
 };
 }
