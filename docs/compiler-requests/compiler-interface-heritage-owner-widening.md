@@ -503,9 +503,42 @@ Five overrides are re-derived from that normal output, preserving only their req
 - TextLabel retains the exact TextLabelRuntime slot and native runtime inheritance, plus the emitted
   TextLabelData/Node2DData base.
 
-The dependent GL context constructor evaluates the same authored members, constructs one runtime and
-assigns the inherited binding on that owner; it no longer uses an invalid inherited-field designator.
-Native Node fixtures likewise initialize inherited cells through their owner. Existing consumer tests
-add base/control-block and live inherited-cell checks for actual selection, Node and GL runtime owners.
-Foreign override records are unchanged, as are all generated files. The remaining partial native
-runtime-family restrictions are retained; reconciliation is not broader owner-family support.
+The original eight re-derivations leave the generated types unchanged. The authorized dependent
+Node regeneration subsequently emits 21/21 Node modules with no owned-package refusals and changes
+seven normal headers. Its `create_node_runtime` evaluates the authored members once, constructs one
+runtime and assigns inherited binding on that same allocation. No generated C++ was edited by hand.
+Four dependent Node overrides were audited against that output: traversal retains its emitted
+Function wrapper plus the existing exact-owner projection and typed empty array; hierarchy and the
+2D transform retain the new explicit Traits calls; the 3D transform's four emitted call changes occur
+only in generic paths absent from its existing fixed-owner native implementation.
+
+Actual consumer compilation also exposed inherited-field designators in seven existing native
+constructor overrides: GL state, core target resolution, GL target resizing, pass target/handle,
+Matrix4, default Material3D and ShapeData. Their authored values keep their evaluation order and are
+assigned on the original fresh allocation. Existing pass-target snapshot behavior and all declared
+partial native-family restrictions remain unchanged.
+
+The six actual consumer targets cover log core, selection, interaction, Scene2D display objects,
+Scene2D GL owners and GL readonly presentation. Their tests check real owner/control-block and
+inherited-cell aliases; the GL consumer also checks the identity Matrix4, default material, pooled
+handle reuse and a real target resize with readback. These checks do not qualify the full Scene3D
+renderer or the remaining owner family.
+
+Before the shared-runtime cleanup landed, the six consumer CTests passed **6/6** and the override
+integrity check passed for all **227** retained records. The override framework tests passed **15/15**.
+The subsequent clean rebase onto `fa4846be` preserves every owned path's content, all foreign manifest
+records and metadata, and every retained status. The integrity check on that floor reports exactly
+one foreign drift, `skeleton2d-formats-spine-parse-helpers-erased-array`, with zero unresolved names
+and zero unmanifested headers; all eight assigned mismatches and four dependent Node records are
+clear. Builder7 already owns the active Spine follow-up. Global integrity is not claimed green on
+this newer floor.
+
+Neither compiler/source patches nor dependency pins change in this reconciliation. The historical
+SWF header result remains **2/6**, the five foreign compiler fixture errors remain separate, and no
+package tier or owner-family completion is claimed.
+
+Because the shared-runtime cleanup changed headers included by all six consumers, their six exact
+targets were rebuilt once at two workers on the `fa4846be` floor. The build passes and the subsequent
+CTest run passes **6/6** in **1.09 seconds**, including the real GL resize/readback and pooled-handle
+checks. The later `b723961b` base changes only compiler patches and request documentation; none of
+these native consumer inputs change, so no additional native or SDK run is made.
