@@ -724,3 +724,8 @@ The preceding 125/125 and raw-schema 586/586 results are historical focused proo
 they do not establish original public parser behavior. The approved single scoped
 Lottie run can now proceed in the confirmed slot, followed by original public
 consumer and exact-header measurement. No generated header changed in this fix.
+
+The incoming symbol-presence compiler patch advances the declared floor to 110.
+It clean-applies with this correction, passes the strict build and passes the
+103/103 focused tests without skips. These results are separate from the historical
+108/109 baseline comparison in the qualification record.

@@ -2,7 +2,7 @@
   "schema": "flight-cpp-json-assertion-scalar-row-qualification/1",
   "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
   "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
-  "compilerPatches": 109,
+  "compilerPatches": 110,
   "orderedApplyFromRawClean": "pass",
   "strictBuild": "pass",
   "focused": {
@@ -32,7 +32,8 @@
       "createCppCompilerBackend unwraps a proven-present optional property before receiver and structural assertion use"
     ],
     "newFailures": 0,
-    "coldControlsByteIdentical": 7
+    "coldControlsByteIdentical": 7,
+    "historicalFloor": "Measured fixed109 versus108 before incoming compiler-symbol-own-presence; retained unchanged evidence."
   },
   "nativeProbe": {
     "typeSource": "packages/types/src/LottieDocument.ts",
@@ -114,6 +115,9 @@
     "current109OrderedApply": "pass",
     "strictBuild": "pass",
     "privateJsonPreservation": "99/99 pass",
-    "backendParity": "same108 baseline27pass1fail; candidate27pass1fail;1576names/statuses identical"
+    "backendParity": "same108 baseline27pass1fail; candidate27pass1fail;1576names/statuses identical",
+    "current110OrderedApply": "pass",
+    "current110StrictBuild": "pass",
+    "current110Focused": "103/103 pass,0 skipped"
   }
 }
