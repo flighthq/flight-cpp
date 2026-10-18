@@ -496,3 +496,45 @@ Two shapes fit, and only these:
 Use 1 unless writing through a JSON-backed member must be refused at compile time; the approved read/write
 tests can be written against either, but not against a projection spliced into the reference-returning
 `row_get`.
+
+## Compiler-half design for the JSON scalar projection (G2, owner: builder6)
+
+Scope, per Manager: this lowers scalar member reads into `flight::JsonScalarCell`; it does not build a
+recursive materializer, copy a schema, or invent a null policy. Structured members are reported as remaining
+work, not closed by a blanket refusal.
+
+**The value.** `JSON.parse(source) as T` keeps the parsed object's identity: the asserted value is a structural
+row over the `JsonObject` owner (`detail::owner_for<JsonObject>`), not a `Ref<T>` cast. One runtime seam is
+required and nothing more: a way to construct `StructuralRef<Schema>` from that owner with no native subject
+(`StructuralRef` already supports owner-only rows; it needs a constructor/factory reachable for a
+`shared_ptr<JsonObject>`). Everything else the cell already provides.
+
+**Provenance.** Only a value whose origin is the assertion (or a local/parameter initialized from one) is
+JSON-backed. This is a binding-provenance set computed once per module, like the existing
+`privateJsonRecordProducerIds`: the assertion seeds it, assignment and direct initialization propagate it, and
+anything that escapes the analysis keeps its current lowering.
+
+**Reads.** A member read on a JSON-backed receiver whose declared member is a JavaScript scalar emits
+`flight::JsonScalarCell` built from the row's own presence:
+- no bound cell -> `JsonScalarCell{}` (missing, evaluates as undefined);
+- bound -> `JsonScalarCell{view.get(name)}` (present, value or explicit undefined).
+The cell is the value; nothing is coerced at the read.
+
+**Operations, by the operation the source writes (not by the declared type):**
+- `Number.isFinite(x)` / `Number.isNaN(x)` -> `cell.is_finite()` / `cell.is_nan()` (non-coercing);
+- unary `+x` / `-x` -> `cell.unary_plus()` / `cell.unary_minus()`;
+- arithmetic and relational operands -> `cell.to_number()` (ToNumber: null 0, absent NaN, string parse);
+- string concatenation/templates -> `cell.to_string()`;
+- `===` / `!==` -> `cell.strict_equals(other)`; `==` / `!=` -> `cell.loose_equals(other)`;
+- `??` / `?.` / truthiness -> `is_nullish()` / `to_boolean()`.
+
+**Escapes.** A JSON-backed value reaching a native `double` parameter, field, return or array element lowers to
+`cell.as_native_number()`, which converts only an actual number and otherwise raises the dedicated
+`NativeScalarEscapeError`. The cell has no implicit numeric conversion, so a site the lowering misses does not
+compile rather than silently coercing -- that is the negative control for "every escape is intercepted", and
+it must be covered by a native-parameter/return/array fixture, not only by the cell's own test.
+
+**Remaining after this cut.** Structured members of a JSON-backed value (`layers`, nested objects) are object
+and array reads, not scalars; they need a nested JSON row or their own explicit operation set. Until they are
+lowered, any header that reads one stays PARTIAL, and the 21-header count reports fully-faithful versus
+mismatch/structured partial separately.
