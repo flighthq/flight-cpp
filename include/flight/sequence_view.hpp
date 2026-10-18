@@ -213,10 +213,7 @@ class SequenceView {
   // deducing the element type from what the callback returns, so emitted code that works over an Array
   // works unchanged over a view. `detail::invoke_array_method_callback` is what makes a one-argument callback
   // acceptable too, which is the common case in emitted code.
-  // `Array.prototype.filter` over a read-only view, returning a real Array as JavaScript does. Like
-  // `flat_map` above, the view is untouched and the result is a new Array, so nothing depends on the view
-  // owning its elements. Mirrors `Array::filter` exactly, including the (element, index) callback pair and
-  // the arity adapter, so emitted code that filters an Array works unchanged on a view.
+  // Test the retained source in order, snapshotting length and short-circuiting on the first success.
   template <typename Predicate>
   [[nodiscard]] bool some(Predicate&& predicate) const {
     const size_type length = size();
@@ -228,6 +225,7 @@ class SequenceView {
     return false;
   }
 
+  // Filtering a view returns a fresh array while retaining its selected element handles.
   template <typename Predicate>
   [[nodiscard]] Array<Value> filter(Predicate&& predicate) const {
     Array<Value> result;
