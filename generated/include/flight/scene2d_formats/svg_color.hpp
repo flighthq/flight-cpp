@@ -93,7 +93,7 @@ inline std::optional<flight::Ref<flight::types::SvgColor>> parse_svg_color(fligh
   }
   std::optional<flight::RegExpExecArray> function_match = flight::RegExp(flight::String("^(rgba?|hsla?)\\((.*)\\)$"), flight::String("")).exec(normalized);
   if (function_match.has_value()) {
-    flight::Array<flight::String> components = function_match.value().element(2.0).split(flight::RegExp(flight::String("[\\s,/]+"), flight::String(""))).filter(flight::to_boolean);
+    flight::Array<flight::String> components = flight::regexp_capture_value(function_match.value().capture(2.0)).split(flight::RegExp(flight::String("[\\s,/]+"), flight::String(""))).filter(flight::to_boolean);
     if ((((function_match.value().element(1.0) == flight::String("rgb")) || (function_match.value().element(1.0) == flight::String("rgba"))) && (static_cast<double>(components.size()) >= 3.0))) {
       std::function<double(double)> component = flight::Function<double(double)>{[=](double index) {
   const flight::String text = components.element(index);

@@ -5472,7 +5472,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/svgDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./svgStyle.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
+      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/displayObject.ts",
       "stage": "dependency"
     },
     {
@@ -5490,13 +5490,6 @@
       "package": "@flighthq/scene2d-formats",
       "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts: contextual union value type flight::Ref<flight::types::Shape> is not a represented runtime domain: the value leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an alternative declares. This expression refers to an existing owner. Keep the value in the declared destination arm from the point it is created, or explicitly rebuild the declared result in source where changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a sibling owner.",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/scene2d-formats/src/svgGradient.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./svgStyle.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
-      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -5520,15 +5513,6 @@
       "package": "@flighthq/scene2d-formats",
       "reason": "dependency ./svgClip.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 41,
-      "module": "packages/scene2d-formats/src/svgStyle.ts",
-      "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",

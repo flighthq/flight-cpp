@@ -3046,6 +3046,11 @@
       "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
     },
     {
+      "name": "SvgGradient",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgGradient.ts"
+    },
+    {
       "name": "SvgRegistry",
       "packageName": "@flighthq/scene2d-formats",
       "source": "packages/scene2d-formats/src/svgRegistry.ts"
@@ -3054,6 +3059,11 @@
       "name": "SvgRequirements",
       "packageName": "@flighthq/scene2d-formats",
       "source": "packages/scene2d-formats/src/svgRequirements.ts"
+    },
+    {
+      "name": "SvgStyle",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgStyle.ts"
     },
     {
       "name": "SvgTransform",
@@ -26036,6 +26046,36 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SvgStyle",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgStyle.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgTransform",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgTransform.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgGradient",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgGradient.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "SvgRegistry",
           "packageName": "@flighthq/scene2d-formats",
           "source": "packages/scene2d-formats/src/svgRegistry.ts"
@@ -26049,16 +26089,6 @@
           "name": "SvgRequirements",
           "packageName": "@flighthq/scene2d-formats",
           "source": "packages/scene2d-formats/src/svgRequirements.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "SvgTransform",
-          "packageName": "@flighthq/scene2d-formats",
-          "source": "packages/scene2d-formats/src/svgTransform.ts"
         }
       ]
     },
@@ -324690,6 +324720,826 @@
           "access": "dependency-live",
           "binding": {
             "column": 3,
+            "fingerprint": "sha256:8c8f90b8dc41b7f44a4b835dd2aee8e49de37994ab96e62d1252bcfec32c6bd4",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",11]",
+            "kind": "import",
+            "name": "createGradientTransformMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createGradientTransformMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:584fea3990b8ec9d66868b35d503dafc6d7571c0c2f785078cf2ff2618eeb2de",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",44]",
+            "kind": "import",
+            "name": "createMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:06a8b1e5eb1a0c0f452aa367cb689848dd716a4e1576fb2b39c7266ea49c14c0",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",60]",
+            "kind": "import",
+            "name": "createRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Rectangle",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/rectangle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:568d9f7bab3abbfe16cc1ae624bd476d841142dd4c3b0d1e5de5af40516c8ec0",
+            "line": 5,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",79]",
+            "kind": "import",
+            "name": "inverseMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "inverseMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 7,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",141]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2224136691404d2c40adadc23f554790ac203e41a991e20dc9fbf670f80e628a",
+            "line": 8,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",220]",
+            "kind": "import",
+            "name": "clamp",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "clamp",
+            "kind": "dependency",
+            "module": {
+              "name": "Clamp",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/clamp.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e57c0d691a0d84ab9939d3e2b001f30f9279e2673ef00ef9ba9c606f3c1d370f",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",269]",
+            "kind": "import",
+            "name": "getPathBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getPathBounds",
+            "kind": "dependency",
+            "module": {
+              "name": "GetPathBounds",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/getPathBounds.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 19,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",477]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1737b2f651c26339a72ec1503ec2bfab316d6f6d3b0005460d5b1e95156bf1ff",
+            "line": 21,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",547]",
+            "kind": "import",
+            "name": "resolveSvgColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "resolveSvgColor",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgColor",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgColor.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2b318f52e182cf0ed3e7f81fc5f26617de0a218f16fb46bf4a9cbcd4f2341524",
+            "line": 22,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",596]",
+            "kind": "import",
+            "name": "parseStyleDeclarations",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseStyleDeclarations",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgStyle",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgStyle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 34,
+            "fingerprint": "sha256:282923efcb200a9b3b964abc7e372c95267f15ee0044a23b6ad36c1e1fb86bd1",
+            "line": 22,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",620]",
+            "kind": "import",
+            "name": "resolveSvgDefinitionStyle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "resolveSvgDefinitionStyle",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgStyle",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgStyle.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e58cb86373fa4c65a7e26e8b7e237a8005d2f53e3a18ef5c90fe9b828592302d",
+            "line": 23,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",679]",
+            "kind": "import",
+            "name": "multiplySvgMatrices",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "multiplySvgMatrices",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgTransform",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgTransform.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 31,
+            "fingerprint": "sha256:08a9c36f2f90410ffcc433f123b7123d12f07cc054824817357a07b7f683da60",
+            "line": 23,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",700]",
+            "kind": "import",
+            "name": "parseSvgTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgTransform",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgTransform",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgTransform.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a0a1e82daa17dc7174075cd98f65847bf97441a09b32dac395c106e95c4a7035",
+            "line": 24,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",755]",
+            "kind": "import",
+            "name": "svgAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 24,
+            "fingerprint": "sha256:f54bbfc6eb09c946bc7123710d943d41c950eeec3350a5668798141b2118c5fa",
+            "line": 24,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",769]",
+            "kind": "import",
+            "name": "svgLocalName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgLocalName",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 38,
+            "fingerprint": "sha256:6072beabeb702d3a4c7fc425eee27cbdeea75838cc3549dc384a4d5ec564fe43",
+            "line": 24,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",783]",
+            "kind": "import",
+            "name": "parseSvgCssNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgCssNumber",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 57,
+            "fingerprint": "sha256:54bcb3f592295c36a2ccecc5f2a4c904d35bec1c648e2df498404997a1ee5fda",
+            "line": 24,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",802]",
+            "kind": "import",
+            "name": "parseSvgCoordinate",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgCoordinate",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 77,
+            "fingerprint": "sha256:1c7730314b0e78b871dd2655e77cbd9ac5928ff2b32cf5f17e4c83dd0dc9f8c9",
+            "line": 24,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",822]",
+            "kind": "import",
+            "name": "parseUrlReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseUrlReference",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:55e82cf26640463e07e9f4f176a743591103825f50c49a160471ff5143630851",
+            "line": 26,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",879]",
+            "kind": "function",
+            "name": "createSvgGradientMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a0678ab8249c661f32c300c146d551bc8fa0af350eb68661c0588e94df2558d0",
+            "line": 87,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",4022]",
+            "kind": "function",
+            "name": "hasZeroAreaSvgGradientBox",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d1539ac4d7914d1ee566ab0aa642b03681b044b90b66a11a58090442d529ce5c",
+            "line": 104,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",5191]",
+            "kind": "function",
+            "name": "resolveSvgGradientTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:48fd3831c675da0138b9af237ef74c7225bcfd2f8748eca5212d4cf1a09ef2ae",
+            "line": 122,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",5841]",
+            "kind": "variable",
+            "name": "_gradientTransformScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9e26dfb0d2905ff98dcf221fe2110c73dd35ff02cffc2296ebfb0b3ac8b5b15d",
+            "line": 124,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",5902]",
+            "kind": "function",
+            "name": "parseSvgGradient",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:42bebab85b3fa5b74440a4e61352bdff12d8e3d623de435e205f1aa99122eb88",
+            "line": 197,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",9431]",
+            "kind": "function",
+            "name": "parseSvgOffset",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7b1519eb3d055b726d99b3aa98438c1ef9fcf79c9871748088c106ce708d4f1b",
+            "line": 204,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",9668]",
+            "kind": "function",
+            "name": "parseSvgSpreadMethod",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8f4d3f9c221b002a750106a580df633b233d2a383aee2e9aec44f1a9437b4a65",
+            "line": 208,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",9839]",
+            "kind": "function",
+            "name": "resolveSvgGradient",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "./svgColor.ts",
+          "target": {
+            "name": "SvgColor",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgColor.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "./svgStyle.ts",
+          "target": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "./svgTransform.ts",
+          "target": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "./svgXml.ts",
+          "target": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "importedNames": [
+            "createGradientTransformMatrix",
+            "createMatrix",
+            "inverseMatrix"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "importedNames": [
+            "createRectangle"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Rectangle",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/rectangle.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Clamp",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/clamp.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "GetPathBounds",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathBounds.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGradient",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGradient.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgGradient",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgGradient.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:48fd3831c675da0138b9af237ef74c7225bcfd2f8748eca5212d4cf1a09ef2ae",
+              "line": 122,
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgGradient.ts",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGradient.ts\",5841]",
+              "kind": "variable",
+              "name": "_gradientTransformScratch",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
             "fingerprint": "sha256:13ea8aeb741b7baea9778e58a4a4891697f694536d0455458d3d35be33d596af",
             "line": 2,
             "packageName": "@flighthq/path-formats",
@@ -325777,6 +326627,581 @@
           "path": [
             "declarations",
             0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2224136691404d2c40adadc23f554790ac203e41a991e20dc9fbf670f80e628a",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",9]",
+            "kind": "import",
+            "name": "clamp",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "clamp",
+            "kind": "dependency",
+            "module": {
+              "name": "Clamp",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/clamp.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a0a1e82daa17dc7174075cd98f65847bf97441a09b32dac395c106e95c4a7035",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",172]",
+            "kind": "import",
+            "name": "svgAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 24,
+            "fingerprint": "sha256:f54bbfc6eb09c946bc7123710d943d41c950eeec3350a5668798141b2118c5fa",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",186]",
+            "kind": "import",
+            "name": "svgLocalName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgLocalName",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 38,
+            "fingerprint": "sha256:6072beabeb702d3a4c7fc425eee27cbdeea75838cc3549dc384a4d5ec564fe43",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",200]",
+            "kind": "import",
+            "name": "parseSvgCssNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgCssNumber",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 57,
+            "fingerprint": "sha256:36de410d62998cddfb8510d17d3999ff28d8bea8dbf88abc01912e3489733cc6",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",219]",
+            "kind": "import",
+            "name": "parseSvgLength",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgLength",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 73,
+            "fingerprint": "sha256:568771c315682a12bd8fa9db2e87827ebc42fd95519b711abf63a4d4d42c4dd1",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",235]",
+            "kind": "import",
+            "name": "visitSvgElements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "visitSvgElements",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:a2c629e25ccfedaadc9ec4b7c7263f3f04739c87f66ee390daf28e23f325134a",
+            "line": 16,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",971]",
+            "kind": "variable",
+            "name": "defaultSvgStyle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f82f09d7a0c28ad83f4bd6f6343d2bd279c4f1ac2a9735641913ad789812e223",
+            "line": 41,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",1497]",
+            "kind": "function",
+            "name": "collectCssRules",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c8ca42ffccc3b53af0de7796a84960585f5d156e86732a42828e8eba5c95db99",
+            "line": 60,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",2294]",
+            "kind": "function",
+            "name": "getCssSelectorSpecificity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b801d826a9781ffaf442c70fb5c66468a35cbc1e965b039f31a599b4c5e22a26",
+            "line": 77,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",2822]",
+            "kind": "function",
+            "name": "matchesCssSelector",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2b318f52e182cf0ed3e7f81fc5f26617de0a218f16fb46bf4a9cbcd4f2341524",
+            "line": 89,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",3349]",
+            "kind": "function",
+            "name": "parseStyleDeclarations",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:282923efcb200a9b3b964abc7e372c95267f15ee0044a23b6ad36c1e1fb86bd1",
+            "line": 104,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",3857]",
+            "kind": "function",
+            "name": "resolveSvgDefinitionStyle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:674d12536af2f935f1ca6338117be076afea9ed8d1972318403887bdf1221f7d",
+            "line": 114,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",4380]",
+            "kind": "function",
+            "name": "resolveSvgStyle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:55d4bd5102d84799bc5624c92c3af5ef154bd2d03df8c35c0c381fb09d94466d",
+            "line": 172,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",7944]",
+            "kind": "function",
+            "name": "resolveSvgWinding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:6aa6b5d749515ac6c0681df78135af83db76bc16b967435b0fe337a4bd7c3737",
+            "line": 178,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",8145]",
+            "kind": "variable",
+            "name": "svgPresentationAttributes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "specifier": "./svgXml.ts",
+          "target": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Clamp",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/clamp.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "ImportDiagnostic"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ImportDiagnostic",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ImportDiagnostic.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "Matrix"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "Node2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "Rectangle"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Rectangle",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Rectangle.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "PathWinding",
+            "SpreadMethod"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "SvgDocumentImportOptions"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SvgDocumentImport",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SvgDocumentImport.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "SvgClipContext",
+            "SvgCssRule",
+            "SvgElementContext",
+            "SvgGradient",
+            "SvgImportContext",
+            "SvgRegistry",
+            "SvgStyle"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SvgRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SvgRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgStyle",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgStyle.ts"
+          },
+          "importedNames": [
+            "XmlElement"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "XmlElement",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/XmlElement.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgStyle",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgStyle.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:a2c629e25ccfedaadc9ec4b7c7263f3f04739c87f66ee390daf28e23f325134a",
+              "line": 16,
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgStyle.ts",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",971]",
+              "kind": "variable",
+              "name": "defaultSvgStyle",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:6aa6b5d749515ac6c0681df78135af83db76bc16b967435b0fe337a4bd7c3737",
+              "line": 178,
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgStyle.ts",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgStyle.ts\",8145]",
+              "kind": "variable",
+              "name": "svgPresentationAttributes",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            8
           ]
         }
       ]
