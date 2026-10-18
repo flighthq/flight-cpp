@@ -191,3 +191,21 @@ not executed as native discovery evidence. This arc changes only the sole failed
 worklist142 and this existing request appendix. C++, runtime, source/patches, repairs, overrides,
 manifests, counts/refusals/init/policy and pins remain unchanged; no native or generation rerun.
 No material enumeration/name lookup, ownership, traversal or native success claim is supplied.
+
+## The narrowing after the presence test (G2 cluster `missing-member-00139043`)
+
+The presence test is only half of the two-layer read. At Flight `a627849` / compiler `806d257`,
+`spineBinaryBoneTimelineHandler.ts` binds `const points = timeline.curves[i]` where `curves` is
+`(number[] | null)[]`, tests `points === null`, and then reads `points.length` and `points[v * 4]`.
+The emitter now tests the *inner* optional correctly, but the bound local keeps both layers
+(`std::optional<std::optional<flight::Array<double>>>`) and the guarded length/index reads unwrap
+one layer, leaving `std::optional<flight::Array<double>>` where `size()`/`element()` are called.
+
+After the guard the source value is known to be the engaged array, so the faithful reads are the
+same live array's `size()` and indexed element, with no copy, no fresh array and no discarded
+absence channel: the outer bounds layer is still what an unguarded read would report as undefined.
+This is the narrowing counterpart of the presence lowering above, and the same rule applies to
+every guarded read of a doubly optional element. Measured in the scoped `-j2` survey after the
+nullable-element lift landed: 8 Spine binary handlers fail on this first diagnostic, one bound
+local each, all pointing at `spine_binary_bone_timeline_handler.hpp:88`. Recorded as
+`missing-member-00139043` in [`generated/header-status.json`](../../generated/header-status.json).

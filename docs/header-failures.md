@@ -32,7 +32,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
-| 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
+| 6 | `other-52e846a6` | 2 pass / 17 advanced | ANIM | compiler *(landed)* | the nullable-element lift landed: the root binder and its clip caller compile, and the other 17 rows advanced to later causes (named-view/Record split, optional-element narrowing, retained refused calls) |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 11 | 2D, 3D, ANIM | compiler (shared fix qualified) | historical assignment labels after nine measured passes; remaining assigned headers have later blockers; three follow-ons unmeasured |
 | 9 | `static-cast-assertion-9674a66c` | 17 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
@@ -459,20 +459,26 @@ consumer tests numeric edge cases and resource/default/color semantics, and dete
 copied color assignment. Only `obj_material_helpers.hpp` and `shared.hpp` move to PASS. The other
 28 rows retain historical classifications and were not rerun; broader compiler debt remains open.
 
-### 6. `other-52e846a6` — 18 header(s)
+### 6. `other-52e846a6` — 18 header(s), resolved at the root; 17 advanced
 
 - cause: a nullable attachment array element (reference or null) is not lifted into the slot carrier that also admits undefined, so the conditional pairs `std::optional<Ref<Attachment2D>>` with `variant<Ref<Attachment2D>, Null, Undefined>`
 - lanes: ANIM
-- fix route: compiler
+- fix route: compiler *(landed)*
 - why this route: the conditional and assignment operate on standard-library carriers. A runtime helper, binding or declaration repair cannot add the conversion, and the cheap branch rewrite still needs it. An override would copy a partially refused module. Null and undefined must stay distinct.
 - first failure at: `flight/skeleton2d/skeleton2d_animation_target.hpp:217`
 - example: `incompatible operand types ('value_type' and 'variant<Ref<Attachment2D>, Null, Undefined>' )`
 
-- G2 check: **0/18 compile**, 18 failures and zero unattempted at `-j1`; every row retains the same root diagnostic.
-- Root: a nullable array element is not lifted into the slot's distinct reference/null/undefined carrier.
+- G2 check (before the fix): **0/18 compile**, 18 failures and zero unattempted at `-j1`; every row retained the same root diagnostic.
+- Root: a nullable array element was not lifted into the slot's distinct reference/null/undefined carrier.
+- Landed: source patch `compiler-nullable-element-dual-sentinel` lifts the indexed element through `Array::get(double)`'s outer/inner absences (array then index evaluated once; outer absent → undefined, engaged outer with empty inner → the element union's own sentinel, present → the same owner). The coordinated scoped regeneration of `@flighthq/skeleton2d` + `@flighthq/skeleton2d-formats` emitted the lift at the original site. The header also carried a retained call to the refused `getSkeleton2DAnimationTargetBinderRegistry`; the existing `declare-refused-function` repair now declares its exact emitted carrier (declaration only — the registry stays link-unusable), recorded in [retained declaration calls](compiler-requests/retained-declaration-calls-omitted-callee.md).
+- G2 measured after the fix — Clang 22.1.8, `-j2`, a scoped 38-header survey of the 26 changed headers plus this cluster:
+  - **2 pass**: `flight/skeleton2d/skeleton2d_animation_target.hpp` and `flight/skeleton2d/apply_animation_clip_to_skeleton_2d.hpp`.
+  - **17 advanced to later first diagnostics** and were re-clustered: 3 retained deform-binder calls (`undeclared-identifier-4056156c`), 1 retained draw-order-binder call (`undeclared-identifier-e07294a5`), 8 double-optional element length/index reads (`missing-member-00139043`), 3 NamedProperties→Record conversions (`other-41f4a462`), 2 NamedProperties pushes into an owning Record array (`call-has-no-matching-d42144f0`).
+  - Two adjacent headers advanced as well: `dragon_bones_full.hpp` from `undeclared-identifier-b90ed4db` to `other-41f4a462`, and `dragon_bones_requirements.hpp` from `no-viable-conversion-303c42f1` to `missing-member-05bee45d`; `spine_json_requirements.hpp` now compiles (`invalid-operands-4b19651b` retired).
+  - No changed header regressed: every header that compiled before this generation still compiles.
+- Public consumer: `tests/generated_skeleton2d_slot_attachment_test.cpp` includes the original installed header and calls `bind_skeleton_2d_slot_attachment` through a real step channel and slot. It passes at the same tree: a present element keeps its owner, a stored null selects null, `-1` and past-end indices select the source's null fallback, the sampled value is rounded before the read, a time before the first keyframe clamps to keyframe 0, empty times and absent (undefined/null) tables leave the slot untouched, and a non-Step track still steps.
+- Scope: **2/19 rows pass**; no claim that the cluster's 18 historical headers are consumable. The remaining roots are recorded above as their own causes.
 - Compiler request: [nullable array element into an optional-nullable slot](compiler-requests/nullable-array-element-into-dual-sentinel-slot.md).
-- The cheap branch-assignment source rewrite still emits an optional directly into the variant. No source patch, runtime change, repair or override is carried; the cluster remains open.
-- G2 link pass: the cluster entry now carries this request as its primary `compilerRequest` (the 18 rows already did), and each row records the measured site `skeleton2d_animation_target.hpp:217`. The measurement above was Clang 22.1.8 at `-j1`. No C++ changed, so nothing was recompiled.
 - compiler request: `docs/compiler-requests/nullable-array-element-into-dual-sentinel-slot.md`
 
 ### 7. `call-has-no-matching-47410fe2` — G2 recheck of 16 headers

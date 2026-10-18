@@ -52,7 +52,7 @@ inline flight::Ref<attachment_names_slots_8d720886328896ca> parse_spine_binary_s
     double i = 0.0;
     while ((i < count)) {
       {
-        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
+        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
           break;
         }
         const std::optional<flight::String> name = flight::skeleton2d_formats::read_spine_binary_string(reader);

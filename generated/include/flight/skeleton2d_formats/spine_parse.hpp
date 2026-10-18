@@ -91,7 +91,7 @@ inline std::optional<flight::Array<double>> resolve_spine_draw_order(flight::Any
         if ((slot_index < 0.0)) {
           return std::nullopt;
         }
-        moves.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>(flight::make_ref<offset_slot_index_78b23845efacf0f9>(offset_slot_index_78b23845efacf0f9{.offset = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(move->offset, 0.0), .slot_index = slot_index}))));
+        moves.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>(flight::make_ref<offset_slot_index_78b23845efacf0f9>(offset_slot_index_78b23845efacf0f9{.offset = flight::skeleton2d_formats::number_or_flight_value_function_number_u00004f_r_flight_source_be367fc7e9286d13(move->offset, 0.0), .slot_index = slot_index}))));
       }
     }
   }

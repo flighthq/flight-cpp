@@ -91,5 +91,28 @@ Measured: new `cppNullableElementDualSentinel.test.ts` 3 pass (guarded/unguarded
 with array-then-index order; undefined-only element to the Undefined arm while the explicit null
 fallback stays Null; optional destination stays direct); the patch applies at its stack position (all
 compiler patches in order, stacked build green); a runtime consumer proves `-0` reads element 0 with
-the same owner, fractional/NaN/past-end select Undefined, and a stored null selects Null. Scoped
-regeneration and the public timeline/slot consumer are pending a generation slot.
+the same owner, fractional/NaN/past-end select Undefined, and a stored null selects Null.
+
+Landed and measured downstream (Clang 22.1.8, compiler `806d257`, flight `a627849`, scoped
+`-j2`): the coordinated regeneration of `@flighthq/skeleton2d` + `@flighthq/skeleton2d-formats`
+emitted the lift verbatim at the original site, and
+`flight/skeleton2d/skeleton2d_animation_target.hpp` now compiles. The public consumer
+`tests/generated_skeleton2d_slot_attachment_test.cpp` includes the installed header and runs
+`bind_skeleton_2d_slot_attachment` over a real step channel and slot: a present element keeps its
+owner, a stored null selects null, `-1` and past-end indices select the source's own null fallback,
+rounding precedes the read, a pre-first-keyframe time clamps to keyframe 0, empty times and absent
+tables leave the slot untouched, and a non-Step track still steps.
+
+The same header carried one retained call to the refused
+`getSkeleton2DAnimationTargetBinderRegistry`, unrelated to this lift. The repository's
+`declare-refused-function` repair now declares its exact emitted carrier
+(`flight::Map<flight::String, Skeleton2DAnimationTargetBinder>`); the declaration adds no body, and
+the registry remains visibly unusable at link. That is header availability debt recorded in
+[retained declaration calls](retained-declaration-calls-omitted-callee.md), not a substitute for
+the refused lowering.
+
+The other 17 cluster rows still fail, at later first diagnostics that this fix exposed (retained
+deform/draw-order binder calls, double-optional element narrowing after a null guard,
+NamedProperties/Record carriers). They are recorded as their own causes in
+[`generated/header-status.json`](../../generated/header-status.json); this request fixes the indexed
+element lift and nothing else.

@@ -43,7 +43,7 @@ inline void consume_spine_binary_events(flight::Ref<flight::types::ByteReader> r
   const double count = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         flight::skeleton2d_formats::read_spine_binary_varint(reader);
         flight::skeleton2d_formats::read_spine_binary_varint(reader);
@@ -80,7 +80,7 @@ inline void skip_spine_binary_constraint_head(flight::Ref<flight::types::ByteRea
   const double bones = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < bones) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < bones) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       flight::skeleton2d_formats::read_spine_binary_varint(reader);
       (i += 1.0);
     }
@@ -91,7 +91,7 @@ inline void consume_spine_binary_ik_constraints(flight::Ref<flight::types::ByteR
   const double ik = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < ik) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < ik) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         skip_spine_binary_constraint_head(reader);
         flight::skeleton2d_formats::read_spine_binary_varint(reader);
@@ -122,7 +122,7 @@ inline void consume_spine_binary_transform_constraints(flight::Ref<flight::types
   const double transform = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < transform) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < transform) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         skip_spine_binary_constraint_head(reader);
         flight::skeleton2d_formats::read_spine_binary_varint(reader);
@@ -147,7 +147,7 @@ inline void consume_spine_binary_path_constraints(flight::Ref<flight::types::Byt
   const double path = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < path) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < path) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         skip_spine_binary_constraint_head(reader);
         flight::skeleton2d_formats::read_spine_binary_varint(reader);

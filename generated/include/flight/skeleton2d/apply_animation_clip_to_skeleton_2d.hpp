@@ -50,7 +50,7 @@ inline void apply_animation_clip_to_skeleton_2d(flight::StructuralRef<flight::Ro
           (i += 1.0);
           continue;
         }
-        bind.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>(channel)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(setup), pose, flight::Any::object(target.value()), time);
+        bind.value()(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>>(channel)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>>(setup), pose, flight::Any::object(target.value()), time);
       }
       (i += 1.0);
     }

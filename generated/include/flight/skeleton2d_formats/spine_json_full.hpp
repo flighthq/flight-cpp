@@ -26,7 +26,7 @@ using flight::types::Skeleton2DImport;
 inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_skeleton(flight::String json, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto registry = flight::skeleton2d_formats::create_spine_json_registry();
   flight::skeleton2d_formats::register_all_spine_json_handlers(registry);
-  return flight::skeleton2d_formats::parse_spine_skeleton_with_registry(json, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpineJsonRegistry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpineJsonRegistry>>>>(registry)), diagnostics);
+  return flight::skeleton2d_formats::parse_spine_skeleton_with_registry(json, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpineJsonRegistry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpineJsonRegistry>>>>(registry)), diagnostics);
 }
 
 } // namespace flight::skeleton2d_formats

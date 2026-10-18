@@ -37,7 +37,7 @@ inline T mark_spine_binary_overrun(flight::Ref<flight::types::ByteReader> reader
 }
 
 inline double read_spine_binary_byte(flight::Ref<flight::types::ByteReader> reader) {
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 1.0)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 1.0)) {
     return mark_spine_binary_overrun<double>(reader, 0.0);
   }
   return reader->view.get_uint8(reader->offset++);
@@ -48,7 +48,7 @@ inline bool read_spine_binary_boolean(flight::Ref<flight::types::ByteReader> rea
 }
 
 inline double read_spine_binary_float(flight::Ref<flight::types::ByteReader> reader) {
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 4.0)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 4.0)) {
     return mark_spine_binary_overrun<double>(reader, 0.0);
   }
   const double value = reader->view.get_float32(reader->offset, false);
@@ -57,7 +57,7 @@ inline double read_spine_binary_float(flight::Ref<flight::types::ByteReader> rea
 }
 
 inline double read_spine_binary_int(flight::Ref<flight::types::ByteReader> reader) {
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 4.0)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 4.0)) {
     return mark_spine_binary_overrun<double>(reader, 0.0);
   }
   const double value = reader->view.get_int32(reader->offset, false);
@@ -66,7 +66,7 @@ inline double read_spine_binary_int(flight::Ref<flight::types::ByteReader> reade
 }
 
 inline double read_spine_binary_unsigned_short(flight::Ref<flight::types::ByteReader> reader) {
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 2.0)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), 2.0)) {
     return mark_spine_binary_overrun<double>(reader, 0.0);
   }
   const double value = reader->view.get_uint16(reader->offset, false);
@@ -75,7 +75,7 @@ inline double read_spine_binary_unsigned_short(flight::Ref<flight::types::ByteRe
 }
 
 inline void skip_spine_binary_bytes(flight::Ref<flight::types::ByteReader> reader, double count) {
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), count)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), count)) {
     mark_spine_binary_overrun<double>(reader, 0.0);
     return;
   }
@@ -123,7 +123,7 @@ inline std::optional<flight::String> read_spine_binary_string(flight::Ref<flight
     return std::optional<flight::String>{flight::String("")};
   }
   const double length = (byte_count - 1.0);
-  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), length)) {
+  if (!has_spine_binary_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)), length)) {
     return ([&]() -> std::optional<flight::String> { (void)mark_spine_binary_overrun<flight::Null>(reader, flight::null); return std::nullopt; }());
   }
   const double start = (static_cast<double>(reader->view.byte_offset) + reader->offset);

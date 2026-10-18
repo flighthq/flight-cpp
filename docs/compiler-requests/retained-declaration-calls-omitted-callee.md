@@ -2287,3 +2287,39 @@ The marker, the retained call and the absent definition sit in the same header, 
 the signature's optional `overlay` carrier is the very absence channel the refusal names, so a declaration
 must not choose one. The refused `destroyGlRichTextData` (`cpp-reference-assertion-without-heritage`) and a
 `CanvasSurface` structural-reference assertion follow in the same header.
+
+## G2 site: the skeleton2d animation-target registry
+
+At flight-compiler `806d257`, `skeleton2dAnimationTarget.ts` refuses
+`getSkeleton2DAnimationTargetBinderRegistry` (its body builds a `Map` whose contextual value type is
+a union of the two concrete binder functions — `cpp-contextual-union-value-type-unrepresented`) while
+retaining `getSkeleton2DAnimationTargetBinder`, `getSkeleton2DAnimationTargetBinderKinds`,
+`registerSkeleton2DAnimationTargetBinder` and `unregisterSkeleton2DAnimationTargetBinder`, which all
+call the emitted symbol. All three witnesses hold in the same header.
+
+Declaration adopted (`skeleton2d-declare-refused-binder-registry` in
+`repairs/emission-repairs.json`), carrying the emitter's own result:
+
+```cpp
+flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder> get_skeleton_2d_animation_target_binder_registry();
+```
+
+With the nullable-element lift landed, this declaration is what lets
+`flight/skeleton2d/skeleton2d_animation_target.hpp` compile at all: the slot binder's public
+consumer (`tests/generated_skeleton2d_slot_attachment_test.cpp`) links and passes without calling
+the registry. Any call through the registry, or through the four wrappers, still fails to link — the
+registry is not supplied, stubbed or substituted. The repair expires when the refused function
+emits and its marker disappears.
+
+Two further retained calls surfaced behind the same fix and remain open:
+
+- `bindSkeleton2DDeformChannel`, called from the deform animation target
+  (`flight/skeleton2d/deform_animation_target_2d.hpp:76`); its three callers are
+  `undeclared-identifier-4056156c`.
+- `bindSkeleton2DDrawOrderChannel`, called from the draw-order animation target
+  (`flight/skeleton2d/skeleton2d_draw_order_target.hpp:148`), `undeclared-identifier-e07294a5`.
+- `collectDragonBonesSectionCounts`, called by the DragonBones requirement probe
+  (`flight/skeleton2d_formats/dragon_bones_requirements.hpp:22`), `missing-member-05bee45d`.
+
+No declaration is claimed for those three yet: their retained calls name parameter carriers that
+must be taken from the emitted call site itself, and the functions stay refused.

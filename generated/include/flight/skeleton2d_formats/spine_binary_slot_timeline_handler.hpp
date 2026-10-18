@@ -69,7 +69,7 @@ inline void add_spine_binary_attachment_channel(flight::Ref<flight::types::ByteR
   flight::Array<double> values = flight::Array<double>{};
   {
     double f = 0.0;
-    while (((f < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((f < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         times.push(flight::skeleton2d_formats::read_spine_binary_float(reader));
         const std::optional<flight::String> name = flight::skeleton2d_formats::read_spine_binary_string_reference(reader, strings);
@@ -124,7 +124,7 @@ inline flight::Ref<curves_times_values_1bed83e47a7a4148> read_spine_binary_color
   }
   {
     double f = 0.0;
-    while ((((f + 1.0) < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while ((((f + 1.0) < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         times.push(flight::skeleton2d_formats::read_spine_binary_float(reader));
         {
@@ -163,13 +163,13 @@ inline void skip_spine_binary_slot_timelines(flight::Ref<flight::types::SpineBin
   const double slots = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < slots) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < slots) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         flight::skeleton2d_formats::read_spine_binary_varint(reader);
         const double timelines = flight::skeleton2d_formats::read_spine_binary_varint(reader);
         {
           double j = 0.0;
-          while (((j < timelines) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+          while (((j < timelines) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
             {
               flight::skeleton2d_formats::tally(context->unregistered_timeline_counts, flight::types::spine_binary_timeline_kind->slot);
               const double type = flight::skeleton2d_formats::read_spine_binary_byte(reader);
@@ -177,7 +177,7 @@ inline void skip_spine_binary_slot_timelines(flight::Ref<flight::types::SpineBin
               if ((type == flight::skeleton2d_formats::spine_binary_slot_attachment)) {
                 {
                   double frame = 0.0;
-                  while (((frame < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+                  while (((frame < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
                     {
                       flight::skeleton2d_formats::skip_spine_binary_bytes(reader, 4.0);
                       flight::skeleton2d_formats::read_spine_binary_varint(reader);
@@ -211,18 +211,18 @@ inline void read_spine_binary_slot_timelines(flight::Ref<flight::types::SpineBin
   const double slots = flight::skeleton2d_formats::read_spine_binary_varint(reader);
   {
     double i = 0.0;
-    while (((i < slots) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < slots) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         const double slot_index = flight::skeleton2d_formats::read_spine_binary_varint(reader);
         const double timelines = flight::skeleton2d_formats::read_spine_binary_varint(reader);
         {
           double j = 0.0;
-          while (((j < timelines) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+          while (((j < timelines) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
             {
               const double type = flight::skeleton2d_formats::read_spine_binary_byte(reader);
               const double frame_count = flight::skeleton2d_formats::read_spine_binary_varint(reader);
               if ((type == flight::skeleton2d_formats::spine_binary_slot_attachment)) {
-                add_spine_binary_attachment_channel(reader, context->channels, strings, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>> { auto contextual_union_source = setup; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>(contextual_union_source.value()))}; }()), slot_index, frame_count);
+                add_spine_binary_attachment_channel(reader, context->channels, strings, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>> { auto contextual_union_source = setup; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>(contextual_union_source.value()))}; }()), slot_index, frame_count);
                 {
                   (j += 1.0);
                   continue;

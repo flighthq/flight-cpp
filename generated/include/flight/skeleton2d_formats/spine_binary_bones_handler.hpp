@@ -55,7 +55,7 @@ inline flight::Array<flight::Ref<flight::types::Bone2D>> parse_spine_binary_bone
     double i = 0.0;
     while ((i < count)) {
       {
-        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
+        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
           break;
         }
         const std::optional<flight::String> name = flight::skeleton2d_formats::read_spine_binary_string(reader);

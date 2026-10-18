@@ -67,7 +67,7 @@ inline void skip_spine_binary_curve_frames(flight::Ref<flight::types::ByteReader
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, (4.0 + payload_bytes));
   {
     double f = 0.0;
-    while ((((f + 1.0) < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while ((((f + 1.0) < frame_count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         flight::skeleton2d_formats::skip_spine_binary_bytes(reader, (4.0 + payload_bytes));
         skip_spine_binary_curve_tag(reader, curve_values);

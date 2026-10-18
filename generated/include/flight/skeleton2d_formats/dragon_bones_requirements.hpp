@@ -29,7 +29,7 @@ inline flight::Ref<flight::types::RequirementSet> parse_dragon_bones_requirement
     for (const auto& [for_of_key, for_of_value] : counts.value()) {
       static_cast<void>(for_of_value);
       auto kind = for_of_key;
-      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(dragonbones_requirement_key_namespace) + flight::String(".") + flight::to_string(kind) + flight::String("")}))));
+      requirements.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>(flight::make_ref<flight::types::Requirement>(flight::types::Requirement{.facet = flight::types::requirement_facet->document_format, .key = flight::String("") + flight::to_string(dragonbones_requirement_key_namespace) + flight::String(".") + flight::to_string(kind) + flight::String("")}))));
     }
   }
   return flight::requirement::create_requirement_set(flight::Array<flight::types::RequirementFacet>{flight::types::requirement_facet->document_format}, requirements);

@@ -83,7 +83,7 @@ inline flight::Array<std::optional<flight::String>> read_spine_binary_string_tab
   flight::Array<std::optional<flight::String>> strings = flight::Array<std::optional<flight::String>>{};
   {
     double i = 0.0;
-    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       strings.push(flight::skeleton2d_formats::read_spine_binary_string(reader));
       (i += 1.0);
     }
@@ -105,7 +105,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_s
   auto reader = flight::skeleton2d_formats::create_spine_binary_reader(bytes);
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, flight::skeleton2d_formats::spine_binary_hash_bytes);
   const std::optional<flight::String> version = flight::skeleton2d_formats::read_spine_binary_string(reader);
-  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
+  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
     const double byte_count = static_cast<double>(bytes.byte_length);
     flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, byte_count}}};
     flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("spine.binary-header-unreadable"), flight::String("parseSpineSkeletonBinary"), detail);
@@ -140,7 +140,7 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_s
   }
   dispatch_spine_binary_section(context, flight::types::spine_binary_section_kind->events, flight::skeleton2d_formats::skip_spine_binary_events_section);
   dispatch_spine_binary_section(context, flight::types::spine_binary_section_kind->animations, flight::skeleton2d_formats::skip_spine_binary_animations_section);
-  if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
+  if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
     const double bone_count = static_cast<double>(context->bones.size());
     const double slot_count = static_cast<double>(context->slots.size());
     flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bones"), std::variant<bool, double, flight::String>{std::in_place_type<double>, bone_count}}, {flight::String("slots"), std::variant<bool, double, flight::String>{std::in_place_type<double>, slot_count}}};

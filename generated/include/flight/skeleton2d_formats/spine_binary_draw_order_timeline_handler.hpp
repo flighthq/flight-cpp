@@ -51,22 +51,22 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DDrawOrderTimeline>> co
   flight::Array<double> orderings = flight::Array<double>{};
   {
     double i = 0.0;
-    while (((i < frames) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+    while (((i < frames) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
       {
         const double time = flight::skeleton2d_formats::read_spine_binary_float(reader);
         const double offsets = flight::skeleton2d_formats::read_spine_binary_varint(reader);
         flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>> moves = flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>>{};
         {
           double j = 0.0;
-          while (((j < offsets) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
+          while (((j < offsets) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))))) {
             {
               const double slot_index = flight::skeleton2d_formats::read_spine_binary_varint(reader);
-              moves.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>(flight::make_ref<offset_slot_index_78b23845efacf0f9>(offset_slot_index_78b23845efacf0f9{.offset = flight::skeleton2d_formats::read_spine_binary_varint(reader), .slot_index = slot_index}))));
+              moves.push(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<offset_slot_index_78b23845efacf0f9>>>>(flight::make_ref<offset_slot_index_78b23845efacf0f9>(offset_slot_index_78b23845efacf0f9{.offset = flight::skeleton2d_formats::read_spine_binary_varint(reader), .slot_index = slot_index}))));
             }
             (j += 1.0);
           }
         }
-        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
+        if (flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader)))) {
           break;
         }
         std::optional<flight::Array<double>> ordering = flight::skeleton2d_formats::resolve_spine_draw_ordering(moves, slot_count);

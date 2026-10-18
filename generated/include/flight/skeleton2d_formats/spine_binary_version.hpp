@@ -51,11 +51,11 @@ inline bool is_version_shaped(flight::String value) {
 inline std::optional<flight::String> read_spine_binary_version_v3(flight::Uint8Array bytes) {
   auto reader = flight::skeleton2d_formats::create_spine_binary_reader(bytes);
   const std::optional<flight::String> hash = flight::skeleton2d_formats::read_spine_binary_string(reader);
-  if (((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !hash.has_value()) || !is_printable_ascii(hash.value()))) {
+  if (((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !hash.has_value()) || !is_printable_ascii(hash.value()))) {
     return std::nullopt;
   }
   const std::optional<flight::String> version = flight::skeleton2d_formats::read_spine_binary_string(reader);
-  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
+  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
     return std::nullopt;
   }
   return (is_version_shaped(version.value()) ? std::optional<flight::String>{version.value()} : std::nullopt);
@@ -65,7 +65,7 @@ inline std::optional<flight::String> read_spine_binary_version_v4(flight::Uint8A
   auto reader = flight::skeleton2d_formats::create_spine_binary_reader(bytes);
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, spine_binary_v4_hash_bytes);
   const std::optional<flight::String> version = flight::skeleton2d_formats::read_spine_binary_string(reader);
-  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
+  if ((flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(reader))) || !version.has_value())) {
     return std::nullopt;
   }
   return (is_version_shaped(version.value()) ? std::optional<flight::String>{version.value()} : std::nullopt);

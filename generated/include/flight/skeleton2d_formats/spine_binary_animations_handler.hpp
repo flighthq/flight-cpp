@@ -69,7 +69,7 @@ inline flight::Array<flight::Ref<flight::types::Skeleton2DImportAnimation>> cons
   auto unregistered = flight::Map<flight::String, double>();
   {
     double i = 0.0;
-    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(section->reader))))) {
+    while (((i < count) && !flight::skeleton2d_formats::is_spine_binary_reader_overrun(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ByteReader>>>>(section->reader))))) {
       {
         const std::optional<flight::String> name = flight::skeleton2d_formats::read_spine_binary_string(section->reader);
         flight::skeleton2d_formats::read_spine_binary_varint(section->reader);
