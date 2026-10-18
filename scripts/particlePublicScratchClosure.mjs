@@ -1,4 +1,4 @@
-// Re-emit original registration and the diagnostic pair into an explicit scratch overlay.
+// Re-emit original registration and diagnostics against actual frozen original parser providers.
 // This does not run SDK generation or write an installed inventory.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -24,13 +24,13 @@ fs.mkdirSync(scratch, { recursive: true });
 const hash = input => createHash('sha256').update(input).digest('hex');
 const backendUrl = pathToFileURL(path.resolve(args['--compiler']));
 const { createCppCompilerBackend } = await import(backendUrl);
-const { lowerTypeScriptSource } = await import(new URL('../../compiler-semantic/src/index.js', backendUrl));
+const { lowerTypeScriptSource, lowerTypeScriptSources } = await import(new URL('../../compiler-semantic/src/index.js', backendUrl));
 const { default: ts } = await import(pathToFileURL(path.resolve(args['--typescript'])));
 const input = fs.readFileSync(path.resolve(args['--context']));
 const context = JSON.parse(input);
 
-// Preserve the qualified original project graph, including its semantic evidence and helper
-// identities. Re-lowering a different project is a separate generation input, not this closure.
+// Preserve qualified registration evidence. Refresh original dependency declarations so helper
+// identities reflect their later approved source patches; providers remain the actual normal output.
 const qualified = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/particle-named-result-view.json')));
 assert.equal(hash(input), qualified.originalSavedGraph.sha256, 'use the qualified original graph');
 const patch = 'source-patches/particle-codec-document-result-owned-view.patch';
@@ -44,17 +44,50 @@ assert.equal(applied.status, 0, applied.stderr);
 const lowered = lowerTypeScriptSource(ts.createSourceFile('/flight/' + codec, fs.readFileSync(destination, 'utf8'), ts.ScriptTarget.Latest, true), { packageName: '@flighthq/types', upstreamDirectory: '/flight' });
 assert.deepEqual(lowered.diagnostics, []);
 context.modules = context.modules.map(module => module.source === codec ? lowered.module : module);
+const originalRegistration = context.modules.find(module => module.source.endsWith('/registerBuiltInParticleFormats.ts'));
+const baselineRegistration = createCppCompilerBackend().createEmissionSession(context).emitModule(originalRegistration)[0].contents;
+const parserSources = ['packages/particles-formats/src/libgdxParse.ts', 'packages/particles-formats/src/particleDesignerParse.ts'];
+// These two modules acquired declared source patches after the saved graph. Derive their
+// complete original modules from the normal project semantic pass, without changing any IR body.
+const sourcePaths = new Set(context.modules.map(module => module.source));
+const projectRoot = path.join(scratch, 'project');
+for (const module of context.modules) {
+  const file = path.join(projectRoot, module.source); fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.copyFileSync(path.join(root, '.dependencies/flight', module.source), file);
+}
+const sourcePatches = [];
+for (const entry of JSON.parse(fs.readFileSync(path.join(root, 'source-patches/manifest.json'))).patches) {
+  if (entry.dependency !== 'flight') continue;
+  const patchFile = path.join(root, 'source-patches', entry.patch), bytes = fs.readFileSync(patchFile);
+  const paths = [...bytes.toString().matchAll(/^\+\+\+ b\/(.+)$/gm)].map(match => match[1]).filter(file => sourcePaths.has(file));
+  if (!paths.length) continue;
+  const result = spawnSync('git', ['apply', ...paths.map(file => '--include=' + file), patchFile], { cwd: projectRoot, encoding: 'utf8' });
+  assert.equal(result.status, 0, entry.patch + ': ' + result.stderr);
+  sourcePatches.push({ file: entry.patch, sha256: hash(bytes), paths });
+}
+const project = lowerTypeScriptSources(context.modules.map(module => ({
+  packageName: module.packageName, upstreamDirectory: '/flight',
+  sourceFile: ts.createSourceFile('/flight/' + module.source, fs.readFileSync(path.join(projectRoot, module.source), 'utf8'), ts.ScriptTarget.Latest, true),
+})), context.moduleResolution, { profileTypeNames: context.options.externalBindings.bindings.filter(binding => binding.space === 'type').map(binding => binding.sourceName) });
+const refreshedParsers = project.filter(result => parserSources.includes(result.module.source));
+assert.equal(refreshedParsers.length, 2);
+refreshedParsers.forEach(result => assert.deepEqual(result.diagnostics, []));
+context.modules = project.map(result => result.module.source === originalRegistration.source ? originalRegistration : result.module);
 const freshContext = JSON.stringify(context);
 const freshContextPath = path.join(scratch, 'context.json');
 fs.writeFileSync(freshContextPath, freshContext);
 const selected = context.modules.filter(module => module.source === 'packages/particles-formats/src/registerBuiltInParticleFormats.ts' || diagnosticSources.includes(module.source));
-assert.equal(selected.length, 3, 'complete original registration module plus the original diagnostic pair');
-assert.equal(hash(JSON.stringify(selected.find(module => module.packageName === '@flighthq/particles-formats'))), qualified.originalSavedGraph.registration.sourceModuleIrSha256);
-const sources = selected.map(module => ({ file: module.source, rawSha256: hash(fs.readFileSync(path.join(root, '.dependencies/flight', module.source))) }));
+assert.equal(selected.length, 3, 'complete original registration and diagnostic pair');
+const registration = selected.find(module => module.source.endsWith('/registerBuiltInParticleFormats.ts'));
+assert.equal(hash(JSON.stringify(registration)), qualified.originalSavedGraph.registration.sourceModuleIrSha256);
+const sources = [...selected, ...refreshedParsers.map(result => result.module)].map(module => ({ file: module.source, rawSha256: hash(fs.readFileSync(path.join(root, '.dependencies/flight', module.source))), patchedSha256: hash(fs.readFileSync(path.join(projectRoot, module.source))) }));
 const session = createCppCompilerBackend().createEmissionSession(context);
 const emitted = selected.flatMap(module => session.emitModule(module).map(file => ({ ...file, source: module.source, moduleIrSha256: hash(JSON.stringify(module)) })));
 assert.equal(emitted.length, 3);
 for (const file of emitted) assert.ok(!file.contents.includes('NOT GENERATED'), file.path + ' contains an omitted body');
+const normalizeHelpers = text => text.replaceAll(/_flight_readonly_options_[a-f0-9]+/g, '_flight_readonly_options_HASH');
+const registrationFile = emitted.find(file => file.source === registration.source);
+assert.equal(hash(normalizeHelpers(registrationFile.contents)), hash(normalizeHelpers(baselineRegistration)), 'refreshing original parsers must only change generated helper identities in registration');
 
 // Check the independently supplied original pair against this exact emission session, rather
 // than treating another compiler's patch count as proof of an identical declaration floor.
@@ -99,16 +132,19 @@ const canonicalProviders = providers.filter(file => file.path.startsWith('flight
 const aliases = aliasDuplicateStructuralStructs([...canonicalProviders, ...emitted], packageGraph);
 const includes = canonicalizeGeneratedIncludes([...providers.map(file => ({ path: file.path, contents: '' })), ...emitted]);
 providers.forEach((file, index) => assert.equal(hash(file.contents), providerHashes[index], 'scratch repair changed an installed provider: ' + file.path));
+const helperCalls = [...new Set([...registrationFile.contents.matchAll(/\b([a-z_]+_flight_readonly_options_[a-f0-9]+)\(/g)].map(match => match[1]))];
+assert.equal(helperCalls.length, 8);
+for (const helper of helperCalls) assert.ok([...providers, ...emitted].some(file => file !== registrationFile && file.contents.includes(' ' + helper + '(')), 'missing original parser helper: ' + helper);
 for (const file of emitted) {
   const destination = path.join(scratch, 'include', file.path);
   fs.mkdirSync(path.dirname(destination), { recursive: true }); fs.writeFileSync(destination, file.contents);
 }
 const report = {
   normalSdk: false, inventoryWritten: false,
-  scope: 'Complete original registration module and diagnostic type/collector emitted in one current compiler session, over unchanged original headers from the completed normal run; existing declared repairs only. Full public consumer scratch closure, with no installed header or package promotion.',
+  scope: 'Complete original registration and diagnostic type/collector emitted in one current compiler session, over unchanged original headers from the completed normal run. Original dependency declarations include their declared source patches; all eight helper calls must resolve to actual original provider definitions. Existing declared repairs only; no parser body replacement, installed header or package promotion.',
   runtimeCommit: spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout.trim(),
   compilerBackendSha256: hash(fs.readFileSync(path.resolve(args['--compiler']))),
-  inputContextSha256: hash(input), freshContextSha256: hash(freshContext), originalRegistrationIrUnchanged: true, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
+  inputContextSha256: hash(input), freshContextSha256: hash(freshContext), originalRegistrationIrUnchanged: true, registrationChangesOnlyGeneratedHelperIdentities: true, helperCalls, sourcePatches, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
   suppliedProvenance, diagnosticParity, repairs, aliases, canonicalIncludes: includes,
   files: emitted.map((file, index) => ({ ...raw[index], sha256: hash(file.contents) })),
   frozenProviders: providers.map((file, index) => ({ file: file.path, sha256: providerHashes[index] })),
