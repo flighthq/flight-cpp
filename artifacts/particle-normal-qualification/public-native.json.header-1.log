@@ -1,0 +1,193 @@
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:9:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:41:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/spine_parse.hpp:40:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  183 |   if ((seg->f == 0.0)) {
+      |        ~~~~~~~^~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: note: remove extraneous parentheses around the comparison to silence this warning
+  183 |   if ((seg->f == 0.0)) {
+      |       ~       ^     ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:183:15: note: use '=' to turn this equality comparison into an assignment
+  183 |   if ((seg->f == 0.0)) {
+      |               ^~
+      |               =
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+  194 |   if ((seg->f == 0.0)) {
+      |        ~~~~~~~^~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: note: remove extraneous parentheses around the comparison to silence this warning
+  194 |   if ((seg->f == 0.0)) {
+      |       ~       ^     ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles/curve.hpp:194:15: note: use '=' to turn this equality comparison into an assignment
+  194 |   if ((seg->f == 0.0)) {
+      |               ^~
+      |               =
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:9:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:45:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'
+  312 |     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("unity.module-unsupported"), flight::String("collectUnityDiagnostics"), ([&]() { flight::Record<flight::String, std::variant<bool, double, flight::String>> record_construction = {}; auto record_construction_key = flight::String("module"); auto record_construction_value = std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, module}; record_construction.set(record_construction_key, record_construction_value); return flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>(record_construction); }()));
+      |                                                                                                                                                                                                                                                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:904:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'const optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &' for 1st argument
+  904 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(const optional&) = default;
+      |                                   ^        ~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:905:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &&' for 1st argument
+  905 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(optional&&)      = default;
+      |                                   ^        ~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:906:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'nullopt_t' for 1st argument
+  906 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(nullopt_t) noexcept {}
+      |                                   ^        ~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:922:35: note: candidate template ignored: requirement 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>::_CheckOptionalArgsConstructor::__enable_implicit()' was not satisfied [with _Up = flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>]
+  922 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(_Up&& __v)
+      |                                   ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:940:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  940 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(const optional<_Up>& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:958:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  958 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(optional<_Up>&& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:912:44: note: explicit constructor is not a candidate
+  912 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_InPlaceT, _Args&&... __args)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:931:44: note: explicit constructor is not a candidate
+  931 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_Up&& __v)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:948:64: note: explicit constructor is not a candidate
+  948 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(const optional<_Up>& __v)
+      |                                                                ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:966:64: note: explicit constructor is not a candidate
+  966 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(optional<_Up>&& __v)
+      |                                                                ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/importdiagnostics/import_diagnostic_collector.hpp:24:303: note: passing argument to parameter 'detail' here
+   24 | inline void report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> sink, flight::types::ImportDiagnosticSeverity severity, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> detail = std::nullopt) {
+      |                                                                                                                                                                                                                                                                                                               ^
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:9:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:45:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'
+  317 |     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("unity.extra-bursts-unsupported"), flight::String("collectUnityDiagnostics"), ([&]() { flight::Record<flight::String, std::variant<bool, double, flight::String>> record_construction_2 = {}; auto record_construction_key_2 = flight::String("burstCount"); auto record_construction_value_2 = std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(bursts.array_size())}; record_construction_2.set(record_construction_key_2, record_construction_value_2); return flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>(record_construction_2); }()));
+      |                                                                                                                                                                                                                                                                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:904:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'const optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &' for 1st argument
+  904 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(const optional&) = default;
+      |                                   ^        ~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:905:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &&' for 1st argument
+  905 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(optional&&)      = default;
+      |                                   ^        ~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:906:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'nullopt_t' for 1st argument
+  906 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(nullopt_t) noexcept {}
+      |                                   ^        ~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:922:35: note: candidate template ignored: requirement 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>::_CheckOptionalArgsConstructor::__enable_implicit()' was not satisfied [with _Up = flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>]
+  922 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(_Up&& __v)
+      |                                   ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:940:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  940 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(const optional<_Up>& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:958:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  958 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(optional<_Up>&& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:912:44: note: explicit constructor is not a candidate
+  912 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_InPlaceT, _Args&&... __args)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:931:44: note: explicit constructor is not a candidate
+  931 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_Up&& __v)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:948:64: note: explicit constructor is not a candidate
+  948 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(const optional<_Up>& __v)
+      |                                                                ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:966:64: note: explicit constructor is not a candidate
+  966 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(optional<_Up>&& __v)
+      |                                                                ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/importdiagnostics/import_diagnostic_collector.hpp:24:303: note: passing argument to parameter 'detail' here
+   24 | inline void report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> sink, flight::types::ImportDiagnosticSeverity severity, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> detail = std::nullopt) {
+      |                                                                                                                                                                                                                                                                                                               ^
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:9:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:45:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'
+  323 |       flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("unity.shape-unsupported"), flight::String("collectUnityDiagnostics"), ([&]() { flight::Record<flight::String, std::variant<bool, double, flight::String>> record_construction_3 = {}; auto record_construction_key_3 = flight::String("shapeType"); auto record_construction_value_3 = std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, shape_type}; record_construction_3.set(record_construction_key_3, record_construction_value_3); return flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>(record_construction_3); }()));
+      |                                                                                                                                                                                                                                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:904:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'const optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &' for 1st argument
+  904 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(const optional&) = default;
+      |                                   ^        ~~~~~~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:905:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> &&' for 1st argument
+  905 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(optional&&)      = default;
+      |                                   ^        ~~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:906:35: note: candidate constructor not viable: no known conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'nullopt_t' for 1st argument
+  906 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(nullopt_t) noexcept {}
+      |                                   ^        ~~~~~~~~~
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:922:35: note: candidate template ignored: requirement 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>::_CheckOptionalArgsConstructor::__enable_implicit()' was not satisfied [with _Up = flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>]
+  922 |   _LIBCPP_HIDE_FROM_ABI constexpr optional(_Up&& __v)
+      |                                   ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:940:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  940 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(const optional<_Up>& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:958:55: note: candidate template ignored: could not match 'optional' against 'flight::ReadonlyRecordView'
+  958 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 optional(optional<_Up>&& __v)
+      |                                                       ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:912:44: note: explicit constructor is not a candidate
+  912 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_InPlaceT, _Args&&... __args)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:931:44: note: explicit constructor is not a candidate
+  931 |   _LIBCPP_HIDE_FROM_ABI constexpr explicit optional(_Up&& __v)
+      |                                            ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:948:64: note: explicit constructor is not a candidate
+  948 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(const optional<_Up>& __v)
+      |                                                                ^
+/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/python/ziglang/lib/libcxx/include/optional:966:64: note: explicit constructor is not a candidate
+  966 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit optional(optional<_Up>&& __v)
+      |                                                                ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/importdiagnostics/import_diagnostic_collector.hpp:24:303: note: passing argument to parameter 'detail' here
+   24 | inline void report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> sink, flight::types::ImportDiagnosticSeverity severity, flight::String kind, flight::String origin, std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>> detail = std::nullopt) {
+      |                                                                                                                                                                                                                                                                                                               ^
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:9:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/contract.hpp:17:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:46:
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+   63 |   if ((low == high)) {
+      |        ~~~~^~~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: note: remove extraneous parentheses around the comparison to silence this warning
+   63 |   if ((low == high)) {
+      |       ~    ^      ~
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_serialize.hpp:63:12: note: use '=' to turn this equality comparison into an assignment
+   63 |   if ((low == high)) {
+      |            ^~
+      |            =
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:3:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/include/flight/runtime.hpp:40:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/include/flight/readonly_record_view.hpp:11:
+/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::PixiParseResult>': structural reference source has an incompatible object type
+  492 |     static_assert(dependent_false<Type>, "structural reference source has an incompatible object type");
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:1615:30: note: in instantiation of function template specialization 'flight::detail::flatten_ref<flight::types::config_diagnostics_c75f552162a3a41d, flight::types::PixiParseResult>' requested here
+ 1615 |     auto flattened = detail::flatten_ref<object_type>(std::move(object));
+      |                              ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:223:735: note: in instantiation of function template specialization 'flight::StructuralRef<flight::RowRequired<flight::RowOf<std::shared_ptr<flight::types::config_diagnostics_c75f552162a3a41d>>>>::StructuralRef<flight::types::PixiParseResult>' requested here
+  223 | }}, .parse_to_config = [](flight::String contextual_callable_argument0_4, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1) -> flight::Ref<flight::types::ParticleEmitterConfig> { return flight::particles_formats::parse_pixi_particle(contextual_callable_argument0_4); }, .parse_to_document = [](flight::String contextual_callable_argument0_5, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1_2) -> flight::StructuralRef<flight::RowRequired<flight::RowOf<flight::Ref<config_diagnostics_c75f552162a3a41d>>>> { return flight::particles_formats::parse_pixi_particle_document(contextual_callable_argument0_5); }})), flight::row_field<flight::RowKey<"kind">>(flight::types::pixi_particle_format_kind));
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+In file included from /tmp/particle-public-native-pwS66R/header-1.cpp:1:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/_internal_index.hpp:3:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/include/flight/runtime.hpp:40:
+In file included from /tmp/builder3-particles-normal-80qnsivq/repo/include/flight/readonly_record_view.hpp:11:
+/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::SpineParseResult>': structural reference source has an incompatible object type
+  492 |     static_assert(dependent_false<Type>, "structural reference source has an incompatible object type");
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:1615:30: note: in instantiation of function template specialization 'flight::detail::flatten_ref<flight::types::config_diagnostics_c75f552162a3a41d, flight::types::SpineParseResult>' requested here
+ 1615 |     auto flattened = detail::flatten_ref<object_type>(std::move(object));
+      |                              ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:738: note: in instantiation of function template specialization 'flight::StructuralRef<flight::RowRequired<flight::RowOf<std::shared_ptr<flight::types::config_diagnostics_c75f552162a3a41d>>>>::StructuralRef<flight::types::SpineParseResult>' requested here
+  258 | }}, .parse_to_config = [](flight::String contextual_callable_argument0_6, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1_3) -> flight::Ref<flight::types::ParticleEmitterConfig> { return flight::particles_formats::parse_spine_particle(contextual_callable_argument0_6); }, .parse_to_document = [](flight::String contextual_callable_argument0_7, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1_4) -> flight::StructuralRef<flight::RowRequired<flight::RowOf<flight::Ref<config_diagnostics_c75f552162a3a41d>>>> { return flight::particles_formats::parse_spine_particle_document(contextual_callable_argument0_7); }, .serialize = std::optional<std::function<flight::Ref<flight::types::ParticleSerializeResult>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> contextual_callable_argument0_8) -> flight::Ref<flight::types::ParticleSerializeResult> { return flight::particles_formats::serialize_spine_particle_document(contextual_callable_argument0_8, std::nullopt); }}})), flight::row_field<flight::RowKey<"kind">>(flight::types::spine_particle_format_kind));
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:1037: note: unnamed type used in template argument was declared here
+  258 | }}, .parse_to_config = [](flight::String contextual_callable_argument0_6, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1_3) -> flight::Ref<flight::types::ParticleEmitterConfig> { return flight::particles_formats::parse_spine_particle(contextual_callable_argument0_6); }, .parse_to_document = [](flight::String contextual_callable_argument0_7, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> contextual_callable_argument1_4) -> flight::StructuralRef<flight::RowRequired<flight::RowOf<flight::Ref<config_diagnostics_c75f552162a3a41d>>>> { return flight::particles_formats::parse_spine_particle_document(contextual_callable_argument0_7); }, .serialize = std::optional<std::function<flight::Ref<flight::types::ParticleSerializeResult>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> contextual_callable_argument0_8) -> flight::Ref<flight::types::ParticleSerializeResult> { return flight::particles_formats::serialize_spine_particle_document(contextual_callable_argument0_8, std::nullopt); }}})), flight::row_field<flight::RowKey<"kind">>(flight::types::spine_particle_format_kind));
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:1037: note: unnamed type used in template argument was declared here
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:1037: note: unnamed type used in template argument was declared here
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:1037: note: unnamed type used in template argument was declared here
+/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258:1037: note: unnamed type used in template argument was declared here
+3 warnings and 5 errors generated.

@@ -1,0 +1,2414 @@
+{
+  "status": "partial-blocked",
+  "normalSdk": {
+    "run": {
+      "actualStart": "2026-10-18T18:18:26.225785+00:00",
+      "pid": 339336,
+      "command": [
+        "npm",
+        "run",
+        "pkg:generate",
+        "--",
+        "@flighthq/particles-formats",
+        "--progress"
+      ],
+      "root": "/tmp/builder3-particles-normal-80qnsivq/repo",
+      "compilerPatches": 124,
+      "totalPatches": 326,
+      "repoCommit": "5b56a8469666db7ef03da949b7d6262a6af357ba",
+      "sharedBCommit": "6e1aa571163c9307dd0022c3302fb7b9060a1ced",
+      "sharedBProvisional": true,
+      "sdkWorkersHere": 0,
+      "nativeJobsLimit": 2,
+      "log": "/tmp/builder3-particles-normal-80qnsivq/normal-generation.log",
+      "actualExit": "2026-10-18T18:35:28.209128+00:00",
+      "exitCode": 0
+    },
+    "package": {
+      "bindingProfileSet": "sha256:5bca1631b0d52c19588fbc7daca5b993b71ecc13cc6acbc6cf883488356016a8",
+      "cppIncludePrefix": "flight/particles_formats",
+      "cppNamespace": "flight::particles_formats",
+      "emittedModules": 18,
+      "package": "@flighthq/particles-formats",
+      "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
+      "sourceModules": 18
+    },
+    "inventoryChange": {
+      "frozenSource": "5b56a8469666db7ef03da949b7d6262a6af357ba",
+      "provisionalSharedB": "6e1aa571163c9307dd0022c3302fb7b9060a1ced",
+      "changed": [
+        {
+          "file": "generated/README.md",
+          "previousGitBlob": "39a23347",
+          "gitBlob": "c49fdf219f5edaa47b508d40f786aec5f2611686",
+          "sha256": "4708bc119cbab79a14bb80259bd255eb3cd116646b6beb984abc19e2d51f62cc",
+          "bytes": 2121
+        },
+        {
+          "file": "generated/best-effort.json",
+          "previousGitBlob": "f68709ba",
+          "gitBlob": "0e1877f7f5d04d5bc8b13b73d402561086056e29",
+          "sha256": "f7f3dc64bdc6d6e6ae27072b5cbe455c84adddcc54ed46a6058e0ad0a9ca578e",
+          "bytes": 3134020
+        },
+        {
+          "file": "generated/include/flight/particles_formats/format_registry.hpp",
+          "previousGitBlob": "2a10b0445f1d788f81fc13d5e397c46ed9cda140",
+          "gitBlob": "554794de5af0c3ad32f88be285b426be09773fe4",
+          "sha256": "ac04c2f65e08e63959a47c41447e7bca7bcb85952b56f1ad1ed751082cc9ebcb",
+          "bytes": 6309
+        },
+        {
+          "file": "generated/include/flight/particles_formats/libgdx_parse.hpp",
+          "previousGitBlob": "204f993244174fcb357d0c708239d1d915ded484",
+          "gitBlob": "403aa0187eca414234cd9325ec3a14edd8667eaa",
+          "sha256": "2a1acaaf46333e6dc1fdc2ddc37ddaad2f1dc6188d3be5f197afde4d4a62cc31",
+          "bytes": 46701
+        },
+        {
+          "file": "generated/include/flight/particles_formats/parse_particle_config.hpp",
+          "previousGitBlob": "e14a7f143bd5fcafdf036528c0fc007fcf4e3ee3",
+          "gitBlob": "d184d10adaa954313224fb59975f4adb6eb96bf4",
+          "sha256": "8848033ec4d21310c62fa7fcae179fac9486e4a323716221e2f921bcba776da9",
+          "bytes": 11847
+        },
+        {
+          "file": "generated/include/flight/particles_formats/particle_designer_parse.hpp",
+          "previousGitBlob": "f638107361ae873ebadcf2df2053aa9b8610398e",
+          "gitBlob": "aaadeece2f7ed298d79e78b49dfac48aa8cc43cc",
+          "sha256": "c723a61d8b6a707cb23d0f54092aa007cb6559240e95eec35bc857448ef4a267",
+          "bytes": 36387
+        },
+        {
+          "file": "generated/include/flight/particles_formats/register_built_in_particle_formats.hpp",
+          "previousGitBlob": "6eb8d18e95d118a67ae7bb3f90e3e868527c8ec8",
+          "gitBlob": "abb06f4847be413486173d750276392419f48e2d",
+          "sha256": "bec33fc554cb24fe3912f89835b06595e11011003019771b5d7c9e903f6852c5",
+          "bytes": 47703
+        },
+        {
+          "file": "generated/include/flight/particles_formats/starling_pex_parse.hpp",
+          "previousGitBlob": "fe3380d4b3536180acb710f4d1e78c67fdc45b9c",
+          "gitBlob": "a5fa66f2b62fe908f042899e62333689edbd1839",
+          "sha256": "e19bda650d01e09a879666603eed3af6853ad6e0fbc80e7025d016d798d0a422",
+          "bytes": 38429
+        },
+        {
+          "file": "generated/include/flight/particles_formats/unity_parse.hpp",
+          "previousGitBlob": "157b396ac4e5e1f4e8bec3f62685bcc08c03e1bc",
+          "gitBlob": "4094ae4bd8eb71c0cd432ed3b3d9888dcd45bd14",
+          "sha256": "79d32b62b78761cf823153c2b593a5bf37b496e359801600ed9c170cf7842e28",
+          "bytes": 58201
+        },
+        {
+          "file": "generated/include/flight/sdk/structural_members.hpp",
+          "previousGitBlob": "9955427d",
+          "gitBlob": "e3666e2fc95d9b7f6684857afa162073e053c7f7",
+          "sha256": "b4e1140c54ff6baed7343cc49d591632552bea6d9c2a047cdc6b44e296a124f6",
+          "bytes": 1398680
+        },
+        {
+          "file": "generated/initialization.json",
+          "previousGitBlob": "78871c4fea545ccac93db1ac9de7a7258eeab78c",
+          "gitBlob": "f100a66c8d532ad3f0088f42dfaa0bc46915ff8b",
+          "sha256": "cb10399b6801300e151f88e0b90ed20a6c81de0e84ac56ffb113df4df006138f",
+          "bytes": 13023740
+        },
+        {
+          "file": "generated/manifest.json",
+          "previousGitBlob": "1a68d9ba",
+          "gitBlob": "40590bb6019e5d15f30ac17cab6c82d6cc96089b",
+          "sha256": "07abf8946c328bba593a8f73e6458ed6251eecb190513121077a8fcd88ea40c4",
+          "bytes": 302263
+        },
+        {
+          "file": "generated/refusals.json",
+          "previousGitBlob": "60a31843",
+          "gitBlob": "d20b8d963d7c024961311344a6449626c7fb34a4",
+          "sha256": "d89eb7d18c053539c11556a909558bbadddc98ee2ae208a2b18ac6c2eccd038f",
+          "bytes": 781193
+        }
+      ],
+      "deleted": []
+    },
+    "profileWarningDependencies": [
+      "entity",
+      "geometry",
+      "importdiagnostics",
+      "log",
+      "math",
+      "particles",
+      "requirement",
+      "signals"
+    ]
+  },
+  "frozenInput": {
+    "root": "/tmp/builder3-particles-normal-80qnsivq/repo",
+    "repoCommit": "5b56a8469666db7ef03da949b7d6262a6af357ba",
+    "compilerPatches": 124,
+    "totalPatches": 326,
+    "pins": {
+      "schema": "flight-dependency-lock/1",
+      "directory": ".dependencies",
+      "dependencies": [
+        {
+          "name": "flight",
+          "repository": "https://github.com/flighthq/flight",
+          "branch": "main",
+          "commit": "a62784923f3be814463286c9fb28edfe6ab15789"
+        },
+        {
+          "name": "flight-compiler",
+          "repository": "https://github.com/flighthq/flight-compiler",
+          "branch": "main",
+          "commit": "806d257d2f4100de745cc97340e61c2f301b0f24"
+        }
+      ]
+    },
+    "sharedB": "6e1aa571163c9307dd0022c3302fb7b9060a1ced",
+    "sharedBProvisional": true,
+    "allRuntimeOverridesBindingsScriptsAndPatchesFrozenByGitArchive": true,
+    "records": [
+      {
+        "id": "compiler-dependent-indexed-access-reference-carrier",
+        "patch": "compiler-dependent-indexed-access-reference-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164"
+      },
+      {
+        "id": "compiler-dependent-erased-object-recovery-template",
+        "patch": "compiler-dependent-erased-object-recovery-template.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f"
+      },
+      {
+        "id": "compiler-error-name-and-erased-error-reads",
+        "patch": "compiler-error-name-and-erased-error-reads.patch",
+        "dependency": "flight-compiler",
+        "sha256": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e"
+      },
+      {
+        "id": "compiler-unrepresented-error-member",
+        "patch": "compiler-unrepresented-error-member.patch",
+        "dependency": "flight-compiler",
+        "sha256": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7"
+      },
+      {
+        "id": "animation-layer-stack-channel-projection",
+        "patch": "animation-layer-stack-channel-projection.patch",
+        "dependency": "flight",
+        "sha256": "a41cf11101da247b54e35eafe1b0854c43e59713a6cf79acea9e8ea4f2446fe5"
+      },
+      {
+        "id": "text-markup-handler-map-type",
+        "patch": "text-markup-handler-map-type.patch",
+        "dependency": "flight",
+        "sha256": "148ed2fa15b9fc8025b0646524a40462066fcfe0914f2aaa74c15c28d4be3199"
+      },
+      {
+        "id": "text-markup-spread-class-merge",
+        "patch": "text-markup-spread-class-merge.patch",
+        "dependency": "flight",
+        "sha256": "37f96ee9a575dd652df83b9847ca499fb975ef4430ef6a0cfd037a34e3c315e1"
+      },
+      {
+        "id": "glyphatlas-iterator-result-binding",
+        "patch": "glyphatlas-iterator-result-binding.patch",
+        "dependency": "flight",
+        "sha256": "e343142f182ffc96761b12223e1abad11ef58912eaa8e7d4d39851368a13c250"
+      },
+      {
+        "id": "glyphatlas-entry-presence-proofs",
+        "patch": "glyphatlas-entry-presence-proofs.patch",
+        "dependency": "flight",
+        "sha256": "dc4027efb8fe9ed12582460393e3f20efc54a810940c1500370a126d830a6406"
+      },
+      {
+        "id": "midi-explicit-port-state-arms",
+        "patch": "midi-explicit-port-state-arms.patch",
+        "dependency": "flight",
+        "sha256": "ebc67544ae29ad17d6ab6cf54629b1325584c7ff733537360174358b13571af6"
+      },
+      {
+        "id": "loader-request-options-return-type",
+        "patch": "loader-request-options-return-type.patch",
+        "dependency": "flight",
+        "sha256": "cfee5309ac1273a21742f6edcd8405530e813a9038678d553a3c5fb2df930290"
+      },
+      {
+        "id": "scene2d-resources-fetch-arity",
+        "patch": "scene2d-resources-fetch-arity.patch",
+        "dependency": "flight",
+        "sha256": "ca5d08ae4b693a6118e553067d8c460e68065ffc4b39b6ff4ba29555efa9f867"
+      },
+      {
+        "id": "shape-formats-keyed-table-owner",
+        "patch": "shape-formats-keyed-table-owner.patch",
+        "dependency": "flight",
+        "sha256": "d7dee6e0a541d6b2112660df082eb08c32632db620154e1e745a3003c2c59d0d"
+      },
+      {
+        "id": "tokens-string-narrowing-binding",
+        "patch": "tokens-string-narrowing-binding.patch",
+        "dependency": "flight",
+        "sha256": "e31ae36c89e6655d5ea9452c4b209c6e5e33cf5cf3329738f8f81ff7d7c5547c"
+      },
+      {
+        "id": "video-extension-array-binding",
+        "patch": "video-extension-array-binding.patch",
+        "dependency": "flight",
+        "sha256": "c234f1a13bc60e2919b34ca64f846c391c45a361ae7f530f4dc7abaf603f192d"
+      },
+      {
+        "id": "spritesheet-formats-line-normalization",
+        "patch": "spritesheet-formats-line-normalization.patch",
+        "dependency": "flight",
+        "sha256": "70f0a417d166875e148c56facc1d6d3040284e8959c1d584077ac89d21b269e4"
+      },
+      {
+        "id": "spritesheet-formats-cocos-diagnostic-details",
+        "patch": "spritesheet-formats-cocos-diagnostic-details.patch",
+        "dependency": "flight",
+        "sha256": "48e08234aaf72e159fc118b49f8a7a2b8dff63b19ab0361f539ce9a4543b4286"
+      },
+      {
+        "id": "spritesheet-formats-plist-brace-regexp",
+        "patch": "spritesheet-formats-plist-brace-regexp.patch",
+        "dependency": "flight",
+        "sha256": "13f77f21cfb890703a0591a33296e62cb662e6e0839b73946db2bb9faf0e0484"
+      },
+      {
+        "id": "spritesheet-formats-required-tag-directions",
+        "patch": "spritesheet-formats-required-tag-directions.patch",
+        "dependency": "flight",
+        "sha256": "e2ea6776e176586cb386d9aed0fbbfddcbc06bc684d69616f2f1e85ec91af9de"
+      },
+      {
+        "id": "spritesheet-formats-explicit-formats",
+        "patch": "spritesheet-formats-explicit-formats.patch",
+        "dependency": "flight",
+        "sha256": "b0320738510a4bb33d5f85b631d90c992a9a7f708590b9c894526549ebbddbbb"
+      },
+      {
+        "id": "spritesheet-formats-serializer-existing-shapes",
+        "patch": "spritesheet-formats-serializer-existing-shapes.patch",
+        "dependency": "flight",
+        "sha256": "39dbaae03a149bc03d761f5df36ddf81ffb8010ffebc1949d1c046174d90e32c"
+      },
+      {
+        "id": "tilemap-formats-record-materialization",
+        "patch": "tilemap-formats-record-materialization.patch",
+        "dependency": "flight",
+        "sha256": "f6e3a267c0060d609bf0bf726770be46dc1c57099255ea75656e3e357e97818b"
+      },
+      {
+        "id": "tilemap-formats-native-portability",
+        "patch": "tilemap-formats-native-portability.patch",
+        "dependency": "flight",
+        "sha256": "780edb2f0db537b773c93d4244b98f79fc5be0c394424e346c0c95752d78a068"
+      },
+      {
+        "id": "spritesheet-player-readonly-identity-comparison",
+        "patch": "spritesheet-player-readonly-identity-comparison.patch",
+        "dependency": "flight",
+        "sha256": "ffbbb53db99e7191d96b5fe84c7fb9429b76a304db2240661d79e9c47daa862e"
+      },
+      {
+        "id": "layout-node-reference-bindings",
+        "patch": "layout-node-reference-bindings.patch",
+        "dependency": "flight",
+        "sha256": "5ebac51263c9dcc509eb0df7584a06485b8e3b8cf2a8adfe97187b8b262219b4"
+      },
+      {
+        "id": "skeleton3d-explicit-storage",
+        "patch": "skeleton3d-explicit-storage.patch",
+        "dependency": "flight",
+        "sha256": "8769c7399239a8e9c5de29e271934beb4325067ded66c7c2f55eb8318eb6fcc7"
+      },
+      {
+        "id": "shading-explicit-reference-storage",
+        "patch": "shading-explicit-reference-storage.patch",
+        "dependency": "flight",
+        "sha256": "09ba5bca4c97d5f9618841afdff91b88e129458b61d9c7c158b8b915ba2d8bd9"
+      },
+      {
+        "id": "scene2d-dom-runtime-accessor",
+        "patch": "scene2d-dom-runtime-accessor.patch",
+        "dependency": "flight",
+        "sha256": "ba16c37f2e6775185121ec2acb7b0a3f9d5992ae96a563d93a853565101596be"
+      },
+      {
+        "id": "scene-document-yaml-nominal-line-owners",
+        "patch": "scene-document-yaml-nominal-line-owners.patch",
+        "dependency": "flight",
+        "sha256": "854c775e847e30d0e820f1fc6e429a95933229fa2c42f708d836daad9114dada"
+      },
+      {
+        "id": "scene-document-yaml-present-colon-token",
+        "patch": "scene-document-yaml-present-colon-token.patch",
+        "dependency": "flight",
+        "sha256": "5ae79cd7d0a4a39b9289fc98d38086ace613641bbe7bf79360a53c1f6d929625"
+      },
+      {
+        "id": "scene-document-yaml-position-record",
+        "patch": "scene-document-yaml-position-record.patch",
+        "dependency": "flight",
+        "sha256": "8b674e59ea0d04f6dc33b2536c51230b6caf4e210392000df5de6fceca7aec70"
+      },
+      {
+        "id": "scene-document-yaml-next-count-narrowing",
+        "patch": "scene-document-yaml-next-count-narrowing.patch",
+        "dependency": "flight",
+        "sha256": "6675b76013608848c6abd52521fa3b275ae7de9aaa00848cfefdb9370f13da18"
+      },
+      {
+        "id": "optional-null-storage-evidence",
+        "patch": "optional-null-storage-evidence.patch",
+        "dependency": "flight",
+        "sha256": "f3faaa8c14ebf6d2a27cc458788f8be448e226009d5cccef134311f1d7b5b003"
+      },
+      {
+        "id": "scene3d-formats-optional-null-storage",
+        "patch": "scene3d-formats-optional-null-storage.patch",
+        "dependency": "flight",
+        "sha256": "d442b9157942116151bd701485d4691523b7a27051cd0a72be9835dda088dc0b"
+      },
+      {
+        "id": "skeleton2d-target-kind-binding",
+        "patch": "skeleton2d-target-kind-binding.patch",
+        "dependency": "flight",
+        "sha256": "4028516cf90eda06e4e34ad21fa1430f87d4ab411a65c98dcb1c4af0479325f9"
+      },
+      {
+        "id": "particles-formats-string-operations",
+        "patch": "particles-formats-string-operations.patch",
+        "dependency": "flight",
+        "sha256": "7d53ff4c20ec3b2a3384036ce096a8d48a235432cf4e8eadd61206942de1d2e2"
+      },
+      {
+        "id": "particles-formats-diagnostic-details",
+        "patch": "particles-formats-diagnostic-details.patch",
+        "dependency": "flight",
+        "sha256": "8a2548fd6e11ea2bb17cb34233230015c8194abcc7a6ff47ba1281ee147abf1a"
+      },
+      {
+        "id": "particles-formats-parse-config-diagnostic-details",
+        "patch": "particles-formats-parse-config-diagnostic-details.patch",
+        "dependency": "flight",
+        "sha256": "5a111d77448151e1380c5493f9421ca16d08b72297e91a9d53bdb2c272c7a524"
+      },
+      {
+        "id": "particles-formats-pex-plist-key-presence",
+        "patch": "particles-formats-pex-plist-key-presence.patch",
+        "dependency": "flight",
+        "sha256": "7abcb3b4f9cbe9ea0ef20504a9685dc092879e2c2f1459cdd9297e490c09b692"
+      },
+      {
+        "id": "particles-formats-plist-string-value",
+        "patch": "particles-formats-plist-string-value.patch",
+        "dependency": "flight",
+        "sha256": "a7dc1ad54521fecbb50dacbfba3b1e797e2e24f247471848e60860baee382051"
+      },
+      {
+        "id": "particles-formats-libgdx-spawn-shape-kind",
+        "patch": "particles-formats-libgdx-spawn-shape-kind.patch",
+        "dependency": "flight",
+        "sha256": "d39161d27c506425882932b35f44197e8d7296d46aeedc2e5b033bba8dfd04c9"
+      },
+      {
+        "id": "particles-formats-pd-raw-dict-local-alias",
+        "patch": "particles-formats-pd-raw-dict-local-alias.patch",
+        "dependency": "flight",
+        "sha256": "1ee9ed503d4f2b9f7f34b53db4c29fc1725f5b355df1fa73cc9ead74ff623b3d"
+      },
+      {
+        "id": "particles-formats-spine-blend-mode-present",
+        "patch": "particles-formats-spine-blend-mode-present.patch",
+        "dependency": "flight",
+        "sha256": "edb26c07f832d8fbc70fb50cd97174db6b98c84e2be7e3eda6f87cb53dbfb1c0"
+      },
+      {
+        "id": "particles-formats-pex-blend-mode-present",
+        "patch": "particles-formats-pex-blend-mode-present.patch",
+        "dependency": "flight",
+        "sha256": "77c2816fb36eb0ff7cca9eaada637127d731521d460ab0d835ac5139591e1bfb"
+      },
+      {
+        "id": "particles-formats-pd-dict-own-key-reads",
+        "patch": "particles-formats-pd-dict-own-key-reads.patch",
+        "dependency": "flight",
+        "sha256": "3841ef32a6961da6fad4f20fa7c6ccc1916fa703abb53ab72c149d55b8a965dd"
+      },
+      {
+        "id": "particles-formats-libgdx-active-ranges",
+        "patch": "particles-formats-libgdx-active-ranges.patch",
+        "dependency": "flight",
+        "sha256": "5187b96ab62054df6e1dd129963581a13930accffcf943d408f06310c8deb18a"
+      },
+      {
+        "id": "gui-hit-area-type-evidence",
+        "patch": "gui-hit-area-type-evidence.patch",
+        "dependency": "flight",
+        "sha256": "a50d46ce2a5a708b637d16daa6ce0fce933b434cdac62d4ead2e310f867cd761"
+      },
+      {
+        "id": "skeleton2d-local-numeric-constants",
+        "patch": "skeleton2d-local-numeric-constants.patch",
+        "dependency": "flight",
+        "sha256": "766d9c49d3ae6ee1e7f23cee41119bce520582869bfc5ab1dcd30e054b661d70"
+      },
+      {
+        "id": "selection-runtime-type-evidence",
+        "patch": "selection-runtime-type-evidence.patch",
+        "dependency": "flight",
+        "sha256": "37bd4ffd372307696f5f7cd7f07cda0d61e8a7e952a6a075ceec6096c5456cb9"
+      },
+      {
+        "id": "movieclip-guard-log-data",
+        "patch": "movieclip-guard-log-data.patch",
+        "dependency": "flight",
+        "sha256": "af236bccd4ab1889bcef0fe1344798290b8cd3f896bc15f12f2010d94fa196d2"
+      },
+      {
+        "id": "movieclip-data-binding",
+        "patch": "movieclip-data-binding.patch",
+        "dependency": "flight",
+        "sha256": "8a11dcbd4be7abfbc37cef1c44569fbfe101a5cbf76f11c750d68a17fb084419"
+      },
+      {
+        "id": "image-resource-discriminant-literals",
+        "patch": "image-resource-discriminant-literals.patch",
+        "dependency": "flight",
+        "sha256": "fa8849ad734afab9babc965e60aabe961bb6de05f1cc3b882c8ac669908cf202"
+      },
+      {
+        "id": "text-data-binding",
+        "patch": "text-data-binding.patch",
+        "dependency": "flight",
+        "sha256": "8079bb530e9ef406ca937b1b4674ed8c78ee6b3d8a870299b1d7bd729f8ceb25"
+      },
+      {
+        "id": "node-traversal-typed-empty-children",
+        "patch": "node-traversal-typed-empty-children.patch",
+        "dependency": "flight",
+        "sha256": "9ea83d5a1a5db382f53befe999d558ca1ea6c370c46a87002f6a58b6fa4acc85"
+      },
+      {
+        "id": "particleemitter-data-binding",
+        "patch": "particleemitter-data-binding.patch",
+        "dependency": "flight",
+        "sha256": "2afcb51dd10482e742c06de8705b7f8e95b0132d3af9dac569f046e8703c66f0"
+      },
+      {
+        "id": "node-stage-fit-string-value",
+        "patch": "node-stage-fit-string-value.patch",
+        "dependency": "flight",
+        "sha256": "32734d1c72c7139364e7cf96786993f2ba81821e6837e4e88636553be2806725"
+      },
+      {
+        "id": "tween-record-membership",
+        "patch": "tween-record-membership.patch",
+        "dependency": "flight",
+        "sha256": "c427061b825face862b7251c23d198eae0b75756626b71bfdd30d6ef93c8ae87"
+      },
+      {
+        "id": "gui-controller-explicit-type-evidence",
+        "patch": "gui-controller-explicit-type-evidence.patch",
+        "dependency": "flight",
+        "sha256": "a37d651c58380515762deb9626c89ca97b49067e319a99cae3bedf73b2d5658a"
+      },
+      {
+        "id": "scene3d-formats-resource-ref-owner-lookup",
+        "patch": "scene3d-formats-resource-ref-owner-lookup.patch",
+        "dependency": "flight",
+        "sha256": "c892a1175c0e40d0829f1ba2e4506187c8d6e07a35f0d4d927f022e82ea32827"
+      },
+      {
+        "id": "scene3d-formats-gltf-camera-diagnostic-details",
+        "patch": "scene3d-formats-gltf-camera-diagnostic-details.patch",
+        "dependency": "flight",
+        "sha256": "afa77d9a7641776ab4a9218f2d7e8542db5fd96b5d5358d50c76bfb25183a826"
+      },
+      {
+        "id": "animation-track-explicit-initialization-defaults",
+        "patch": "animation-track-explicit-initialization-defaults.patch",
+        "dependency": "flight",
+        "sha256": "f5d3b89bd3d5a4ca98ea4c740d4673f6a12191fddb872438fc6a5924b28277b0"
+      },
+      {
+        "id": "render-state-runtime-owner-and-initialization",
+        "patch": "render-state-runtime-owner-and-initialization.patch",
+        "dependency": "flight",
+        "sha256": "98cd2a61903e4361e6beb5eeedf23f55983983ed6c48569e7cfd1f68f2bfbc03"
+      },
+      {
+        "id": "canvas-render-state-runtime-owner-and-initialization",
+        "patch": "canvas-render-state-runtime-owner-and-initialization.patch",
+        "dependency": "flight",
+        "sha256": "8cc1a61299547bfa3b81fc4a7c848cfda3aacc411e2305ffec5dcade29515f2f"
+      },
+      {
+        "id": "node-initialize-node-non-optional-source",
+        "patch": "node-initialize-node-non-optional-source.patch",
+        "dependency": "flight",
+        "sha256": "ce4bffb331c4e80b0b9fba007b4e52636720082d81686ddf48de8eb63bed5979"
+      },
+      {
+        "id": "timeline-noop-construct-frame-arity",
+        "patch": "timeline-noop-construct-frame-arity.patch",
+        "dependency": "flight",
+        "sha256": "18620ad6c6102a93a1310056742125fd8580303831ae92fbf4d0866d39ca49b9"
+      },
+      {
+        "id": "screen-copy-screen-info-explicit-fields",
+        "patch": "screen-copy-screen-info-explicit-fields.patch",
+        "dependency": "flight",
+        "sha256": "dc2dc7e71be54536133b52684808e3277fe62a49d732191fc8836d72f0039620"
+      },
+      {
+        "id": "collision-shape-contact-explicit-branches",
+        "patch": "collision-shape-contact-explicit-branches.patch",
+        "dependency": "flight",
+        "sha256": "9fecaa2800758daa48ca1bb516cdc2ab3c7d12985a2c6b30da8d721bc63ea744"
+      },
+      {
+        "id": "collision-raycast-named-shape-parameters",
+        "patch": "collision-raycast-named-shape-parameters.patch",
+        "dependency": "flight",
+        "sha256": "7e939673913fd6f4698dab596b9e54481ae6b8b85bba030ae8b73cf8e3d1908e"
+      },
+      {
+        "id": "path-retain-stroke-geometry-return-type",
+        "patch": "path-retain-stroke-geometry-return-type.patch",
+        "dependency": "flight",
+        "sha256": "fc3ad616552be17a91ce837bf1580b245b402eb0b31237618f70d653a936e3ca"
+      },
+      {
+        "id": "font-formats-name-woff-diagnostic-details",
+        "patch": "font-formats-name-woff-diagnostic-details.patch",
+        "dependency": "flight",
+        "sha256": "3ddeae713ae2ee8a9e03aa43090c1143ee6b2fd1545d1512370e3b065477a94b"
+      },
+      {
+        "id": "statechart-single-transition-binding",
+        "patch": "statechart-single-transition-binding.patch",
+        "dependency": "flight",
+        "sha256": "f2674d6e3f4ff83871d36ae34eaf64d77ee9f96c11e258228488924422c23d9d"
+      },
+      {
+        "id": "clip-explicit-contours-storage",
+        "patch": "clip-explicit-contours-storage.patch",
+        "dependency": "flight",
+        "sha256": "330d92ca6686d718f434cb1ec035cc047bafd3087372ff52a27aac7310faec19"
+      },
+      {
+        "id": "geometry-matrix-independent-storage",
+        "patch": "geometry-matrix-independent-storage.patch",
+        "dependency": "flight",
+        "sha256": "c6eba7c53344d439d06d527938efc28be9ac1bf4dbc78075f4ae0673478e310b"
+      },
+      {
+        "id": "mesh-icosphere-explicit-base-vertices",
+        "patch": "mesh-icosphere-explicit-base-vertices.patch",
+        "dependency": "flight",
+        "sha256": "3fcfd64f77271f81f4e419fb29c8fc3e0ae9173cdd2bb7dfb047dead1acaa8d5"
+      },
+      {
+        "id": "compiler-structural-row-weak-keys",
+        "patch": "compiler-structural-row-weak-keys.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b02689718a4b47624f10ae30b3f8745b84e72659d7f517fbad834ad5467026ff"
+      },
+      {
+        "id": "compiler-concrete-owner-union-row-assertions",
+        "patch": "compiler-concrete-owner-union-row-assertions.patch",
+        "dependency": "flight-compiler",
+        "sha256": "17f47ccc904d65fb495d38f45d2c59a5bff9989a59db17a6cc01c6d047698510"
+      },
+      {
+        "id": "compiler-union-import-runtime-identity",
+        "patch": "compiler-union-import-runtime-identity.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5aed3efd29ec4939052bceb5504930b7cb8a7e62fcdd06ba38a50b8e6912f255"
+      },
+      {
+        "id": "compiler-erased-ref-weak-map-view",
+        "patch": "compiler-erased-ref-weak-map-view.patch",
+        "dependency": "flight-compiler",
+        "sha256": "3436926b4125a60232033d4dbc4526c165781fc90223e2ff29a0255b19326f46"
+      },
+      {
+        "id": "compiler-generic-erased-map-reference-recovery",
+        "patch": "compiler-generic-erased-map-reference-recovery.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8e2fdcadd6b9cf7bfb1b6b7fc65d1461e7cbacec2edf4747fc391d815f238644"
+      },
+      {
+        "id": "compiler-nullable-structural-row-widening",
+        "patch": "compiler-nullable-structural-row-widening.patch",
+        "dependency": "flight-compiler",
+        "sha256": "83614af822c7e842e6d75d94c3d8d95d5ef85edd18b655fea6728f3e8a7162fa"
+      },
+      {
+        "id": "compiler-external-optional-result-widening",
+        "patch": "compiler-external-optional-result-widening.patch",
+        "dependency": "flight-compiler",
+        "sha256": "0072f315ef85d72f36a1edbbc886f83d414ba8ac8375f9e530e3dbc83eec577e"
+      },
+      {
+        "id": "texture-like-concrete-value-arms",
+        "patch": "texture-like-concrete-value-arms.patch",
+        "dependency": "flight",
+        "sha256": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9"
+      },
+      {
+        "id": "scene3d-gl-uniform-location-locals",
+        "patch": "scene3d-gl-uniform-location-locals.patch",
+        "dependency": "flight",
+        "sha256": "a1dc6af147821589af10933ae25b8c3ba1f2f8b9bc9bf12c3b01ebbd29ff1d86"
+      },
+      {
+        "id": "pbr-extension-concrete-value-arms",
+        "patch": "pbr-extension-concrete-value-arms.patch",
+        "dependency": "flight",
+        "sha256": "46c48b29ae41355be2ef7659102fd488a85e76d1c2b2bcd83c4bdd44b4e1d97d"
+      },
+      {
+        "id": "scene3d-gl-erased-upload-cache",
+        "patch": "scene3d-gl-erased-upload-cache.patch",
+        "dependency": "flight",
+        "sha256": "ac88ff286d486d84b8683120f2fff99bf58035f3c1820c0d668582a98f633345"
+      },
+      {
+        "id": "scene3d-gl-erased-program-cache",
+        "patch": "scene3d-gl-erased-program-cache.patch",
+        "dependency": "flight",
+        "sha256": "73f635a1a28941f5e90ab42199859e0413fc55d73e76e85998551516b3c05bd2"
+      },
+      {
+        "id": "scene3d-gl-present-index-storage",
+        "patch": "scene3d-gl-present-index-storage.patch",
+        "dependency": "flight",
+        "sha256": "a8485f243476f4837a686d52518723d74fe85a6a6f2768345238ea43fc9cdaff"
+      },
+      {
+        "id": "scene3d-gl-viewport-number-domain",
+        "patch": "scene3d-gl-viewport-number-domain.patch",
+        "dependency": "flight",
+        "sha256": "e3a94d937f70c7e5323f0db007cd94a6046ae926ede981756be96b418f5fd49b"
+      },
+      {
+        "id": "scene2d-gl-clip-rectangle-viewport-number-domain",
+        "patch": "scene2d-gl-clip-rectangle-viewport-number-domain.patch",
+        "dependency": "flight",
+        "sha256": "bd70b53c84659b373b0064d853282ea5d7a69f4aaa3ee9425c99d30836e003fa"
+      },
+      {
+        "id": "texture-source-concrete-value-arms",
+        "patch": "texture-source-concrete-value-arms.patch",
+        "dependency": "flight",
+        "sha256": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699"
+      },
+      {
+        "id": "scene3d-gl-explicit-environment-carriers",
+        "patch": "scene3d-gl-explicit-environment-carriers.patch",
+        "dependency": "flight",
+        "sha256": "6861766cc9c292c93e5b9e2e7033912c6728ac47bea2bfeacdb5d9b956bce677"
+      },
+      {
+        "id": "scene3d-gl-mesh-runtime-accessor",
+        "patch": "scene3d-gl-mesh-runtime-accessor.patch",
+        "dependency": "flight",
+        "sha256": "62a9c86008af8745b4bfb370731c4db0d24e162b611ea9fb10cca5a5ee719273"
+      },
+      {
+        "id": "scene3d-gl-stable-modifier-property-reads",
+        "patch": "scene3d-gl-stable-modifier-property-reads.patch",
+        "dependency": "flight",
+        "sha256": "46526af800682ccebd727e30e9c41cc649d7eadfc3f1ee40a802c8a73e774139"
+      },
+      {
+        "id": "scene3d-gl-stable-fog-mode-reads",
+        "patch": "scene3d-gl-stable-fog-mode-reads.patch",
+        "dependency": "flight",
+        "sha256": "466ddb08cc387fd21fc0c9a40709484e87f8fd6c1f2e163a44eda5cc2be9c759"
+      },
+      {
+        "id": "render-scene3d-projection-api",
+        "patch": "render-scene3d-projection-api.patch",
+        "dependency": "flight",
+        "sha256": "2b58f9c35da47f5c6334dbf34b9255c7ecde989d859bc591c871121f08cfcedb"
+      },
+      {
+        "id": "scene3d-material-value-enumeration",
+        "patch": "scene3d-material-value-enumeration.patch",
+        "dependency": "flight",
+        "sha256": "7cb9363a577bc455343230bddb77a0bfded1db4119687ffb0f11d5eb6c441fdd"
+      },
+      {
+        "id": "scene3d-document-light-values",
+        "patch": "scene3d-document-light-values.patch",
+        "dependency": "flight",
+        "sha256": "2279c341e5e6beddd294ffd1331140acc2204bb4cfd38e4fcac69a6442196b72"
+      },
+      {
+        "id": "node-matrix-owner-accessors",
+        "patch": "node-matrix-owner-accessors.patch",
+        "dependency": "flight",
+        "sha256": "d41a6f1ed5778292cf7da8ea4d45ad1a188ec5561e62b6b04f69a3a9963ebe01"
+      },
+      {
+        "id": "scene3d-readonly-billboard-probe",
+        "patch": "scene3d-readonly-billboard-probe.patch",
+        "dependency": "flight",
+        "sha256": "18abe47b9853dc6ce4551e96d0c8a91bc9fd9bb880e47b963a54eb0aea6060ea"
+      },
+      {
+        "id": "scene3d-exact-runtime-owner",
+        "patch": "scene3d-exact-runtime-owner.patch",
+        "dependency": "flight",
+        "sha256": "55cc99271fc9f2ba3a42c3816a4bf42420a3e9ba5aa0a53637458d860b4d800e"
+      },
+      {
+        "id": "scene3d-morph-capability-guard",
+        "patch": "scene3d-morph-capability-guard.patch",
+        "dependency": "flight",
+        "sha256": "a94c59d8db78977daff902d4de87096c37b1c06f043ba0cd4fac3a2f52b70543"
+      },
+      {
+        "id": "scene3d-gl-particle-capability-guard",
+        "patch": "scene3d-gl-particle-capability-guard.patch",
+        "dependency": "flight",
+        "sha256": "483d4bed307b5700bd262041c0f83eb1eb5c76cef3e7043ccad4afa9eb892c12"
+      },
+      {
+        "id": "scene3d-concrete-node-construction",
+        "patch": "scene3d-concrete-node-construction.patch",
+        "dependency": "flight",
+        "sha256": "8c2836c6b2baee42bd58f33e7ba243cd387fb0639a418a10647526dba5895e6b"
+      },
+      {
+        "id": "particleemitter3d-concrete-node-construction",
+        "patch": "particleemitter3d-concrete-node-construction.patch",
+        "dependency": "flight",
+        "sha256": "dc8dd49b3d8ec82730ef60a257cacfca003020ba074604606bff0ba56f57ddb2"
+      },
+      {
+        "id": "particleemitter-node-matrix-direct-emitter",
+        "patch": "particleemitter-node-matrix-direct-emitter.patch",
+        "dependency": "flight",
+        "sha256": "70a308d4f94d8efc9ec6b2a39d9ee5386265400808cce0b7f087e3ca6ee6101a"
+      },
+      {
+        "id": "particleemitter-clone-typed-partial-data",
+        "patch": "particleemitter-clone-typed-partial-data.patch",
+        "dependency": "flight",
+        "sha256": "2dd786de92773a3ba71f1b82e89964354bca5002e43f761fb2340180364f0030"
+      },
+      {
+        "id": "scene-nodeof-traversal-capabilities",
+        "patch": "scene-nodeof-traversal-capabilities.patch",
+        "dependency": "flight",
+        "sha256": "a7ca8d936cd6033f1ccff021ca8c3b63180a0c24b868dc436e94147f5bb0d680"
+      },
+      {
+        "id": "node-exact-runtime-and-owner-paths",
+        "patch": "node-exact-runtime-and-owner-paths.patch",
+        "dependency": "flight",
+        "sha256": "fd8be781f5219275d68994724bf8c595d25a2113f946787715456306666cf76e"
+      },
+      {
+        "id": "meshgeometry-exact-runtime-owner",
+        "patch": "meshgeometry-exact-runtime-owner.patch",
+        "dependency": "flight",
+        "sha256": "fbde9226d25d4f0e8841b6ba462c84aa4e76a46b4ab9af33b6ee0228551885b0"
+      },
+      {
+        "id": "meshgeometry-present-index-storage",
+        "patch": "meshgeometry-present-index-storage.patch",
+        "dependency": "flight",
+        "sha256": "4126ef73e70b8abb477ea004fcb1f6260e102c5c5a0e0e6be1ead48d5e3321c0"
+      },
+      {
+        "id": "scene3d-mesh-capability-presence",
+        "patch": "scene3d-mesh-capability-presence.patch",
+        "dependency": "flight",
+        "sha256": "ccc4f61cdf5933761b8a5ba27aa3a72fed5673750d4557f387fbe93fedb29e07"
+      },
+      {
+        "id": "scene3d-exact-owner-boundaries",
+        "patch": "scene3d-exact-owner-boundaries.patch",
+        "dependency": "flight",
+        "sha256": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea"
+      },
+      {
+        "id": "scene3d-gl-lazy-uniform-location-boundaries",
+        "patch": "scene3d-gl-lazy-uniform-location-boundaries.patch",
+        "dependency": "flight",
+        "sha256": "9892adf102a3937f72052b817a2a487c10e3ab959d6af8287b01718755141521"
+      },
+      {
+        "id": "node3d-named-runtime-carriers",
+        "patch": "node3d-named-runtime-carriers.patch",
+        "dependency": "flight",
+        "sha256": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b"
+      },
+      {
+        "id": "compiler-readonly-union-view-conversion",
+        "patch": "compiler-readonly-union-view-conversion.patch",
+        "dependency": "flight-compiler",
+        "sha256": "288b524ea0a3389f7bc2bd2decbf18954ad8eb33de04c180e4fa568e8d8775bc"
+      },
+      {
+        "id": "lighting-dense-forward-selection-scratch",
+        "patch": "lighting-dense-forward-selection-scratch.patch",
+        "dependency": "flight",
+        "sha256": "d8dd36d56cb03a59e00b1e8ae93a408d34fe1f9beee4c6bbc3a14fe9adb1b041"
+      },
+      {
+        "id": "texture-preserve-source-value-owners",
+        "patch": "texture-preserve-source-value-owners.patch",
+        "dependency": "flight",
+        "sha256": "caab1ba591d714d912d61f12747e27176e3f4143f0f2c9bef309e5ca2114466a"
+      },
+      {
+        "id": "compiler-contextual-imported-union-owner",
+        "patch": "compiler-contextual-imported-union-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "052bf7fe5b4753a4dc343fe642bc78d3cfb175bb2cc295c9c0b1a27c75983bdf"
+      },
+      {
+        "id": "texture-exact-dimension-content-dispatch",
+        "patch": "texture-exact-dimension-content-dispatch.patch",
+        "dependency": "flight",
+        "sha256": "970863f065e956affa00ce10c3a5b18a0b4213ae75a28a9042d265531f713fe6"
+      },
+      {
+        "id": "texture-explicit-source-presence-queries",
+        "patch": "texture-explicit-source-presence-queries.patch",
+        "dependency": "flight",
+        "sha256": "5ffc867297043567f476e20183fc4c95b24cc6d8cce17a1e97734ef06f5ec220"
+      },
+      {
+        "id": "texture-explicit-nullish-equality-operands",
+        "patch": "texture-explicit-nullish-equality-operands.patch",
+        "dependency": "flight",
+        "sha256": "72434f2465640edfd0be03dd8bc0cf11bc6179a0c78fba691036dd5a4a89b573"
+      },
+      {
+        "id": "compiler-present-dual-sentinel-multivariant",
+        "patch": "compiler-present-dual-sentinel-multivariant.patch",
+        "dependency": "flight-compiler",
+        "sha256": "06f969236c93eb9a12726deaabf20794e7e8d7d24df6949907b2a24b13d22a8b"
+      },
+      {
+        "id": "texture-clone-exact-dimension-helpers",
+        "patch": "texture-clone-exact-dimension-helpers.patch",
+        "dependency": "flight",
+        "sha256": "97614cc4c8d46c9be7e2576c4aee142b798b0bd3c54706e9037333d6cb6660a5"
+      },
+      {
+        "id": "texture-common-fields-live-carrier",
+        "patch": "texture-common-fields-live-carrier.patch",
+        "dependency": "flight",
+        "sha256": "c79808999947e9f6a263eb599de7737a2ecdbfeaabaafe3bf782f1b98d537993"
+      },
+      {
+        "id": "texture-common-options-view",
+        "patch": "texture-common-options-view.patch",
+        "dependency": "flight",
+        "sha256": "ab7e3ce8555264ae47566319835d7d6c1bf7d42a0b3337aa935a34b5f496ea12"
+      },
+      {
+        "id": "texture-exact-cube-face-clone",
+        "patch": "texture-exact-cube-face-clone.patch",
+        "dependency": "flight",
+        "sha256": "97be30f7cb94a5bf358b02c017cdc0b1257a6f7fc12716823ed43e320c48518b"
+      },
+      {
+        "id": "texture-direct-cube-face-storage",
+        "patch": "texture-direct-cube-face-storage.patch",
+        "dependency": "flight",
+        "sha256": "7b74702e92467fe2e06375c1d621d641318a2c7c025388d7ea9d22a8dad98581"
+      },
+      {
+        "id": "texture-default-2d-narrowing",
+        "patch": "texture-default-2d-narrowing.patch",
+        "dependency": "flight",
+        "sha256": "756acaec3bd9c4cd5d54e4b70923c2b6052bb4d6a15cbbb555b3e68feb4cbf1f"
+      },
+      {
+        "id": "texture-named-dimension-options",
+        "patch": "texture-named-dimension-options.patch",
+        "dependency": "flight",
+        "sha256": "6ec331ada72e0dee4e595962272fe84a78335d557c57d9ad44acc7d0fd024d3e"
+      },
+      {
+        "id": "texture-initialize2d-source-presence",
+        "patch": "texture-initialize2d-source-presence.patch",
+        "dependency": "flight",
+        "sha256": "f3cb79ab62074768ddf1121ff89bfc49d4b48898146bff494cd7bc2f267c159b"
+      },
+      {
+        "id": "texture-create-options-views",
+        "patch": "texture-create-options-views.patch",
+        "dependency": "flight",
+        "sha256": "def21529b69a63a438e635308b4a493ed4bf9dc55a4cba4eae6457aa12abdcf0"
+      },
+      {
+        "id": "render-gl-texture-resolver-explicit-boundaries",
+        "patch": "render-gl-texture-resolver-explicit-boundaries.patch",
+        "dependency": "flight",
+        "sha256": "bb4f2fa0f5a707cf0ef10134b03c0f1732611fde94db89bc064aa6d36c8e1912"
+      },
+      {
+        "id": "canvas-texture-resolver-void-miss-callback",
+        "patch": "canvas-texture-resolver-void-miss-callback.patch",
+        "dependency": "flight",
+        "sha256": "3c4eedc759cdeb14e6459ee4f7ee97a35dd234bb37e345c150987e437f34a6f3"
+      },
+      {
+        "id": "canvas-texture-resolver-present-registry",
+        "patch": "canvas-texture-resolver-present-registry.patch",
+        "dependency": "flight",
+        "sha256": "322e828c53e5681be22063d05f9af44f64deccfec897e33344ab15fc43b782f0"
+      },
+      {
+        "id": "canvas-texture-resolver-exact-2d-source",
+        "patch": "canvas-texture-resolver-exact-2d-source.patch",
+        "dependency": "flight",
+        "sha256": "6773cd6ca994ee39ddf64516dd4d337285f2cb05d194ebbb4475971639d474fc"
+      },
+      {
+        "id": "canvas-texture-resolver-explicit-optional-receivers",
+        "patch": "canvas-texture-resolver-explicit-optional-receivers.patch",
+        "dependency": "flight",
+        "sha256": "961d410e81dcf1f92ab35dd027be34ab5594a2ba06b5c842ffd2abefd209b1c1"
+      },
+      {
+        "id": "canvas-texture-resolver-host-image-result",
+        "patch": "canvas-texture-resolver-host-image-result.patch",
+        "dependency": "flight",
+        "sha256": "a9aba250ea8c4c6ce86a015eb617932b7649ee788e66e9dee4d677caaf2c601b"
+      },
+      {
+        "id": "compiler-exact-variant-owner-priority",
+        "patch": "compiler-exact-variant-owner-priority.patch",
+        "dependency": "flight-compiler",
+        "sha256": "14655ce90d5c9a22f5e1c435e8b9a024fcfa591e168d1e867e9946db5ef3451d"
+      },
+      {
+        "id": "compiler-imported-alias-outer-union-abi",
+        "patch": "compiler-imported-alias-outer-union-abi.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a5370242528a7b45b42d12555e84de83702e6a213a184ee60d6a529bec88babb"
+      },
+      {
+        "id": "compiler-canvas-context-overload-result",
+        "patch": "compiler-canvas-context-overload-result.patch",
+        "dependency": "flight-compiler",
+        "sha256": "351729a88df1ad6eba3fe0924ff5893edd155828caa42894fb0d949fe31b1325"
+      },
+      {
+        "id": "compiler-owner-preserving-named-write",
+        "patch": "compiler-owner-preserving-named-write.patch",
+        "dependency": "flight-compiler",
+        "sha256": "53371cbd4743e855da063a9f475e6b13f8d642aae895a6f8dfeb57df0f0b3e53"
+      },
+      {
+        "id": "materials-named-standard-block-clone",
+        "patch": "materials-named-standard-block-clone.patch",
+        "dependency": "flight",
+        "sha256": "9d081e3811ef93e22a210fe4873eca748170d1136e5ff48dc2e983871f816c15"
+      },
+      {
+        "id": "materials-glass-preset-option-boundary",
+        "patch": "materials-glass-preset-option-boundary.patch",
+        "dependency": "flight",
+        "sha256": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6"
+      },
+      {
+        "id": "render-proxy-destroy-helper-owner",
+        "patch": "render-proxy-destroy-helper-owner.patch",
+        "dependency": "flight",
+        "sha256": "d70a28f47b279986c8f23502a2e05adcd865bd6fae86a96d0f7e9e605287ded7"
+      },
+      {
+        "id": "compiler-flattened-optional-chain-union-storage",
+        "patch": "compiler-flattened-optional-chain-union-storage.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5176cacf29fcc11f8007b1097930b8856507cb018b044e7a4e04920173a282e4"
+      },
+      {
+        "id": "compiler-imported-readonly-view-owner-recovery",
+        "patch": "compiler-imported-readonly-view-owner-recovery.patch",
+        "dependency": "flight-compiler",
+        "sha256": "652a856aaecd27035ecf47db110486bb249d5d16b8de8041c810e0b956752d95"
+      },
+      {
+        "id": "compiler-imported-variant-owner-qualification",
+        "patch": "compiler-imported-variant-owner-qualification.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e6b567cd7244cac90f437fcd978f1c14fc610e0cd489532aaac13c0c08ecc78d"
+      },
+      {
+        "id": "compiler-concrete-structural-union-view-selection",
+        "patch": "compiler-concrete-structural-union-view-selection.patch",
+        "dependency": "flight-compiler",
+        "sha256": "36a2a678fcee9bbd854e056ce8ef03270790c996d494e5450fdab8cd492aae06"
+      },
+      {
+        "id": "compiler-structural-union-exact-native-owner",
+        "patch": "compiler-structural-union-exact-native-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "622b0503864d02b2134889cd21b4a5368d091577587abba4df92052042276a4a"
+      },
+      {
+        "id": "compiler-imported-alias-parameter-abi",
+        "patch": "compiler-imported-alias-parameter-abi.patch",
+        "dependency": "flight-compiler",
+        "sha256": "18d87f3574366f6592917d4d54c778d21150e62b203bb7964b621e5cf79071e7"
+      },
+      {
+        "id": "compiler-imported-alias-local-flow-abi",
+        "patch": "compiler-imported-alias-local-flow-abi.patch",
+        "dependency": "flight-compiler",
+        "sha256": "809adc849b8c486b932c99ee8b1af2f3a45f52b2c82ebb2fd7283f76bb35926f"
+      },
+      {
+        "id": "compiler-imported-alias-call-declaration-recovery",
+        "patch": "compiler-imported-alias-call-declaration-recovery.patch",
+        "dependency": "flight-compiler",
+        "sha256": "3010ebb868a6dbdf12ca200a2a87bae7fd38a2e55d227231c3af2c6aa33f2462"
+      },
+      {
+        "id": "compiler-error-stack-cause-presence",
+        "patch": "compiler-error-stack-cause-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b6609b8eea331d2067a24aa4799ca507295e4261cf8b5f13dc202b7432a91766"
+      },
+      {
+        "id": "compiler-host-timer-return-type-handle",
+        "patch": "compiler-host-timer-return-type-handle.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a6faab48365c93a0daf4bd57691fd600f1899d7b2378ab5aa195c7039971ceb8"
+      },
+      {
+        "id": "compiler-nullable-optional-parameter-narrowing",
+        "patch": "compiler-nullable-optional-parameter-narrowing.patch",
+        "dependency": "flight-compiler",
+        "sha256": "1638ff18e9efecf738b72c7df1afec3189c1c0d43b828d47a6db1dd10758e0a0"
+      },
+      {
+        "id": "compiler-closed-key-external-member-call",
+        "patch": "compiler-closed-key-external-member-call.patch",
+        "dependency": "flight-compiler",
+        "sha256": "7f7ae843354297c55eba1d93337162c687494a6a564277bfe56d55d20b613f07"
+      },
+      {
+        "id": "compiler-host-object-dynamic-index-refusal",
+        "patch": "compiler-host-object-dynamic-index-refusal.patch",
+        "dependency": "flight-compiler",
+        "sha256": "c1d3393d6f91cbb89404155d2cfd774f71847aa50501571dfddbb673de0e58f5"
+      },
+      {
+        "id": "compiler-nullish-assignment-statement-in-catch",
+        "patch": "compiler-nullish-assignment-statement-in-catch.patch",
+        "dependency": "flight-compiler",
+        "sha256": "ad4b95bf90a84830a1c3c2d91796009b68cd4c7a9ff73b4ab83ef86d3dd4cb18"
+      },
+      {
+        "id": "compiler-catch-recorded-slot-carrier",
+        "patch": "compiler-catch-recorded-slot-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "46d8947034986c7143c66cd63b91f4bd7e31ce779b357fdf39fb77af61bb35b0"
+      },
+      {
+        "id": "compiler-catch-handler-breadth",
+        "patch": "compiler-catch-handler-breadth.patch",
+        "dependency": "flight-compiler",
+        "sha256": "7d7b38db348726bae56840f5bb5a1a88792218b9d3f42ef3861420eac1102042"
+      },
+      {
+        "id": "scene2d-canvas-host-image-draw-flow",
+        "patch": "scene2d-canvas-host-image-draw-flow.patch",
+        "dependency": "flight",
+        "sha256": "b1b0ec5443ee54580fee94b12244c019f234b1e6907bb26a6c12ae9a1b462b27"
+      },
+      {
+        "id": "scene2d-canvas-bitmap-host-image-cache",
+        "patch": "scene2d-canvas-bitmap-host-image-cache.patch",
+        "dependency": "flight",
+        "sha256": "7ec8e67047949256447a0f03583bf92d226ec279b51dd2f65aa9426dc66c54ae"
+      },
+      {
+        "id": "scene2d-canvas-exact-texture-view-dimensions",
+        "patch": "scene2d-canvas-exact-texture-view-dimensions.patch",
+        "dependency": "flight",
+        "sha256": "0450d81ca53668c8c183e8dd5fcf533eff877676387805475f2039ab705d3bf1"
+      },
+      {
+        "id": "scene2d-canvas-bitmap-text-readonly-runtime",
+        "patch": "scene2d-canvas-bitmap-text-readonly-runtime.patch",
+        "dependency": "flight",
+        "sha256": "2fba793639718a1b7157958c173af949be26fcd627f1822662f05c96e00ef242"
+      },
+      {
+        "id": "node-exact-capability-runtimes",
+        "patch": "node-exact-capability-runtimes.patch",
+        "dependency": "flight",
+        "sha256": "7ee1c044da0b9c0d3645862062ebe167442078d5d1a343ccc72cccf2dabe6fbf"
+      },
+      {
+        "id": "node-exact-runtime-helper-boundaries",
+        "patch": "node-exact-runtime-helper-boundaries.patch",
+        "dependency": "flight",
+        "sha256": "330857683895def9c717aa2c6012db54b36c43b7514d7b7c3d7f111d808bced9"
+      },
+      {
+        "id": "scene3d-readonly-transform-query-boundaries",
+        "patch": "scene3d-readonly-transform-query-boundaries.patch",
+        "dependency": "flight",
+        "sha256": "490783733951b1607487544bc6b55a26f26cc86a98d4ae2b192c36fd23c43694"
+      },
+      {
+        "id": "node-bounds-validity-explicit-carrier",
+        "patch": "node-bounds-validity-explicit-carrier.patch",
+        "dependency": "flight",
+        "sha256": "af2e19a517930ee72ae17a5de1cdd42f816536a1a4af890187458aaad25cf024"
+      },
+      {
+        "id": "materials-exact-construction-owner",
+        "patch": "materials-exact-construction-owner.patch",
+        "dependency": "flight",
+        "sha256": "f67f7a29c2b1b1355d163c4a4b0662a1fc4a0154edfd19aea7cf10f39926830f"
+      },
+      {
+        "id": "materials-standard-pbr-exact-owner-initialization",
+        "patch": "materials-standard-pbr-exact-owner-initialization.patch",
+        "dependency": "flight",
+        "sha256": "0c1655f66804c636af13bf39f23fd6221094a2290437e89fc692997ba2176562"
+      },
+      {
+        "id": "node-revision-required-parent-runtime",
+        "patch": "node-revision-required-parent-runtime.patch",
+        "dependency": "flight",
+        "sha256": "eba48b1d8650e71f7fa9f6fcdc4e31c8b7b64e4be04c2944fc690fb2d2a85248"
+      },
+      {
+        "id": "node-bounds-rectangle-explicit-narrowing",
+        "patch": "node-bounds-rectangle-explicit-narrowing.patch",
+        "dependency": "flight",
+        "sha256": "3f7f7773217c1e445a103aa4c33f0bc2eb7730b2f94bead8886d9930d869adeb"
+      },
+      {
+        "id": "log-buffered-sink-state-explicit-guard",
+        "patch": "log-buffered-sink-state-explicit-guard.patch",
+        "dependency": "flight",
+        "sha256": "31e4826e03668f0e58a7602ba5db2577b32a5c94781383148ca506c7c5478269"
+      },
+      {
+        "id": "particles-forces-case-early-exit-guards",
+        "patch": "particles-forces-case-early-exit-guards.patch",
+        "dependency": "flight",
+        "sha256": "1165b747e65ed42c54752a90953c97318f9e6aa925e9c4d099fefb6bdfa96722"
+      },
+      {
+        "id": "scene2d-canvas-text-label-base-cache",
+        "patch": "scene2d-canvas-text-label-base-cache.patch",
+        "dependency": "flight",
+        "sha256": "795007da7c7bfdc5be7924e6c1caf6c2dc40e1d39ae954c1366f00858d226c54"
+      },
+      {
+        "id": "compiler-readonly-view-argument-substitution",
+        "patch": "compiler-readonly-view-argument-substitution.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10"
+      },
+      {
+        "id": "compiler-host-timer-local-storage-carrier",
+        "patch": "compiler-host-timer-local-storage-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "4193c5b5211770c8b3ee97f2e15a17a8e694662335e1979185795bb1f04a3e64"
+      },
+      {
+        "id": "tray-create-result-and-runtime-owner",
+        "patch": "tray-create-result-and-runtime-owner.patch",
+        "dependency": "flight",
+        "sha256": "80cdd5e92ad925691bdef339a15c208d7e889a5761ad43c62b9cb07f1071e556"
+      },
+      {
+        "id": "compiler-nested-nullable-property-narrowed-null-test",
+        "patch": "compiler-nested-nullable-property-narrowed-null-test.patch",
+        "dependency": "flight-compiler",
+        "sha256": "523f94df836e5f7562357768b1fdbade55890276d67ad4c5a9a387038578bc9e"
+      },
+      {
+        "id": "audio-indexed-member-presence-proof",
+        "patch": "audio-indexed-member-presence-proof.patch",
+        "dependency": "flight",
+        "sha256": "b1f7f30e280c93c505cb3eb924428a9a1c83820314e7b0c9738ee448378b32d5"
+      },
+      {
+        "id": "swf-diagnostic-detail-records",
+        "patch": "swf-diagnostic-detail-records.patch",
+        "dependency": "flight",
+        "sha256": "46451ef2c8e13e3a3dc700ebeb63b2a2c08b0298519585d9588c4e54d03414d4"
+      },
+      {
+        "id": "swf-image-texture-2d-constructor",
+        "patch": "swf-image-texture-2d-constructor.patch",
+        "dependency": "flight",
+        "sha256": "00953bb916eb2b5aeaee901351d94fbd20543dd52984b04cb1ea98dabc9bf676"
+      },
+      {
+        "id": "swf-video-texture-2d-constructor",
+        "patch": "swf-video-texture-2d-constructor.patch",
+        "dependency": "flight",
+        "sha256": "7304378eb02e7ff146fd613305d0528545a41c7da4c3f41d567b09c61ee94be9"
+      },
+      {
+        "id": "compiler-placeholder-graph-qualification",
+        "patch": "compiler-placeholder-graph-qualification.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8ec9d24d1e269c2ed8d9fe6589ca57d933b0f208811a161fe338d597620997d6"
+      },
+      {
+        "id": "velocity-transform-trait-traversal",
+        "patch": "velocity-transform-trait-traversal.patch",
+        "dependency": "flight",
+        "sha256": "24c5deea8c620fdf601735ae6ac9320cd2324b7a1961a7f5b595c086d3ce8d39"
+      },
+      {
+        "id": "scene2d-sprite-exact-runtime-runner",
+        "patch": "scene2d-sprite-exact-runtime-runner.patch",
+        "dependency": "flight",
+        "sha256": "ea2fbaed4a0b6152b1bd8aa5babb790c6870e37e84936fe3761ed3864b5095a6"
+      },
+      {
+        "id": "compiler-constructor-parameter-property-assignment",
+        "patch": "compiler-constructor-parameter-property-assignment.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f2a6f053e15631b4b08e8bc18235cd2d04cdbdf80ec4c4af9466de0e4a08473d"
+      },
+      {
+        "id": "movieclip-spritesheet-texture-narrowed-insertion",
+        "patch": "movieclip-spritesheet-texture-narrowed-insertion.patch",
+        "dependency": "flight",
+        "sha256": "87a6cb003b62e3931e85d21bf984d23b2854b29650f7e40d74fef23f4eca0e72"
+      },
+      {
+        "id": "textureatlas-formats-explicit-formats",
+        "patch": "textureatlas-formats-explicit-formats.patch",
+        "dependency": "flight",
+        "sha256": "9abf3ab50ce8c657c7d19f45973d9067d4d0170b7f75ca026633f635a2ecb8a2"
+      },
+      {
+        "id": "textureatlas-formats-indexed-lines",
+        "patch": "textureatlas-formats-indexed-lines.patch",
+        "dependency": "flight",
+        "sha256": "0fbcbd99ff7bb8629b0a194daa5e95f966031017f1937d4136b860743af53b6e"
+      },
+      {
+        "id": "textureatlas-formats-starling-optional-attributes",
+        "patch": "textureatlas-formats-starling-optional-attributes.patch",
+        "dependency": "flight",
+        "sha256": "ab38b6d4591b75668b914a196ead648bd984e73e24a810ac2e6d91d9adb1efd0"
+      },
+      {
+        "id": "compiler-indexed-element-presence-test",
+        "patch": "compiler-indexed-element-presence-test.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8eba5041a0db63560cde1d6b2fec88d15db7886d4851fed5739e8058126fa67d"
+      },
+      {
+        "id": "skeleton2d-clone-slot-copy-declared-type",
+        "patch": "skeleton2d-clone-slot-copy-declared-type.patch",
+        "dependency": "flight",
+        "sha256": "f81648a28e77a2c4301bb958043659b713d52c8e2d2d9608e9c2f29c4acca928"
+      },
+      {
+        "id": "skeleton2d-create-two-state-slots-default",
+        "patch": "skeleton2d-create-two-state-slots-default.patch",
+        "dependency": "flight",
+        "sha256": "472b363c3d68e6e81f576d2d4adc77bca26d997059c1ef852a973b3d1a321190"
+      },
+      {
+        "id": "skeleton2d-slot-deform-offsets-slice",
+        "patch": "skeleton2d-slot-deform-offsets-slice.patch",
+        "dependency": "flight",
+        "sha256": "dc7687f7f930f8478bd84edda35df13ae1ed62493934efb2259a4858bff50256"
+      },
+      {
+        "id": "skeleton2d-bone-name-present-comparison",
+        "patch": "skeleton2d-bone-name-present-comparison.patch",
+        "dependency": "flight",
+        "sha256": "64dacae63b2d1e446378625dd366b294b4b86ef34567f3e07255406a63ddbb47"
+      },
+      {
+        "id": "compiler-constrained-type-parameter-union-slot",
+        "patch": "compiler-constrained-type-parameter-union-slot.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f281424105f66dd2a847b79e4051e82854d03d10e2f6e51174f4219f89e111ee"
+      },
+      {
+        "id": "compiler-dependent-callable-pack-reuse",
+        "patch": "compiler-dependent-callable-pack-reuse.patch",
+        "dependency": "flight-compiler",
+        "sha256": "ed37cd746bee997f5f3e615a16c4dd4f2ec06d4c5888d28c4135cf32d6d25ebc"
+      },
+      {
+        "id": "skeleton2d-formats-diagnostic-detail-number-locals",
+        "patch": "skeleton2d-formats-diagnostic-detail-number-locals.patch",
+        "dependency": "flight",
+        "sha256": "740298fad36a994cce0e9cb8684ba55141285ee92cf46db0cd1000dd393bd40c"
+      },
+      {
+        "id": "skeleton2d-formats-census-unknown-attachment-exit",
+        "patch": "skeleton2d-formats-census-unknown-attachment-exit.patch",
+        "dependency": "flight",
+        "sha256": "ad1a693c823352807701ff91b636e45287a933c44b9f9dbdd42a89dd3992788f"
+      },
+      {
+        "id": "skeleton2d-formats-binary-influences-constructor",
+        "patch": "skeleton2d-formats-binary-influences-constructor.patch",
+        "dependency": "flight",
+        "sha256": "728a285175409320c9e9e30c084ca53e398ad3adef1e5fadf7a467a8dbdc9e8b"
+      },
+      {
+        "id": "skeleton2d-formats-census-byte-reader-parameters",
+        "patch": "skeleton2d-formats-census-byte-reader-parameters.patch",
+        "dependency": "flight",
+        "sha256": "1a7b9858b19bbed224484100ea52940ff9c63e3bd14f4d0f732b4f72c222fd3f"
+      },
+      {
+        "id": "compiler-runtime-instanceof-lowering",
+        "patch": "compiler-runtime-instanceof-lowering.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5105e7a3a57c86cbf2b4beb8ef2b26fce2d7066234ee08ab9f687da2ce140b14"
+      },
+      {
+        "id": "compiler-profile-type-name-evidence",
+        "patch": "compiler-profile-type-name-evidence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b82d88ab8157b69233e22292e58922e5e7fab9c1120f8282ebb83b7e0dd41849"
+      },
+      {
+        "id": "compiler-guarded-path-narrowing",
+        "patch": "compiler-guarded-path-narrowing.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2d10c022c42dc8006ad924ef3c040bb4845ed8d02e2f46b902c4d62de7f772e0"
+      },
+      {
+        "id": "compiler-catch-await-owned-carrier",
+        "patch": "compiler-catch-await-owned-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e48d51c610294a6eb138036d3db11734914dc5462f47abe51901d5e62ec3433e"
+      },
+      {
+        "id": "compiler-promise-resolve-domain",
+        "patch": "compiler-promise-resolve-domain.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e575a351676fde146b22003c49379629c6aa5d459c8fea41529930486c0caa4e"
+      },
+      {
+        "id": "flow-optional-overlay-flags-explicit",
+        "patch": "flow-optional-overlay-flags-explicit.patch",
+        "dependency": "flight",
+        "sha256": "fce2b7f3fe317a902fdc7c0f833dffd303c15a76eb9f959d482d2460b8fbc093"
+      },
+      {
+        "id": "compiler-callable-arity-adaptation",
+        "patch": "compiler-callable-arity-adaptation.patch",
+        "dependency": "flight-compiler",
+        "sha256": "6493ede41b94d493501690ef7094be544feaa14d36e8c498e32c5c07c982582a"
+      },
+      {
+        "id": "compiler-nul-string-literal",
+        "patch": "compiler-nul-string-literal.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8faa111a17b55f48adb6c83173c5e22e145a19accf1e1a4aa125a439fce63c89"
+      },
+      {
+        "id": "statechart-comparison-closed-set",
+        "patch": "statechart-comparison-closed-set.patch",
+        "dependency": "flight",
+        "sha256": "a3fc8c55b9e6d0cbb6cab15595febd2e50e734b3fb3b88a9dcef65874e0dd236"
+      },
+      {
+        "id": "requirement-codegen-expand-requirements-nominal-copy",
+        "patch": "requirement-codegen-expand-requirements-nominal-copy.patch",
+        "dependency": "flight",
+        "sha256": "bfd2435e9ecf7a62e2e02d470ffc3bcc4383a7860490373d1c58608f514caead"
+      },
+      {
+        "id": "compiler-generic-receiver-null-write",
+        "patch": "compiler-generic-receiver-null-write.patch",
+        "dependency": "flight-compiler",
+        "sha256": "d609d18915598b6a5b363d54a7d1886985ffbc66a02742442a0cea75890706a8"
+      },
+      {
+        "id": "compiler-new-map-copy",
+        "patch": "compiler-new-map-copy.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e2b35fd34c7ae5cb0fb2c65ea762d49573cb8948be5720479878d81668f4ac95"
+      },
+      {
+        "id": "compiler-new-set-copy",
+        "patch": "compiler-new-set-copy.patch",
+        "dependency": "flight-compiler",
+        "sha256": "597593e1b256d84f62e056df3d120da9c8dfac2b130a84db2a8510989cb2b61b"
+      },
+      {
+        "id": "compiler-new-set-from-iterator",
+        "patch": "compiler-new-set-from-iterator.patch",
+        "dependency": "flight-compiler",
+        "sha256": "334ca08252477612fb3a869c28ba4d4a43ac534f321c1a5b7fbf0e4ac1600509"
+      },
+      {
+        "id": "compiler-nullish-conditional-absent-fallback",
+        "patch": "compiler-nullish-conditional-absent-fallback.patch",
+        "dependency": "flight-compiler",
+        "sha256": "faed6e00141e3e976e5ab08a7067b44f15bd8b98b212676cd59ab91fcba10652"
+      },
+      {
+        "id": "bitmap-clone-typed-array-slice",
+        "patch": "bitmap-clone-typed-array-slice.patch",
+        "dependency": "flight",
+        "sha256": "b18e2d15d31a8f586fffab064649e5cd6fbcc874802aff1d992c6f9693e1cf59"
+      },
+      {
+        "id": "compiler-declared-present-reference-chain",
+        "patch": "compiler-declared-present-reference-chain.patch",
+        "dependency": "flight-compiler",
+        "sha256": "d74c93685375817aefca246260b6972a9ec383b528f291d094fbedc1c19bce34"
+      },
+      {
+        "id": "compiler-asserted-empty-object-fallback",
+        "patch": "compiler-asserted-empty-object-fallback.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5ae844a099b0bbbac6be9552e9c7b89d73e811e93ea453eac4275ee31786d52d"
+      },
+      {
+        "id": "compiler-coalesced-union-member-narrowing",
+        "patch": "compiler-coalesced-union-member-narrowing.patch",
+        "dependency": "flight-compiler",
+        "sha256": "9c008abdd99d3dcb22652f4ee15a3680e4a2b89d3bc7fd41036a50322b06bf7c"
+      },
+      {
+        "id": "compiler-narrowed-coalesced-arm-slot",
+        "patch": "compiler-narrowed-coalesced-arm-slot.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5072d8f9f0b8493929f273b31c113daa0ccbdb3f5c08e5f40b5c0c9b58146c35"
+      },
+      {
+        "id": "compiler-dependent-indexed-access-carrier",
+        "patch": "compiler-dependent-indexed-access-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f4d618509cc70d0ebc6e82a221cb50edc21531426c4944f2fec254ee5f63bfc9"
+      },
+      {
+        "id": "compiler-async-closure-coroutine",
+        "patch": "compiler-async-closure-coroutine.patch",
+        "dependency": "flight-compiler",
+        "sha256": "05c0f2a60d83a99fc4dc39e41c5178846388a67113db0f59538eb78fad53cd89"
+      },
+      {
+        "id": "physics2d-collider-bounds-spatial-aabb",
+        "patch": "physics2d-collider-bounds-spatial-aabb.patch",
+        "dependency": "flight",
+        "sha256": "5fb73bf431eb4bfc0b7cc379be12708e83643a3dda4d2843d949f0046798bbe9"
+      },
+      {
+        "id": "physics2d-area-less-overlap-whole-shapes",
+        "patch": "physics2d-area-less-overlap-whole-shapes.patch",
+        "dependency": "flight",
+        "sha256": "1cd35686350973ec5c454d8dac4a7dc2f5b568f34150d2ba59a7b3c35861e2bb"
+      },
+      {
+        "id": "physics2d-default-collision-filter-annotation",
+        "patch": "physics2d-default-collision-filter-annotation.patch",
+        "dependency": "flight",
+        "sha256": "7c4553f9df97a35fb9dca42f4b78203aa6a0ec3760c0b075d4018ac2e151fc67"
+      },
+      {
+        "id": "physics2d-remove-body-owner-key",
+        "patch": "physics2d-remove-body-owner-key.patch",
+        "dependency": "flight",
+        "sha256": "a0f13bdf5d10de24f8089c6a7a87e9336e7f2b108f81abb7c3eedb7237910593"
+      },
+      {
+        "id": "physics2d-earliest-impact-split-presence-guards",
+        "patch": "physics2d-earliest-impact-split-presence-guards.patch",
+        "dependency": "flight",
+        "sha256": "b99c5c86d8c4f6956ee8652164164392ddddda4eeaa97109a2756181d96d58cd"
+      },
+      {
+        "id": "physics2d-shape-cast-guarded-body",
+        "patch": "physics2d-shape-cast-guarded-body.patch",
+        "dependency": "flight",
+        "sha256": "581a1584e1ce2c10683f3b0d07174e3edf92d727cd8b6b92c1e1e9ac999ffd6b"
+      },
+      {
+        "id": "physics2d-contact-hook-restore-finally",
+        "patch": "physics2d-contact-hook-restore-finally.patch",
+        "dependency": "flight",
+        "sha256": "27705a3a64db2c347e63334e91310962481fd543b9c66d00aff5a12e6a26f396"
+      },
+      {
+        "id": "physics2d-hydrate-version-declared-read",
+        "patch": "physics2d-hydrate-version-declared-read.patch",
+        "dependency": "flight",
+        "sha256": "6251112caa81bcade663baf0b63a07fc3b836ad60d5b6279a5682826bd97fe01"
+      },
+      {
+        "id": "compiler-exported-type-owner-cache",
+        "patch": "compiler-exported-type-owner-cache.patch",
+        "dependency": "flight-compiler",
+        "sha256": "c89b56761105c07c388b1676c1ef38122b8737c560aba5e289cc25f14ec066d2"
+      },
+      {
+        "id": "registry-ordinal-table-nullable-entries",
+        "patch": "registry-ordinal-table-nullable-entries.patch",
+        "dependency": "flight",
+        "sha256": "e056a66afba308166484831d3e236288e0cf644caad6b52930a67dd9ae59b0b8"
+      },
+      {
+        "id": "compiler-derived-render-state-owner-fixture",
+        "patch": "compiler-derived-render-state-owner-fixture.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5fc1b04a682a8ce4c4b2595617d8cc60d8c04bbb6bc015249f9a6b6b36c209a8"
+      },
+      {
+        "id": "material-concrete-value-path",
+        "patch": "material-concrete-value-path.patch",
+        "dependency": "flight",
+        "sha256": "6e1a54f21266005149e9c2f44ce0d305db9684ffe03092ce6152f812ffe87918"
+      },
+      {
+        "id": "modifier-concrete-value-path",
+        "patch": "modifier-concrete-value-path.patch",
+        "dependency": "flight",
+        "sha256": "02826d9d7d9a66104b16d64d8067120ccdedb7d3fa37eb252fbfe50de6cf8171"
+      },
+      {
+        "id": "scene3d-gl-pbr-alpha-mode-boundary",
+        "patch": "scene3d-gl-pbr-alpha-mode-boundary.patch",
+        "dependency": "flight",
+        "sha256": "dcdc63893840d28c8fd598991a1d29146eb00b2934e6843f28619747ac02f4ed"
+      },
+      {
+        "id": "scene3d-gl-shadow-checked-capability-flow",
+        "patch": "scene3d-gl-shadow-checked-capability-flow.patch",
+        "dependency": "flight",
+        "sha256": "8c0c732e807a799baeca5e5876a66de650efdb211b64e2b7b7d858bf01e27944"
+      },
+      {
+        "id": "compiler-shadow-checked-capability-flow",
+        "patch": "compiler-shadow-checked-capability-flow.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b8f09f5a35986a3afbf96e694f0d0f792849b9c1d81eb5c14d280fa6f8877f7c"
+      },
+      {
+        "id": "render-node-call-explicit-traits",
+        "patch": "render-node-call-explicit-traits.patch",
+        "dependency": "flight",
+        "sha256": "95de41226fa6db8fea89e1655054837ae16500af50d8c24a3ffd570331345da3"
+      },
+      {
+        "id": "compiler-named-reexport-provenance",
+        "patch": "compiler-named-reexport-provenance.patch",
+        "dependency": "flight-compiler",
+        "sha256": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78"
+      },
+      {
+        "id": "scene3d-instanced-mesh-lazy-signals",
+        "patch": "scene3d-instanced-mesh-lazy-signals.patch",
+        "dependency": "flight",
+        "sha256": "c9796b0f0ff46f66c6541b0e08cd3d77b45bc7d57bd83bf7f595526e7db27104"
+      },
+      {
+        "id": "scene2d-resources-typed-result-owners",
+        "patch": "scene2d-resources-typed-result-owners.patch",
+        "dependency": "flight",
+        "sha256": "17630c9a89c7e417a5e32c441193348b59fd9fa87a833f9557fc1aeb41904242"
+      },
+      {
+        "id": "image-resource-mime-optional-carrier",
+        "patch": "image-resource-mime-optional-carrier.patch",
+        "dependency": "flight",
+        "sha256": "671ce355461f9a70ef066a853a886627ed48449d58f2c05495810b12591ca81e"
+      },
+      {
+        "id": "scene3d-formats-gltf-skin-matrix-loop",
+        "patch": "scene3d-formats-gltf-skin-matrix-loop.patch",
+        "dependency": "flight",
+        "sha256": "8d67b87767da9a2df8dedb66a69f7d53d056c1e27d027056dcb33014605eb7b6"
+      },
+      {
+        "id": "scene3d-instanced-color-present-write",
+        "patch": "scene3d-instanced-color-present-write.patch",
+        "dependency": "flight",
+        "sha256": "3a84ea96e8bc853ec7cbab7e14897b1b8276bde0357265f29d5ffbf440a68b8f"
+      },
+      {
+        "id": "layout-flex-basis-unknown-comparison",
+        "patch": "layout-flex-basis-unknown-comparison.patch",
+        "dependency": "flight",
+        "sha256": "42a00e3d8d431f7092531a1f647ea033dc16121a3816d434e85ffb38bd2011f9"
+      },
+      {
+        "id": "spine-binary-transform-mode-element-union",
+        "patch": "spine-binary-transform-mode-element-union.patch",
+        "dependency": "flight",
+        "sha256": "30659e68bd4ad4992f6842069422fb21ada0beec8b71c8550e34c4530ce6801a"
+      },
+      {
+        "id": "scene2d-dom-texture-table-carrier",
+        "patch": "scene2d-dom-texture-table-carrier.patch",
+        "dependency": "flight",
+        "sha256": "2c8fd25b0c5a2b74d8f64ae910a9b9f0dafa9dbb7c25e6e698a49c1b814fe717"
+      },
+      {
+        "id": "scene3d-formats-obj-standard-pbr-explicit-options",
+        "patch": "scene3d-formats-obj-standard-pbr-explicit-options.patch",
+        "dependency": "flight",
+        "sha256": "d1d818c5647ec793f95122ff1e5fbc73e942e213f06686ada18cf8b3e10ea839"
+      },
+      {
+        "id": "layout-anchor-number-guard-carrier",
+        "patch": "layout-anchor-number-guard-carrier.patch",
+        "dependency": "flight",
+        "sha256": "5371a4984d94034440c05a59eb2b920485a8b65c60248d42e6dba91d529e8fb6"
+      },
+      {
+        "id": "scene2d-dom-merge-options-empty-map-fallback",
+        "patch": "scene2d-dom-merge-options-empty-map-fallback.patch",
+        "dependency": "flight",
+        "sha256": "15af192d7ec6f974e25e21f0f8d3e51ccb49bfe68bcb79bdba30e74cea3901d6"
+      },
+      {
+        "id": "scene3d-gl-custom-uniform-context-carrier",
+        "patch": "scene3d-gl-custom-uniform-context-carrier.patch",
+        "dependency": "flight",
+        "sha256": "b6df07fc083066e3ed9aa2b9139aa3b5fdc9d3c626a1abb1ad784853a39f06f8"
+      },
+      {
+        "id": "rive-object-graph-fresh-diagnostic-record",
+        "patch": "rive-object-graph-fresh-diagnostic-record.patch",
+        "dependency": "flight",
+        "sha256": "123a1e9ecded618e022c2d436d7d65fedff5b2d1ddae2360683c7f93389bbfc1"
+      },
+      {
+        "id": "registry-kind-map-keys-value-parameter",
+        "patch": "registry-kind-map-keys-value-parameter.patch",
+        "dependency": "flight",
+        "sha256": "3796a8f0b5dc208e6d5da424d5638b37992877d6169d3157bd5f194df682c601"
+      },
+      {
+        "id": "scene3d-formats-obj-texture-2d-owner",
+        "patch": "scene3d-formats-obj-texture-2d-owner.patch",
+        "dependency": "flight",
+        "sha256": "6a9401faad526209b961b362bf7225a152c9bf656e1103baa387cbae99fe95a1"
+      },
+      {
+        "id": "compiler-erased-array-iteration",
+        "patch": "compiler-erased-array-iteration.patch",
+        "dependency": "flight-compiler",
+        "sha256": "0044f4f924c67ad11c04d3d8cd1f685e1205e5af0eebd4cc468ca4db0bbff352"
+      },
+      {
+        "id": "scene2d-svg-selector-numeric-match-length",
+        "patch": "scene2d-svg-selector-numeric-match-length.patch",
+        "dependency": "flight",
+        "sha256": "5537769e9693b44831ad5676d881b8df6218501fe26bf28521763d9efddfb8e6"
+      },
+      {
+        "id": "scene2d-svg-declarations-string-prototype-key",
+        "patch": "scene2d-svg-declarations-string-prototype-key.patch",
+        "dependency": "flight",
+        "sha256": "ac8441e622c1d0d90582f68b11c0bd8e7f6c52e1de960fef114c1ce7de995f03"
+      },
+      {
+        "id": "compiler-nullable-map-get-nullish-projection",
+        "patch": "compiler-nullable-map-get-nullish-projection.patch",
+        "dependency": "flight-compiler",
+        "sha256": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe"
+      },
+      {
+        "id": "compiler-interface-native-heritage-widening",
+        "patch": "compiler-interface-native-heritage-widening.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346"
+      },
+      {
+        "id": "swf-filter-effect-owner-pushes",
+        "patch": "swf-filter-effect-owner-pushes.patch",
+        "dependency": "flight",
+        "sha256": "fdc03913754c0032e641e5662524723f3543b75be17ad76f690d4374499382b0"
+      },
+      {
+        "id": "compiler-inferred-invocation-type-arguments",
+        "patch": "compiler-inferred-invocation-type-arguments.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c"
+      },
+      {
+        "id": "compiler-erased-array-length-index",
+        "patch": "compiler-erased-array-length-index.patch",
+        "dependency": "flight-compiler",
+        "sha256": "953aeb3686a0f53b0ad009e039e3b2589704d27186b11519bd120d95da9e188f"
+      },
+      {
+        "id": "scene2d-formats-lottie-frame-rate-narrowed-local",
+        "patch": "scene2d-formats-lottie-frame-rate-narrowed-local.patch",
+        "dependency": "flight",
+        "sha256": "98f7aae5b4f798dde31c50fd1d5ada718a274b7a7b3ce20ee3693be79dbce64b"
+      },
+      {
+        "id": "compiler-present-readonly-row-context",
+        "patch": "compiler-present-readonly-row-context.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8a1e679fa8ce48194555fff6b889a2b8e7b8a7523e3f5c45395d047f4406f25a"
+      },
+      {
+        "id": "compiler-callable-value-identity",
+        "patch": "compiler-callable-value-identity.patch",
+        "dependency": "flight-compiler",
+        "sha256": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab"
+      },
+      {
+        "id": "compiler-optional-record-literal-materialization",
+        "patch": "compiler-optional-record-literal-materialization.patch",
+        "dependency": "flight-compiler",
+        "sha256": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35"
+      },
+      {
+        "id": "loader-options-nullish-row-local",
+        "patch": "loader-options-nullish-row-local.patch",
+        "dependency": "flight",
+        "sha256": "72c6e93d6ecd01d01a821fe311868c9243d9e9d8b4c5945506a0e3260d60098c"
+      },
+      {
+        "id": "compiler-readonly-json-record-view",
+        "patch": "compiler-readonly-json-record-view.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f78224dedf15bea1a840b6b140ad743fe41635c270fdb2ddb9caab76e71d05e6"
+      },
+      {
+        "id": "compiler-typed-record-missing-key",
+        "patch": "compiler-typed-record-missing-key.patch",
+        "dependency": "flight-compiler",
+        "sha256": "ad62c0d079d119e37e03ad454a63cdb459e2def8bb9f225a380ef4bcdc43b618"
+      },
+      {
+        "id": "compiler-nullable-element-dual-sentinel",
+        "patch": "compiler-nullable-element-dual-sentinel.patch",
+        "dependency": "flight-compiler",
+        "sha256": "4c95512067d677d96e64cc51bbbf82308fd59b8b1b4833ae0d47b0bd9a0c0bf4"
+      },
+      {
+        "id": "loader-finish-entity-factory-return",
+        "patch": "loader-finish-entity-factory-return.patch",
+        "dependency": "flight",
+        "sha256": "47c13685be95c1bf034e9e2876411e04b7520c70890da14f96621b31de85e1f6"
+      },
+      {
+        "id": "compiler-readonly-contextual-source-projection",
+        "patch": "compiler-readonly-contextual-source-projection.patch",
+        "dependency": "flight-compiler",
+        "sha256": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f"
+      },
+      {
+        "id": "compiler-contextual-optional-map-owner",
+        "patch": "compiler-contextual-optional-map-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1"
+      },
+      {
+        "id": "compiler-contextual-new-value-object-any",
+        "patch": "compiler-contextual-new-value-object-any.patch",
+        "dependency": "flight-compiler",
+        "sha256": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709"
+      },
+      {
+        "id": "compiler-external-object-field-literal-type",
+        "patch": "compiler-external-object-field-literal-type.patch",
+        "dependency": "flight-compiler",
+        "sha256": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63"
+      },
+      {
+        "id": "compiler-private-json-read-flow",
+        "patch": "compiler-private-json-read-flow.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635"
+      },
+      {
+        "id": "compiler-record-computed-delete",
+        "patch": "compiler-record-computed-delete.patch",
+        "dependency": "flight-compiler",
+        "sha256": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce"
+      },
+      {
+        "id": "compiler-primitive-record-nullish-storage",
+        "patch": "compiler-primitive-record-nullish-storage.patch",
+        "dependency": "flight-compiler",
+        "sha256": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42"
+      },
+      {
+        "id": "scene2d-svg-cascade-own-key-presence",
+        "patch": "scene2d-svg-cascade-own-key-presence.patch",
+        "dependency": "flight",
+        "sha256": "9c00002f5a395b1af2fa807c03794558b558773591c5b52c61fcafa253b0e735"
+      },
+      {
+        "id": "scene2d-svg-color-local-component-presence",
+        "patch": "scene2d-svg-color-local-component-presence.patch",
+        "dependency": "flight",
+        "sha256": "f2fa29aec68d6ec58cb16c16280e76974bfbd6f8790bead0fe78848d7055924e"
+      },
+      {
+        "id": "compiler-erased-external-member-presence",
+        "patch": "compiler-erased-external-member-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "41f0bc10a57c1ab32d932a13c81b93d2f735c9edaaac53c561ebc51e4d5a53bc"
+      },
+      {
+        "id": "compiler-interface-absence-refinement-heritage",
+        "patch": "compiler-interface-absence-refinement-heritage.patch",
+        "dependency": "flight-compiler",
+        "sha256": "66424d0fafd05a309bb73a2f4385128e265527a5e539c78af02f8cb599d661eb"
+      },
+      {
+        "id": "compiler-membership-test-presence",
+        "patch": "compiler-membership-test-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "fd765af8a838ff382afe73debf4e2e1d39549ca7b54a40fdb226d1e67257b787"
+      },
+      {
+        "id": "compiler-regexp-capture-member-presence",
+        "patch": "compiler-regexp-capture-member-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c"
+      },
+      {
+        "id": "compiler-defaulted-nullable-present-storage",
+        "patch": "compiler-defaulted-nullable-present-storage.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c"
+      },
+      {
+        "id": "compiler-structural-member-view-assertion",
+        "patch": "compiler-structural-member-view-assertion.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e3f3e239ad2c4889e564df21456fa5ec0d300991e9c5196c0a1b391d95e86c2c"
+      },
+      {
+        "id": "compiler-private-guarded-json-read-flow",
+        "patch": "compiler-private-guarded-json-read-flow.patch",
+        "dependency": "flight-compiler",
+        "sha256": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899"
+      },
+      {
+        "id": "compiler-contextual-tuple-element-array-literal",
+        "patch": "compiler-contextual-tuple-element-array-literal.patch",
+        "dependency": "flight-compiler",
+        "sha256": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022"
+      },
+      {
+        "id": "compiler-finish-entity-construction-owner",
+        "patch": "compiler-finish-entity-construction-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2276aca307eed2259bdb1ea3137f621aeb565ec170c03c4806be92ff8f613490"
+      },
+      {
+        "id": "compiler-record-missing-key-falsiness-guard",
+        "patch": "compiler-record-missing-key-falsiness-guard.patch",
+        "dependency": "flight-compiler",
+        "sha256": "591ac0c8444ec8973095cbd1b12564604036a9226d3ccc4786b76ddcf6fd1543"
+      },
+      {
+        "id": "compiler-inferred-member-written-union",
+        "patch": "compiler-inferred-member-written-union.patch",
+        "dependency": "flight-compiler",
+        "sha256": "4e0557549d81e925ab43e163cd061564224c5ea57d87a2464291d2f886e5af91"
+      },
+      {
+        "id": "compiler-symbol-membership-variant-arm",
+        "patch": "compiler-symbol-membership-variant-arm.patch",
+        "dependency": "flight-compiler",
+        "sha256": "03ab2079a4035fef44a6bbafdb662db109f7b1f47886c22f609d6922cfd2f046"
+      },
+      {
+        "id": "compiler-numeric-enum-string-conversion",
+        "patch": "compiler-numeric-enum-string-conversion.patch",
+        "dependency": "flight-compiler",
+        "sha256": "ae8ba1319364e05b5f229d3dda15a15a8110c632ad3657c5de5a1b59f224ec4f"
+      },
+      {
+        "id": "compiler-inherited-alias-reference-representation",
+        "patch": "compiler-inherited-alias-reference-representation.patch",
+        "dependency": "flight-compiler",
+        "sha256": "f4a6d558dff6861711348dd6c8a0553d0fdd15ec40031f8a56362f3db10a90cd"
+      },
+      {
+        "id": "compiler-private-record-forwarded-reads",
+        "patch": "compiler-private-record-forwarded-reads.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410"
+      },
+      {
+        "id": "compiler-guarded-indexed-nullable-member",
+        "patch": "compiler-guarded-indexed-nullable-member.patch",
+        "dependency": "flight-compiler",
+        "sha256": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509"
+      },
+      {
+        "id": "compiler-loop-bound-indexed-element-member",
+        "patch": "compiler-loop-bound-indexed-element-member.patch",
+        "dependency": "flight-compiler",
+        "sha256": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda"
+      },
+      {
+        "id": "compiler-checked-derived-member-read",
+        "patch": "compiler-checked-derived-member-read.patch",
+        "dependency": "flight-compiler",
+        "sha256": "e931613ede280463c98560c37b3f3819871e949f491dc83eeecb1e21e5b71830"
+      },
+      {
+        "id": "compiler-structural-value-carrier",
+        "patch": "compiler-structural-value-carrier.patch",
+        "dependency": "flight-compiler",
+        "sha256": "25a6e4beb1df63018a1dd7d1a2446fbf834e3e736ea0acad6e6459b13167b281"
+      },
+      {
+        "id": "compiler-single-carrier-union-member",
+        "patch": "compiler-single-carrier-union-member.patch",
+        "dependency": "flight-compiler",
+        "sha256": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5"
+      },
+      {
+        "id": "compiler-inherited-callable-initializer-qualification",
+        "patch": "compiler-inherited-callable-initializer-qualification.patch",
+        "dependency": "flight-compiler",
+        "sha256": "c2eea4d061e189620cfb71335e15ef85fce24fe71d1c8b6725a9fb245c1f7eb7"
+      },
+      {
+        "id": "compiler-self-returning-array-iterable-lifetime",
+        "patch": "compiler-self-returning-array-iterable-lifetime.patch",
+        "dependency": "flight-compiler",
+        "sha256": "b4ca431185b332354a76a73a34582e02240dcc9286d3828583d7615c645f5f0a"
+      },
+      {
+        "id": "compiler-shared-reference-cells",
+        "patch": "compiler-shared-reference-cells.patch",
+        "dependency": "flight-compiler",
+        "sha256": "09962470833600196748e2955962ec8a19673d1fb9005b6f47c82bed9bb5cb32"
+      },
+      {
+        "id": "compiler-inherited-callable-declaration-owner",
+        "patch": "compiler-inherited-callable-declaration-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "fc98f4858d4cc1f7329bbd906bab057847cb3f7c283df2e2f3ccad2606db2bc8"
+      },
+      {
+        "id": "compiler-checked-record-member-owner",
+        "patch": "compiler-checked-record-member-owner.patch",
+        "dependency": "flight-compiler",
+        "sha256": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d"
+      },
+      {
+        "id": "compiler-private-json-record-graph-reads",
+        "patch": "compiler-private-json-record-graph-reads.patch",
+        "dependency": "flight-compiler",
+        "sha256": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7"
+      },
+      {
+        "id": "compiler-json-assertion-scalar-row",
+        "patch": "compiler-json-assertion-scalar-row.patch",
+        "dependency": "flight-compiler",
+        "sha256": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100"
+      },
+      {
+        "id": "compiler-symbol-own-presence",
+        "patch": "compiler-symbol-own-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "695dd5568912c3d87080e836dc2738f17aedc9def76b42ef5857a4a5707b920d"
+      },
+      {
+        "id": "particle-codec-document-result-owned-view",
+        "patch": "particle-codec-document-result-owned-view.patch",
+        "dependency": "flight",
+        "sha256": "306ec6173f117b52c6893fceb79843eba69e29046f14cec376c7ff561044e617"
+      },
+      {
+        "id": "compiler-readonly-named-callable-views",
+        "patch": "compiler-readonly-named-callable-views.patch",
+        "dependency": "flight-compiler",
+        "sha256": "5fb75e2fc9b47274854cfda989f9fd6996edb158ace6a30f52bcc350aee482b4"
+      },
+      {
+        "id": "compiler-nullish-map-construction-and-presence",
+        "patch": "compiler-nullish-map-construction-and-presence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db"
+      },
+      {
+        "id": "compiler-nullable-json-and-indexed-string-trim",
+        "patch": "compiler-nullable-json-and-indexed-string-trim.patch",
+        "dependency": "flight-compiler",
+        "sha256": "19dfb5e6a5c4ef6201cc23fe0dbdee53a2fbe2a9bb134fe0065bec4be20d2a12"
+      },
+      {
+        "id": "compiler-erased-array-selection-and-fill",
+        "patch": "compiler-erased-array-selection-and-fill.patch",
+        "dependency": "flight-compiler",
+        "sha256": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507"
+      },
+      {
+        "id": "compiler-erased-host-result-evidence",
+        "patch": "compiler-erased-host-result-evidence.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2190c726952f0094779da59a6fddc76bcbf50873a3ef6ffd1d59c417da1f968b"
+      },
+      {
+        "id": "compiler-lazy-nullish-fallback",
+        "patch": "compiler-lazy-nullish-fallback.patch",
+        "dependency": "flight-compiler",
+        "sha256": "58871773838c4eb4fed581bc7ab90466eb75045a90459f83622d57985e8de758"
+      },
+      {
+        "id": "compiler-structural-value-carrier-host-handle-read",
+        "patch": "compiler-structural-value-carrier-host-handle-read.patch",
+        "dependency": "flight-compiler",
+        "sha256": "2064d76712c6322c4142ee492c3bf7e34482927138b110a3a9699982e9c79d81"
+      },
+      {
+        "id": "compiler-generic-array-owner-and-narrowed-field",
+        "patch": "compiler-generic-array-owner-and-narrowed-field.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a2b481665a7b79c982bd0f0eba5bea6b75491f416f47d7c28b586f8c13b0b8c9"
+      },
+      {
+        "id": "compiler-typed-empty-fallback-iteration",
+        "patch": "compiler-typed-empty-fallback-iteration.patch",
+        "dependency": "flight-compiler",
+        "sha256": "6039c5df40c9568ecd3ee62bc3be4b93b4d104e774455c056b646d3a617c3656"
+      },
+      {
+        "id": "compiler-narrowed-filter-and-optional-subset",
+        "patch": "compiler-narrowed-filter-and-optional-subset.patch",
+        "dependency": "flight-compiler",
+        "sha256": "a4396017b29ea09288e5426bf8438d36689edac093b06b44837474b54afccad7"
+      },
+      {
+        "id": "compiler-lazy-json-union-document-view",
+        "patch": "compiler-lazy-json-union-document-view.patch",
+        "dependency": "flight-compiler",
+        "sha256": "65ca74c364ca1be7ad20c35c41cc1018d13d957b00ce1d3ce605c552e6dcef87"
+      },
+      {
+        "id": "compiler-original-optional-slot-and-erased-membership",
+        "patch": "compiler-original-optional-slot-and-erased-membership.patch",
+        "dependency": "flight-compiler",
+        "sha256": "7d33d6372b467a651a6e5e4a662f924dfeaf480a1ee5adcad8ecc6486cb4e841"
+      },
+      {
+        "id": "compiler-readonly-forwarded-options",
+        "patch": "compiler-readonly-forwarded-options.patch",
+        "dependency": "flight-compiler",
+        "sha256": "09e0c030079a77564ebfa25915007d0b074c9dea8d83456fe6163c24cd7bbfeb"
+      },
+      {
+        "id": "compiler-closed-readonly-record-view",
+        "patch": "compiler-closed-readonly-record-view.patch",
+        "dependency": "flight-compiler",
+        "sha256": "cfc8dd6213ae6bd5907e0db9717cacc351afcf2255389b16de4841092a1bb429"
+      }
+    ],
+    "generationStarted": true,
+    "qualification": {
+      "compilerPatches": 124,
+      "totalPatches": 326,
+      "rawOrderedApplyContentAndReverse": true,
+      "baseline123Strict": "pass",
+      "active124Strict": "pass",
+      "focused12": "pass",
+      "excluded10": "byte-identical",
+      "syntheticNative27": "pass",
+      "sourceOracle": "original2helpers/nativeABI/IR unchanged"
+    },
+    "actualStart": "2026-10-18T18:18:26.225785+00:00",
+    "pid": 339336,
+    "actualSdkCompilerMatchesQualified124": [
+      {
+        "file": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "actual": "c2ff43aedc95cafa8fd8495288b52cc5f8968f744cf115b853d646434f6fc83d",
+        "qualified": "c2ff43aedc95cafa8fd8495288b52cc5f8968f744cf115b853d646434f6fc83d",
+        "identical": true
+      },
+      {
+        "file": "packages/tool-compiler/dist/packages/compiler-backend-cpp/src/cppCompilerBackend.js",
+        "actual": "67c82ec7f8106f9637bf45ba45da109cee12440b8689476bb7e7d611a27551e7",
+        "qualified": "67c82ec7f8106f9637bf45ba45da109cee12440b8689476bb7e7d611a27551e7",
+        "identical": true
+      }
+    ]
+  },
+  "postGenerationIntegrity": {
+    "dependencyHeaders": 1150,
+    "changedDependencyHeaders": [],
+    "frozenPatchPayloads": 326,
+    "changedPatchPayloads": [],
+    "postExitPinnedCheckoutsClean": true
+  },
+  "sourcePublic": {
+    "strictOriginalConsumerGraph": "pass",
+    "originalPublicContractAndBodies": true,
+    "checks": 129,
+    "groups": {
+      "installation": 10,
+      "identity": 12,
+      "detectors": 32,
+      "dispatch": 5,
+      "options": 36,
+      "result": 8,
+      "errors": 26
+    },
+    "sourceHashes": {
+      "particles-formats/src/contract.ts": "965cfcaaf5b6859b1402e09ba3d682ef2f48b93a46f2d649ee8264223ddb83a7",
+      "particles-formats/src/particlesFormatRequirements.ts": "85fd490dcf5125446c37ad1bf3cff59ea52d0b6ad0a2f6725c50111a9d6892b2",
+      "particles-formats/src/detect.ts": "4bfc90c37d41c8554be4ea234c67e6c3e5bdf0d520421534c5ed41a59987ef08",
+      "particles-formats/src/formatRegistry.ts": "d2be4a574bdcdbad130117db7647e79a961f8b89b9595d2b36a8e05be3131281",
+      "importdiagnostics/src/importDiagnosticCollector.ts": "5aab6518a367bf77e95168a553875de04ea9fa91d2ac7e561d76c76e12efa215",
+      "particles/src/particleEmitterConfig.ts": "77a2f7a28c06a03a73d0e7b52d93f3e739448351b985bc6f697c78e5459e30ac",
+      "particles/src/curve.ts": "a0af9f5497161fde7072a877fb8d1cb5b89e7ce5fb4e0eefb83717ef5688ecc5",
+      "types/src/ImportDiagnostic.ts": "b56593c1baf28ae733c9fdce62e96fee96bfa9ea3628a7c271a8464f45bdf8ae",
+      "types/src/ParticleFormatKind.ts": "f64c52f3f0fc9302eb7ab89ce298f3e78bbc67ea1db2be66822bd63630601ba5",
+      "types/src/ParticleConfigParse.ts": "9f6112360c2e8c354e0ed476bc7ea15d926e50cf549a4bfd0dd0a43cbeb84be2",
+      "types/src/ParticleFormatCodec.ts": "358ac4621fdef099551a33aa08afc27e16a31d9f9fb7280ffc817cc6b04dfbcf",
+      "types/src/ParticleFormatDescriptor.ts": "2f05ed87e4bceaa861e834053141a30eb464eed7a1ea31f8e979ad6b1692f5d3",
+      "types/src/ParticleEmitterConfig.ts": "95b0764b4cbc447ef74f1ff89d537a19c64c01cfb237e7718986868ae31715a5",
+      "types/src/ParticleCurve.ts": "19b9ce4d922cea06abb6091cb055bf4bb64812d2250a2e9e0dd161e254eeaf88",
+      "types/src/ParticleSerializeResult.ts": "1b46b9b8ff6772a4199e629a01f67ea485bcf4192a1d37baa3d1b86b6533ed7b",
+      "types/src/NonEntityCreateResult.ts": "27250e4d661f90b18c29fbb8335628b453c8eba3d3c39e450920c426c09f5fe7",
+      "types/src/LibgdxParticleSchema.ts": "40c97ed6d2416159c3f41c6d883c05fdf6ad92a1d848d6b732efa4bcbcfa32c2",
+      "types/src/ParticleDesignerSchema.ts": "5f12c203d88f5535daa1eaae6f9c08e8680b994d279ce82ecbb578bed1a6fc36",
+      "types/src/PixiParseResult.ts": "b626a71483f4eab2e53d3686cfc837e113b616bd50681eab29c239e45e4bc81e",
+      "types/src/SpineParticleSchema.ts": "2d1f9144aaa4e1a06d23d21fe0fed83b0337af349111a4c0c75073b024f263ce",
+      "types/src/StarlingPexSchema.ts": "e593d0dc15f11f697364a416f93b8604fc3a9f2c1da27763b0204e5b96736bce",
+      "types/src/UnitySchema.ts": "63041525e043df157215f132d4270e1f1efb28e295de4183311cc39c9353a9df",
+      "particles-formats/src/libgdxParse.ts": "d14d5f6a3750a39886ee8cb64a3841c5433d38b5a02aa05bab3e415a7c8cae1d",
+      "math/src/constants.ts": "81b1771fa6df3dbaf350ce79a7d43ec8981ee60e7349eebcdd2af92e4412aedf",
+      "particles-formats/src/libgdxSerialize.ts": "c2c3017898d0d5ef8dc978eacd9f87e9d86cf2b48a8f08f00f7760d48ab97ad9",
+      "particles-formats/src/parseParticleConfig.ts": "64f4478308016bb37b67ca688e36fc18dad6b1155fe8b93d48fbcf4117a7f7eb",
+      "particles-formats/src/particleDesignerParse.ts": "45b23388fc116f2b0d73da2fb60dc25ea06f186f8ee325621f9affabe38e9fc4",
+      "particles-formats/src/particleDesignerSerialize.ts": "8f0613d0d51f98de2a5916b1249e2f4f86fa99e1333400276b7d0a525bf76dc5",
+      "particles-formats/src/pixiParse.ts": "13cb19a58dfd4c6559b170bfd496487339e1abfbba99cb3fa8552dbb557391ab",
+      "particles-formats/src/registerBuiltInParticleFormats.ts": "cc4e0d3e1200a304c0fe4e8b2d5a73e153d1b8975059e5fa501d32f5603ce519",
+      "particles-formats/src/spineParse.ts": "51485edfdac2fc2fad2865f94100b138e32d003c09c0750282ffdff8c7075de5",
+      "particles-formats/src/spineSerialize.ts": "10f2be14e0ee558c2eafcfac128c7013430731bbc017f294092324eca9b0ed21",
+      "particles-formats/src/starlingPexParse.ts": "83b73cce886b40ea0cf5f5ac9b249ded35232fb387090ec1daa2ec47d2e66af0",
+      "particles-formats/src/starlingPexSerialize.ts": "9e12809c95be05f999c74d6c738ca4bd73756e053b6cb5f0777dbe35979c7bc0",
+      "particles-formats/src/unityParse.ts": "105d29c1d9abbf99f3968fc0404c289cf6b1ec82c0694d06c81f66a944b182db",
+      "particles-formats/src/unitySerialize.ts": "fad0e1c330071cd9f3cfa1a0405340ec7d6ae2ad797b2cb5d1541fcc67e1bfa6"
+    },
+    "nativeConsumer": {
+      "fixture": "scripts/fixtures/particlePublicConsumer.cpp",
+      "sha256": "f25701042de7b3218c755bee0f4b9562644165578d01f4dc8cf07db2ddbda8e1",
+      "compiled": false,
+      "status": "prepared; qualification pending actual shared Types and authorized particles output"
+    },
+    "normalSdk": false,
+    "scope": "Actual original TypeScript public registration/detection/registry/callback/parser edge controls. No compiler emission, installed native callback/header, SDK or ledger claim."
+  },
+  "actualNative": {
+    "normalSdk": false,
+    "scope": "Actual selected generated inventory. Original public TypeScript consumer emitted with the exact declared type-only codec result patch. No local parser/detector/codec implementation or invented public declaration.",
+    "inputContextSha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+    "declaredTypeOnlyPatch": {
+      "file": "source-patches/particle-codec-document-result-owned-view.patch",
+      "sha256": "306ec6173f117b52c6893fceb79843eba69e29046f14cec376c7ff561044e617"
+    },
+    "sourceConsumer": {
+      "file": "scripts/fixtures/particlePublicConsumer.ts",
+      "sha256": "5f8a80282d769ab018689a7e02c920926090854e9fde3ce391d5a3bda8579e39",
+      "emittedSha256": "5da174c964fc7d66ba9ad64115cb6201e305bdd3d78e081e4d213f5c08ea6685",
+      "helperCalls": [
+        "parse_particle_config_flight_readonly_options_e84f3ed8689bb024",
+        "parse_particle_config_document_flight_readonly_options_b19fbb432e032207"
+      ],
+      "helpersInInstalledHeader": true
+    },
+    "nativeFixture": {
+      "file": "scripts/fixtures/particlePublicConsumer.cpp",
+      "sha256": "f25701042de7b3218c755bee0f4b9562644165578d01f4dc8cf07db2ddbda8e1"
+    },
+    "inventory": [
+      {
+        "file": "flight/particles_formats/unity_parse.hpp",
+        "sha256": "79d32b62b78761cf823153c2b593a5bf37b496e359801600ed9c170cf7842e28"
+      },
+      {
+        "file": "flight/particles_formats/_internal_index.hpp",
+        "sha256": "b13da872914679d2864aa232c0587b31cb844409ca7bf7c7c4def02bad069b09"
+      },
+      {
+        "file": "flight/particles_formats/contract.hpp",
+        "sha256": "99fbfe1f8ca8395cfc36bd34e7b8d7797f1e55e5eac92d28b7a42f8add1f79a7"
+      },
+      {
+        "file": "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "sha256": "bec33fc554cb24fe3912f89835b06595e11011003019771b5d7c9e903f6852c5"
+      },
+      {
+        "file": "flight/particles_formats/parse_particle_config.hpp",
+        "sha256": "8848033ec4d21310c62fa7fcae179fac9486e4a323716221e2f921bcba776da9"
+      },
+      {
+        "file": "flight/types/particle_format_codec.hpp",
+        "sha256": "fb6266f7b4fc0dfc484144ad867c9a8e5ad871e8263e1695ea56ddde8c638740"
+      },
+      {
+        "file": "flight/sdk/structural_members.hpp",
+        "sha256": "b4e1140c54ff6baed7343cc49d591632552bea6d9c2a047cdc6b44e296a124f6"
+      }
+    ],
+    "emitOnly": false,
+    "compiled": false,
+    "headers": [
+      {
+        "file": "flight/particles_formats/unity_parse.hpp",
+        "pass": false,
+        "exit": 1,
+        "log": "/tmp/builder3-particles-normal-80qnsivq/public-native.json.header-0.log"
+      },
+      {
+        "file": "flight/particles_formats/_internal_index.hpp",
+        "pass": false,
+        "exit": 1,
+        "log": "/tmp/builder3-particles-normal-80qnsivq/public-native.json.header-1.log"
+      },
+      {
+        "file": "flight/particles_formats/contract.hpp",
+        "pass": false,
+        "exit": 1,
+        "log": "/tmp/builder3-particles-normal-80qnsivq/public-native.json.header-2.log"
+      },
+      {
+        "file": "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "pass": false,
+        "exit": 1,
+        "log": "/tmp/builder3-particles-normal-80qnsivq/public-native.json.header-3.log"
+      }
+    ],
+    "compileExit": 1,
+    "publicNativeQualified": false,
+    "inventoryUnchanged": true
+  },
+  "logs": [
+    {
+      "file": "artifacts/particle-normal-qualification/public-native.json.header-0.log",
+      "sha256": "6382104735d5dde85099ddb3e4a9116e476489ac4350c594440a112d8c4895af",
+      "errors": [
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'"
+      ]
+    },
+    {
+      "file": "artifacts/particle-normal-qualification/public-native.json.header-1.log",
+      "sha256": "d61c1a352e72af4f28e6376f188e0f463ef0415c43669fb7efc70b3be28c50c5",
+      "errors": [
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::PixiParseResult>': structural reference source has an incompatible object type",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::SpineParseResult>': structural reference source has an incompatible object type"
+      ]
+    },
+    {
+      "file": "artifacts/particle-normal-qualification/public-native.json.header-2.log",
+      "sha256": "44b2e3bd2d30d72a10d5d1be15c674e0a71af7f98dbffa5a9959746c3f34c18c",
+      "errors": [
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::PixiParseResult>': structural reference source has an incompatible object type",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::SpineParseResult>': structural reference source has an incompatible object type"
+      ]
+    },
+    {
+      "file": "artifacts/particle-normal-qualification/public-native.json.header-3.log",
+      "sha256": "4f90ebe5946775a2b6652d3997ad6451a13148edbbc7f3ce90ee05efed3eb821",
+      "errors": [
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::PixiParseResult>': structural reference source has an incompatible object type",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::SpineParseResult>': structural reference source has an incompatible object type"
+      ]
+    },
+    {
+      "file": "artifacts/particle-normal-qualification/public-native.json.native-build.log",
+      "sha256": "e13d0768290c21d8ebb18630b064dd6f3d064502410aad51b5752fe4d26bfdd9",
+      "errors": [
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:312:282: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:317:288: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/generated/include/flight/particles_formats/unity_parse.hpp:323:286: error: no viable conversion from 'flight::ReadonlyRecordView<std::variant<bool, double, flight::String>>' to 'std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>'",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::PixiParseResult>': structural reference source has an incompatible object type",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/structural_ref.hpp:492:19: error: static assertion failed due to requirement 'dependent_false<flight::types::SpineParseResult>': structural reference source has an incompatible object type",
+        "/tmp/builder3-particles-normal-80qnsivq/repo/include/flight/record.hpp:74:19: error: static assertion failed due to requirement 'dependent_false_record<char[8]>': Flight Record key is not a PropertyKey domain"
+      ]
+    }
+  ],
+  "firstBoundaries": [
+    {
+      "kind": "named-dependency-coherence",
+      "locations": [
+        "generated/include/flight/particles_formats/unity_parse.hpp:312",
+        "generated/include/flight/particles_formats/unity_parse.hpp:317",
+        "generated/include/flight/particles_formats/unity_parse.hpp:323",
+        "generated/include/flight/importdiagnostics/import_diagnostic_collector.hpp:24",
+        "generated/include/flight/types/import_diagnostic.hpp:30"
+      ],
+      "detail": "New ReadonlyRecordView details cannot enter retained concrete Record storage. Builder5 confirms; coherent later Types/importdiagnostics emission coordinated with sole writer2."
+    },
+    {
+      "kind": "one-parameter-named-result-view",
+      "locations": [
+        "generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:223",
+        "generated/include/flight/particles_formats/register_built_in_particle_formats.hpp:258"
+      ],
+      "detail": "Original Pixi/Spine Ref results are returned directly from existing contextual arity wrappers as Required canonical result rows. Native subjects are unrelated. Bounded result-only same-owner implementation now approved Managera2abd00b/Foreman-a57a9f1e; not part of this frozen normal output."
+    },
+    {
+      "kind": "fixture-record-key-carrier",
+      "locations": [
+        "scripts/fixtures/particlePublicConsumer.cpp:138",
+        "scripts/fixtures/particlePublicConsumer.cpp:149"
+      ],
+      "detail": "Original failed native fixture passed C-string message to Record.get. Corrected source now passes flight::String; full corrected native consumer not yet qualified. Original failed fixture hash retained in actualNative.",
+      "correctedFixtureSha256": "652e111e364ac1ad7081578a00888d0378e89ada7795b48b2e12c4d727755fe8"
+    }
+  ],
+  "claims": {
+    "exactHeadersPassed": 0,
+    "exactHeadersFailed": 4,
+    "publicConsumerCompiled": false,
+    "nativeCallbacksExecuted": 0,
+    "nativeJsonDetectorChecksExecuted": 0,
+    "packagePromoted": false,
+    "sharedBAccepted": false,
+    "generatedWrittenToMainRepo": false
+  },
+  "outputArchive": {
+    "file": "/tmp/builder3-particles-normal-80qnsivq/particles-normal-output-provisional.tar.gz",
+    "sha256": "9c2a29ee777d2c6cf30561d6ba82d181c2e061ab4d4891dcdd84429a001b209a",
+    "content": "exact13 changed normal generated paths plus actual provenance; full shared B output is not resent"
+  }
+}

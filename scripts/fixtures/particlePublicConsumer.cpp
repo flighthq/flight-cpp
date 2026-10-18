@@ -135,7 +135,7 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
   bool matching_error = false;
   for (const auto& crumb : rejected->diagnostics) {
     if (crumb->kind != "particles.parse-error" || crumb->origin != "parseRegisteredParticleFormat" || !crumb->detail) continue;
-    const auto message = crumb->detail->get("message");
+    const auto message = crumb->detail->get(flight::String("message"));
     const auto* text = message ? std::get_if<flight::String>(&*message) : nullptr;
     matching_error = crumb->severity == "Reject" && text && *text == "options sentinel";
   }
@@ -146,7 +146,7 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
   bool matching_public_error = false;
   for (const auto& crumb : rejected_public->diagnostics) {
     if (crumb->kind != "particles.parse-error" || crumb->origin != "parseParticleConfigDocument" || !crumb->detail) continue;
-    const auto message = crumb->detail->get("message");
+    const auto message = crumb->detail->get(flight::String("message"));
     const auto* text = message ? std::get_if<flight::String>(&*message) : nullptr;
     matching_public_error = crumb->severity == "Reject" && text && *text == "options sentinel";
   }
