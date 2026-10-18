@@ -1,0 +1,147 @@
+{
+  "active": false,
+  "decisionRequired": true,
+  "fixtureStrict": true,
+  "nativeSyntheticCompatibility": {
+    "checks": 27,
+    "failures": 0
+  },
+  "originalSavedGraph": {
+    "sha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+    "originalModuleIrSha256": "fc06693fbaa9c900eb378945c6a6a1d1778b631cb76e3237923565eadc492416",
+    "unchanged": true,
+    "nativeSignaturesUnchanged": [
+      "inline flight::Ref<flight::types::ParticleEmitterConfig> parse_particle_config(flight::String text, std::optional<flight::Ref<flight::types::ParseParticleConfigOptions>> options = std::nullopt) {",
+      "inline flight::Ref<flight::types::ParticleConfigParseResult> parse_particle_config_document(flight::String text, std::optional<flight::Ref<flight::types::ParseParticleConfigOptions>> options = std::nullopt) {"
+    ],
+    "additionalReadonlyHelpers": [
+      "inline flight::Ref<flight::types::ParticleEmitterConfig> parse_particle_config_flight_readonly_options_e84f3ed8689bb024(flight::String text, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> options = std::nullopt) {",
+      "inline flight::Ref<flight::types::ParticleConfigParseResult> parse_particle_config_document_flight_readonly_options_b19fbb432e032207(flight::String text, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>> options = std::nullopt) {"
+    ],
+    "originalAndConsumerWithoutRefusals": true,
+    "compilerEmittedModuleSha256": "80a319be46cd1ced3d73969ebb9135610d20ed7da06148de62537e27faf1a732",
+    "consumerSha256": "06a68f8a66a40e1a0bfe3f5a2011a6cccfbe6abbca0c97f543822a84205c1a3c"
+  },
+  "proposal": {
+    "file": "docs/compiler-requests/proposals/compiler-readonly-forwarded-options.patch",
+    "sha256": "eb82660069c64504e693ce661b9ddabb5bc418ed026167ebeab740d789035961",
+    "inActiveManifest": false
+  },
+  "normalSdk": false,
+  "scope": "Scratch compiler proposal only. Synthetic emitted native controls prove unchanged original function pointer ABI, schema-only readonly owner/accessor/exception/lifetime behavior. Actual original automatic parser bodies and readonly consumer source emit from saved graph. This is not installed public native parser qualification.",
+  "compilerFloor": {
+    "compilerPatches": 119,
+    "totalPatches": 321,
+    "base": "1f5a18f8",
+    "sourceCompilation": "scratch only, inactive proposal applied over active119",
+    "strict": "pass"
+  },
+  "focused": {
+    "adapter": "node:assert, not Vitest",
+    "outcomes": [
+      {
+        "name": "adds a uniquely named readonly helper while keeping the original native ABI",
+        "pass": true
+      },
+      {
+        "name": "keeps a nominal caller on the original entrypoint",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for mutable target",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for different canonical owner",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for two forwarding uses",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for alias escape",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for captured reference",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for additional direct read",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for parameter write",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for identity observation",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for non numeric shape",
+        "pass": true
+      },
+      {
+        "name": "leaves the preceding lane for three field shape",
+        "pass": true
+      }
+    ],
+    "parity": [
+      {
+        "name": "mutable target",
+        "unchanged": true
+      },
+      {
+        "name": "different canonical owner",
+        "unchanged": true
+      },
+      {
+        "name": "two forwarding uses",
+        "unchanged": true
+      },
+      {
+        "name": "alias escape",
+        "unchanged": true
+      },
+      {
+        "name": "captured reference",
+        "unchanged": true
+      },
+      {
+        "name": "additional direct read",
+        "unchanged": true
+      },
+      {
+        "name": "parameter write",
+        "unchanged": true
+      },
+      {
+        "name": "identity observation",
+        "unchanged": true
+      },
+      {
+        "name": "non numeric shape",
+        "unchanged": true
+      },
+      {
+        "name": "three field shape",
+        "unchanged": true
+      }
+    ]
+  },
+  "managerDecision": "Pending: approve additional readonly entrypoints for the bounded single-forwarding/two-optional-numeric-field shape, outside previous one-field/direct-read proof.",
+  "patchRoundTrip": {
+    "reversesExactlyToActive119": true,
+    "reappliesExactlyToQualifiedCandidate": true
+  },
+  "retainedSource": {
+    "passed": 56,
+    "nativeCaseDeliberatelyUnselected": 1
+  },
+  "integratedEmptyFallbackControls": {
+    "sourcePassed": 23,
+    "exclusionsUnchanged": 13
+  }
+}

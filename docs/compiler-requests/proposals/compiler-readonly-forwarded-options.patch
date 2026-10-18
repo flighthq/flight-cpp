@@ -1,0 +1,166 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5563,10 +5563,11 @@
+       const callableExpression = hasDependentCallableSpread
+         ? unwrapCppAnyRestCallableCast(expression.callee)
+         : expression.callee;
+-      const callee =
++      const readonlyForwardedCall = getCppReadonlyForwardedOptionsCallCpp(expression, context);
++      const callee = readonlyForwardedCall?.callee ?? (
+         callableExpression.kind === 'function'
+           ? `(${emitExpression(callableExpression, context)})`
+-          : emitExpression(callableExpression, context);
++          : emitExpression(callableExpression, context));
+       const sourceTypeArguments =
+         expression.typeArguments.length > 0
+           ? expression.typeArguments
+@@ -5596,7 +5597,7 @@
+             }
+             const recordReadArgument = emitCppPrivateRecordReadArgumentCpp(expression, index, context);
+             if (recordReadArgument) return recordReadArgument;
+-            const argumentExpectedType = getIrCallArgumentExpectedTypeCpp(
++            const argumentExpectedType = index === 1 && readonlyForwardedCall ? readonlyForwardedCall.type : getIrCallArgumentExpectedTypeCpp(
+               expression,
+               index,
+               context,
+@@ -26869,7 +26870,7 @@
+ // every parameter reference is an optional data read outside nested closures and mutation targets.
+ function getCppReadonlyCallableOptionsPlanCpp(
+   declaration: Readonly<IrFunctionDeclaration>, context: EmitContext,
+-): Readonly<{ parameter: Readonly<IrParameter>; type: Readonly<IrType>; helper: string }> | undefined {
++): Readonly<{ parameter: Readonly<IrParameter>; type: Readonly<IrType>; helper: string; forwarded: boolean }> | undefined {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || declaration.async || declaration.namespaceMember ||
+       declaration.typeParameters.length || declaration.overloads.length || declaration.parameters.length !== 2) return undefined;
+   const [text, parameter] = declaration.parameters;
+@@ -26879,8 +26880,10 @@
+   const owner = context.sourceModules.find(module => module.declarations.some(d => d.kind === 'function' && d.binding.id === declaration.binding.id)) ?? context.module;
+   if (context.referenceRepresentationPlanner.resolveStructuralRow(parameter.type, owner)) return undefined;
+   const shape = context.referenceRepresentationPlanner.resolveObjectShape(parameter.type, owner);
+-  if (!shape || shape.length !== 1 || shape.some(p => p.computedKey || !p.optional ||
++  if (!shape || shape.some(p => p.computedKey || !p.optional ||
+       p.type.kind !== 'primitive' || p.type.name !== 'number')) return undefined;
++  const forwarded = shape.length === 2 && hasCppReadonlyForwardedOptionsUseCpp(declaration, parameter, owner, context);
++  if (shape.length !== 1 && !forwarded) return undefined;
+   const references: Readonly<IrExpression>[] = [], receivers = new Set<Readonly<IrExpression>>();
+   let invalid = false;
+   const isParameter = (e: Readonly<IrExpression>): boolean => e.kind === 'identifier' &&
+@@ -26899,12 +26902,64 @@
+       });
+     },
+   });
+-  if (invalid || references.length === 0 || references.some(reference => !receivers.has(reference))) return undefined;
++  if (!forwarded && (invalid || references.length === 0 || references.some(reference => !receivers.has(reference)))) return undefined;
+   const type: IrType = { kind: 'named', reference: { kind: 'ambient', name: 'Readonly' }, typeArguments: [parameter.type] };
+   const names = context.targetNameMaps.get(getCppModuleIdentityKey(owner)) ?? context.targetNames;
+   const base = `${names.get(declaration.binding.id) ?? safeCppName(declaration.binding.name)}_flight_readonly_options_${getCppStableIdentifierHash(declaration.binding.id)}`;
+   const reserved = new Set(names.values()); let helper = base; while (reserved.has(helper)) helper += '_';
+-  return { parameter, type, helper };
++  return { parameter, type, helper, forwarded };
++}
++
++// PROPOSAL ONLY: one original optional nominal options binding forwarded exactly once to
++// a declared readonly callable parameter over the SAME canonical declaration. No read/copy/cast.
++function hasCppReadonlyForwardedOptionsUseCpp(
++  declaration: Readonly<IrFunctionDeclaration>, parameter: Readonly<IrParameter>,
++  owner: Readonly<IrModule>, context: EmitContext,
++): boolean {
++  const references: Readonly<IrExpression>[] = [], forwarded = new Set<Readonly<IrExpression>>();
++  let captured = false;
++  const isParameter = (expression: Readonly<IrExpression>): boolean => expression.kind === 'identifier' &&
++    expression.reference.kind === 'binding' && expression.reference.binding.id === parameter.binding.id;
++  const original = getCppMemberDeclarationKeyCpp(parameter.type, owner, context);
++  if (!original) return false;
++  for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++    expression(expression) {
++      if (isParameter(expression)) references.push(expression);
++      if (expression.kind === 'function') analyzeIrExpressionSubtreeTraversal(expression, {
++        expression(nested) { if (isParameter(nested)) captured = true; },
++      });
++      if (expression.kind !== 'call' || expression.optional || expression.callee.kind !== 'property' ||
++          expression.callee.optional || expression.arguments.length !== 2 || !expression.arguments[1] ||
++          !isParameter(expression.arguments[1])) return;
++      const target = getIrInvocationArgumentExpectedTypeCpp(expression, 1);
++      const row = target ? context.referenceRepresentationPlanner.resolveStructuralRow(target, owner) : undefined;
++      const nominal = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
++      if (!row || !isCppStructuralRowReadonlyCpp(row) || nominal?.kind !== 'named' ||
++          getCppMemberDeclarationKeyCpp(nominal, getCppNamedTypeBindingModuleCpp(nominal, context), context) !== original) return;
++      forwarded.add(expression.arguments[1]);
++    },
++  });
++  return !captured && references.length === 1 && forwarded.has(references[0]!);
++}
++
++function getCppReadonlyForwardedOptionsCallCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>, context: EmitContext,
++): Readonly<{ callee: string; type: Readonly<IrType> }> | undefined {
++  if (expression.optional || expression.typeArguments.length || expression.arguments.length !== 2 ||
++      expression.callee.kind !== 'identifier' || expression.callee.reference.kind !== 'binding') return undefined;
++  const declaration = getCppFunctionDeclarationForBindingCpp(expression.callee.reference.binding.id, context);
++  const plan = declaration ? getCppReadonlyCallableOptionsPlanCpp(declaration, context) : undefined;
++  if (!declaration || !plan?.forwarded) return undefined;
++  const argument = expression.arguments[1]!;
++  const source = getIrExpressionBindingTypeCpp(argument, context) ?? getIrExpressionTypeEvidenceCpp(argument, context);
++  const members = source?.kind === 'union' ? source.types.filter(type => type.kind !== 'null' && type.kind !== 'undefined') : source ? [source] : [];
++  const present = members.length === 1 ? members[0] : undefined;
++  const row = present ? context.referenceRepresentationPlanner.resolveStructuralRow(present, context.module) : undefined;
++  if (!row || !isCppStructuralRowReadonlyCpp(row) ||
++      getCppStructuralRowObjectWideningProofCpp(present!, plan.type, context) !== 'proven') return undefined;
++  const native = emitIdentifierReference(expression.callee.reference, context);
++  const separator = native.lastIndexOf('::');
++  return { callee: (separator < 0 ? '' : native.slice(0, separator + 2)) + plan.helper, type: plan.type };
+ }
+ 
+ // Only the selected callback result projection uses this proof. Named members must resolve to
+@@ -26949,7 +27004,7 @@
+   const declaration = getCppFunctionDeclarationForBindingCpp(expression.reference.binding.id, context);
+   const plan = declaration ? getCppReadonlyCallableOptionsPlanCpp(declaration, context) : undefined;
+   const target = getCppPlainCallableTypeCpp(expectedType, context);
+-  if (!declaration || !plan || !target || target.typeParameters.length || target.parameters.length !== 2 ||
++  if (!declaration || !plan || plan.forwarded || !target || target.typeParameters.length || target.parameters.length !== 2 ||
+       target.parameters.some(p => p.rest) || !target.parameters[1]?.optional) return undefined;
+   const source = getIrFunctionDeclarationTypeCpp(declaration);
+   const targetCpp = emitType(target, context);
+diff --git a/packages/compiler-backend-cpp/src/cppReadonlyForwardedOptionsProposal.test.ts b/packages/compiler-backend-cpp/src/cppReadonlyForwardedOptionsProposal.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppReadonlyForwardedOptionsProposal.test.ts
+@@ -0,0 +1,38 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++function emit(source:string):string {
++ const lowered=lowerTypeScriptSource(ts.createSourceFile('/flight/packages/example/src/proposal.ts',source,ts.ScriptTarget.Latest,true),{packageName:'@flighthq/example',upstreamDirectory:'/flight'});
++ expect(lowered.diagnostics).toEqual([]);return emitIrModuleCpp(lowered.module,{runtimeProfile:'flight-cpp'}).contents;
++}
++const prefix='export interface Options{size?:number;kind?:number}export interface Sink{parse(text:string,options?:Readonly<Options>):number}export let sink:Sink={parse:(_text:string,options?:Readonly<Options>)=>5};';
++const forward='export function dispatch(text:string,options?:Options):number{return sink.parse(text,options)}';
++const consumer='export function consume(text:string,options?:Readonly<Options>):number{return dispatch(text,options)}';
++it('adds a uniquely named readonly helper while keeping the original native ABI',()=>{
++ const output=emit(prefix+forward+consumer);
++ expect(output).toContain('inline double dispatch(flight::String text, std::optional<flight::Ref<Options>> options = std::nullopt)');
++ expect(output.match(/inline double dispatch_flight_readonly_options_/g)?.length).toEqual(1);
++ expect(output).toMatch(/return dispatch_flight_readonly_options_[a-f0-9]+\(text, options\);/);
++ expect(output.match(/return sink->parse\(text, options\);/g)?.length).toEqual(2);
++ expect(output).not.toContain('structural_ref_cast');expect(output).not.toContain('make_structural_ref');
++});
++it('keeps a nominal caller on the original entrypoint',()=>{
++ const output=emit(prefix+forward+'export function native(text:string,options?:Options):number{return dispatch(text,options)}');
++ expect(output).toContain('return dispatch(text, options);');
++});
++const excluded:readonly(readonly[string,string])[]=[
++ ['mutable target',prefix.replace('Readonly<Options>','Options')+forward],
++ ['different canonical owner',prefix.replace('export interface Sink','export interface Other{size?:number;kind?:number}export interface Sink').replace('Readonly<Options>','Readonly<Other>')+forward],
++ ['two forwarding uses',prefix+forward.replace('return sink.parse(text,options)','sink.parse(text,options);return sink.parse(text,options)')],
++ ['alias escape',prefix+forward.replace('return sink.parse(text,options)','const alias=options;return sink.parse(text,alias)')],
++ ['captured reference',prefix+forward.replace('return sink.parse(text,options)','const fn=()=>sink.parse(text,options);return fn()')],
++ ['additional direct read',prefix+forward.replace('return sink.parse(text,options)','options?.size;return sink.parse(text,options)')],
++ ['parameter write',prefix+forward.replace('return sink.parse(text,options)','options=undefined;return sink.parse(text,options)')],
++ ['identity observation',prefix+forward.replace('return sink.parse(text,options)','if(options===undefined)return 0;return sink.parse(text,options)')],
++ ['non numeric shape',prefix.replace('kind?:number','kind?:string')+forward],
++ ['three field shape',prefix.replace('kind?:number','kind?:number;other?:number')+forward],
++];
++it.each(excluded)('leaves the preceding lane for %s',(_name,source)=>{
++ const output=emit(source);expect(output).not.toContain('dispatch_flight_readonly_options_');
++});
