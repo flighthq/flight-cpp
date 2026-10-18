@@ -1,0 +1,205 @@
+{
+  "schema": "flight-cpp-sprite-factory-source-controls/1",
+  "state": "PREPARATION ONLY: factory/options native closure incomplete",
+  "purpose": "Lock original allocation, initializer order, defaults, callback and texture identity, getter error identity before repairing native factory boundaries.",
+  "sourceInputs": {
+    "rawPinnedFlight": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "effective": "Preserved qualified builder4 current134 Flight source stack; selected effective Sprite.ts and types/Sprite.ts byte-identical to builder5 immutable image136 inputs.",
+    "imageArchiveSha256": "6c7f2419458cace669f6f848aa0247916528f167f6d09436586b65e1547fdf64"
+  },
+  "commands": [
+    "node scripts/spriteFactorySourceOracle.mjs --report=<scratch>/raw-source-controls.json",
+    "node scripts/spriteFactorySourceOracle.mjs --flight=<qualified-effective-Flight> --report=<scratch>/full-effective-source-controls.json"
+  ],
+  "sourceResults": {
+    "raw": {
+      "checks": 39,
+      "failures": 0,
+      "executedSources": [
+        {
+          "source": "packages/entity/src/entity.ts",
+          "sha256": "d48c455a664722c3df349aadd667e599d2700273baf71158253aaa4d77bbec48"
+        },
+        {
+          "source": "packages/entity/src/runtime.ts",
+          "sha256": "09f8b8e9e5c7ae9d6de28655cf3d65bae5af564f73b8109e127365a78af679dc"
+        },
+        {
+          "source": "packages/node/src/hasAppearance.ts",
+          "sha256": "47e8b863567d04381c0180f575bba02a4500d18ad6f4f389e853e025076a68e8"
+        },
+        {
+          "source": "packages/node/src/hasBlendMode.ts",
+          "sha256": "f12f6714144126fec7842353d0bf6e4115effbe98c25dd4071cd14a8278a7e50"
+        },
+        {
+          "source": "packages/node/src/hasBoundsRectangle.ts",
+          "sha256": "e2499c13f2db06aaf0941fe66b36302398d42deb6c2febc4b288f6a2eb17325d"
+        },
+        {
+          "source": "packages/node/src/hasClip.ts",
+          "sha256": "e078ca597fe69c31163cd5872d0dbd9333557a733d6930223d138d07a1c4fe45"
+        },
+        {
+          "source": "packages/node/src/hasMaterial.ts",
+          "sha256": "3fb07fb820e0453ecdfa8afc0b409df775680ded679ad6410dcd21877f9b3647"
+        },
+        {
+          "source": "packages/node/src/hasTransform2d.ts",
+          "sha256": "d67ce7e52d6ac87a9f7a91bd9de525f9f445681a4f2acfd0ab9ebc0519d68207"
+        },
+        {
+          "source": "packages/node/src/node.ts",
+          "sha256": "1deb121241a80cb6c519c2ccab7489cb6d59005fbb5eca93790d498b16dc5ed4"
+        },
+        {
+          "source": "packages/scene2d/src/displayObject.ts",
+          "sha256": "e7bdb330930355357438f211bbd6b9210fcb603b1b54d9663552c5655fed780f"
+        },
+        {
+          "source": "packages/scene2d/src/sprite.ts",
+          "sha256": "f9173ef2d83ff62f408697a2591bb1a998b68004025d0dbaa4da65e8661025be"
+        },
+        {
+          "source": "packages/types/src/Entity.ts",
+          "sha256": "c3961efff8938ca7c5dd26b4e14da66159e1f9f0ec218e13ca8bbd271a3fedd4"
+        },
+        {
+          "source": "packages/types/src/Node2D.ts",
+          "sha256": "36158b6ff6c08bc50e70a9093e512f8917e9d04ed75d355d142d4ec99b2cc171"
+        },
+        {
+          "source": "packages/types/src/Sprite.ts",
+          "sha256": "554c99db988d8297c80ca5cf764912d1338a64b862df0af307e4dabc713e0c82"
+        }
+      ]
+    },
+    "qualifiedEffective": {
+      "checks": 39,
+      "failures": 0,
+      "executedSources": [
+        {
+          "source": "packages/entity/src/entity.ts",
+          "sha256": "d48c455a664722c3df349aadd667e599d2700273baf71158253aaa4d77bbec48"
+        },
+        {
+          "source": "packages/node/src/hasAppearance.ts",
+          "sha256": "47e8b863567d04381c0180f575bba02a4500d18ad6f4f389e853e025076a68e8"
+        },
+        {
+          "source": "packages/node/src/hasBlendMode.ts",
+          "sha256": "f12f6714144126fec7842353d0bf6e4115effbe98c25dd4071cd14a8278a7e50"
+        },
+        {
+          "source": "packages/node/src/hasBoundsRectangle.ts",
+          "sha256": "2b1822e0941a61d64fabb4c27d760497110e3c1ecbb0ddddbd99744526e2c8ac"
+        },
+        {
+          "source": "packages/node/src/hasClip.ts",
+          "sha256": "e078ca597fe69c31163cd5872d0dbd9333557a733d6930223d138d07a1c4fe45"
+        },
+        {
+          "source": "packages/node/src/hasMaterial.ts",
+          "sha256": "3fb07fb820e0453ecdfa8afc0b409df775680ded679ad6410dcd21877f9b3647"
+        },
+        {
+          "source": "packages/node/src/hasTransform2d.ts",
+          "sha256": "d67ce7e52d6ac87a9f7a91bd9de525f9f445681a4f2acfd0ab9ebc0519d68207"
+        },
+        {
+          "source": "packages/node/src/node.ts",
+          "sha256": "88cdcc9b10b93bea798b9c4e8af71fec61cbf580cfbb41aa6abebd0b7f65aadb"
+        },
+        {
+          "source": "packages/scene2d/src/displayObject.ts",
+          "sha256": "e7bdb330930355357438f211bbd6b9210fcb603b1b54d9663552c5655fed780f"
+        },
+        {
+          "source": "packages/scene2d/src/sprite.ts",
+          "sha256": "532237b7baed413564ae5189b9f27b34c0e50ea6eb7fda03bfea859a9ac635a6"
+        },
+        {
+          "source": "packages/types/src/Entity.ts",
+          "sha256": "c3961efff8938ca7c5dd26b4e14da66159e1f9f0ec218e13ca8bbd271a3fedd4"
+        },
+        {
+          "source": "packages/types/src/Node2D.ts",
+          "sha256": "36158b6ff6c08bc50e70a9093e512f8917e9d04ed75d355d142d4ec99b2cc171"
+        },
+        {
+          "source": "packages/types/src/Sprite.ts",
+          "sha256": "cd31aa79e336d19dbf6835fdd0899604e82dcaac8c8f49e8e3d045b78a45be26"
+        }
+      ]
+    },
+    "observed": [
+      "each source factory call owns fresh Sprite, SpriteData and SpriteRuntime",
+      "source default Node, Sprite data and appearance values",
+      "source default transform and nullable trait values",
+      "Sprite runtime accessor retains the original exact runtime and Node2D traits",
+      "authored Sprite bounds callbacks and original Node default method remain installed",
+      "default Sprite bounds cache validity runs through the installed original callback",
+      "source options getters run once in authored initializer order",
+      "source allocates fresh Sprite and data while retaining the supplied texture owner",
+      "source preserves false, zero, negative transform values and all supplied trait owners",
+      "options construction retains the same runtime contract and callback identities as defaults",
+      "source never writes to options or nested input data",
+      "original clone factory retains texture while allocating fresh Sprite, data and runtime",
+      "original clone copies only authored texture rather than unrelated source traits",
+      "source nullish data/texture defaults: undefined",
+      "source nullish data/texture defaults: null",
+      "source nullish data/texture defaults: {}",
+      "source nullish data/texture defaults: {}",
+      "source nullish data/texture defaults: {\"texture\":null}",
+      "source preserves thrown getter owner and stops at data",
+      "source preserves thrown getter owner and stops at texture",
+      "source preserves thrown getter owner and stops at name",
+      "source preserves thrown getter owner and stops at enabled",
+      "source preserves thrown getter owner and stops at pivotX",
+      "source preserves thrown getter owner and stops at pivotY",
+      "source preserves thrown getter owner and stops at rotation",
+      "source preserves thrown getter owner and stops at scaleX",
+      "source preserves thrown getter owner and stops at scaleY",
+      "source preserves thrown getter owner and stops at skewX",
+      "source preserves thrown getter owner and stops at skewY",
+      "source preserves thrown getter owner and stops at x",
+      "source preserves thrown getter owner and stops at y",
+      "source preserves thrown getter owner and stops at alpha",
+      "source preserves thrown getter owner and stops at visible",
+      "source preserves thrown getter owner and stops at blendMode",
+      "source preserves thrown getter owner and stops at material",
+      "source preserves thrown getter owner and stops at materialData",
+      "source preserves thrown getter owner and stops at clip",
+      "original Node2D factory stores exact supplied runtime before reading data and calling its factory",
+      "original runtime factory error precedes every options read and retains thrown owner"
+    ]
+  },
+  "current136NativeBoundary": {
+    "wholeOriginalSprite": "REFUSED; standard salvage retains all supported declarations and explicitly marks four omitted functions; this is diagnostic output, not a replacement factory.",
+    "diagnosticHeaderSha256": "eb5ad41b1caf9cf54ee866bf8214c3da9f0c6fdeeab3379de442cff612cb4f8e",
+    "omittedDeclarations": [
+      "function initializeSpriteRendererData -- source line 72",
+      "function isSpriteRendererDirty -- source line 84",
+      "function createSpriteRuntime -- source line 55",
+      "function createSprite -- source line 39"
+    ],
+    "factoryFirstRefusal": {
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "cause": "createSpriteData takes the optional SpriteData row and returns SpriteData; createNode2D fixes the callback to the optional Node2DData row and Node2DData result."
+    },
+    "runtimeFirstRefusal": {
+      "rule": "cpp-reference-assertion-without-heritage",
+      "cause": "createSpriteRuntime receives a Node2DRuntime allocation then asserts SpriteRuntime; source type inheritance alone cannot provide an exact native derived owner."
+    },
+    "existingOverride": "Only zero-argument/nullopt create_sprite exists; original image passes Readonly<PartialNode<Sprite>> with authored data.texture. No options-capable replacement has been installed.",
+    "originalImageHeader": "Known FAIL at create_sprite(options) in immutable builder5 actual SDL/Clang report.",
+    "originalImageConsumer": "NOT RUN"
+  },
+  "limits": [
+    "No compiler, runtime, source patch, provider, generated, override, SDK, inventory or pin edits in this preparation.",
+    "Source checks run actual bodies from 14 modules, using lazy original contract re-exports; no factory or dependency body substitutions.",
+    "Custom factory callbacks are caller supplied fixture callbacks through the original createNode2D API, not replacements for source providers.",
+    "Builder2 owns Types/Sprite carriers and B coherence; this proof does not qualify those overrides or claim a native Sprite owner.",
+    "No normal output/header promotion, package result, B acceptance, draw or framebuffer claim."
+  ]
+}
