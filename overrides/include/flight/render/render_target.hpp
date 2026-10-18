@@ -137,17 +137,21 @@ inline flight::Ref<ResolvedRenderTargetDescriptor> resolve_render_target_descrip
       flight::row_get<flight::RowKey<"depth">>(descriptor);
   const auto requested_color_space =
       flight::row_get<flight::RowKey<"colorSpace">>(descriptor);
-  return flight::make_ref<ResolvedRenderTargetDescriptor>(
-      ResolvedRenderTargetDescriptor{
-          .width = width,
-          .height = height,
-          .format = color_formats.element(0.0),
-          .color_attachments = color_attachments,
-          .color_formats = color_formats,
-          .sample_count = flight::maximum(
-              1.0, std::ceil(requested_samples.value_or(1.0))),
-          .depth = requested_depth.value_or(flight::String("none")),
-          .color_space = requested_color_space.value_or(flight::String("srgb"))});
+  const auto format = color_formats.element(0.0);
+  const auto sample_count = flight::maximum(
+      1.0, std::ceil(requested_samples.value_or(1.0)));
+  const auto depth = requested_depth.value_or(flight::String("none"));
+  const auto color_space = requested_color_space.value_or(flight::String("srgb"));
+  auto resolved = flight::make_ref<ResolvedRenderTargetDescriptor>();
+  resolved->width = width;
+  resolved->height = height;
+  resolved->format = format;
+  resolved->color_attachments = color_attachments;
+  resolved->color_formats = color_formats;
+  resolved->sample_count = sample_count;
+  resolved->depth = depth;
+  resolved->color_space = color_space;
+  return resolved;
 }
 
 inline flight::Ref<Matrix> temp_inv_local = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);

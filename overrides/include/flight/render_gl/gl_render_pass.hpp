@@ -223,14 +223,18 @@ inline flight::Ref<GlRenderTarget> gl_render_target_view(
   if constexpr (std::same_as<Target, GlRenderTarget>) {
     return target;
   } else {
-    return flight::make_ref<GlRenderTarget>(GlRenderTarget{
-        .entity_runtime_key = target->entity_runtime_key,
-        .height = target->height,
-        .width = target->width,
-        .gl = target->gl,
-        .framebuffer = gl_target_framebuffer(target),
-        .color_attachments = target->color_attachments,
-        .color_space = target->color_space});
+    const auto runtime = target->entity_runtime_key;
+    const auto height = target->height;
+    const auto width = target->width;
+    const auto gl = target->gl;
+    const auto framebuffer = gl_target_framebuffer(target);
+    const auto attachments = target->color_attachments;
+    const auto color_space = target->color_space;
+    auto view = flight::make_ref<GlRenderTarget>(GlRenderTarget{
+        .height = height, .width = width, .gl = gl, .framebuffer = framebuffer,
+        .color_attachments = attachments, .color_space = color_space});
+    view->entity_runtime_key = runtime;
+    return view;
   }
 }
 
