@@ -47,7 +47,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares *(G2: 1 pass, 7 to `undeclared-identifier-e7884ac7`)* |
 | 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
-| 21 | `other-18dcce71` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | Array.isArray narrowing leaves an erased array length read as Any in a numeric assignment |
+| 21 | `other-18dcce71` | 7 | ANIM | override (applied) | erased-array reads in the Spine parse helpers *(G2 resolved: 2 pass; 3 to `undeclared-identifier-99221374`, 2 to `no-matching-function-b37ddf91`)* |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | declaration repair (applied) | refused scene accessor declared; G2: 2 pass, 5 later compiler failures; accessor remains unlinkable |
 | 23 | `undeclared-identifier-b90ed4db` | 7 | ANIM | [compiler request](compiler-requests/erased-array-element-reading.md) | a retained callback alias references the DragonBones animations handler after its body is refused |
 | 24 | `invalid-operands-ec4dbe74` | 6 | CORE, GL | runtime | an operator is applied to operand types it does not accept |
@@ -753,6 +753,39 @@ for the two apply passes, and `docs/compiler-requests/bound-interface-weak-map-k
 - G2 classification: **one shared cause**, not seven independent failures. Each owned row has the same first diagnostic in `spine_parse_helpers.hpp:90`: the `Array.isArray(raw)` branch of `skipCrumbSpineTimelineGroup` emits `count = flight::named_properties(raw).get("length")`, assigning `Any` to `double`.
 - The numeric extraction is only half the gap: `named_properties(const Any&)` resolves object row owners, while an erased array is held as `AnyArray`, so this view returns an empty owner and its length read is undefined. An implicit numeric conversion, an added cast, or replacing array length with enumerable key count cannot faithfully fix it. Exact typed-array recovery already exists, but an array guard alone does not prove its element carrier; the request records the current site beside the earlier measured failed source spellings.
 - Numbers: **0/7 pass, 7 fail**, retained from G1. All seven rows stay failed and link the same request; cluster ID is retained for continuity while its cause and route are corrected. No C++ input, source patch, binding, declaration repair, or override changed; no unchanged compile rerun or behavior improvement is claimed.
+
+
+**G2 resolved (builder2, Foreman-assigned flight-hx blocker).** The containing header `spine_parse_helpers.hpp` now
+compiles, and `clampUnit` is consumed through the original public header. Three pieces landed:
+- builder4's checked runtime API reads the live typed array storage without copying it: `Any::array_size()`,
+  `Any::array_get(double)`, and the free `flight::is_array(const Any&)` that the emitted `Array.isArray` guard
+  calls. Before that overload, the generic catch-all answered false for every boxed array.
+- The derived override `skeleton2d-formats-spine-parse-helpers-erased-array` (`overrides/manifest.json`)
+  respells seven things:
+  - the three length reads as `array_size()`;
+  - the four `curve[offset + k]` reads as `array_get(...).value_or(undefined)`;
+  - the `keys[i].curve` read as `value_or(undefined)`, so a keyframe without a curve is uncurved instead of
+    throwing;
+  - the three diagnostic-detail literals as named `Record`s inside their optional
+    ([optional-record request](compiler-requests/optional-record-literal-not-materialized.md)).
+- Every other byte is the emission.
+
+A scratch public-header consumer linked and ran at `-j1` (Clang 22.1.8). These match the pinned source:
+- `clamp_unit` at ten boundaries: ±inf, -1, -0 (sign kept), +0, the values just inside 0 and 1, 1, 1.0001, and
+  NaN passing through.
+- `build_spine_segment_easings` on an `Array<double>` curve, an `Array<Any>` curve with clamped x (crumbed with
+  `segments` 1), a string control falling back to 0, a short curve, and an absent curve.
+- `skip_crumb_spine_timeline_group` counting a live array mutated after boxing.
+
+The committed regression test is builder7's.
+
+**Numbers: 2/7 pass** (`spine_parse_helpers`, `spine_json_stub_handlers`), 5 fail on causes outside this module:
+- 3 to `undeclared-identifier-99221374`: the retained callers of the refused presence-test functions
+  `addSpineBoneChannel` / `parseSpineSkins`
+  ([retained callee](compiler-requests/retained-declaration-calls-omitted-callee.md)).
+- 2 to `no-matching-function-b37ddf91`: `spine_parse.hpp:152` reads the `JSON.parse` result (`flight::JsonValue`)
+  through `named_properties`, the producer half of the
+  [erased-array reading request](compiler-requests/erased-array-element-reading.md).
 
 ### 22. `undeclared-identifier-7dc86326` — 7 G1 header(s), declaration repaired
 

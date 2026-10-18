@@ -681,3 +681,15 @@ Any and String arrays, const/mutable/temporary receivers, engaged/absent/null op
 undefined/null/number/object/TypedArray receivers; direct Array and generic scalar behavior remain.
 Committed changed runtime build/link passed, then **1/1 runtime CTest pass, 0.01 s** (0.02 s total).
 No Spine source/header, array storage, coercion policy or caller qualification claim is changed here.
+
+## G2 resolution for `spineParseHelpers.ts`: runtime API plus a derived override
+
+The runtime half now exists (builder4): `Any::array_size()`, `Any::array_get(double)` and the free
+`flight::is_array(const Any&)`. All three read the live original typed storage. The override
+`skeleton2d-formats-spine-parse-helpers-erased-array` lowers this module's three length reads and four indexed
+`curve` reads onto them, which is the required C++ shape this request asks the emitter to produce. Its expiry is
+the emitter producing that shape itself.
+
+The consumer proof is recorded in `docs/header-failures.md` cluster 21. The JSON-producer half named above is
+still open: `spine_parse.hpp:152` passes a `flight::JsonValue` to `named_properties` (G2 cluster
+`no-matching-function-b37ddf91`).
