@@ -1,4 +1,4 @@
-// Qualifies an INACTIVE compiler proposal in a scratch compiler; never applies patches or runs an SDK.
+// Qualifies the approved bounded forwarding compiler patch; never applies patches or runs an SDK.
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -42,8 +42,8 @@ try {
  assert.ok(!after.includes('NOT GENERATED') && !callsite.includes('NOT GENERATED'));
  assert.match(callsite,/return flight::particles_formats::parse_particle_config_flight_readonly_options_[a-f0-9]+\(text, options\);/);
  assert.match(callsite,/return flight::particles_formats::parse_particle_config_document_flight_readonly_options_[a-f0-9]+\(text, options\);/);
- const proposal = 'docs/compiler-requests/proposals/compiler-readonly-forwarded-options.patch';
- const manifest = fs.readFileSync(path.join(root,'source-patches/manifest.json'),'utf8'); assert.ok(!manifest.includes('compiler-readonly-forwarded-options'));
- const report = { active:false,decisionRequired:true,fixtureStrict:true,nativeSyntheticCompatibility:JSON.parse(run.stdout),originalSavedGraph:{sha256:hash(input),originalModuleIrSha256:hash(originalJson),unchanged:true,nativeSignaturesUnchanged:signatures(after),additionalReadonlyHelpers:helpers,originalAndConsumerWithoutRefusals:true,compilerEmittedModuleSha256:hash(after),consumerSha256:hash(callsite)},proposal:{file:proposal,sha256:hash(fs.readFileSync(path.join(root,proposal))),inActiveManifest:false},normalSdk:false,scope:'Scratch compiler proposal only. Synthetic emitted native controls prove unchanged original function pointer ABI, schema-only readonly owner/accessor/exception/lifetime behavior. Actual original automatic parser bodies and readonly consumer source emit from saved graph. This is not installed public native parser qualification.' };
+ const proposal = 'source-patches/compiler-readonly-forwarded-options.patch';
+ const manifest = fs.readFileSync(path.join(root,'source-patches/manifest.json'),'utf8'); assert.ok(manifest.includes('compiler-readonly-forwarded-options'));
+ const report = { active:true,decisionRequired:false,fixtureStrict:true,nativeSyntheticCompatibility:JSON.parse(run.stdout),originalSavedGraph:{sha256:hash(input),originalModuleIrSha256:hash(originalJson),unchanged:true,nativeSignaturesUnchanged:signatures(after),additionalReadonlyHelpers:helpers,originalAndConsumerWithoutRefusals:true,compilerEmittedModuleSha256:hash(after),consumerSha256:hash(callsite)},proposal:{file:proposal,sha256:hash(fs.readFileSync(path.join(root,proposal))),inActiveManifest:true},normalSdk:false,scope:'Approved bounded compiler source and synthetic native controls. Synthetic emitted native controls prove unchanged original function pointer ABI, schema-only readonly owner/accessor/exception/lifetime behavior. Actual original automatic parser bodies and readonly consumer source emit from saved graph. This is not installed public native parser qualification.' };
  fs.writeFileSync(path.resolve(args['--output']),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
 } finally { fs.rmSync(scratch,{recursive:true,force:true}); }

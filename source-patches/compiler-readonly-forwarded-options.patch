@@ -1,7 +1,7 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -5563,10 +5563,11 @@
+@@ -5565,10 +5565,11 @@
        const callableExpression = hasDependentCallableSpread
          ? unwrapCppAnyRestCallableCast(expression.callee)
          : expression.callee;
@@ -15,7 +15,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        const sourceTypeArguments =
          expression.typeArguments.length > 0
            ? expression.typeArguments
-@@ -5596,7 +5597,7 @@
+@@ -5598,7 +5599,7 @@
              }
              const recordReadArgument = emitCppPrivateRecordReadArgumentCpp(expression, index, context);
              if (recordReadArgument) return recordReadArgument;
@@ -24,7 +24,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
                expression,
                index,
                context,
-@@ -26869,7 +26870,7 @@
+@@ -26923,7 +26924,7 @@
  // every parameter reference is an optional data read outside nested closures and mutation targets.
  function getCppReadonlyCallableOptionsPlanCpp(
    declaration: Readonly<IrFunctionDeclaration>, context: EmitContext,
@@ -33,7 +33,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || declaration.async || declaration.namespaceMember ||
        declaration.typeParameters.length || declaration.overloads.length || declaration.parameters.length !== 2) return undefined;
    const [text, parameter] = declaration.parameters;
-@@ -26879,8 +26880,10 @@
+@@ -26933,8 +26934,10 @@
    const owner = context.sourceModules.find(module => module.declarations.some(d => d.kind === 'function' && d.binding.id === declaration.binding.id)) ?? context.module;
    if (context.referenceRepresentationPlanner.resolveStructuralRow(parameter.type, owner)) return undefined;
    const shape = context.referenceRepresentationPlanner.resolveObjectShape(parameter.type, owner);
@@ -45,7 +45,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const references: Readonly<IrExpression>[] = [], receivers = new Set<Readonly<IrExpression>>();
    let invalid = false;
    const isParameter = (e: Readonly<IrExpression>): boolean => e.kind === 'identifier' &&
-@@ -26899,12 +26902,64 @@
+@@ -26953,12 +26956,64 @@
        });
      },
    });
@@ -59,7 +59,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  return { parameter, type, helper, forwarded };
 +}
 +
-+// PROPOSAL ONLY: one original optional nominal options binding forwarded exactly once to
++// One original optional nominal options binding forwarded exactly once to
 +// a declared readonly callable parameter over the SAME canonical declaration. No read/copy/cast.
 +function hasCppReadonlyForwardedOptionsUseCpp(
 +  declaration: Readonly<IrFunctionDeclaration>, parameter: Readonly<IrParameter>,
@@ -112,7 +112,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  }
  
  // Only the selected callback result projection uses this proof. Named members must resolve to
-@@ -26949,7 +27004,7 @@
+@@ -27003,7 +27058,7 @@
    const declaration = getCppFunctionDeclarationForBindingCpp(expression.reference.binding.id, context);
    const plan = declaration ? getCppReadonlyCallableOptionsPlanCpp(declaration, context) : undefined;
    const target = getCppPlainCallableTypeCpp(expectedType, context);

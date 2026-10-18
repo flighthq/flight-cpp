@@ -735,3 +735,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   presence assertions enable the actual SVG style/color parser closure. Code-first
   whole-body consumers and normal generation are qualified: actual native consumers2/2PASS,
   all22style fields/88colors retained, no source body replacement or full-import claim.
+
+- [Readonly automatic particle parser forwarding entrypoints](particle-readonly-forwarding-proposal.md) —
+  approved bounded additional readonly helpers preserve the original native parser ABI and
+  forward the original options owner into declared readonly codec slots.

@@ -5488,6 +5488,23 @@
       "unblocks": "Original applyScalarProperty/applyVectorProperty native handle forwarding and reportLottieExpression raw membership compilation; readonly Record and following native closure remain.",
       "expires": "When upstream preserves optional original-slot context and emits original erased membership with equivalent checks.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-readonly-forwarded-options",
+      "dependency": "flight-compiler",
+      "patch": "compiler-readonly-forwarded-options.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/particles-formats",
+      "answers": "diagnostic",
+      "refusal": "Readonly schema-only public options are passed to the nominal automatic parseParticleConfig/Document native ABI; a readonly view cannot recover a native owner it never retained.",
+      "rewrite": "Preserve original native functions and add uniquely named readonly helpers over their original IR only for synchronous nongeneric (string, optional nominal options) functions with two optional numeric fields and exactly one binding use forwarded as argument2 of an ordinary two-argument property call to a declared Readonly slot over the same canonical options declaration. Proven compatible readonly direct calls select the helper; nominal callers retain the native name. No new named-callback adaptation for this shape.",
+      "equivalence": "Forward the original optional owner without reading or copying cells, preserving presence, identity, accessor/callback timing and errors. The same original body runs with a readonly parameter representation. Aliasing, captures, writes, extra reads, identity tests, multiple uses, mutable targets and different canonical owners remain excluded. Original native signatures/function pointers remain unchanged.",
+      "verification": "Manager86361348/f5dd6b54 and Foremana49dfd81 approve exact bounded shape. Current120/322 baseline+candidate strict PASS;12focused source PASS and10excluded outputs byte-identical. Synthetic emitted native27checks PASS with native pointer ABI, schema-only owner/getters/live writes/exceptions/lifetime; original saved graph emits exactly2helpers and both public readonly call edges with unchanged original signatures/IR, no refused declarations. Retained56PASS1native deliberately unselected; emptyfallback23PASS13unchanged. Full122compiler/324total ordered raw apply/candidate content equality/reverse to raw backend PASS, including incoming JSON document views; current122 strict/focused/parity/native/source controls repeated PASS. Installed qualification remains separate.",
+      "whyNotUpstreamFirst": "The pinned backend already has retained-owner readonly rows and the bounded additional-entrypoint mechanism; it lacks the closed forwarding proof and direct readonly call edge.",
+      "unblocks": "Readonly automatic public particle parser option calls while retaining native compatibility; actual installed callback/public/header qualification still requires authorized normal particles output.",
+      "expires": "When upstream emits equivalent additional readonly forwarding entrypoints and preserves native ABI/owner semantics with matching exclusion and native controls.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
