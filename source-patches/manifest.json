@@ -4504,6 +4504,23 @@
       "unblocks": "Lets lottie_counts.hpp compile in full, so the exported getLottieFeatureNames catalog and the retained Lottie feature tables are usable.",
       "expires": "when the emitter lowers a typeof-narrowed record member read at its narrowed type, or Flight adopts this spelling.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-present-readonly-row-context",
+      "dependency": "flight-compiler",
+      "patch": "compiler-present-readonly-row-context.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPresentReadonlyRowReturn.test.ts",
+      "package": "@flighthq/scene2d-canvas",
+      "answers": "diagnostic",
+      "refusal": "A guarded optional Readonly<HostCanvasCapability> remains an optional readonly row in C++, but flow evidence names its nominal HostCanvasCapability subject; returning it to the identical readonly row manufactures an invalid writable intermediate in get_canvas_host.",
+      "rewrite": "Before general contextual structural conversion, recognize a proven-present binding stored in an optionalSingle readonly row whose destination is exactly the same readonly carrier. Emit the existing binding projection once instead of constructing a writable view first. Add focused backend regressions.",
+      "equivalence": "The original guard already proves the single optional payload present. Returning that exact stored readonly view retains its existing owner and live cells without adding writes, copying or replacing the object, materializing another row owner, changing the public return type, collapsing a reachable absent state, repeating the source read or altering exceptions. Matching uses actual storage and exact emitted carrier equality; non-readonly, different carriers, still-absent results and variant-backed unions keep their existing paths.",
+      "whyNotUpstreamFirst": "This is a locally supported compiler representation correction through declared compiler source patches. The runtime correctly rejects readonly-to-writable construction and needs no relaxation.",
+      "unblocks": "The exact present readonly host return in the original Canvas surface module and matching optional readonly binding-to-identical-view contexts. Original full Canvas consumer qualification remains required; no general row or variant conversion claim.",
+      "expires": "when contextual present optional readonly returns and matching contexts reuse their exact stored view without a manufactured writable intermediate (docs/compiler-requests/readonly-view-to-writable.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "Production compiler build on67existing compiler patchesPASS.13direct compiler controlsPASS:8exact projections and5byte-identical/refusal-equivalent counterexamples against independently transpiled67patch baseline. Four actual emitted native functions compile/link/runPASS for row/native owner identity, live cells, signed zero/NaN, attachment replacement, single evaluation, absence guards and exact thrown-owner preservation. Normal SDK/header/public-consumer qualification pending. Focused Vitest/Oxlint absent; check launcher unavailable, no upstream gate pass claimed."
     }
   ]
 }

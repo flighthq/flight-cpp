@@ -70,4 +70,8 @@ still fails in the transitive `canvas_render_surface.hpp`: `get_canvas_host` con
 correctly rejects adding writes. The original Canvas header includes its texture resolver, which
 includes that surface header, so the actual public getter/helper consumer remains blocked there.
 No helper execution or automatic promotion of the historical 40-header family follows from retirement.
+The adjacent return correction is now carried separately as
+[`compiler-present-readonly-row-context.patch`](../../source-patches/compiler-present-readonly-row-context.patch),
+with its exact optional-storage guards and focused evidence in the existing
+[readonly-view request](readonly-view-to-writable.md#g3-matching-present-readonly-returns).
 Normal scoped regeneration and original-header qualification remain queued for a generation slot.

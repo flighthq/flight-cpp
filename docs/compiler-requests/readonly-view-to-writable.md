@@ -327,3 +327,32 @@ skips, indexed subset draw, persistent snapshots and opt-in renderer registratio
 They are not additional native proof. Recorded draw/proxy rewrapping expressions are independent
 inspected follow-ons, not measured later errors. Evidence is under
 `/tmp/builder4-g2-custom-material/` (host build/CTest/LastTest and scoped header report).
+
+## G3 matching present readonly returns
+
+Retiring the obsolete same-namespace Canvas using repair exposes this independent boundary in
+`scene2d_canvas/canvas_render_surface.hpp`, through the original Canvas state header's dependency
+on the texture resolver and surface module. The authored `getCanvasHost` reads its optional readonly
+host once, throws when it is undefined, and returns `Readonly<HostCanvasCapability>`. Its binding
+remains `optional<StructuralRef<RowReadonly<RowOf<Ref<HostCanvasCapability>>>>>`, but flow narrowing
+names the nominal subject. The general contextual conversion then manufactures a writable view of
+that already readonly payload before converting it back to the original readonly type.
+
+[`compiler-present-readonly-row-context.patch`](../../source-patches/compiler-present-readonly-row-context.patch)
+uses the binding's actual storage for this exact case. A proven-present identifier, an `optionalSingle`
+readonly row payload, and the identical emitted readonly destination carrier are all required. The
+existing projection is emitted once, so the return is `canvas_host.value()`. This retains the exact row
+owner, native owner, live cells and readonly capability. The original source, signature, guard, property
+snapshot, source evaluation and exceptions stay unchanged. No object, cell or forwarding function is
+copied or supplied. Still-absent results, variant-backed unions, non-readonly storage, different carriers
+and nominal-owner recovery retain their existing paths; this does not close the broader request.
+
+The candidate production compiler builds with the preceding 67 compiler patches. Thirteen direct
+compiler controls pass: eight exact projections and five counterexamples with byte-identical output
+or the same refusal as an independently transpiled preceding-stack source baseline. Four actually
+emitted native functions compile, link and run for null/undefined guards, a property snapshot, an
+effectful callback and a partial readonly schema. They preserve row/native owner identity, live numeric
+cells including signed zero and NaN, replacement attachments, single evaluation, missing-value throws
+and an exception's exact owner. Compiler Vitest and Oxlint executables and the static-check launcher
+are unavailable locally; no upstream unit/lint/static gate pass is claimed. Original Canvas headers
+and their real public consumer still require scoped normal regeneration and qualification.

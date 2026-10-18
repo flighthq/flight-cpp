@@ -1,0 +1,154 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6959,11 +6959,50 @@
+   return `([&]() -> flight::String { const auto& string_conversion_value = ${emitted}; if (!string_conversion_value.has_value()) return flight::String("${absence}"); return std::visit([](const auto& value) { return flight::to_string(value); }, string_conversion_value.value()); }())`;
+ }
+ 
++// Flow narrowing may name the nominal subject of Readonly<T> even though the binding keeps a
++// readonly row in its optional storage. A matching readonly context needs that exact stored view;
++// constructing a writable projection first would add authority the binding never held.
++function emitCppContextualPresentReadonlyRowCpp(
++  expression: Readonly<IrExpression>,
++  expectedType: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    expression.kind !== 'identifier' ||
++    expression.reference.kind !== 'binding' ||
++    expression.presence !== 'narrowedPresent'
++  ) {
++    return undefined;
++  }
++  const bindingType = getCppBindingTypeCpp(expression.reference.binding.id, context);
++  const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
++  if (!union) return undefined;
++  const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  const plan = getCppUnionRepresentationPlan(union, isolatedContext);
++  if (plan.kind !== 'optionalSingle' || plan.valueSlots.length !== 1) return undefined;
++  const slot = plan.valueSlots[0]!;
++  const sourceRow = context.referenceRepresentationPlanner.resolveStructuralRow(slot.runtimeType, context.module);
++  const targetRow = context.referenceRepresentationPlanner.resolveStructuralRow(expectedType, context.module);
++  if (
++    !sourceRow ||
++    !targetRow ||
++    !isCppStructuralRowSchemaReadonlyCpp(sourceRow) ||
++    !isCppStructuralRowSchemaReadonlyCpp(targetRow) ||
++    qualifyCppDeclaringModuleTypeCpp(slot.targetType, context) !==
++      qualifyCppDeclaringModuleTypeCpp(emitType(expectedType, isolatedContext), context)
++  ) {
++    return undefined;
++  }
++  return emitExpression(expression, context, undefined, false);
++}
++
+ function emitCppContextualStructuralReferenceCpp(
+   expression: Readonly<IrExpression>,
+   expectedType: Readonly<IrType>,
+   context: EmitContext,
+ ): string | undefined {
++  const presentReadonlyRow = emitCppContextualPresentReadonlyRowCpp(expression, expectedType, context);
++  if (presentReadonlyRow) return presentReadonlyRow;
+   const narrowedUnionFacet = emitCppContextualStructuralUnionAssertionFacetCpp(expression, expectedType, context);
+   if (narrowedUnionFacet) return narrowedUnionFacet;
+   refuseCppContextualReadonlyStructuralAssertionCapabilityCpp(expression, expectedType, context);
+diff --git a/packages/compiler-backend-cpp/src/cppPresentReadonlyRowReturn.test.ts b/packages/compiler-backend-cpp/src/cppPresentReadonlyRowReturn.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppPresentReadonlyRowReturn.test.ts
+@@ -0,0 +1,95 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++function emitReadonlyReturn(code: string, imported = false): string {
++  const packageName = '@flighthq/readonly-return';
++  const ownerPackage = '@flighthq/readonly-owner';
++  const declarations = `export interface Host { value: number }
++    export interface Runtime { host?: Readonly<Host> }`;
++  const source = (owner: string, file: string, text: string) => ({
++    packageName: owner,
++    sourceFile: ts.createSourceFile(
++      `/flight/packages/${owner.slice('@flighthq/'.length)}/src/${file}.ts`,
++      text,
++      ts.ScriptTarget.Latest,
++      true,
++    ),
++    upstreamDirectory: '/flight',
++  });
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    edges: [{
++      specifier: '@flighthq/readonly-owner/contract',
++      target: { packageName: ownerPackage, source: 'packages/readonly-owner/src/contract.ts' },
++    }],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const results = lowerTypeScriptSources(
++    imported
++      ? [source(ownerPackage, 'contract', declarations), source(packageName, 'readonly',
++          `import type { Host, Runtime } from '@flighthq/readonly-owner/contract'; ${code}`)]
++      : [source(packageName, 'readonly', declarations + code)],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = results.map((result) => result.module);
++  return createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules,
++    options: { runtimeProfile: 'flight-cpp' },
++  }).emitModule(modules[modules.length - 1]!)[0]!.contents;
++}
++
++describe('emitIrModuleCpp', () => {
++  it('returns the exact stored readonly view after a null or undefined guard', () => {
++    for (const sentinel of ['null', 'undefined']) {
++      for (const imported of [false, true]) {
++        const text = emitReadonlyReturn(`export function getHost(host: Readonly<Host> | ${sentinel}): Readonly<Host> {
++          if (host === ${sentinel}) throw new Error('missing');
++          return host;
++        }`, imported);
++        expect(text).toContain('return host.value();');
++        expect(text).not.toContain('RowWritable');
++        expect(text).toContain('throw flight::Error(flight::String("missing"));');
++      }
++    }
++  });
++
++  it('preserves the guarded property snapshot and one effectful source read', () => {
++    const text = emitReadonlyReturn(`export function getHost(runtime: Runtime): Readonly<Host> {
++      const host = runtime.host;
++      if (host === undefined) throw new Error('missing');
++      return host;
++    }
++    export function getEffects(read: () => Readonly<Host> | undefined): Readonly<Host> {
++      const host = read();
++      if (host === undefined) throw new Error('missing');
++      return host;
++    }`);
++    expect(text).toContain('host = runtime->host;');
++    expect(text.split('host = read();')).toHaveLength(2);
++    expect(text.split('return host.value();')).toHaveLength(3);
++    expect(text).not.toContain('RowWritable');
++  });
++
++  it('keeps an exact partial readonly schema without adding required cells', () => {
++    const text = emitReadonlyReturn(`export function getHost(host: Readonly<Partial<Host>> | undefined): Readonly<Partial<Host>> {
++      if (host === undefined) throw new Error('missing');
++      return host;
++    }`);
++    expect(text).toContain('RowReadonly<flight::RowPartial<');
++    expect(text).toContain('return host.value();');
++    expect(text).not.toContain('RowWritable');
++  });
++
++  it('does not project a returned optional whose absence is still reachable', () => {
++    const text = emitReadonlyReturn(`export function getHost(host: Readonly<Host> | undefined): Readonly<Host> | undefined {
++      return host;
++    }`);
++    expect(text).toContain('return host;');
++    expect(text).not.toContain('host.value()');
++  });
++});
