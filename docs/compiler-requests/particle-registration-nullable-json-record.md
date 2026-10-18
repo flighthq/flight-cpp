@@ -9,7 +9,7 @@ without a public ABI change, runtime addition or source body rewrite.
 
 The private `parseJsonObject` at original `registerBuiltInParticleFormats.ts:185` parses once,
 returns the original object only after the null/object/nonarray guard, and returns null on any
-caught failure. The emitted native signature is `optional<Record<String,Any>>`, but its object
+caught failure. On historical stack111 the emitted native signature is `optional<Record<String,Any>>`, but its object
 branch constructs that optional from `flight::named_properties(value)`. That value is the existing
 owner-preserving `NamedProperties` view, which cannot construct an owning `Record`. Copying its
 fields into a Record would replace the original owner and is not an acceptable conversion.
@@ -56,7 +56,7 @@ These are distinct measured contexts and rules; neither establishes current norm
 Builder2f2f23d97 confirms no overlap: its work covers IR `call.optional`, declared callable returns,
 external binding `callResultType` and erased local evidence. This detector instead calls a member
 through an optional chain on a builtin string receiver obtained by indexing. Its separately approved
-scope recovers the existing builtin String method's known return evidence and preserve the
+scope recovers the existing builtin String method's known return evidence and preserves the
 optional receiver guard, with each receiver/index evaluated once. No public function ABI or runtime
 primitive changes are introduced. The absent receiver must remain undefined, and the present branch
 must invoke the original trim exactly once; a proof may not assume an indexed array is nonempty
@@ -85,8 +85,8 @@ returns the retained parsed object; native aliases observe a write to that same 
 null from an absent key and retain it until the last view is released.
 
 The compiler patch carries focused source tests. The current qualification reports 36 source
-assertions plus 29 preceding-stack parity cases; nullable/undefined String element and optional-array controls are
-parity-only because their existing generic lane is outside the new bare-String selection. The
+assertions plus 29 preceding-stack parity cases; nullable/undefined String element and optional-array
+controls are parity-only because their existing generic lane is outside the new bare-String selection. The
 `node:assert` adapter is explicitly not Vitest. The artifact records exact inputs and results.
 The earlier `particleRegistrationBoundaryOracle.mjs` remains a frozen-stack counterexample and
 intentionally expects the old refusal/native diagnostic; use the new compiler oracle for this patch.
