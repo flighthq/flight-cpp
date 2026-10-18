@@ -20340,7 +20340,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/render/packages/render/src/contract.ts",
         "@flighthq/render/packages/render/src/index.ts",
@@ -20367,7 +20367,7 @@
         "source": "packages/render/src/renderCache.ts"
       },
       "path": "flight/render/render_cache.hpp",
-      "rule": "cpp-contextual-union-secondary-intersection-carrier-unrepresented",
+      "rule": "cpp-membership-test-unrepresented",
       "status": "refused-placeholder"
     },
     {
@@ -20469,6 +20469,7 @@
       "status": "emitted"
     },
     {
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/debug/packages/debug/src/debug.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlTextureResolverGuards.ts",
@@ -20478,16 +20479,24 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/enableCanvasTextureResolverGuards.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/enableDomTextureResolverGuards.ts"
       ],
+      "declarationFingerprints": [
+        "sha256:1184494e3f63b633ecf51fe8194a376eff1ba91b6637e81565b23d66570b5e86",
+        "sha256:66cb591eb0c654530e6b93032152e5989ec097dedd43b2969e35e035c4289d9f",
+        "sha256:875316bbbe0349eccf19748d6738112d7b260a6efb5031a33dfe0ceb9d570030",
+        "sha256:9147a0e8219d607e19c31bc7a3f440248aaa8c8c4b5ae09908b7c4aa7f6cc5af",
+        "sha256:b0d1f8bdc7c683a191e0253bc6d78647307ff3fb6ac4058fe58a2d73a5d3ac26",
+        "sha256:b844fed4fe74fc98887d5844da0c704d35a7f9035abff527bdbe65087cdbc011",
+        "sha256:be153b2a8ea87051c00cf098cf6de8a49aa7e0de09adca8154b038901217f067",
+        "sha256:e55c9710ec0ae4c86ab5e52c199d7cf1c1f4f172ab737139bf068f3c0a645e3a"
+      ],
       "module": {
         "name": "RenderRegistryGuards",
         "packageName": "@flighthq/render",
         "source": "packages/render/src/renderRegistryGuards.ts"
       },
       "path": "flight/render/render_registry_guards.hpp",
-      "refusedDependencies": [
-        "@flighthq/log/packages/log/src/log.ts"
-      ],
-      "status": "dependency-incomplete"
+      "rule": "cpp-membership-test-unrepresented",
+      "status": "refused-placeholder"
     },
     {
       "consumers": [

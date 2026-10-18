@@ -507,7 +507,7 @@ inline bool is_pointer_signal_needed(flight::Ref<flight::types::InteractionManag
 }
 
 inline bool has_transform_2d_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::NodeTraits>>>>>> runtime) {
-  return (flight::String("worldMatrix") in runtime);
+  return flight::row_has<flight::RowKey<"worldMatrix">>(runtime);
 }
 
 inline bool is_transform_2d_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> source) {

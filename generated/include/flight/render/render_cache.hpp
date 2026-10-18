@@ -127,9 +127,22 @@ struct entity_runtime_key_adapt_cache_signals_046de73025a2792c : public flight::
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ENTITY_RUNTIME_KEY_ADAPT_CACHE_SIGNALS_046DE73025A2792C
 
-inline bool is_render_cache_adapter(flight::Any value) {
-  return ((((value.type_of() == flight::String("object")) && ([&]() { const auto& presence_operand = value; return !presence_operand.is_null(); }())) && (flight::String("function") == flight::String("function"))) && (flight::String("cache") in ([&]() -> flight::Ref<flight::types::RenderCacheAdapter> { const auto& erased_value_2 = value; auto erased_object_2 = erased_value_2.object_if<flight::types::RenderCacheAdapter>(); if (!erased_object_2) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object_2; }())));
-}
+// NOT GENERATED: function isRenderCacheAdapter -- source line 91
+// refusal: cpp-membership-test-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export function isRenderCacheAdapter(value: unknown): value is RenderCacheAdapter {
+//     return (
+//       typeof value === 'object' &&
+//       value !== null &&
+//       typeof (value as RenderCacheAdapter).adapt === 'function' &&
+//       'cache' in (value as RenderCacheAdapter)
+//     );
+//   }
+//   
+// cpp emission failed for @flighthq/render/packages/render/src/renderCache.ts: `"cache" in receiver` probes a
+// key declared by an ASSERTED receiver type: the source asks the object itself, but the assertion's checked
+// recovery would throw for an object that is not that type. Test the unasserted value's own carrier instead
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ADAPT_081E23C001CA84E4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ADAPT_081E23C001CA84E4

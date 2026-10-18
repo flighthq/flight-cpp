@@ -41,7 +41,7 @@ inline void collect_used_3d_kinds(flight::Set<flight::String> out_kinds, flight:
   while ((static_cast<double>(stack.size()) > 0.0)) {
     flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> current = stack.pop().value();
     out_kinds.add(flight::row_get<flight::RowKey<"kind">>(current));
-    if ((flight::String("materials") in current)) {
+    if (flight::row_has<flight::RowKey<"materials">>(current)) {
       flight::Array<std::optional<flight::Ref<flight::types::Material>>> materials = static_cast<flight::Array<std::optional<flight::Ref<flight::types::Material>>>>(flight::row_get<flight::RowKey<"materials">>(current));
       {
         double i = 0.0;

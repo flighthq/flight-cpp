@@ -73,7 +73,7 @@ inline bool is_shadow_mesh(flight::types::NodeOf<flight::Ref<flight::types::Node
 }
 
 inline bool is_shadow_instanced_mesh(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh) {
-  return (flight::String("instanceMatrices") in mesh);
+  return flight::row_has<flight::RowKey<"instanceMatrices">>(mesh);
 }
 
 inline const flight::String shadow_depth_instanced_vertex = flight::String("#version 300 es\n") + flight::to_string(flight::scene3d_gl::gl_instance_vertex_declarations_glsl) + flight::String("\nlayout(location = 0) in vec3 a_position;\nuniform mat4 u_viewProjection;\nuniform mat4 u_model;\nvoid main() {\n  gl_Position = u_viewProjection * u_model * instanceModelMatrix() * vec4(a_position, 1.0);\n}\n");

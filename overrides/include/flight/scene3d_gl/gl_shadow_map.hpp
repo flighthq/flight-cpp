@@ -56,7 +56,7 @@ inline double normalize_directional_shadow_pcf_radius(double radius) {
 }
 
 inline bool is_shadow_instanced_mesh(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh) {
-  return flight::row_get<flight::RowKey<"kind">>(mesh) == flight::types::instanced_mesh_kind;
+  return flight::row_has<flight::RowKey<"instanceMatrices">>(mesh);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_GL_GEOMETRY_78917018626D5DDC

@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 3919cfc..e6719c5 100644
+index 3919cfc..06c9d43 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -4195,6 +4195,10 @@ function emitExpression(
@@ -13,7 +13,7 @@ index 3919cfc..e6719c5 100644
        if (expression.semantics.nullishComparison) {
          return emitNullishComparisonCpp(expression, context);
        }
-@@ -22455,6 +22459,106 @@ function getCppNamedTypeBindingModuleCpp(
+@@ -22455,6 +22459,118 @@ function getCppNamedTypeBindingModuleCpp(
    );
  }
  
@@ -86,7 +86,19 @@ index 3919cfc..e6719c5 100644
 +      'cpp-membership-test-unrepresented',
 +    );
 +  }
-+  if (evidence.receiver === 'required') return `(static_cast<void>(${receiver}), true)`;
++  if (evidence.receiver === 'required') {
++    // The answer is the receiver's declared type, so it holds only when that type is proven. An asserted
++    // receiver (`value as T`) names a type the object may not have: the source asks the real object, while
++    // the emitted checked recovery would throw for one that is not a `T`.
++    if (hasCppReceiverAssertionSyntaxCpp(expression.right)) {
++      emissionError(
++        context,
++        `${describe} probes a key declared by an ASSERTED receiver type: the source asks the object itself, but the assertion's checked recovery would throw for an object that is not that type. Test the unasserted value's own carrier instead`,
++        'cpp-membership-test-unrepresented',
++      );
++    }
++    return `(static_cast<void>(${receiver}), true)`;
++  }
 +  if (evidence.receiver === 'optional') {
 +    emissionError(
 +      context,
@@ -120,7 +132,7 @@ index 3919cfc..e6719c5 100644
  function emitCppInferredPropertyUnionMemberTestCpp(
    expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
    context: EmitContext,
-@@ -35186,3 +35290,20 @@ const cppMathSpreadFoldTargets: Readonly<Record<string, { algorithm: string; ide
+@@ -35186,3 +35302,20 @@ const cppMathSpreadFoldTargets: Readonly<Record<string, { algorithm: string; ide
      runtime: 'flight::minimum',
    },
  };
@@ -143,10 +155,10 @@ index 3919cfc..e6719c5 100644
 +]);
 diff --git a/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
 new file mode 100644
-index 0000000..0512a0d
+index 0000000..2c7dada
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppMembershipTest.test.ts
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,124 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -231,6 +243,14 @@ index 0000000..0512a0d
 +      export function hasDevice(state: RenderState): boolean { return 'device' in state; }
 +    `),
 +  ).toContain('cannot hold a value that declares it');
++  expect(
++    refusal(`
++      export interface Adapter { cache: number; adapt: () => void }
++      export function isAdapter(value: unknown): boolean {
++        return typeof value === 'object' && value !== null && 'cache' in (value as Adapter);
++      }
++    `),
++  ).toContain('declared by an ASSERTED receiver type');
 +  expect(
 +    refusal(`
 +      export function hasRotate(raw: unknown): boolean {

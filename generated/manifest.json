@@ -3350,12 +3350,6 @@
     },
     {
       "files": [
-        "flight/effects/effect_defaults.hpp"
-      ],
-      "id": "effects-membership-test-defaults"
-    },
-    {
-      "files": [
         "flight/interaction/hit_tests.hpp"
       ],
       "id": "interaction-declare-refused-hit-area-contains-point"
@@ -6933,9 +6927,9 @@
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/render",
       "cppNamespace": "flight::render",
-      "emittedModules": 16,
+      "emittedModules": 15,
       "package": "@flighthq/render",
-      "refusedModules": 10,
+      "refusedModules": 11,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
@@ -7799,8 +7793,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2578,
-    "refusedModules": 573,
+    "emittedModules": 2577,
+    "refusedModules": 574,
     "sourceModules": 3151
   }
 }

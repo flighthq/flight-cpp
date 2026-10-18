@@ -111,7 +111,7 @@ inline void ensure_instance_capacity(flight::Ref<GlParticle3DShader> shader, fli
 }
 
 inline bool is_scene_particle_emitter_3d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> node) {
-  return (((flight::row_get<flight::RowKey<"kind">>(node) == flight::types::particle_emitter_3d_kind) && (flight::String("blendMode") in node)) && (flight::String("data") in node));
+  return (((flight::row_get<flight::RowKey<"kind">>(node) == flight::types::particle_emitter_3d_kind) && flight::row_has<flight::RowKey<"blendMode">>(node)) && (static_cast<void>(node), true));
 }
 
 inline void collect_particle_emitter_3d_nodes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> node, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>> out) {

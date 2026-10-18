@@ -4827,6 +4827,23 @@
       "unblocks": "Native heritage for absence-only interface refinements, including the WGPU and GL render-target subtypes. With the base-to-derived member read (next patch), bindWgpuRenderPassTarget and the 117 rows behind it.",
       "expires": "when upstream preserves interface heritage for absence-only member refinements.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-membership-test-presence",
+      "dependency": "flight-compiler",
+      "patch": "compiler-membership-test-presence.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "TypeScript `key in receiver` is emitted verbatim as C++ (`(k in x)`), which does not parse (`expected ')'` / `unknown type name`); in-operator-not-lowered-b1eae4af and membership-test-lowered-literally",
+      "rewrite": "Semantic lowering records IrMembershipTestEvidence on each `in` binary from the checker: the key (string literal or dynamic string), how the receiver's own type declares it (required/optional/undeclared), whether it is only inherited through the apparent prototype, and whether any analyzed object type assignable to the receiver declares it optional (generic containers counted conservatively). The C++ backend, for flight-cpp receivers it carries as Record, nominal Ref, structural row or NamedProperties view, lowers: Record -> `r.has(k)` (literal key), `true` for an Object.prototype name, or `r.has(k) || flight::is_object_prototype_property(k)` for a dynamic key; a key the receiver declares required -> `(receiver, true)`; a structural row with every assignable declarer required -> `flight::row_has<flight::RowKey<\"k\">>(row)` (owner cell presence). It refuses (cpp-membership-test-unrepresented) an optional key, an assignable optional declarer, an inherited key on a non-Record, a dynamic key on a non-Record, a nominal receiver that does not declare the key, and any NamedProperties view. Closed-union arm tests, erased Any receivers, type-parameter receivers and symbol keys keep their existing lowering.",
+      "equivalence": "`in` asks whether the property exists on the object or its prototype chain. A Record is storage for an ordinary object, whose prototype is Object.prototype, so own entry presence plus that fixed name set is the same answer, and present-undefined entries stay present because has() is entry presence, not value. A structural row's shared owner binds a named cell for every member its concrete type declares; when no type that can reach the receiver declares the key optional, a bound cell means the source object has the property and an unbound one means it does not, without reading the value or invoking a getter. A key the receiver type declares required is present on every value of that type. Every case where presence is not exactly representable is refused rather than answered from the value, an own-key predicate, a constant, or a nominal downcast.",
+      "whyNotUpstreamFirst": "The lowering is the request itself (docs/compiler-requests/membership-test-lowered-literally.md); it is carried through the established compiler patch stack so the SDK can measure it before upstream adoption.",
+      "unblocks": "Membership sites on Record and structural-row receivers whose key is required on every assignable declarer (interaction_manager hasTransform2DRuntime, explain_scene_3d_pipeline_coverage, gl_particle_emitter_3d, effect_defaults); converts the remaining verbatim sites on those carriers into named refusals.",
+      "expires": "when flight-compiler lowers `in` to the runtime presence question on each carrier, or refuses it by name, upstream.",
+      "appliedOn": "2026-10-18",
+      "verification": "Compiler worktree at 806d257 with the 69-patch stack plus this patch: all 70 apply sequentially with plain git apply. compiler-semantic tsc 0 errors; compiler-backend-cpp tsc 5 errors, identical without this patch (other patches' tests). New cppMembershipTest.test.ts 6 pass. Full compiler-backend-cpp + compiler-semantic vitest: 78 failed / 3004 passed / 33 skipped, the identical 78-failure set as the stack without this patch (0 new, 0 fixed). Emitted Record and row lowerings compiled with g++ 15.2 against this runtime plus the SDK structural member table and run: Mesh-through-Node row true, plain Node false, Record own key true, absent false, toString true."
     }
   ]
 }

@@ -9002,19 +9002,6 @@
       "expires": "when initializeGlyphSourceFromBitmapFont emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
-      "id": "effects-membership-test-defaults",
-      "kind": "respell-membership-test",
-      "appliesTo": "flight/effects/effect_defaults.hpp",
-      "receivers": [
-        "entry"
-      ],
-      "sourceDeclaration": "packages/effects/src/effectDefaults.ts -- `if (!(key in entry))` in copyEffectDefaults, where entry is the per-kind defaults Record and key comes from Object.keys(effectRec)",
-      "diagnostic": "unknown type name 'key_2'",
-      "defect": "The emitter lowers JavaScript's `key in object` literally, and `in` is not a C++ operator, so the header does not compile and the compiler reports the key token as a type name. The faithful primitive already exists: flight::Record::has(key) asks whether the PROPERTY EXISTS, which is the question `in` asks -- a key whose value is undefined is present, and get(key)->has_value(), the Any's own test, would wrongly call it absent (measured: absent has=0 get-engaged=0 any-defined=0; present-undefined has=1 get-engaged=1 any-defined=0). Anchored to this header and this receiver rather than matched by text, because a text repair cannot see a receiver's type and `in` appears over Records, strings and maps alike.",
-      "expectedWhen": "always",
-      "expires": "when the emitter lowers a membership test to the runtime's presence question instead of emitting `in`; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "interaction-declare-refused-hit-area-contains-point",
       "kind": "declare-refused-function",
       "appliesTo": "flight/interaction/hit_tests.hpp",

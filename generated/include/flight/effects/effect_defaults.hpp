@@ -100,7 +100,7 @@ inline bool normalize_effect(flight::StructuralRef<flight::RowReadonly<flight::R
     ([&]() { const auto& named_write_receiver = out; const auto named_write_key = key; auto assignment_value = (effect_rec.get(key).has_value() ? effect_rec.get(key) : entry.get(key).value()); if (!flight::named_properties(named_write_receiver).set(named_write_key, assignment_value)) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value; }());
   }
   for (auto key_2 : ([&]() { const auto named_view = effect_rec; const auto named_keys = named_view.keys(); return flight::Array<flight::String>(named_keys.begin(), named_keys.end()); }())) {
-    if (!(entry.has(key_2))) {
+    if (!([&]() { const auto membership_key = key_2; const auto& membership_receiver = entry; return membership_receiver.has(membership_key) || flight::is_object_prototype_property(membership_key); }())) {
       ([&]() { const auto& named_write_receiver_2 = out; const auto named_write_key_2 = key_2; auto assignment_value_2 = effect_rec.get(key_2); if (!flight::named_properties(named_write_receiver_2).set(named_write_key_2, assignment_value_2)) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value_2; }());
     }
   }

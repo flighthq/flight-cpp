@@ -3845,10 +3845,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 109,
+      "line": 91,
       "module": "packages/render/src/renderCache.ts",
       "package": "@flighthq/render",
-      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderCache.ts: contextual union value type flight::Ref<entity_runtime_key_adapt_cache_signals_046de73025a2792c> is stored through its intersection's own C++ object carrier, but the destination names secondary constituent RenderProxyAdapter through an independent carrier. The runtime does not retain a checked owner-preserving view for that constituent, and the compiler will not replace one with an unchecked pointer cast, a materialized copy, or invented side storage. Keep the destination on the exact declared intersection owner, declare one explicit common nominal owner for both APIs, or add identity-preserving structural-reference storage for the constituent contract",
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderCache.ts: `\"cache\" in receiver` probes a key declared by an ASSERTED receiver type: the source asks the object itself, but the assertion's checked recovery would throw for an object that is not that type. Test the unasserted value's own carrier instead",
       "stage": "emission"
     },
     {
@@ -3879,11 +3879,13 @@
       "stage": "emission"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 35,
       "module": "packages/render/src/renderRegistryGuards.ts",
       "package": "@flighthq/render",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderRegistryGuards.ts: `\"device\" in receiver` probes a key flight::Ref<flight::types::RenderState> does not declare, and that carrier cannot hold a value that declares it: the receiver must be carried as a structural row over the caller's actual owner before presence can be answered",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
