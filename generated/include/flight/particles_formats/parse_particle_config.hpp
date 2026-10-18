@@ -54,14 +54,14 @@ inline flight::Ref<flight::types::ParticleConfigParseResult> parse_particle_conf
   std::optional<flight::String> format = flight::particles_formats::detect_particle_format(text);
   if (!format.has_value()) {
     flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};
-    flight::Record<flight::String, std::variant<bool, double, flight::String>> details = {{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-format-detected")}}};
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> details = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-format-detected")}}};
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->reject, flight::String("particles.unknown-format"), flight::String("parseParticleConfigDocument"), details);
     return flight::make_ref<flight::types::ParticleConfigParseResult>(flight::types::ParticleConfigParseResult{.config = flight::particles::create_particle_emitter_config(std::nullopt), .diagnostics = diagnostics, .format = std::nullopt});
   }
   auto codec = flight::particles_formats::get_particle_format_codec(format.value());
   if (!codec.has_value()) {
     flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics_2 = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};
-    flight::Record<flight::String, std::variant<bool, double, flight::String>> details_2 = {{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-registered-parser")}}};
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> details_2 = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-registered-parser")}}};
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics_2}, flight::types::import_diagnostic_severity->reject, flight::String("particles.unknown-format"), flight::String("parseParticleConfigDocument"), details_2);
     return flight::make_ref<flight::types::ParticleConfigParseResult>(flight::types::ParticleConfigParseResult{.config = flight::particles::create_particle_emitter_config(std::nullopt), .diagnostics = diagnostics_2, .format = std::optional<flight::String>{format.value()}});
   }
@@ -71,7 +71,7 @@ inline flight::Ref<flight::types::ParticleConfigParseResult> parse_particle_conf
   }
   catch (const std::exception& err) {
     flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics_3 = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};
-    flight::Record<flight::String, std::variant<bool, double, flight::String>> details_3 = {{flight::String("message"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, static_cast<flight::Error>(err).message()}}};
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> details_3 = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("message"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, static_cast<flight::Error>(err).message()}}};
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics_3}, flight::types::import_diagnostic_severity->reject, flight::String("particles.parse-error"), flight::String("parseParticleConfigDocument"), details_3);
     return flight::make_ref<flight::types::ParticleConfigParseResult>(flight::types::ParticleConfigParseResult{.config = flight::particles::create_particle_emitter_config(std::nullopt), .diagnostics = diagnostics_3, .format = std::optional<flight::String>{format.value()}});
   }

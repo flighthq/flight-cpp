@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/number.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
@@ -38,7 +39,7 @@ inline flight::String escape_xml_flight_value_function_escape_u000058_ml_flight_
 inline flight::String document_to_plist(flight::Ref<flight::types::ParticleDesignerDocument> doc) {
   std::function<void(flight::String, std::variant<bool, double, flight::String>)> kv;
   flight::Array<flight::String> lines = flight::Array<flight::String>{flight::String("<?xml version=\"1.0\" encoding=\"utf-8\"?>"), flight::String("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">"), flight::String("<plist version=\"1.0\">"), flight::String("<dict>")};
-  (kv = [=](flight::String key, std::variant<bool, double, flight::String> value) {
+  (kv = flight::Function<void(flight::String, std::variant<bool, double, flight::String>)>{[=](flight::String key, std::variant<bool, double, flight::String> value) {
   lines.push(flight::String("\t<key>") + flight::to_string(key) + flight::String("</key>"));
   if (value.index() == 0) {
     lines.push(flight::String("\t<") + flight::to_string((std::get<0>(value) ? flight::String("true") : flight::String("false"))) + flight::String("/>"));
@@ -56,7 +57,7 @@ inline flight::String document_to_plist(flight::Ref<flight::types::ParticleDesig
       lines.push(flight::String("\t<string>") + flight::to_string(escape_xml_flight_value_function_escape_u000058_ml_flight_private_0e515013f2ef4167(std::get<flight::String>(value))) + flight::String("</string>"));
     }
   }
-});
+}});
   kv(flight::String("maxParticles"), std::variant<bool, double, flight::String>{std::in_place_type<double>, doc->max_particles});
   kv(flight::String("emitterType"), std::variant<bool, double, flight::String>{std::in_place_type<double>, doc->emitter_type});
   kv(flight::String("duration"), std::variant<bool, double, flight::String>{std::in_place_type<double>, doc->duration});

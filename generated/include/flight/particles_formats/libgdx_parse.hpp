@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/number.hpp>
 #include <flight/regexp.hpp>
@@ -84,10 +85,10 @@ inline flight::Array<flight::Ref<flight::types::ImportDiagnostic>> collect_libgd
 
 inline flight::Array<double> hex_to_rgb_flight_value_function_hex_u000054_o_u000052_gb_flight_private_6a52348bc459802f(flight::String hex) {
   const flight::String s = hex.replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String("")).pad_end(6.0, flight::String("f"));
-  std::function<double(double)> channel = [=](double i) {
+  std::function<double(double)> channel = flight::Function<double(double)>{[=](double i) {
   const double v = flight::parse_int(s.slice(i, (i + 2.0)), 16.0);
   return (std::isfinite(v) ? (v / 255.0) : 1.0);
-};
+}};
   return flight::Array<double>{channel(0.0), channel(2.0), channel(4.0)};
 }
 
@@ -156,33 +157,33 @@ using alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_ALPHA_END_ALPHA_START_BLEND_MODE_COLOR_END_B_COLOR_END_G_COLOR_END_R_COLOR_END_VARIANCE_B_COLOR_END_VARIANCE_G_COLOR_END_VARIANCE_R_COLOR_START_B_COLOR_START_G_COLOR_START_R_COLOR_START_VARIANCE_B_COLOR_START_VARIANCE_G_COLOR_START_VARIANCE_R_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_GRAVITY_X_GRAVITY_Y_GRAVITY_Z_EMITTER_CONE_ANGLE_EMITTER_DEPTH_EMITTER_HEIGHT_EMITTER_RADIUS_EMITTER_SHAPE_EMITTER_WIDTH_BURST_COUNT_BURST_INTERVAL_DURATION_LOOP_FRAME_COUNT_FRAME_RATE_LIFETIME_MAX_LIFETIME_MIN_MAX_PARTICLES_REGION_ID_MAX_REGION_ID_MIN_SCALE_END_SCALE_MAX_SCALE_MIN_SPEED_MAX_SPEED_MIN_SPAWN_RATE_SPREAD_ROTATION_SPEED_MAX_ROTATION_SPEED_MIN_VELOCITY_INHERITANCE_ALPHA_CURVE_COLOR_CURVE_SCALE_CURVE_WORLD_SPACE_009102F54C361689
 
 inline flight::Ref<flight::types::ParticleEmitterConfig> document_to_config_flight_value_function_document_u000054_o_u000043_onfig_flight_private_6a52348bc459802f(flight::Ref<flight::types::LibgdxParticleDocument> doc, double texture_size) {
-  flight::Array<double> array_pattern_value = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->life)));
+  flight::Array<double> array_pattern_value = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->life)));
   const double life_min = array_pattern_value.element(0.0);
   const double life_max = array_pattern_value.element(1.0);
-  flight::Array<double> array_pattern_value_6 = (doc->velocity->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->velocity))) : flight::Array<double>{0.0, 0.0});
+  flight::Array<double> array_pattern_value_6 = (doc->velocity->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->velocity))) : flight::Array<double>{0.0, 0.0});
   const double vel_min = array_pattern_value_6.element(0.0);
   const double vel_max = array_pattern_value_6.element(1.0);
-  flight::Array<double> array_pattern_value_10 = (doc->angle->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->angle))) : flight::Array<double>{0.0, 360.0});
+  flight::Array<double> array_pattern_value_10 = (doc->angle->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->angle))) : flight::Array<double>{0.0, 360.0});
   const double angle_min = array_pattern_value_10.element(0.0);
   const double angle_max = array_pattern_value_10.element(1.0);
   const double angle_mid = (((angle_min + angle_max) * 0.5) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   const double spread = (((angle_max - angle_min) * 0.5) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
-  flight::Array<double> array_pattern_value_12 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->scale)));
+  flight::Array<double> array_pattern_value_12 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->scale)));
   const double scale_min_px = array_pattern_value_12.element(0.0);
   const double scale_max_px = array_pattern_value_12.element(1.0);
   const double scale_min = (scale_min_px / texture_size);
   const double scale_max = (scale_max_px / texture_size);
   const double last_scaling = ((static_cast<double>(doc->scale->scaling.size()) > 0.0) ? doc->scale->scaling.element((static_cast<double>(doc->scale->scaling.size()) - 1.0)) : 1.0);
   const double scale_end = last_scaling;
-  flight::Array<double> array_pattern_value_2 = (doc->wind->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->wind))) : flight::Array<double>{0.0, 0.0});
+  flight::Array<double> array_pattern_value_2 = (doc->wind->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->wind))) : flight::Array<double>{0.0, 0.0});
   const double wind_min = array_pattern_value_2.element(0.0);
-  flight::Array<double> array_pattern_value_3 = (doc->gravity->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->gravity))) : flight::Array<double>{0.0, 0.0});
+  flight::Array<double> array_pattern_value_3 = (doc->gravity->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->gravity))) : flight::Array<double>{0.0, 0.0});
   const double grav_min = array_pattern_value_3.element(0.0);
   const flight::String shape = doc->spawn_shape->shape;
-  flight::Array<double> array_pattern_value_4 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->spawn_width)));
+  flight::Array<double> array_pattern_value_4 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->spawn_width)));
   const double sw_min = array_pattern_value_4.element(0.0);
   const double sw_max = array_pattern_value_4.element(1.0);
-  flight::Array<double> array_pattern_value_5 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->spawn_height)));
+  flight::Array<double> array_pattern_value_5 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->spawn_height)));
   const double sh_min = array_pattern_value_5.element(0.0);
   const double sh_max = array_pattern_value_5.element(1.0);
   const double sw_mid = ((sw_min + sw_max) * 0.5);
@@ -223,11 +224,11 @@ inline flight::Ref<flight::types::ParticleEmitterConfig> document_to_config_flig
   const double eb = array_pattern_value_8.element(2.0);
   const double alpha_start = ([&]() -> double { auto nullish_coalesce_left = doc->transparency->scaling.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
   const double alpha_end = ([&]() -> double { auto nullish_coalesce_left = doc->transparency->scaling.get((static_cast<double>(doc->transparency->scaling.size()) - 1.0)); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
-  flight::Array<double> array_pattern_value_9 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->duration)));
+  flight::Array<double> array_pattern_value_9 = range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>(doc->duration)));
   const double dur_min = array_pattern_value_9.element(0.0);
   const double dur_max = array_pattern_value_9.element(1.0);
   const double dur_mid = ((dur_min + dur_max) * 0.5);
-  flight::Array<double> array_pattern_value_11 = (doc->rotation->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->rotation))) : flight::Array<double>{0.0, 0.0});
+  flight::Array<double> array_pattern_value_11 = (doc->rotation->active ? range_to_min_max(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxRangeValue>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LibgdxActiveRangeValue>>>>(doc->rotation))) : flight::Array<double>{0.0, 0.0});
   const double rot_min = array_pattern_value_11.element(0.0);
   const double rot_max = array_pattern_value_11.element(1.0);
   const double lifetime_mid = ([&]() -> double { auto logical_or_value = (((life_min / 1000.0) + (life_max / 1000.0)) * 0.5); if (flight::to_boolean(logical_or_value)) return logical_or_value; return 1.0; }());
@@ -275,7 +276,7 @@ inline flight::Ref<flight::types::LibgdxRangeValue> read_range(LibgdxSection sec
 
 inline flight::Ref<flight::types::LibgdxActiveRangeValue> read_active_range(LibgdxSection section, bool active, std::optional<flight::Ref<low_min_low_max_high_min_high_max_relative_scaling_timeline_fc991c5718a9845b>> def = std::nullopt) {
   auto range = read_range(section, def);
-  return ([&]() { auto object_member_active = active; auto object_member_low_min = range->low_min; auto object_member_low_max = range->low_max; auto object_member_high_min = range->high_min; auto object_member_high_max = range->high_max; auto object_member_relative = range->relative; auto object_member_scaling = range->scaling; auto object_member_timeline = range->timeline; return flight::make_ref<flight::types::LibgdxActiveRangeValue>(flight::types::LibgdxActiveRangeValue{.low_min = object_member_low_min, .low_max = object_member_low_max, .high_min = object_member_high_min, .high_max = object_member_high_max, .relative = object_member_relative, .scaling = object_member_scaling, .timeline = object_member_timeline, .active = object_member_active}); }());
+  return ([&]() { auto object_member_active = active; auto object_member_low_min = range->low_min; auto object_member_low_max = range->low_max; auto object_member_high_min = range->high_min; auto object_member_high_max = range->high_max; auto object_member_relative = range->relative; auto object_member_scaling = range->scaling; auto object_member_timeline = range->timeline; auto intersection_value = flight::make_ref<flight::types::LibgdxActiveRangeValue>(flight::types::LibgdxActiveRangeValue{.active = object_member_active}); intersection_value->low_min = object_member_low_min; intersection_value->low_max = object_member_low_max; intersection_value->high_min = object_member_high_min; intersection_value->high_max = object_member_high_max; intersection_value->relative = object_member_relative; intersection_value->scaling = object_member_scaling; intersection_value->timeline = object_member_timeline; return intersection_value; }());
 }
 
 inline flight::String str_key(LibgdxSection section, flight::String key, std::optional<flight::String> def = std::nullopt) {
@@ -289,38 +290,38 @@ using shape_edges_side_ad397097fb67afdb = flight::types::shape_edges_side_ad3970
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_SHAPE_EDGES_SIDE_AD397097FB67AFDB
 
 inline flight::Ref<flight::types::LibgdxParticleDocument> sections_to_document(flight::Map<flight::String, LibgdxSection> sections) {
-  const std::optional<flight::String> emitter_key = ([&]() { flight::Array<flight::String> array_spread_result; { auto&& array_spread_collection = sections; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_mapped_value); array_spread_result.push(array_spread_key); } } return array_spread_result; }()).find([=](flight::String k) { return (k.starts_with(flight::String("- ")) && k.ends_with(flight::String(" -"))); });
+  const std::optional<flight::String> emitter_key = ([&]() { flight::Array<flight::String> array_spread_result; { auto&& array_spread_collection = sections; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_mapped_value); array_spread_result.push(array_spread_key); } } return array_spread_result; }()).find(flight::Function<bool(flight::String)>{[=](flight::String k) { return (k.starts_with(flight::String("- ")) && k.ends_with(flight::String(" -"))); }});
   const flight::String emitter_name = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = emitter_key; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().slice(2.0, -2.0); }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().trim(); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }());
   flight::Map<flight::String, flight::String> root = ([&]() -> flight::Map<flight::String, flight::String> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Map<flight::String, flight::String>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Map<flight::String, flight::String>> { auto nullish_coalesce_left = (emitter_key.has_value() ? std::optional{sections.get(emitter_key.value())} : std::nullopt); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return sections.get(flight::String("Particle Effect")); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return sections.get(flight::String("")); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Map<flight::String, flight::String>(); }());
-  std::function<flight::Map<flight::String, flight::String>(flight::String)> get = [=](flight::String name) { return ([&]() -> flight::Map<flight::String, flight::String> { auto nullish_coalesce_left = sections.get(name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Map<flight::String, flight::String>(); }()); };
-  flight::Map<flight::String, flight::String> delay_section = get(flight::String("Delay"));
-  flight::Map<flight::String, flight::String> duration_section = get(flight::String("Duration"));
-  flight::Map<flight::String, flight::String> emission_section = get(flight::String("Emission"));
-  flight::Map<flight::String, flight::String> life_section = get(flight::String("Life"));
-  flight::Map<flight::String, flight::String> life_offset_section = get(flight::String("Life Offset"));
-  flight::Map<flight::String, flight::String> x_off_section = get(flight::String("X Offset"));
-  flight::Map<flight::String, flight::String> y_off_section = get(flight::String("Y Offset"));
-  flight::Map<flight::String, flight::String> spawn_shape_section = get(flight::String("Spawn Shape"));
-  flight::Map<flight::String, flight::String> spawn_width_section = get(flight::String("Spawn Width"));
-  flight::Map<flight::String, flight::String> spawn_height_section = get(flight::String("Spawn Height"));
-  flight::Map<flight::String, flight::String> scale_section = get(flight::String("Scale"));
-  flight::Map<flight::String, flight::String> velocity_section = get(flight::String("Velocity"));
-  flight::Map<flight::String, flight::String> angle_section = get(flight::String("Angle"));
-  flight::Map<flight::String, flight::String> rotation_section = get(flight::String("Rotation"));
-  flight::Map<flight::String, flight::String> wind_section = get(flight::String("Wind"));
-  flight::Map<flight::String, flight::String> gravity_section = get(flight::String("Gravity"));
-  flight::Map<flight::String, flight::String> tint_section = get(flight::String("Tint"));
-  flight::Map<flight::String, flight::String> transparency_section = get(flight::String("Transparency"));
+  std::function<LibgdxSection(flight::String)> get = flight::Function<LibgdxSection(flight::String)>{[=](flight::String name) { return ([&]() -> flight::Map<flight::String, flight::String> { auto nullish_coalesce_left = sections.get(name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Map<flight::String, flight::String>(); }()); }};
+  LibgdxSection delay_section = get(flight::String("Delay"));
+  LibgdxSection duration_section = get(flight::String("Duration"));
+  LibgdxSection emission_section = get(flight::String("Emission"));
+  LibgdxSection life_section = get(flight::String("Life"));
+  LibgdxSection life_offset_section = get(flight::String("Life Offset"));
+  LibgdxSection x_off_section = get(flight::String("X Offset"));
+  LibgdxSection y_off_section = get(flight::String("Y Offset"));
+  LibgdxSection spawn_shape_section = get(flight::String("Spawn Shape"));
+  LibgdxSection spawn_width_section = get(flight::String("Spawn Width"));
+  LibgdxSection spawn_height_section = get(flight::String("Spawn Height"));
+  LibgdxSection scale_section = get(flight::String("Scale"));
+  LibgdxSection velocity_section = get(flight::String("Velocity"));
+  LibgdxSection angle_section = get(flight::String("Angle"));
+  LibgdxSection rotation_section = get(flight::String("Rotation"));
+  LibgdxSection wind_section = get(flight::String("Wind"));
+  LibgdxSection gravity_section = get(flight::String("Gravity"));
+  LibgdxSection tint_section = get(flight::String("Tint"));
+  LibgdxSection transparency_section = get(flight::String("Transparency"));
   flight::Array<flight::String> tint_colors = flight::Array<flight::String>{};
   flight::Array<double> tint_timeline = flight::Array<double>{};
   const flight::String raw_colors = str_key(tint_section, flight::String("colors"), flight::String(""));
   if (flight::to_boolean(raw_colors)) {
-    raw_colors.split(flight::String(",")).for_each([=](flight::String c) {
+    raw_colors.split(flight::String(",")).for_each(flight::Function<void(flight::String)>{[=](flight::String c) {
   const flight::String trimmed = c.trim();
   if (flight::to_boolean(trimmed)) {
     tint_colors.push(trimmed);
   }
-});
+}});
   }
   if ((static_cast<double>(tint_colors.size()) == 0.0)) {
     tint_colors.push(flight::String("ffffff"));

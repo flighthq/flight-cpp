@@ -4333,6 +4333,13 @@
       "package": "@flighthq/skeleton2d"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635",
+      "id": "compiler-private-json-read-flow",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateJsonReadFlow.test.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
       "dependency": "flight",
       "digest": "7d53ff4c20ec3b2a3384036ce096a8d48a235432cf4e8eadd61206942de1d2e2",
       "id": "particles-formats-string-operations",
@@ -6715,7 +6722,7 @@
       "sourceModules": 13
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
       "emittedModules": 15,

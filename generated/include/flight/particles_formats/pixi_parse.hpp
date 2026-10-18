@@ -5,6 +5,7 @@
 #include <flight/any.hpp>
 #include <flight/array.hpp>
 #include <flight/boolean.hpp>
+#include <flight/callable.hpp>
 #include <flight/json.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
@@ -41,18 +42,18 @@ using flight::types::ParticleEmitterConfig;
 
 using PixiRaw = flight::Record<flight::String, flight::Any>;
 
-inline PixiRaw parse_pixi_json(flight::String json) {
+inline flight::NamedProperties parse_pixi_json(flight::String json) {
   flight::JsonValue raw;
   try {
     (raw = flight::Json::parse(json));
   }
-  catch (const std::exception& e) {
+  catch (const flight::JsonSyntaxError& e) {
     throw flight::Error(flight::String("Invalid Pixi particle JSON: ") + flight::to_string(static_cast<flight::Error>(e).message()) + flight::String(""));
   }
   if (((([&]() { const auto& presence_operand = raw; return presence_operand.is_null(); }()) || ([&]() { const auto& typeof_json_value = raw; return !((typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object)); }())) || flight::is_array(raw))) {
     throw flight::Error(flight::String("Invalid Pixi particle document: expected a JSON object, got ") + flight::to_string((([&]() { const auto& presence_operand_2 = raw; return presence_operand_2.is_null(); }()) ? flight::String("null") : (flight::is_array(raw) ? flight::String("array") : ([&]() -> flight::String { const auto& typeof_json_value_2 = raw; const auto typeof_json_kind = typeof_json_value_2.kind(); if (typeof_json_kind == flight::JsonValue::Kind::boolean) return flight::String("boolean"); if (typeof_json_kind == flight::JsonValue::Kind::number) return flight::String("number"); if (typeof_json_kind == flight::JsonValue::Kind::string) return flight::String("string"); return flight::String("object"); }())))) + flight::String(""));
   }
-  return static_cast<PixiRaw>(raw);
+  return flight::named_properties(raw);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_VALUE_792D85311303933D
@@ -64,13 +65,13 @@ struct value_792d85311303933d : public flight::ReferenceEnabled {
 
 inline flight::Array<double> read_color(flight::Any obj, std::optional<flight::String> def = std::nullopt) {
   def = def.value_or(flight::String("ffffff"));
-  auto value_obj = obj;
-  const flight::String hex = ([&]() -> flight::String { const auto& erased_typeof_carrier = obj; if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return ([&]() -> flight::String { const auto& erased_typeof_carrier_2 = ([&]() -> std::optional<flight::Any> { const auto& optional_chain_receiver = value_obj; if (optional_chain_receiver.is_nullish()) return std::nullopt; const auto optional_chain_property = flight::named_properties(optional_chain_receiver).get(flight::String("value")); if (optional_chain_property.is_undefined()) return std::nullopt; return optional_chain_property; }()); if (erased_typeof_carrier_2.has_value() && erased_typeof_carrier_2.value().type_of() == flight::String("string")) return erased_typeof_carrier_2.value().as_string(); return def.value(); }()); }());
+  flight::Any value_obj = obj;
+  const flight::String hex = ([&]() -> flight::String { const auto& erased_typeof_carrier = obj; if (erased_typeof_carrier.type_of() == flight::String("string")) return erased_typeof_carrier.as_string(); return ([&]() -> flight::String { const auto& erased_typeof_carrier_2 = ([&]() -> flight::Any { const auto& json_optional_receiver = value_obj; if (json_optional_receiver.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver, flight::String("value")); }()); if (erased_typeof_carrier_2.has_value() && erased_typeof_carrier_2.value().type_of() == flight::String("string")) return erased_typeof_carrier_2.value().as_string(); return def.value(); }()); }());
   const flight::String s = hex.replace(flight::RegExp(flight::String("^#"), flight::String("")), flight::String("")).pad_end(6.0, flight::String("f"));
-  std::function<double(double)> channel = [=](double i) {
+  std::function<double(double)> channel = flight::Function<double(double)>{[=](double i) {
   const double v = flight::parse_int(s.slice(i, (i + 2.0)), 16.0);
   return (std::isfinite(v) ? (v / 255.0) : 1.0);
-};
+}};
   return flight::Array<double>{channel(0.0), channel(2.0), channel(4.0)};
 }
 
@@ -87,19 +88,19 @@ struct x_y_053d9d83832929b7 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_X_Y_053D9D83832929B7
 
-inline flight::Array<flight::Ref<flight::types::ImportDiagnostic>> collect_pixi_diagnostics(PixiRaw raw) {
+inline flight::Array<flight::Ref<flight::types::ImportDiagnostic>> collect_pixi_diagnostics(flight::NamedProperties raw) {
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};
-  if (([&]() { const auto& presence_operand = raw.get(flight::String("spawnBurst")).value(); return !presence_operand.is_undefined(); }())) {
+  if (([&]() { const auto& presence_operand = raw.get(flight::String("spawnBurst")); return !presence_operand.is_undefined(); }())) {
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("pixi.spawn-burst-mapped-to-point"), flight::String("collectPixiDiagnostics"), std::nullopt);
   }
-  if (([&]() { const auto& presence_operand = raw.get(flight::String("spawnPolygon")).value(); return !presence_operand.is_undefined(); }())) {
+  if (([&]() { const auto& presence_operand = raw.get(flight::String("spawnPolygon")); return !presence_operand.is_undefined(); }())) {
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->recover, flight::String("pixi.spawn-polygon-mapped-to-point"), flight::String("collectPixiDiagnostics"), std::nullopt);
   }
-  auto accel = ([&]() -> std::optional<flight::Ref<x_y_053d9d83832929b7>> { const auto& erased_value = raw.get(flight::String("acceleration")).value(); if (static_cast<bool>(erased_value.object_if<x_y_053d9d83832929b7>())) return std::optional<flight::Ref<x_y_053d9d83832929b7>>{erased_value.object_if<x_y_053d9d83832929b7>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  if ((accel.has_value() && ((rn_flight_value_function_rn_flight_private_137c89430f512a3f(accel.value()->x, 0.0) != 0.0) || (rn_flight_value_function_rn_flight_private_137c89430f512a3f(accel.value()->y, 0.0) != 0.0)))) {
+  flight::Any accel = raw.get(flight::String("acceleration"));
+  if ((([&]() { const auto& presence_operand = accel; return !presence_operand.is_undefined(); }()) && ((rn_flight_value_function_rn_flight_private_137c89430f512a3f(flight::read_json_data_property(accel.value(), flight::String("x")), 0.0) != 0.0) || (rn_flight_value_function_rn_flight_private_137c89430f512a3f(flight::read_json_data_property(accel.value(), flight::String("y")), 0.0) != 0.0)))) {
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("pixi.acceleration-unsupported"), flight::String("collectPixiDiagnostics"), std::nullopt);
   }
-  if (([&]() { const auto& presence_operand = raw.get(flight::String("behaviors")).value(); return !presence_operand.is_undefined(); }())) {
+  if (([&]() { const auto& presence_operand = raw.get(flight::String("behaviors")); return !presence_operand.is_undefined(); }())) {
     flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics}, flight::types::import_diagnostic_severity->skip, flight::String("pixi.behaviors-partial"), flight::String("collectPixiDiagnostics"), std::nullopt);
   }
   return diagnostics;
@@ -119,11 +120,11 @@ inline flight::Array<double> read_start_end(flight::Any obj, std::optional<doubl
   if ((([&]() { const auto& presence_operand = obj; return presence_operand.is_nullish(); }()) || (obj.type_of() != flight::String("object")))) {
     return flight::Array<double>{def_start.value(), def_end.value()};
   }
-  auto o = ([&]() -> flight::Ref<start_end_b52f33757daf8771> { const auto& erased_value_2 = obj; auto erased_object = erased_value_2.object_if<start_end_b52f33757daf8771>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }());
-  auto start_obj = ([&]() -> std::optional<flight::Ref<value_792d85311303933d>> { const auto& erased_value_slot = o->start; if (!erased_value_slot.has_value()) return std::nullopt; const auto& erased_value_3 = erased_value_slot.value(); if (static_cast<bool>(erased_value_3.object_if<value_792d85311303933d>())) return std::optional<flight::Ref<value_792d85311303933d>>{erased_value_3.object_if<value_792d85311303933d>()}; if (erased_value_3.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  auto end_obj = ([&]() -> std::optional<flight::Ref<value_792d85311303933d>> { const auto& erased_value_slot_2 = o->end; if (!erased_value_slot_2.has_value()) return std::nullopt; const auto& erased_value_4 = erased_value_slot_2.value(); if (static_cast<bool>(erased_value_4.object_if<value_792d85311303933d>())) return std::optional<flight::Ref<value_792d85311303933d>>{erased_value_4.object_if<value_792d85311303933d>()}; if (erased_value_4.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  const double start = ([&]() -> double { const auto& erased_typeof_carrier_3 = o->start; if (erased_typeof_carrier_3.has_value() && erased_typeof_carrier_3.value().type_of() == flight::String("number")) return erased_typeof_carrier_3.value().as_number(); return ([&]() -> double { const auto& erased_typeof_carrier_4 = ([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = start_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->value; }()); if (erased_typeof_carrier_4.has_value() && erased_typeof_carrier_4.value().type_of() == flight::String("number")) return erased_typeof_carrier_4.value().as_number(); return def_start.value(); }()); }());
-  const double end = ([&]() -> double { const auto& erased_typeof_carrier_5 = o->end; if (erased_typeof_carrier_5.has_value() && erased_typeof_carrier_5.value().type_of() == flight::String("number")) return erased_typeof_carrier_5.value().as_number(); return ([&]() -> double { const auto& erased_typeof_carrier_6 = ([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = end_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->value; }()); if (erased_typeof_carrier_6.has_value() && erased_typeof_carrier_6.value().type_of() == flight::String("number")) return erased_typeof_carrier_6.value().as_number(); return def_end.value(); }()); }());
+  flight::Any o = obj;
+  flight::Any start_obj = flight::read_json_data_property(o, flight::String("start"));
+  flight::Any end_obj = flight::read_json_data_property(o, flight::String("end"));
+  const double start = ([&]() -> double { const auto& erased_typeof_carrier_3 = flight::read_json_data_property(o, flight::String("start")); if (erased_typeof_carrier_3.has_value() && erased_typeof_carrier_3.value().type_of() == flight::String("number")) return erased_typeof_carrier_3.value().as_number(); return ([&]() -> double { const auto& erased_typeof_carrier_4 = ([&]() -> flight::Any { const auto& json_optional_receiver_2 = start_obj; if (json_optional_receiver_2.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_2, flight::String("value")); }()); if (erased_typeof_carrier_4.has_value() && erased_typeof_carrier_4.value().type_of() == flight::String("number")) return erased_typeof_carrier_4.value().as_number(); return def_start.value(); }()); }());
+  const double end = ([&]() -> double { const auto& erased_typeof_carrier_5 = flight::read_json_data_property(o, flight::String("end")); if (erased_typeof_carrier_5.has_value() && erased_typeof_carrier_5.value().type_of() == flight::String("number")) return erased_typeof_carrier_5.value().as_number(); return ([&]() -> double { const auto& erased_typeof_carrier_6 = ([&]() -> flight::Any { const auto& json_optional_receiver_3 = end_obj; if (json_optional_receiver_3.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_3, flight::String("value")); }()); if (erased_typeof_carrier_6.has_value() && erased_typeof_carrier_6.value().type_of() == flight::String("number")) return erased_typeof_carrier_6.value().as_number(); return def_end.value(); }()); }());
   return flight::Array<double>{rn_flight_value_function_rn_flight_private_137c89430f512a3f(start, def_start.value()), rn_flight_value_function_rn_flight_private_137c89430f512a3f(end, def_end.value())};
 }
 
@@ -160,59 +161,59 @@ struct r_f7fd8f347e866590 : public flight::ReferenceEnabled {
 using alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689 = flight::particles::alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_ALPHA_END_ALPHA_START_BLEND_MODE_COLOR_END_B_COLOR_END_G_COLOR_END_R_COLOR_END_VARIANCE_B_COLOR_END_VARIANCE_G_COLOR_END_VARIANCE_R_COLOR_START_B_COLOR_START_G_COLOR_START_R_COLOR_START_VARIANCE_B_COLOR_START_VARIANCE_G_COLOR_START_VARIANCE_R_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_GRAVITY_X_GRAVITY_Y_GRAVITY_Z_EMITTER_CONE_ANGLE_EMITTER_DEPTH_EMITTER_HEIGHT_EMITTER_RADIUS_EMITTER_SHAPE_EMITTER_WIDTH_BURST_COUNT_BURST_INTERVAL_DURATION_LOOP_FRAME_COUNT_FRAME_RATE_LIFETIME_MAX_LIFETIME_MIN_MAX_PARTICLES_REGION_ID_MAX_REGION_ID_MIN_SCALE_END_SCALE_MAX_SCALE_MIN_SPEED_MAX_SPEED_MIN_SPAWN_RATE_SPREAD_ROTATION_SPEED_MAX_ROTATION_SPEED_MIN_VELOCITY_INHERITANCE_ALPHA_CURVE_COLOR_CURVE_SCALE_CURVE_WORLD_SPACE_009102F54C361689
 
-inline flight::Ref<flight::types::ParticleEmitterConfig> raw_to_config_flight_value_function_raw_u000054_o_u000043_onfig_flight_private_137c89430f512a3f(PixiRaw raw) {
-  const double max_particles = flight::bitwise_or(rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("maxParticles")).value(), 1000.0), 0.0);
-  const double frequency = rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("frequency")).value(), 0.1);
+inline flight::Ref<flight::types::ParticleEmitterConfig> raw_to_config_flight_value_function_raw_u000054_o_u000043_onfig_flight_private_137c89430f512a3f(flight::NamedProperties raw) {
+  const double max_particles = flight::bitwise_or(rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("maxParticles")), 1000.0), 0.0);
+  const double frequency = rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("frequency")), 0.1);
   const double spawn_rate = ((frequency > 0.0) ? (1.0 / frequency) : 10.0);
-  auto life = ([&]() -> std::optional<flight::Ref<min_max_32499564fafdaa70>> { const auto& erased_value_5 = raw.get(flight::String("lifetime")).value(); if (static_cast<bool>(erased_value_5.object_if<min_max_32499564fafdaa70>())) return std::optional<flight::Ref<min_max_32499564fafdaa70>>{erased_value_5.object_if<min_max_32499564fafdaa70>()}; if (erased_value_5.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  const double lifetime_min = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = life; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->min; }()), 0.5);
-  const double lifetime_max = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = life; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max; }()), 1.0);
-  flight::Array<double> array_pattern_value_4 = read_start_end(raw.get(flight::String("speed")).value(), 100.0, 50.0);
+  flight::Any life = raw.get(flight::String("lifetime"));
+  const double lifetime_min = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> flight::Any { const auto& json_optional_receiver_4 = life; if (json_optional_receiver_4.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_4, flight::String("min")); }()), 0.5);
+  const double lifetime_max = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> flight::Any { const auto& json_optional_receiver_5 = life; if (json_optional_receiver_5.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_5, flight::String("max")); }()), 1.0);
+  flight::Array<double> array_pattern_value_4 = read_start_end(raw.get(flight::String("speed")), 100.0, 50.0);
   const double speed_start = array_pattern_value_4.element(0.0);
   const double speed_end = array_pattern_value_4.element(1.0);
   const double speed_min = flight::minimum(speed_start, speed_end);
   const double speed_max = flight::maximum(speed_start, speed_end);
-  flight::Array<double> array_pattern_value_5 = read_start_end(raw.get(flight::String("scale")).value(), 1.0, 0.5);
+  flight::Array<double> array_pattern_value_5 = read_start_end(raw.get(flight::String("scale")), 1.0, 0.5);
   const double scale_start = array_pattern_value_5.element(0.0);
   const double scale_end = array_pattern_value_5.element(1.0);
   const double scale_min = flight::minimum(scale_start, scale_end);
   const double scale_max = flight::maximum(scale_start, scale_end);
   const double scale_end_ratio = ((scale_max > 0.0) ? (flight::minimum(scale_start, scale_end) / scale_max) : 1.0);
-  flight::Array<double> array_pattern_value = read_start_end(raw.get(flight::String("alpha")).value(), 1.0, 0.0);
+  flight::Array<double> array_pattern_value = read_start_end(raw.get(flight::String("alpha")), 1.0, 0.0);
   const double alpha_start = array_pattern_value.element(0.0);
   const double alpha_end = array_pattern_value.element(1.0);
-  auto color_obj = ([&]() -> std::optional<flight::Ref<start_end_b52f33757daf8771>> { const auto& erased_value_6 = raw.get(flight::String("color")).value(); if (static_cast<bool>(erased_value_6.object_if<start_end_b52f33757daf8771>())) return std::optional<flight::Ref<start_end_b52f33757daf8771>>{erased_value_6.object_if<start_end_b52f33757daf8771>()}; if (erased_value_6.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  flight::Array<double> array_pattern_value_2 = read_color(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = color_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->start; }()), flight::String("ffffff"));
+  flight::Any color_obj = raw.get(flight::String("color"));
+  flight::Array<double> array_pattern_value_2 = read_color(([&]() -> flight::Any { const auto& json_optional_receiver_6 = color_obj; if (json_optional_receiver_6.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_6, flight::String("start")); }()), flight::String("ffffff"));
   const double sr = array_pattern_value_2.element(0.0);
   const double sg = array_pattern_value_2.element(1.0);
   const double sb = array_pattern_value_2.element(2.0);
-  flight::Array<double> array_pattern_value_3 = read_color(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = color_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->end; }()), flight::String("ffffff"));
+  flight::Array<double> array_pattern_value_3 = read_color(([&]() -> flight::Any { const auto& json_optional_receiver_7 = color_obj; if (json_optional_receiver_7.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_7, flight::String("end")); }()), flight::String("ffffff"));
   const double er = array_pattern_value_3.element(0.0);
   const double eg = array_pattern_value_3.element(1.0);
   const double eb = array_pattern_value_3.element(2.0);
-  auto angle_obj = ([&]() -> std::optional<flight::Ref<min_max_32499564fafdaa70>> { const auto& erased_value_7 = raw.get(flight::String("angle")).value(); if (static_cast<bool>(erased_value_7.object_if<min_max_32499564fafdaa70>())) return std::optional<flight::Ref<min_max_32499564fafdaa70>>{erased_value_7.object_if<min_max_32499564fafdaa70>()}; if (erased_value_7.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  const double angle_min = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = angle_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->min; }()), 0.0);
-  const double angle_max = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> std::optional<flight::Any> { auto optional_chain_receiver = angle_obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->max; }()), 360.0);
+  flight::Any angle_obj = raw.get(flight::String("angle"));
+  const double angle_min = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> flight::Any { const auto& json_optional_receiver_8 = angle_obj; if (json_optional_receiver_8.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_8, flight::String("min")); }()), 0.0);
+  const double angle_max = rn_flight_value_function_rn_flight_private_137c89430f512a3f(([&]() -> flight::Any { const auto& json_optional_receiver_9 = angle_obj; if (json_optional_receiver_9.is_nullish()) return flight::undefined; return flight::read_json_data_property(json_optional_receiver_9, flight::String("max")); }()), 360.0);
   const double angle_mid = (((angle_min + angle_max) * 0.5) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   const double spread = (((angle_max - angle_min) * 0.5) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   flight::String emitter_shape = flight::String("point");
   double emitter_radius = 0.0;
   double emitter_width = 0.0;
   double emitter_height = 0.0;
-  auto spawn_rect = ([&]() -> std::optional<flight::Ref<w_h_2b9c299da0c4c1b9>> { const auto& erased_value_8 = raw.get(flight::String("spawnRect")).value(); if (static_cast<bool>(erased_value_8.object_if<w_h_2b9c299da0c4c1b9>())) return std::optional<flight::Ref<w_h_2b9c299da0c4c1b9>>{erased_value_8.object_if<w_h_2b9c299da0c4c1b9>()}; if (erased_value_8.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-  auto spawn_circle = ([&]() -> std::optional<flight::Ref<r_f7fd8f347e866590>> { const auto& erased_value_9 = raw.get(flight::String("spawnCircle")).value(); if (static_cast<bool>(erased_value_9.object_if<r_f7fd8f347e866590>())) return std::optional<flight::Ref<r_f7fd8f347e866590>>{erased_value_9.object_if<r_f7fd8f347e866590>()}; if (erased_value_9.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
+  flight::Any spawn_rect = raw.get(flight::String("spawnRect"));
+  flight::Any spawn_circle = raw.get(flight::String("spawnCircle"));
   if (flight::to_boolean(spawn_circle)) {
     (emitter_shape = flight::String("circle"));
-    (emitter_radius = rn_flight_value_function_rn_flight_private_137c89430f512a3f(spawn_circle.value()->r, 0.0));
+    (emitter_radius = rn_flight_value_function_rn_flight_private_137c89430f512a3f(flight::read_json_data_property(spawn_circle.value(), flight::String("r")), 0.0));
   }
   else {
     if (flight::to_boolean(spawn_rect)) {
       (emitter_shape = flight::String("rect"));
-      (emitter_width = rn_flight_value_function_rn_flight_private_137c89430f512a3f(spawn_rect.value()->w, 0.0));
-      (emitter_height = rn_flight_value_function_rn_flight_private_137c89430f512a3f(spawn_rect.value()->h, 0.0));
+      (emitter_width = rn_flight_value_function_rn_flight_private_137c89430f512a3f(flight::read_json_data_property(spawn_rect.value(), flight::String("w")), 0.0));
+      (emitter_height = rn_flight_value_function_rn_flight_private_137c89430f512a3f(flight::read_json_data_property(spawn_rect.value(), flight::String("h")), 0.0));
     }
   }
-  const flight::String blend_mode_str = rs_flight_value_function_rs_flight_private_137c89430f512a3f(raw.get(flight::String("blendMode")).value(), flight::String("normal")).to_lower();
+  const flight::String blend_mode_str = rs_flight_value_function_rs_flight_private_137c89430f512a3f(raw.get(flight::String("blendMode")), flight::String("normal")).to_lower();
   std::optional<flight::String> blend_mode = std::nullopt;
   if (((blend_mode_str == flight::String("add")) || (blend_mode_str == flight::String("additive")))) {
     (blend_mode = std::optional<flight::String>{flight::String("add")});
@@ -232,7 +233,7 @@ inline flight::Ref<flight::types::ParticleEmitterConfig> raw_to_config_flight_va
       }
     }
   }
-  const double rotation_speed = (rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("rotationSpeed")).value(), 0.0) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
+  const double rotation_speed = (rn_flight_value_function_rn_flight_private_137c89430f512a3f(raw.get(flight::String("rotationSpeed")), 0.0) * flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3);
   return flight::particles::create_particle_emitter_config(([&]() { auto object_member_max_particles = std::optional<double>{max_particles}; auto object_member_spawn_rate = std::optional<double>{spawn_rate}; auto object_member_lifetime_min = std::optional<double>{lifetime_min}; auto object_member_lifetime_max = std::optional<double>{lifetime_max}; auto object_member_speed_min = std::optional<double>{speed_min}; auto object_member_speed_max = std::optional<double>{speed_max}; auto object_member_direction_x = std::optional<double>{std::cos(angle_mid)}; auto object_member_direction_y = std::optional<double>{std::sin(angle_mid)}; auto object_member_spread = std::optional<double>{spread}; auto object_member_emitter_shape = std::optional<flight::String>{emitter_shape}; auto object_member_emitter_radius = std::optional<double>{emitter_radius}; auto object_member_emitter_width = std::optional<double>{emitter_width}; auto object_member_emitter_height = std::optional<double>{emitter_height}; auto object_member_scale_min = std::optional<double>{scale_min}; auto object_member_scale_max = std::optional<double>{scale_max}; auto object_member_scale_end = std::optional<double>{scale_end_ratio}; auto object_member_color_start_r = std::optional<double>{sr}; auto object_member_color_start_g = std::optional<double>{sg}; auto object_member_color_start_b = std::optional<double>{sb}; auto object_member_color_end_r = std::optional<double>{er}; auto object_member_color_end_g = std::optional<double>{eg}; auto object_member_color_end_b = std::optional<double>{eb}; auto object_member_alpha_start = std::optional<double>{alpha_start}; auto object_member_alpha_end = std::optional<double>{alpha_end}; auto object_member_rotation_speed_min = std::optional<double>{rotation_speed}; auto object_member_rotation_speed_max = std::optional<double>{rotation_speed}; auto object_member_blend_mode = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = blend_mode; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }()); return flight::make_ref<alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689>(alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689{.alpha_end = object_member_alpha_end, .alpha_start = object_member_alpha_start, .blend_mode = object_member_blend_mode, .color_end_b = object_member_color_end_b, .color_end_g = object_member_color_end_g, .color_end_r = object_member_color_end_r, .color_start_b = object_member_color_start_b, .color_start_g = object_member_color_start_g, .color_start_r = object_member_color_start_r, .direction_x = object_member_direction_x, .direction_y = object_member_direction_y, .emitter_height = object_member_emitter_height, .emitter_radius = object_member_emitter_radius, .emitter_shape = object_member_emitter_shape, .emitter_width = object_member_emitter_width, .lifetime_max = object_member_lifetime_max, .lifetime_min = object_member_lifetime_min, .max_particles = object_member_max_particles, .scale_end = object_member_scale_end, .scale_max = object_member_scale_max, .scale_min = object_member_scale_min, .speed_max = object_member_speed_max, .speed_min = object_member_speed_min, .spawn_rate = object_member_spawn_rate, .spread = object_member_spread, .rotation_speed_max = object_member_rotation_speed_max, .rotation_speed_min = object_member_rotation_speed_min}); }()));
 }
 
@@ -241,7 +242,7 @@ inline flight::Ref<flight::types::ParticleEmitterConfig> parse_pixi_particle(fli
 }
 
 inline flight::Ref<flight::types::PixiParseResult> parse_pixi_particle_document(flight::String json) {
-  PixiRaw raw = parse_pixi_json(json);
+  flight::NamedProperties raw = parse_pixi_json(json);
   return flight::make_ref<flight::types::PixiParseResult>(flight::types::PixiParseResult{.config = raw_to_config_flight_value_function_raw_u000054_o_u000043_onfig_flight_private_137c89430f512a3f(raw), .diagnostics = collect_pixi_diagnostics(raw)});
 }
 

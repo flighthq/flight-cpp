@@ -68,7 +68,7 @@ inline flight::Record<flight::String, flight::Any> parse_unity_json(flight::Stri
   try {
     (raw = flight::Json::parse(json));
   }
-  catch (const std::exception& e) {
+  catch (const flight::JsonSyntaxError& e) {
     throw flight::Error(flight::String("Invalid Unity particle JSON: ") + flight::to_string(static_cast<flight::Error>(e).message()) + flight::String(""));
   }
   if (((([&]() { const auto& presence_operand = raw; return presence_operand.is_null(); }()) || ([&]() { const auto& typeof_json_value = raw; return !((typeof_json_value.kind() == flight::JsonValue::Kind::null || typeof_json_value.kind() == flight::JsonValue::Kind::array || typeof_json_value.kind() == flight::JsonValue::Kind::object)); }())) || flight::is_array(raw))) {
@@ -99,11 +99,11 @@ inline double mm_low(flight::Any obj, std::optional<double> def = std::nullopt) 
     return obj.as_number();
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  const flight::String mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")).value(), flight::String("constant"));
+  const flight::String mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")), flight::String("constant"));
   if (((mode == flight::String("twoConstants")) || (mode == flight::String("twoCurves")))) {
-    return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMin")).value(), rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")).value(), def.value()));
+    return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMin")), rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")), def.value()));
   }
-  return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")).value(), def.value());
+  return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")), def.value());
 }
 
 inline double mm_high(flight::Any obj, std::optional<double> def = std::nullopt) {
@@ -115,17 +115,17 @@ inline double mm_high(flight::Any obj, std::optional<double> def = std::nullopt)
     return obj.as_number();
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  const flight::String mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")).value(), flight::String("constant"));
+  const flight::String mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")), flight::String("constant"));
   if (((mode == flight::String("twoConstants")) || (mode == flight::String("twoCurves")))) {
-    return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMax")).value(), rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")).value(), def.value()));
+    return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMax")), rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")), def.value()));
   }
-  return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")).value(), def.value());
+  return rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")), def.value());
 }
 
 inline flight::Ref<flight::types::UnityColor> color_at(flight::Any obj, flight::Ref<flight::types::UnityColor> def) {
   if ((([&]() { const auto& presence_operand = obj; return !presence_operand.is_nullish(); }()) && (obj.type_of() == flight::String("object")))) {
     flight::NamedProperties o = flight::named_properties(obj);
-    return flight::make_ref<flight::types::UnityColor>(flight::types::UnityColor{.r = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("r")).value(), def->r), .g = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("g")).value(), def->g), .b = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("b")).value(), def->b), .a = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("a")).value(), def->a)});
+    return flight::make_ref<flight::types::UnityColor>(flight::types::UnityColor{.r = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("r")), def->r), .g = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("g")), def->g), .b = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("b")), def->b), .a = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("a")), def->a)});
   }
   return flight::make_ref<flight::types::UnityColor>(*def);
 }
@@ -135,17 +135,17 @@ inline flight::Array<flight::Array<flight::String>> unsupported_unity_modules = 
 inline flight::Set<flight::String> known_unity_shapes = flight::Set<flight::String>(flight::Array<flight::String>{flight::String("Sphere"), flight::String("Hemisphere"), flight::String("Circle"), flight::String("Box"), flight::String("Rectangle"), flight::String("Cone")});
 
 inline std::optional<flight::Array<double>> color_keys_to_curve(flight::Any arr) {
-  if ((!flight::is_array(arr) || (flight::named_properties(arr).get(flight::String("length")) <= 2.0))) {
+  if ((!flight::is_array(arr) || (static_cast<double>(arr.array_size()) <= 2.0))) {
     return std::nullopt;
   }
   flight::Array<flight::Ref<flight::types::ColorKeyframe>> keys = flight::Array<flight::Ref<flight::types::ColorKeyframe>>{};
   {
     double i = 0.0;
-    while ((i < flight::named_properties(arr).get(flight::String("length")))) {
+    while ((i < static_cast<double>(arr.array_size()))) {
       {
-        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(arr[static_cast<size_t>(i)]);
-        flight::Record<flight::String, flight::Any> c = static_cast<flight::Record<flight::String, flight::Any>>(k.get(flight::String("color")).value());
-        keys.push(flight::make_ref<flight::types::ColorKeyframe>(flight::types::ColorKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value(), (i / (flight::named_properties(arr).get(flight::String("length")) - 1.0))), .r = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("r")).value(), 1.0), .g = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("g")).value(), 1.0), .b = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("b")).value(), 1.0)}));
+        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(([&]() -> flight::Any { const auto& erased_array_receiver = arr; const double erased_array_index = i; return erased_array_receiver.array_get(erased_array_index).value_or(flight::Any(flight::undefined)); }()));
+        flight::Record<flight::String, flight::Any> c = static_cast<flight::Record<flight::String, flight::Any>>(k.get(flight::String("color")).value_or(flight::Any(flight::undefined)));
+        keys.push(flight::make_ref<flight::types::ColorKeyframe>(flight::types::ColorKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value_or(flight::Any(flight::undefined)), (i / (static_cast<double>(arr.array_size()) - 1.0))), .r = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("r")).value_or(flight::Any(flight::undefined)), 1.0), .g = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("g")).value_or(flight::Any(flight::undefined)), 1.0), .b = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(c.get(flight::String("b")).value_or(flight::Any(flight::undefined)), 1.0)}));
       }
       (i += 1.0);
     }
@@ -154,16 +154,16 @@ inline std::optional<flight::Array<double>> color_keys_to_curve(flight::Any arr)
 }
 
 inline std::optional<flight::Array<double>> alpha_keys_to_curve(flight::Any arr) {
-  if ((!flight::is_array(arr) || (flight::named_properties(arr).get(flight::String("length")) <= 2.0))) {
+  if ((!flight::is_array(arr) || (static_cast<double>(arr.array_size()) <= 2.0))) {
     return std::nullopt;
   }
   flight::Array<flight::Ref<flight::types::CurveKeyframe>> keys = flight::Array<flight::Ref<flight::types::CurveKeyframe>>{};
   {
     double i = 0.0;
-    while ((i < flight::named_properties(arr).get(flight::String("length")))) {
+    while ((i < static_cast<double>(arr.array_size()))) {
       {
-        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(arr[static_cast<size_t>(i)]);
-        keys.push(flight::make_ref<flight::types::CurveKeyframe>(flight::types::CurveKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value(), (i / (flight::named_properties(arr).get(flight::String("length")) - 1.0))), .value = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("alpha")).value(), 1.0)}));
+        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(([&]() -> flight::Any { const auto& erased_array_receiver_2 = arr; const double erased_array_index_2 = i; return erased_array_receiver_2.array_get(erased_array_index_2).value_or(flight::Any(flight::undefined)); }()));
+        keys.push(flight::make_ref<flight::types::CurveKeyframe>(flight::types::CurveKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value_or(flight::Any(flight::undefined)), (i / (static_cast<double>(arr.array_size()) - 1.0))), .value = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("alpha")).value_or(flight::Any(flight::undefined)), 1.0)}));
       }
       (i += 1.0);
     }
@@ -175,17 +175,17 @@ inline std::optional<flight::Array<double>> size_keys_to_curve(flight::Any curve
   if ((([&]() { const auto& presence_operand = curve; return presence_operand.is_nullish(); }()) || (curve.type_of() != flight::String("object")))) {
     return std::nullopt;
   }
-  auto arr = flight::named_properties(curve).get(flight::String("keys")).value();
-  if ((!flight::is_array(arr) || (flight::named_properties(arr).get(flight::String("length")) <= 2.0))) {
+  auto arr = flight::named_properties(curve).get(flight::String("keys"));
+  if ((!flight::is_array(arr) || (static_cast<double>(arr.array_size()) <= 2.0))) {
     return std::nullopt;
   }
   flight::Array<flight::Ref<flight::types::CurveKeyframe>> keys = flight::Array<flight::Ref<flight::types::CurveKeyframe>>{};
   {
     double i = 0.0;
-    while ((i < flight::named_properties(arr).get(flight::String("length")))) {
+    while ((i < static_cast<double>(arr.array_size()))) {
       {
-        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(arr[static_cast<size_t>(i)]);
-        keys.push(flight::make_ref<flight::types::CurveKeyframe>(flight::types::CurveKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value(), (i / (flight::named_properties(arr).get(flight::String("length")) - 1.0))), .value = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("value")).value(), 1.0)}));
+        flight::Record<flight::String, flight::Any> k = static_cast<flight::Record<flight::String, flight::Any>>(([&]() -> flight::Any { const auto& erased_array_receiver_3 = arr; const double erased_array_index_3 = i; return erased_array_receiver_3.array_get(erased_array_index_3).value_or(flight::Any(flight::undefined)); }()));
+        keys.push(flight::make_ref<flight::types::CurveKeyframe>(flight::types::CurveKeyframe{.time = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("time")).value_or(flight::Any(flight::undefined)), (i / (static_cast<double>(arr.array_size()) - 1.0))), .value = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(k.get(flight::String("value")).value_or(flight::Any(flight::undefined)), 1.0)}));
       }
       (i += 1.0);
     }
@@ -193,8 +193,8 @@ inline std::optional<flight::Array<double>> size_keys_to_curve(flight::Any curve
   return std::optional<flight::Array<double>>{flight::particles::particle_curve_from_keyframes(keys, std::nullopt)};
 }
 
-inline std::optional<flight::String> unity_blend_mode(flight::Record<flight::String, flight::Any> raw) {
-  const std::optional<flight::String> mode = ((raw.get(flight::String("blendMode")).value().type_of() == flight::String("string")) ? std::optional<flight::String>{raw.get(flight::String("blendMode")).value().to_lower()} : std::nullopt);
+inline std::optional<flight::String> unity_blend_mode(flight::NamedProperties raw) {
+  const std::optional<flight::String> mode = ((raw.get(flight::String("blendMode")).type_of() == flight::String("string")) ? std::optional<flight::String>{raw.get(flight::String("blendMode")).to_lower()} : std::nullopt);
   if (((mode == flight::String("additive")) || (mode == flight::String("add")))) {
     return std::optional<flight::String>{flight::String("add")};
   }
@@ -342,7 +342,7 @@ inline flight::Ref<flight::types::UnityMinMaxValue> read_min_max(flight::Any obj
     return flight::make_ref<flight::types::UnityMinMaxValue>(flight::types::UnityMinMaxValue{.mode = flight::String("constant"), .constant = std::optional<double>{obj.as_number()}});
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  return flight::make_ref<flight::types::UnityMinMaxValue>(flight::types::UnityMinMaxValue{.mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")).value(), flight::String("constant")), .constant = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")).value(), def_const.value())}, .constant_min = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMin")).value(), def_const.value())}, .constant_max = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMax")).value(), def_const.value())}});
+  return flight::make_ref<flight::types::UnityMinMaxValue>(flight::types::UnityMinMaxValue{.mode = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("mode")), flight::String("constant")), .constant = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constant")), def_const.value())}, .constant_min = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMin")), def_const.value())}, .constant_max = std::optional<double>{rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("constantMax")), def_const.value())}});
 }
 
 
@@ -474,8 +474,8 @@ inline flight::Ref<flight::types::UnityShape> read_shape(flight::Any obj) {
     return def;
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  flight::Record<flight::String, flight::Any> sc = (flight::to_boolean((o.get(flight::String("scale")).value() && (o.get(flight::String("scale")).value().type_of() == flight::String("object")))) ? flight::named_properties(o.get(flight::String("scale")).value()) : flight::Record<flight::String, flight::Any>{});
-  return flight::make_ref<flight::types::UnityShape>(flight::types::UnityShape{.enabled = rb(o.get(flight::String("enabled")).value(), true), .shape_type = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("shapeType")).value(), flight::String("Cone")), .radius = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("radius")).value(), 1.0), .angle = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("angle")).value(), 25.0), .scale = flight::make_ref<flight::types::x_y_z_82615fd0df8619c4>(flight::types::x_y_z_82615fd0df8619c4{.x = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("x")).value(), 1.0), .y = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("y")).value(), 1.0), .z = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("z")).value(), 1.0)})});
+  flight::Record<flight::String, flight::Any> sc = (flight::to_boolean((o.get(flight::String("scale")) && (o.get(flight::String("scale")).type_of() == flight::String("object")))) ? flight::named_properties(o.get(flight::String("scale"))) : flight::Record<flight::String, flight::Any>{});
+  return flight::make_ref<flight::types::UnityShape>(flight::types::UnityShape{.enabled = rb(o.get(flight::String("enabled")), true), .shape_type = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(o.get(flight::String("shapeType")), flight::String("Cone")), .radius = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("radius")), 1.0), .angle = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("angle")), 25.0), .scale = flight::make_ref<flight::types::x_y_z_82615fd0df8619c4>(flight::types::x_y_z_82615fd0df8619c4{.x = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("x")).value_or(flight::Any(flight::undefined)), 1.0), .y = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("y")).value_or(flight::Any(flight::undefined)), 1.0), .z = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(sc.get(flight::String("z")).value_or(flight::Any(flight::undefined)), 1.0)})});
 }
 
 inline flight::Ref<flight::types::UnityColorOverLifetime> read_color_lifetime(flight::Any obj) {
@@ -484,7 +484,7 @@ inline flight::Ref<flight::types::UnityColorOverLifetime> read_color_lifetime(fl
     return def;
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  return flight::make_ref<flight::types::UnityColorOverLifetime>(flight::types::UnityColorOverLifetime{.enabled = rb(o.get(flight::String("enabled")).value(), false), .color_start = color_at(o.get(flight::String("colorStart")).value(), def->color_start), .color_end = color_at(o.get(flight::String("colorEnd")).value(), def->color_end)});
+  return flight::make_ref<flight::types::UnityColorOverLifetime>(flight::types::UnityColorOverLifetime{.enabled = rb(o.get(flight::String("enabled")), false), .color_start = color_at(o.get(flight::String("colorStart")), def->color_start), .color_end = color_at(o.get(flight::String("colorEnd")), def->color_end)});
 }
 
 inline flight::Ref<flight::types::UnitySizeOverLifetime> read_size_lifetime(flight::Any obj) {
@@ -492,7 +492,7 @@ inline flight::Ref<flight::types::UnitySizeOverLifetime> read_size_lifetime(flig
     return flight::make_ref<flight::types::UnitySizeOverLifetime>(flight::types::UnitySizeOverLifetime{.enabled = false, .size_start = 1.0, .size_end = 1.0});
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  return flight::make_ref<flight::types::UnitySizeOverLifetime>(flight::types::UnitySizeOverLifetime{.enabled = rb(o.get(flight::String("enabled")).value(), false), .size_start = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("sizeStart")).value(), 1.0), .size_end = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("sizeEnd")).value(), 1.0)});
+  return flight::make_ref<flight::types::UnitySizeOverLifetime>(flight::types::UnitySizeOverLifetime{.enabled = rb(o.get(flight::String("enabled")), false), .size_start = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("sizeStart")), 1.0), .size_end = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(o.get(flight::String("sizeEnd")), 1.0)});
 }
 
 inline flight::Ref<flight::types::UnityRotationOverLifetime> read_rotation_lifetime(flight::Any obj) {
@@ -500,11 +500,11 @@ inline flight::Ref<flight::types::UnityRotationOverLifetime> read_rotation_lifet
     return flight::make_ref<flight::types::UnityRotationOverLifetime>(flight::types::UnityRotationOverLifetime{.enabled = false, .angular_velocity = flight::make_ref<flight::types::UnityMinMaxValue>(flight::types::UnityMinMaxValue{.mode = flight::String("constant"), .constant = std::optional<double>{0.0}})});
   }
   flight::NamedProperties o = flight::named_properties(obj);
-  return flight::make_ref<flight::types::UnityRotationOverLifetime>(flight::types::UnityRotationOverLifetime{.enabled = rb(o.get(flight::String("enabled")).value(), false), .angular_velocity = read_min_max(o.get(flight::String("angularVelocity")).value(), 0.0)});
+  return flight::make_ref<flight::types::UnityRotationOverLifetime>(flight::types::UnityRotationOverLifetime{.enabled = rb(o.get(flight::String("enabled")), false), .angular_velocity = read_min_max(o.get(flight::String("angularVelocity")), 0.0)});
 }
 
-inline flight::Ref<flight::types::UnityParticleDocument> raw_to_document_flight_value_function_raw_u000054_o_u000044_ocument_flight_private_35f336b0213adf9c(flight::Record<flight::String, flight::Any> raw) {
-  return flight::make_ref<flight::types::UnityParticleDocument>(flight::types::UnityParticleDocument{.name = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(raw.get(flight::String("name")).value(), flight::String("")), .duration = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("duration")).value(), 5.0), .looping = rb(raw.get(flight::String("looping")).value(), true), .prewarm = rb(raw.get(flight::String("prewarm")).value(), false), .max_particles = flight::bitwise_or(rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("maxParticles")).value(), 1000.0), 0.0), .start_lifetime = read_min_max(raw.get(flight::String("startLifetime")).value(), 1.0), .start_speed = read_min_max(raw.get(flight::String("startSpeed")).value(), 5.0), .start_size = read_min_max(raw.get(flight::String("startSize")).value(), 1.0), .start_rotation = read_min_max(raw.get(flight::String("startRotation")).value(), 0.0), .start_color = color_at(raw.get(flight::String("startColor")).value(), flight::make_ref<flight::types::UnityColor>(flight::types::UnityColor{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0})), .gravity_modifier = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("gravityModifier")).value(), 0.0), .physics_gravity = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("physicsGravity")).value(), default_gravity), .emission = read_emission(raw.get(flight::String("emission")).value()), .shape = read_shape(raw.get(flight::String("shape")).value()), .color_over_lifetime = read_color_lifetime(raw.get(flight::String("colorOverLifetime")).value()), .size_over_lifetime = read_size_lifetime(raw.get(flight::String("sizeOverLifetime")).value()), .rotation_over_lifetime = read_rotation_lifetime(raw.get(flight::String("rotationOverLifetime")).value())});
+inline flight::Ref<flight::types::UnityParticleDocument> raw_to_document_flight_value_function_raw_u000054_o_u000044_ocument_flight_private_35f336b0213adf9c(flight::NamedProperties raw) {
+  return flight::make_ref<flight::types::UnityParticleDocument>(flight::types::UnityParticleDocument{.name = rs_flight_value_function_rs_flight_private_35f336b0213adf9c(raw.get(flight::String("name")), flight::String("")), .duration = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("duration")), 5.0), .looping = rb(raw.get(flight::String("looping")), true), .prewarm = rb(raw.get(flight::String("prewarm")), false), .max_particles = flight::bitwise_or(rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("maxParticles")), 1000.0), 0.0), .start_lifetime = read_min_max(raw.get(flight::String("startLifetime")), 1.0), .start_speed = read_min_max(raw.get(flight::String("startSpeed")), 5.0), .start_size = read_min_max(raw.get(flight::String("startSize")), 1.0), .start_rotation = read_min_max(raw.get(flight::String("startRotation")), 0.0), .start_color = color_at(raw.get(flight::String("startColor")), flight::make_ref<flight::types::UnityColor>(flight::types::UnityColor{.r = 1.0, .g = 1.0, .b = 1.0, .a = 1.0})), .gravity_modifier = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("gravityModifier")), 0.0), .physics_gravity = rn_flight_value_function_rn_flight_private_35f336b0213adf9c(raw.get(flight::String("physicsGravity")), default_gravity), .emission = read_emission(raw.get(flight::String("emission"))), .shape = read_shape(raw.get(flight::String("shape"))), .color_over_lifetime = read_color_lifetime(raw.get(flight::String("colorOverLifetime"))), .size_over_lifetime = read_size_lifetime(raw.get(flight::String("sizeOverLifetime"))), .rotation_over_lifetime = read_rotation_lifetime(raw.get(flight::String("rotationOverLifetime")))});
 }
 
 inline flight::Ref<flight::types::ParticleEmitterConfig> parse_unity_particle(flight::String json, std::optional<flight::Ref<flight::types::UnityParseOptions>> options = std::nullopt) {
