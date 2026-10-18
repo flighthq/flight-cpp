@@ -432,3 +432,36 @@ After generation, `npm run overrides:check` reports 227 declared overrides, 13 s
 unresolved entries and zero unmanifested headers. The 13 retained native Scene3D GL copies require
 separate source audits; no override body or digest is changed in this compiler task. The result is
 not a global override-integrity pass. Existing refusal, renderer and package debts remain explicit.
+
+## G3 WGPU viewport parameter audit
+
+The remaining 14 rows in `no-matching-function-a7c6e418` all name
+`wgpu_shader.hpp:129`, the call from `writeWgpuQuadUniforms` to
+`setWgpuMatrixFromTransform`. This is a different boundary from the landed readonly contextual
+source-projection fix: the helper's third parameter is authored as mutable
+`{ width: number; height: number }` and emitted as a nominal anonymous `Ref`. Its argument is the
+readonly named `WgpuRenderPassViewport` row returned by `getWgpuRenderPassViewport`. The landed
+fix deliberately requests a readonly source projection only for a readonly destination; it cannot
+supply writable authority or recover the unrelated anonymous nominal owner here.
+
+The getter's runtime slot is nominal/mutable in the source. Its own writable-to-readonly return
+projection is therefore not evidence of a readonly upgrade. Changing that slot or the getter is
+unnecessary for this call boundary.
+
+The complete original helper body writes only `matrixArray`, reads `viewport.width` and
+`viewport.height` once each, and never retains or forwards the viewport. The smallest source route
+is a third-parameter annotation `Readonly<{ width: number; height: number }>`. This accepts the
+same source objects and needs only their existing read cells. It requires no factory domain
+restriction, writable cast, copied object, mutable slot change or new runtime API. A general compiler
+route would need declaration/body-proved parameter read authority; permissively converting an
+arbitrary readonly argument to a writable parameter would be incorrect for functions that write.
+
+An AST-selected copy of the entire pinned helper, independently emitted with the current ordered
+84-patch compiler plus the Matrix candidate, confirms both parameter shapes: the original is an
+anonymous nominal reference; the readonly annotation produces a readonly structural destination
+and the already-supported readonly-to-readonly projection at its caller. The complete helper's
+transpiled JavaScript is byte-identical before/after that annotation (SHA256
+`a2a1286e69e05620c5d80bb985a120220881da27b56821593ecb6cfc41176f16`). This is an emission/source audit,
+not a native execution or header qualification. No production viewport annotation, SDK generation,
+14-row recompile, header-status change or old 16-row GL rerun is carried by this audit. Builder2 owns
+the WGPU implementation lane and receives this bounded route for coordination.
