@@ -1,19 +1,23 @@
-// The real generated SwfReader class owner, viewed through the EXISTING shared view API, plus the
-// method-forwarding operation the SWF class/interface pair needs.
+// The generated SwfReader class IS the SwfTagReader interface it is passed as: one allocation, one set
+// of live data cells, and the interface's method members dispatch to the class's own implementations.
 //
-// BOUNDARY, stated honestly so the test cannot be read as more than it is:
-// - the data half is the shipped API: flight::NominalOrStructuralView aliases the class owner's own
-//   cells (writes both ways), identity is the object's, and the view keeps the owner alive.
-// - the method-forwarding half uses a FIXTURE-LOCAL owner-holding view below. The interface the SWF
-//   handlers receive declares std::function members while the class declares real member functions,
-//   so the shipped family does not yet forward methods. This class is the required operation's
-//   contract -- one owner, cursor advanced by the class's own functions, no copy -- not a shipped
-//   family; when the shared adoption family lands, this view is replaced by it and the assertions
-//   below are the ones it must satisfy.
-#include <flight/nominal_or_structural_view.hpp>
+// Both directions are declared (class-interface-adoptions.json) and both are exercised here on the
+// REAL emitted types:
+// - forward: a flight::Ref<SwfReader> converts to flight::Ref<SwfTagReader> by the base adjustment,
+//   sharing the control block, so the interface reference names the same object and the same cells;
+// - reverse: require_owner<SwfReader> recovers that exact allocation, and a foreign interface
+//   allocation keeps the honest NativeScalarEscapeError partial instead of a cast or an empty owner.
+//
+// It also pins what makes the shape sound: constructor initialization, the thunk binding (so a write
+// or call through either spelling reaches one implementation), lifetime, and stable captures after the
+// original class reference is dropped.
 #include <flight/swf/swf_reader.hpp>
-#include <flight/string.hpp>
+#include <flight/types/swf_tag_parse_state.hpp>
+
 #include <iostream>
+#include <memory>
+#include <string>
+#include <type_traits>
 
 namespace {
 
@@ -26,98 +30,86 @@ void check(bool condition, const char* message) {
   }
 }
 
-// The bounded method-forwarding operation: one owner, data cells aliased in place, interface methods
-// forwarded to the class's own functions. Nothing is copied and the owner is kept alive.
-class SwfTagReaderOwnerView {
- public:
-  explicit SwfTagReaderOwnerView(flight::Ref<flight::swf::SwfReader> owner) : owner_(std::move(owner)) {}
-
-  [[nodiscard]] flight::Ref<flight::swf::SwfReader> owner() const { return owner_; }
-  [[nodiscard]] double pos() const { return owner_->pos; }
-  void set_pos(double value) const { owner_->pos = value; }
-  [[nodiscard]] bool valid() const { return owner_->valid; }
-  void set_valid(bool value) const { owner_->valid = value; }
-  [[nodiscard]] double bit_position() const { return owner_->bit_position; }
-
-  // Method forwarding: the interface's read operations are the class's own functions.
-  double read_uint8() const { return owner_->read_uint8(); }
-  void align_to_byte() const { owner_->align_to_byte(); }
-
- private:
-  flight::Ref<flight::swf::SwfReader> owner_;
-};
-
 } // namespace
 
 int main() {
+  static_assert(std::is_base_of_v<flight::types::SwfTagReader, flight::swf::SwfReader>,
+                "the declared pair is one native hierarchy");
+  static_assert(std::is_convertible_v<flight::Ref<flight::swf::SwfReader>, flight::Ref<flight::types::SwfTagReader>>,
+                "a class reference converts to the interface it implements");
+
   flight::Uint8Array bytes(4.0);
   bytes.element(0.0) = 7;
   bytes.element(1.0) = 0;
+  bytes.element(2.0) = 9;
+  bytes.element(3.0) = 0;
   auto reader = flight::make_ref<flight::swf::SwfReader>(bytes, 0.0, bytes.size());
 
-  // Existing shared view API over the class owner: data both ways, identity, lifetime.
-  flight::NominalOrStructuralView<flight::swf::SwfReader, flight::swf::SwfReader> view(reader);
-  check(view.read<flight::RowKey<"pos">, double, &flight::swf::SwfReader::pos>().value() == 0.0,
-        "the shared view reads the class owner's pos");
-  view.write<flight::RowKey<"pos">, double, &flight::swf::SwfReader::pos>(3.0);
-  check(reader->pos == 3.0, "a write through the shared view is the class owner's cell");
-  reader->valid = false;
-  check(view.read<flight::RowKey<"valid">, bool, &flight::swf::SwfReader::valid>().value() == false,
-        "a class write is visible through the shared view");
-  check(view == flight::NominalOrStructuralView<flight::swf::SwfReader, flight::swf::SwfReader>(reader),
-        "two views of one class owner are equal");
+  // Constructor initialization: the class's field initializers ran on the inherited cells and the
+  // interface method members were bound before any interface use.
+  check(reader->bit_position == 0.0, "the constructor initialized the inherited bit cursor");
+  check(reader->valid, "the constructor initialized the inherited validity flag");
+  check(reader->pos == 0.0, "the constructor assigned the inherited cursor from its parameter");
 
-  // Method-forwarding operation over the same owner.
-  reader->pos = 0.0;
+  // Forward: one allocation and one control block.
+  flight::Ref<flight::types::SwfTagReader> as_interface = reader;
+  check(as_interface.get() == reader.get(), "the interface reference is the class allocation");
+  check(!as_interface.owner_before(reader) && !reader.owner_before(as_interface), "the two references share one control block");
+  check(as_interface.use_count() == reader.use_count(), "the reference counts are one count");
+
+  // One physical data cell, written and read through both names.
+  as_interface->pos = 2.0;
+  check(reader->pos == 2.0, "an interface write is the class's own cursor cell");
+  reader->bit_position = 5.0;
+  check(as_interface->bit_position == 5.0, "a class write is the interface's own cell");
+  as_interface->valid = false;
+  check(!reader->valid, "the interface validity write is the class's cell");
   reader->valid = true;
-  SwfTagReaderOwnerView interface_view(reader);
-  check(interface_view.pos() == 0.0, "the interface view reads the same cursor");
-  check(interface_view.read_uint8() == 7.0, "a forwarded method reads the class's bytes");
-  check(interface_view.pos() == 1.0, "a forwarded method advances the same cursor");
-  interface_view.set_valid(false);
-  check(reader->valid == false, "an interface write is visible on the class instance");
-  interface_view.set_pos(2.0);
-  check(reader->pos == 2.0, "an interface cursor write is visible on the class instance");
+  check(as_interface->valid, "the class validity write is the interface's cell");
 
-  // Provenance, on the re-landed A-prime (constant-initialized descriptor; gate passed 153af7cf):
-  // the record lives in the control block, so the recovered owner is the SAME allocation -- a checked
-  // query, never a cast -- and an object built outside make_ref has none.
-  auto recovered = flight::recover_owner<flight::swf::SwfReader>(reader);
-  check(recovered.get() == reader.get(), "recover_owner yields the same allocation");
-  check(flight::detail::recoverable_owner_identity(reader).has_value(), "a make_ref allocation carries provenance");
-  auto required = flight::require_owner<flight::swf::SwfReader>(reader);
-  check(required.get() == reader.get(), "require_owner yields the same allocation");
-  check(!recovered.owner_before(reader) && !reader.owner_before(recovered), "the recovered owner is equivalent");
-  auto foreign = std::make_shared<flight::swf::SwfReader>(bytes, 0.0, bytes.size());
-  check(!flight::recover_owner<flight::swf::SwfReader>(foreign), "an object not made by make_ref has no provenance");
-  bool escaped = false;
+  // Method thunks dispatch to the class's own implementations over the shared cursor.
+  reader->pos = 0.0;
+  reader->bit_position = 0.0;
+  check(as_interface->read_uint8() == 7.0, "the interface method dispatches to the class reader");
+  check(reader->pos == 1.0, "the dispatched method advanced the shared cursor");
+  check(as_interface->read_string().length() == 0, "the forwarded string read terminates on the zero byte");
+  check(reader->pos == 2.0, "the forwarded string read advanced the shared cursor");
+  check(as_interface->read_uint16() == 9.0, "the forwarded word read is little-endian over the class bytes");
+  check(reader->pos == 4.0, "the forwarded word read advanced the shared cursor");
+
+  // No hiding collision: the class method and the inherited interface member are one implementation.
+  reader->pos = 0.0;
+  check(reader->read_uint8() == 7.0, "the class method reads the same bytes");
+  check(as_interface->pos == 1.0, "a class-method call is visible through the interface cursor");
+
+  // Reverse: the same owner is recovered from the interface reference.
+  auto recovered = flight::require_owner<flight::swf::SwfReader>(as_interface);
+  check(recovered.get() == reader.get(), "require_owner recovers the same allocation");
+  check(!recovered.owner_before(reader) && !reader.owner_before(recovered), "the recovered owner shares the control block");
+
+  // A foreign interface allocation is the honest partial boundary: exact throw, never a cast.
+  auto foreign = flight::make_ref<flight::types::SwfTagReader>();
+  bool threw = false;
   try {
     (void)flight::require_owner<flight::swf::SwfReader>(foreign);
   } catch (const flight::NativeScalarEscapeError&) {
-    escaped = true;
+    threw = true;
   }
-  check(escaped, "require_owner throws the native escape for a foreign allocation");
+  check(threw, "a foreign interface allocation throws the native escape");
 
-  // Refcount: a recovered reference shares the control block and dropping it restores the count.
-  const long before_recovery = reader.use_count();
-  {
-    auto temporary = flight::recover_owner<flight::swf::SwfReader>(reader);
-    check(temporary.get() == reader.get(), "the recovered reference is the same object");
-  }
-  check(reader.use_count() == before_recovery, "dropping a recovered reference restores the refcount");
-
-  // Lifetime: the interface view keeps the owner alive after the original reference is dropped.
+  // Lifetime and stable captures: the interface reference keeps the owner alive, and its thunks still
+  // dispatch to the same object after the original class reference is gone.
   std::weak_ptr<flight::swf::SwfReader> observed = reader;
-  flight::Ref<flight::swf::SwfReader> dropped = reader;
+  as_interface->pos = 1.0;
   reader = nullptr;
-  dropped = nullptr;
-  check(!observed.expired(), "the interface view keeps the owner alive");
-  check(interface_view.owner() != nullptr, "the interface view still holds the owner");
+  check(!observed.expired(), "the interface reference keeps the owner alive");
+  check(as_interface->read_uint8() == 0.0, "the thunk still dispatches after the class reference is dropped");
+  check(as_interface->pos == 2.0, "the thunk still advances the same live cell");
 
   if (failures != 0) {
-    std::cerr << failures << " swf owner-view fixture check(s) failed\n";
+    std::cerr << failures << " swf class/interface heritage check(s) failed\n";
     return 1;
   }
-  std::cout << "swf class owner serves shared-view data and forwarded methods over one allocation\n";
+  std::cout << "SwfReader is the SwfTagReader it is passed as: one allocation, cells and method dispatch shared\n";
   return 0;
 }
