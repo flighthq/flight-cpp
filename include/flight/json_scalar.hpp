@@ -85,7 +85,7 @@ class JsonScalarCell final {
 
   // `Number.isFinite` and `Number.isNaN` ask about the VALUE; they do not coerce. A JSON null, a
   // numeric string, or a boolean is not a number to them even though `> 0` and arithmetic on the same
-  // value go through ToNumber. Answering these from `operator double` would make null finite.
+  // value go through ToNumber. Answering these from a numeric conversion would make null finite.
   [[nodiscard]] bool is_finite() const noexcept {
     return present_ && value_.kind() == AnyKind::number && std::isfinite(value_.as_number());
   }
@@ -93,9 +93,6 @@ class JsonScalarCell final {
   [[nodiscard]] bool is_nan() const noexcept {
     return present_ && value_.kind() == AnyKind::number && std::isnan(value_.as_number());
   }
-
-  // C++ arithmetic/comparison on this cell is a JavaScript numeric operation, so it uses ToNumber.
-  [[nodiscard]] operator double() const { return to_number(); }
 
   [[nodiscard]] String to_string() const {
     return present_ ? flight::to_string(value_) : flight::String("undefined");
@@ -137,19 +134,81 @@ class JsonScalarCell final {
 
  private:
   [[nodiscard]] static double parse_number(const String& text) {
-    const std::string value = text.to_utf8();
+    const std::string raw = text.to_utf8();
     std::size_t begin = 0;
-    std::size_t end = value.size();
-    while (begin < end && std::isspace(static_cast<unsigned char>(value[begin]))) ++begin;
-    while (end > begin && std::isspace(static_cast<unsigned char>(value[end - 1]))) --end;
-    if (begin == end) return 0.0;
-    const std::string trimmed = value.substr(begin, end - begin);
+    std::size_t finish = raw.size();
+    while (begin < finish && std::isspace(static_cast<unsigned char>(raw[begin]))) ++begin;
+    while (finish > begin && std::isspace(static_cast<unsigned char>(raw[finish - 1]))) --finish;
+    if (begin == finish) return 0.0;  // Number("") and whitespace-only is 0
+    const std::string value = raw.substr(begin, finish - begin);
+
+    // Radix prefixes: accepted only without a sign, exactly as JavaScript Number().
+    if (value.size() > 2 && value[0] == '0') {
+      const char prefix = value[1];
+      if (prefix == 'x' || prefix == 'X' || prefix == 'b' || prefix == 'B' || prefix == 'o' || prefix == 'O') {
+        const unsigned base = (prefix == 'x' || prefix == 'X') ? 16u : (prefix == 'b' || prefix == 'B') ? 2u : 8u;
+        long double accumulated = 0.0L;
+        bool any = false;
+        for (std::size_t index = 2; index < value.size(); ++index) {
+          const unsigned char character = static_cast<unsigned char>(value[index]);
+          unsigned digit = 0;
+          if (character >= '0' && character <= '9') digit = character - '0';
+          else if (character >= 'a' && character <= 'f') digit = 10 + (character - 'a');
+          else if (character >= 'A' && character <= 'F') digit = 10 + (character - 'A');
+          else return std::numeric_limits<double>::quiet_NaN();
+          if (digit >= base) return std::numeric_limits<double>::quiet_NaN();
+          accumulated = accumulated * base + digit;
+          any = true;
+        }
+        if (!any) return std::numeric_limits<double>::quiet_NaN();
+        if (accumulated > static_cast<long double>(std::numeric_limits<double>::max())) {
+          return std::numeric_limits<double>::infinity();
+        }
+        return static_cast<double>(accumulated);
+      }
+    }
+
+    // Infinity is JavaScript's exact spelling after an optional sign; strtod's "inf"/"nan" are not.
+    std::size_t sign_offset = (value[0] == '+' || value[0] == '-') ? 1 : 0;
+    const bool negative = value[0] == '-';
+    const std::string_view body(value.data() + sign_offset, value.size() - sign_offset);
+    if (body == "Infinity") {
+      return negative ? -std::numeric_limits<double>::infinity() : std::numeric_limits<double>::infinity();
+    }
+
+    // Decimal syntax: optional sign, digits with at most one '.', optional exponent. Every character
+    // must be consumed, so "30px", "0x" without digits, "inf"/"nan" and trailing junk are NaN.
+    std::size_t index = sign_offset;
+    bool digits = false;
+    bool point = false;
+    while (index < value.size() && std::isdigit(static_cast<unsigned char>(value[index]))) {
+      digits = true;
+      ++index;
+    }
+    if (index < value.size() && value[index] == '.') {
+      point = true;
+      ++index;
+      while (index < value.size() && std::isdigit(static_cast<unsigned char>(value[index]))) {
+        digits = true;
+        ++index;
+      }
+    }
+    if (!digits) return std::numeric_limits<double>::quiet_NaN();
+    static_cast<void>(point);
+    if (index < value.size() && (value[index] == 'e' || value[index] == 'E')) {
+      ++index;
+      if (index < value.size() && (value[index] == '+' || value[index] == '-')) ++index;
+      bool exponent_digits = false;
+      while (index < value.size() && std::isdigit(static_cast<unsigned char>(value[index]))) {
+        exponent_digits = true;
+        ++index;
+      }
+      if (!exponent_digits) return std::numeric_limits<double>::quiet_NaN();
+    }
+    if (index != value.size()) return std::numeric_limits<double>::quiet_NaN();
     char* stop = nullptr;
-    const double parsed = std::strtod(trimmed.c_str(), &stop);
-    if (stop == trimmed.c_str()) return std::numeric_limits<double>::quiet_NaN();
-    while (*stop != '\0' && std::isspace(static_cast<unsigned char>(*stop))) ++stop;
-    if (*stop != '\0') return std::numeric_limits<double>::quiet_NaN();
-    return parsed;
+    const double parsed = std::strtod(value.c_str(), &stop);
+    return stop == value.c_str() ? std::numeric_limits<double>::quiet_NaN() : parsed;
   }
 
   Any value_{};

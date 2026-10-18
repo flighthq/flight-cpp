@@ -4583,16 +4583,41 @@ static void test_json_scalar_cell() {
   check(thirty.is_finite() && !null_value.is_finite() && !absent.is_finite() &&
             !string_value.is_finite() && !boolean_true.is_finite() && !nan_value.is_finite(),
         "Number.isFinite is false for null, absent, a numeric string, a boolean and NaN");
-  check(thirty > 0.0 && !(null_value > 0.0) && !(absent > 0.0) && string_value > 0.0 &&
-            boolean_true > 0.0 && !(nan_value > 0.0),
+  check(thirty.to_number() > 0.0 && !(null_value.to_number() > 0.0) &&
+            !(absent.to_number() > 0.0) && string_value.to_number() > 0.0 &&
+            boolean_true.to_number() > 0.0 && !(nan_value.to_number() > 0.0),
         "relational comparison coerces through ToNumber (null 0, string 30, true 1, absent NaN)");
-  check(1.0 / static_cast<double>(thirty) == 1.0 / 30.0 &&
-            std::isinf(1.0 / static_cast<double>(null_value)) &&
-            std::isnan(1.0 / static_cast<double>(absent)) &&
-            1.0 / static_cast<double>(boolean_true) == 1.0,
+  check(1.0 / thirty.to_number() == 1.0 / 30.0 &&
+            std::isinf(1.0 / null_value.to_number()) &&
+            std::isnan(1.0 / absent.to_number()) &&
+            1.0 / boolean_true.to_number() == 1.0,
         "division coerces through ToNumber (null Infinity, absent NaN, true 1)");
   check(nan_value.is_nan() && !thirty.is_nan() && !null_value.is_nan() && !string_value.is_nan(),
         "Number.isNaN is false for every non-number, even when its ToNumber is NaN");
+
+  // JavaScript Number() semantics for radix prefixes, Infinity, whitespace, invalid and -0.
+  auto number_of = [](const char* text) {
+    return flight::JsonScalarCell{Any(flight::String(text))}.to_number();
+  };
+  check(number_of("0b101") == 5.0 && number_of("0B10") == 2.0 && number_of("0o17") == 15.0 &&
+            number_of("0x1f") == 31.0 && number_of(" 30 ") == 30.0 && number_of("1e3") == 1000.0,
+        "Number() accepts binary/octal/hex prefixes, whitespace and exponents");
+  check(std::isnan(number_of("0b2")) && std::isnan(number_of("0x")) && std::isnan(number_of("30px")) &&
+            std::isnan(number_of("inf")) && std::isnan(number_of("nan")) && std::isnan(number_of("1e")) &&
+            std::isnan(number_of(".")),
+        "invalid digits, missing digits, trailing junk, inf/nan spellings and bare point are NaN");
+  check(std::isinf(number_of("Infinity")) && number_of("Infinity") > 0 &&
+            std::isinf(number_of("-Infinity")) && number_of("-Infinity") < 0 &&
+            std::isinf(number_of("+Infinity")) && number_of("+Infinity") > 0,
+        "Infinity is accepted with its exact JavaScript spelling and an optional sign");
+  check(number_of("-0") == 0.0 && std::signbit(number_of("-0")),
+        "negative zero survives ToNumber");
+
+  // Escape-only: the cell is not implicitly convertible or assignable to a native double, so a
+  // parameter, field, return value or array element cannot silently take ToNumber.
+  static_assert(!std::is_convertible_v<flight::JsonScalarCell, double>);
+  static_assert(!std::is_assignable_v<double&, flight::JsonScalarCell>);
+  static_assert(!std::is_constructible_v<double, flight::JsonScalarCell>);
 }
 
 int main() {
