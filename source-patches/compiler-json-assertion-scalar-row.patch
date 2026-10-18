@@ -1,0 +1,310 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -330,6 +330,8 @@
+   jsonReadRecordBindingIds: Set<string>;
+   jsonReadValueBindingIds: Set<string>;
+   jsonReadShapeAssertions: Set<Readonly<IrExpression>>;
++  jsonScalarCellBindingIds: Set<string>;
++  jsonAssertionBindingRows: Map<string, Readonly<CompilerCppStructuralRowPlan>>;
+   privateJsonRecordProducerIds: Set<string>;
+   privateJsonRecordReturns: Map<Readonly<IrExpression>, Readonly<IrExpression>>;
+   privateGuardedRecordProducerIds: Set<string>;
+@@ -737,6 +739,8 @@
+     jsonReadRecordBindingIds: new Set(),
+     jsonReadValueBindingIds: new Set(),
+     jsonReadShapeAssertions: new Set(),
++    jsonScalarCellBindingIds: new Set(),
++    jsonAssertionBindingRows: new Map(),
+     privateJsonRecordProducerIds: new Set(),
+     privateJsonRecordReturns: new Map(),
+     privateGuardedRecordProducerIds: new Set(),
+@@ -3389,6 +3393,17 @@
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
+   }
++  if (variable.initializer && isCppJsonScalarCellExpressionCpp(variable.initializer, context)) {
++    context.jsonScalarCellBindingIds.add(variable.binding.id);
++    return `${variable.mutable ? '' : 'const '}auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context)};`;
++  }
++  if (variable.initializer?.kind === 'cast' && isCppJsonParseCallCpp(variable.initializer.expression)) {
++    const row = getCppStructuralProjectionRowCpp(variable.initializer.type, context);
++    if (row && getCppJsonSchemaIdentityCpp(variable.initializer.type, context)) {
++      context.jsonAssertionBindingRows.set(variable.binding.id, row);
++      return `${variable.mutable ? '' : 'const '}auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context)};`;
++    }
++  }
+   const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
+   if (caughtValueRebinding) return caughtValueRebinding;
+   const name = getBindingTargetName(variable.binding, context);
+@@ -4198,6 +4213,236 @@
+   return `([&]() -> ${slot.targetType} { const auto& ${valueName} = ${left}; if (${absent}) return ${fallback}; return std::get<${String(plan.valueSlots.indexOf(slot))}>(${valueName}); }())`;
+ }
+ 
++// JSON assertions elect only their original named schema. Native callers of that same row ABI
++// keep their native owners; scalar reads ask the shared live row rather than materializing a schema.
++const cppJsonProjectionSchemas = new WeakMap<CompilerCppReferenceRepresentationPlanner, ReadonlySet<string>>();
++
++function isCppJsonParseCallCpp(expression: Readonly<IrExpression>): boolean {
++  return expression.kind === 'call' && !expression.optional && expression.arguments.length === 1 &&
++    expression.callee.kind === 'property' && !expression.callee.optional && expression.callee.name === 'parse' &&
++    expression.callee.object.kind === 'identifier' && expression.callee.object.reference.kind === 'ambient' &&
++    expression.callee.object.reference.name === 'JSON';
++}
++
++function getCppJsonSchemaIdentityCpp(type: Readonly<IrType>, context: EmitContext): string | undefined {
++  const row = context.referenceRepresentationPlanner.resolveStructuralRow(type, context.module) ??
++    getCppStructuralProjectionRowCpp(type, context);
++  const object = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
++  if (object?.kind !== 'named') return undefined;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(object, context.module, context);
++  if (!owner || owner.declaration.kind !== 'interface') return undefined;
++  return `${getCppModuleIdentityKey(owner.module)}\0${owner.declaration.binding.id}`;
++}
++
++function getCppJsonProjectionSchemasCpp(context: EmitContext): ReadonlySet<string> {
++  const cached = cppJsonProjectionSchemas.get(context.referenceRepresentationPlanner);
++  if (cached) return cached;
++  const schemas = new Set<string>();
++  cppJsonProjectionSchemas.set(context.referenceRepresentationPlanner, schemas);
++  for (const module of context.sourceModules) {
++    const moduleContext = {...context, module};
++    analyzeIrModuleTraversal(module, {expression(expression) {
++      if (expression.kind !== 'cast' || !isCppJsonParseCallCpp(expression.expression)) return;
++      const identity = getCppJsonSchemaIdentityCpp(expression.type, moduleContext);
++      if (identity) schemas.add(identity);
++    }});
++  }
++  return schemas;
++}
++
++function getCppJsonProjectionRowCpp(expression: Readonly<IrExpression>, context: EmitContext):
++  Readonly<{row: Readonly<CompilerCppStructuralRowPlan>; optional: boolean}> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  let row = getCppStructuralRowExpressionPlanCpp(expression, context);
++  const type = getIrExpressionTypeEvidenceCpp(expression, context);
++  const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
++  const values = union?.types.filter(t => t.kind !== 'null' && t.kind !== 'undefined');
++  const optional = Boolean(values && values.length === 1 && union!.types.length > 1);
++  if (!row && optional) row = context.referenceRepresentationPlanner.resolveStructuralRow(values![0]!, context.module);
++  if (!row && expression.kind === 'cast' && isCppJsonParseCallCpp(expression.expression))
++    row = getCppStructuralProjectionRowCpp(expression.type, context);
++  const object = row ? getCppStructuralRowObjectTypeCpp(row) : undefined;
++  const identity = object ? getCppJsonSchemaIdentityCpp(object, context) : undefined;
++  return row && identity && getCppJsonProjectionSchemasCpp(context).has(identity) ? {row, optional} : undefined;
++}
++
++function isCppJsonScalarMemberCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (expression.kind !== 'property' || isCppJsonReadValueCpp(expression.object, context)) return false;
++  const plan = getCppJsonProjectionRowCpp(expression.object, context);
++  const object = plan ? getCppStructuralRowObjectTypeCpp(plan.row) : undefined;
++  const type = object ? getIrObjectPropertyTypeCpp(object, expression.name, context) : undefined;
++  const members = type ? (getIrUnionTypeCpp(type, context, new Set())?.types ?? [type]) : [];
++  return members.length > 0 && members.every(member =>
++    member.kind === 'null' || member.kind === 'undefined' ||
++    member.kind === 'literal' && ['number', 'boolean', 'string'].includes(typeof member.value) ||
++    member.kind === 'primitive' && ['number', 'boolean', 'string'].includes(member.name));
++}
++
++function isCppJsonScalarCellExpressionCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return false;
++  if (isCppJsonScalarMemberCpp(expression, context)) return true;
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding')
++    return context.jsonScalarCellBindingIds.has(expression.reference.binding.id);
++  if (expression.kind === 'cast') return isCppJsonScalarCellExpressionCpp(expression.expression, context);
++  if (expression.kind === 'binary' && ['+', '??', '&&', '||'].includes(expression.operator))
++    return isCppJsonScalarCellExpressionCpp(expression.left, context) || isCppJsonScalarCellExpressionCpp(expression.right, context);
++  if (expression.kind === 'conditional') return isCppJsonScalarCellExpressionCpp(expression.whenTrue, context) ||
++    isCppJsonScalarCellExpressionCpp(expression.whenFalse, context);
++  return false;
++}
++
++function emitCppJsonScalarOperandCpp(expression: Readonly<IrExpression>, context: EmitContext): string {
++  if (isCppJsonScalarCellExpressionCpp(expression, context)) return emitExpression(expression, context);
++  const value = expression.kind === 'literal' && expression.value === null ? 'flight::null' :
++    expression.kind === 'identifier' && expression.reference.kind === 'ambient' && expression.reference.name === 'undefined'
++      ? 'flight::undefined' : emitExpression(expression, context);
++  return `flight::JsonScalarCell{flight::Any(${value})}`;
++}
++
++function emitCppJsonScalarEscapeCpp(value: string, expectedType: Readonly<IrType> | undefined, context: EmitContext): string {
++  if (!expectedType) return value;
++  if (isCppAliasResolvedErasedDynamicValueTypeCpp(expectedType, context)) return `(${value}).raw()`;
++  const native = emitType(expectedType, context);
++  if (native === 'double') return `(${value}).as_native_number()`;
++  if (native === 'bool' || native === 'flight::String') {
++    const cell = getGeneratedTargetName('jsonNativeScalar', context);
++    const kind = native === 'bool' ? 'boolean' : 'string';
++    return `([&]() -> ${native} { const auto ${cell} = ${value}; if (${cell}.is_present() && ${cell}.raw().kind() == flight::AnyKind::${kind}) return ${cell}.raw().as_${kind}(); throw flight::NativeScalarEscapeError(${cell}.type_of()); }())`;
++  }
++  emissionError(context, `JSON scalar escape to ${native} requires an explicit represented native scalar boundary`, 'cpp-json-scalar-native-escape-unrepresented');
++}
++
++function emitCppJsonProjectionExpressionCpp(expression: Readonly<IrExpression>, context: EmitContext,
++  expectedType?: Readonly<IrType>): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const include = () => context.includes.add('flight/json_scalar.hpp');
++  const finishCell = (value: string) => { include(); return emitCppJsonScalarEscapeCpp(value, expectedType, context); };
++  if (expression.kind === 'cast' && isCppJsonParseCallCpp(expression.expression)) {
++    const asserted = getCppStructuralProjectionRowCpp(expression.type, context);
++    if (!asserted || !getCppJsonSchemaIdentityCpp(expression.type, context)) return undefined;
++    const union = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
++    const expected = union?.types.find(t => t.kind !== 'null' && t.kind !== 'undefined') ?? expectedType;
++    const row = expected ? context.referenceRepresentationPlanner.resolveStructuralRow(expected, context.module) ?? asserted : asserted;
++    include();
++    return `flight::json_assertion_row<${emitCppStructuralRowSchemaTypeCpp(row, context)}>(${emitExpression(expression.expression, context)})`;
++  }
++  if (isCppJsonScalarMemberCpp(expression, context) && expression.kind === 'property') {
++    include();
++    const plan = getCppJsonProjectionRowCpp(expression.object, context)!;
++    const receiver = emitExpression(expression.object, context);
++    const key = emitLiteral(expression.name, context);
++    if (!expression.optional && !plan.optional)
++      return finishCell(`flight::read_json_scalar_row_member(${receiver}, ${key})`);
++    const value = getGeneratedTargetName('jsonRowReceiver', context);
++    const row = plan.optional ? `${value}.value()` : value;
++    const absent = plan.optional ? `!${value}.has_value() || flight::json_row_is_nullish(${row})` : `flight::json_row_is_nullish(${row})`;
++    const missing = expression.optional ? 'return flight::JsonScalarCell{};' : 'throw flight::TypeError("Cannot read properties of null or undefined");';
++    return finishCell(`([&]() -> flight::JsonScalarCell { const auto ${value} = ${receiver}; if (${absent}) { ${missing} } return flight::read_json_scalar_row_member(${row}, ${key}); }())`);
++  }
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding' &&
++      context.jsonScalarCellBindingIds.has(expression.reference.binding.id))
++    return finishCell(emitIdentifierReference(expression.reference, context));
++  if (expression.kind === 'cast' && isCppJsonScalarCellExpressionCpp(expression.expression, context))
++    return finishCell(emitExpression(expression.expression, context));
++  if (expression.kind === 'assignment' && expression.operator === '=' && expression.left.kind === 'identifier' &&
++      expression.left.reference.kind === 'binding' && context.jsonScalarCellBindingIds.has(expression.left.reference.binding.id)) {
++    include();
++    return finishCell(`(${emitIdentifierReference(expression.left.reference, context)} = ${emitCppJsonScalarOperandCpp(expression.right, context)})`);
++  }
++  if (expression.kind === 'binary') {
++    const typeofOperand = expression.left.kind === 'unary' && expression.left.operator === 'typeof' ? expression.left.operand :
++      expression.right.kind === 'unary' && expression.right.operator === 'typeof' ? expression.right.operand : undefined;
++    if (typeofOperand && (isCppJsonScalarCellExpressionCpp(typeofOperand, context) || getCppJsonProjectionRowCpp(typeofOperand, context)) &&
++        ['===','==','!==','!='].includes(expression.operator)) {
++      include();
++      const left = getGeneratedTargetName('jsonTypeofLeft', context);
++      const right = getGeneratedTargetName('jsonTypeofRight', context);
++      return `([&]() -> bool { const auto ${left} = ${emitExpression(expression.left, context)}; const auto ${right} = ${emitExpression(expression.right, context)}; return ${left} ${['!=','!=='].includes(expression.operator) ? '!=' : '=='} ${right}; }())`;
++    }
++    const leftCell = isCppJsonScalarCellExpressionCpp(expression.left, context);
++    const rightCell = isCppJsonScalarCellExpressionCpp(expression.right, context);
++    if (leftCell || rightCell) {
++      include();
++      const left = getGeneratedTargetName('jsonScalarLeft', context);
++      const right = getGeneratedTargetName('jsonScalarRight', context);
++      const begin = `const auto ${left} = ${emitCppJsonScalarOperandCpp(expression.left, context)}; `;
++      if (['??', '&&', '||'].includes(expression.operator)) {
++        const keep = expression.operator === '??' ? `!${left}.is_nullish()` :
++          expression.operator === '&&' ? `!${left}.to_boolean()` : `${left}.to_boolean()`;
++        return finishCell(`([&]() -> flight::JsonScalarCell { ${begin}if (${keep}) return ${left}; return ${emitCppJsonScalarOperandCpp(expression.right, context)}; }())`);
++      }
++      const both = begin + `const auto ${right} = ${emitCppJsonScalarOperandCpp(expression.right, context)}; `;
++      if (expression.operator === '+')
++        return finishCell(`([&]() -> flight::JsonScalarCell { ${both}return flight::JsonScalarCell::add(${left}, ${right}); }())`);
++      const equality = ['===', '!=='].includes(expression.operator) ? 'strict_equals' : ['==', '!='].includes(expression.operator) ? 'loose_equals' : undefined;
++      if (equality) return `([&]() -> bool { ${both}return ${['!=', '!=='].includes(expression.operator) ? '!' : ''}${left}.${equality}(${right}); }())`;
++      const compare = ({'<':'less','<=':'less_equal','>':'greater','>=':'greater_equal'} as Record<string,string>)[expression.operator];
++      if (compare) return `([&]() -> bool { ${both}return flight::JsonScalarCell::${compare}(${left}, ${right}); }())`;
++      if (['-', '*', '/'].includes(expression.operator))
++        return `([&]() -> double { ${both}return ${left}.to_number() ${expression.operator} ${right}.to_number(); }())`;
++      emissionError(context, `JSON scalar operator ${expression.operator} is not represented by the bounded lazy scalar lane`, 'cpp-json-scalar-operation-unrepresented');
++    }
++    const sentinel = expression.left.kind === 'literal' && expression.left.value === null ? expression.right :
++      expression.right.kind === 'literal' && expression.right.value === null ? expression.left : undefined;
++    const plan = sentinel ? getCppJsonProjectionRowCpp(sentinel, context) : undefined;
++    if (sentinel && plan && ['===','==','!==','!='].includes(expression.operator)) {
++      include();
++      const value = getGeneratedTargetName('jsonRootValue', context);
++      const test = plan.optional ? `!${value}.has_value() || flight::json_row_is_nullish(${value}.value())` : `flight::json_row_is_nullish(${value})`;
++      return `([&]() -> bool { const auto ${value} = ${emitExpression(sentinel, context)}; return ${['!==','!='].includes(expression.operator) ? '!' : ''}(${test}); }())`;
++    }
++  }
++  if (expression.kind === 'unary') {
++    if (isCppJsonScalarCellExpressionCpp(expression.operand, context)) {
++      include();
++      const value = `(${emitExpression(expression.operand, context)})`;
++      if (expression.operator === 'typeof') return `flight::String(${value}.type_of())`;
++      if (expression.operator === '!') return `!${value}.to_boolean()`;
++      if (expression.operator === '+') return `${value}.unary_plus()`;
++      if (expression.operator === '-') return `${value}.unary_minus()`;
++      emissionError(context, `JSON scalar unary ${expression.operator} is not represented`, 'cpp-json-scalar-operation-unrepresented');
++    }
++    const plan = getCppJsonProjectionRowCpp(expression.operand, context);
++    if (plan && expression.operator === '!') {
++      include();
++      const value = getGeneratedTargetName('jsonRootValue', context);
++      const test = plan.optional ? `${value}.has_value() && flight::json_row_to_boolean(${value}.value())` : `flight::json_row_to_boolean(${value})`;
++      return `([&]() -> bool { const auto ${value} = ${emitExpression(expression.operand, context)}; return !(${test}); }())`;
++    }
++    if (plan && expression.operator === 'typeof') {
++      include();
++      const value = getGeneratedTargetName('jsonRootValue', context);
++      const result = plan.optional ? `${value}.has_value() ? flight::String(flight::json_row_type_of(${value}.value())) : flight::String("object")` : `flight::String(flight::json_row_type_of(${value}))`;
++      return `([&]() -> flight::String { const auto ${value} = ${emitExpression(expression.operand, context)}; return ${result}; }())`;
++    }
++  }
++  if (expression.kind === 'call' && expression.arguments.length === 1 &&
++      isCppJsonScalarCellExpressionCpp(expression.arguments[0]!, context)) {
++    const callee = expression.callee;
++    const value = `(${emitExpression(expression.arguments[0]!, context)})`;
++    if (callee.kind === 'property' && callee.object.kind === 'identifier' &&
++        callee.object.reference.kind === 'ambient' && callee.object.reference.name === 'Number' &&
++        ['isFinite','isNaN'].includes(callee.name)) {
++      include(); return `${value}.${callee.name === 'isFinite' ? 'is_finite' : 'is_nan'}()`;
++    }
++    if (callee.kind === 'identifier' && callee.reference.kind === 'ambient') {
++      const method = ({Number:'to_number',String:'to_string',Boolean:'to_boolean'} as Record<string,string>)[callee.reference.name];
++      if (method) { include(); return `${value}.${method}()`; }
++    }
++  }
++  if (expression.kind === 'conditional' && isCppJsonScalarCellExpressionCpp(expression, context)) {
++    include();
++    return finishCell(`(${emitCppTruthinessExpression(expression.condition, context)} ? ${emitCppJsonScalarOperandCpp(expression.whenTrue, context)} : ${emitCppJsonScalarOperandCpp(expression.whenFalse, context)})`);
++  }
++  if (expression.kind === 'template' && expression.parts.some(part => typeof part !== 'string' && isCppJsonScalarCellExpressionCpp(part, context))) {
++    include();
++    const text = getGeneratedTargetName('jsonTemplateText', context);
++    const steps = expression.parts.map(part => `${text} = ${text} + ${typeof part === 'string' ? emitLiteral(part, context) : `(${emitCppJsonScalarOperandCpp(part, context)}).to_string()`};`).join(' ');
++    return `([&]() -> flight::String { flight::String ${text}; ${steps} return ${text}; }())`;
++  }
++  return undefined;
++}
++
+ function emitExpression(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+@@ -4205,6 +4450,8 @@
+   constructExpectedUnion = true,
+   denseArrayLengthInitialized = false,
+ ): string {
++  const jsonProjection = emitCppJsonProjectionExpressionCpp(expression, context, expectedType);
++  if (jsonProjection !== undefined) return jsonProjection;
+   const indexedRead = context.indexedNullableReadExpressions?.get(expression);
+   if (indexedRead !== undefined) return indexedRead;
+   const indexedMember = emitCppGuardedIndexedNullableMemberCpp(expression, context, (next) =>
+@@ -32622,6 +32869,15 @@
+ }
+ 
+ function emitCppTruthinessExpression(expression: Readonly<IrExpression>, context: EmitContext): string {
++  if (isCppJsonScalarCellExpressionCpp(expression, context)) return `(${emitExpression(expression, context)}).to_boolean()`;
++  const jsonRow = getCppJsonProjectionRowCpp(expression, context);
++  if (jsonRow) {
++    context.includes.add('flight/json_scalar.hpp');
++    const value = getGeneratedTargetName('jsonRootTruth', context);
++    const test = jsonRow.optional ? `${value}.has_value() && flight::json_row_to_boolean(${value}.value())` : `flight::json_row_to_boolean(${value})`;
++    return `([&]() -> bool { const auto ${value} = ${emitExpression(expression, context)}; return ${test}; }())`;
++  }
++
+   if (
+     getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+     expression.kind === 'binary' &&
+@@ -35062,7 +35318,7 @@
+ ): Readonly<CompilerCppStructuralRowPlan> | undefined {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
+   if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
+-    const bindingRow = context.structuralCastBindingRows.get(expression.reference.binding.id);
++    const bindingRow = context.jsonAssertionBindingRows.get(expression.reference.binding.id) ?? context.structuralCastBindingRows.get(expression.reference.binding.id);
+     if (bindingRow) return bindingRow;
+   }
+   const type = getIrExpressionTypeEvidenceCpp(expression, context);

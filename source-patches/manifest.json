@@ -5233,6 +5233,23 @@
       "unblocks": "Original Unity rawToConfig, collectUnityDiagnostics and readEmission bodies and their private descendants; product qualification remains separate from diagnostic emission.",
       "expires": "when upstream preserves original parsed descendants through closed private Record aliases, guarded arrays/maps, lazy nullish reads and exact primitive guards without fabricated typed owners.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-json-assertion-scalar-row",
+      "dependency": "flight-compiler",
+      "patch": "compiler-json-assertion-scalar-row.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "JSON.parse assertions into named document schemas emit an invalid nominal static_cast; scalar structural-row reads cannot retain null, absence or wrong-typed raw JSON values through source operations.",
+      "rewrite": "PROTOTYPE: elect exact original named schemas reached by JSON.parse assertions in an emission graph; construct a lazy root-preserving existing StructuralRef via json_assertion_row, select only declared scalar reads on those schemas, retain local scalar cells, lower source-order JS operations and explicit native scalar escapes. Preserve ordinary row ABI, unrelated schemas, structured members and existing guarded/private JSON and declared carrier paths.",
+      "equivalence": "Original parsed object owners and primitive/null roots are retained without schema validation or tree copies. Raw scalar values remain distinct through typeof, finite/NaN predicates, source truth/nullish operations, concat, UTF16 relations and strict/loose equality; actual native scalar boundaries explicitly reject unsupported raw values with shared NativeScalarEscapeError. This prototype requires native qualification before generation.",
+      "whyNotUpstreamFirst": "Pin-bound compiler capability uses the declared source-patch mechanism; no original Flight body or global scalar ABI change.",
+      "unblocks": "Preparation for approved21 Lottie/resources/Aseprite headers. Structured and unsupported operation paths remain PARTIAL by name; no installed header or original parser success claimed.",
+      "expires": "When the pinned compiler preserves JSON assertions as root-retaining lazy rows and coherent source scalar operations/native escape boundaries.",
+      "appliedOn": "2026-10-18",
+      "verification": "UNQUALIFIED PROTOTYPE: actual current107+candidate strict TypeScript build PASS; whole raw original LottieDocument.ts schema plus operation/root/nativeescape fixture emitted successfully and inspected. Node reference24cases9roots and C++ driver prepared. Native compile/link/run, declared108 ordered composition and regression controls PENDING exact qualified builder6 plain-row runtime adapter delivery. NO SDK/header promotions."
     }
   ]
 }
