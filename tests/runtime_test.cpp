@@ -4848,6 +4848,26 @@ static void test_constructed_own_keys() {
   check(properties.erase(flight::String("b")) && !properties.has(flight::String("b")) &&
             properties.keys() == std::vector<flight::String>{flight::String("a")},
         "delete removes the own key from presence and order on the same owner");
+
+  // JavaScript own-key order: canonical integer indices first, ascending; then authored order.
+  flight::mark_constructed_own_named_properties(
+      object, {flight::ConstructedOwnKey{flight::String("10"), flight::ConstructedKeySentinel::Value},
+               flight::ConstructedOwnKey{flight::String("a"), flight::ConstructedKeySentinel::Value},
+               flight::ConstructedOwnKey{flight::String("2"), flight::ConstructedKeySentinel::Value}});
+  properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("2"), flight::String("10"), flight::String("a")},
+        "integer-index keys enumerate first in ascending order, then string keys in authored order");
+  owner->mark_named_own_key("1", flight::ConstructedKeySentinel::Value);
+  properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("1"), flight::String("2"),
+                                                        flight::String("10"), flight::String("a")},
+        "a later integer key is inserted in numeric order");
+  owner->mark_named_own_key("b", flight::ConstructedKeySentinel::Value);
+  properties = flight::named_properties(row);
+  check(properties.keys() == std::vector<flight::String>{flight::String("1"), flight::String("2"),
+                                                        flight::String("10"), flight::String("a"),
+                                                        flight::String("b")},
+        "a later string key appends after the authored string keys");
 }
 
 

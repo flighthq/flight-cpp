@@ -104,6 +104,44 @@ struct ConstructedOwnKey final {
   ConstructedKeySentinel sentinel{ConstructedKeySentinel::Value};
 };
 
+namespace detail {
+
+// JavaScript own-property order for string keys: canonical array indices (0 .. 2^32-2) ascending
+// first, then the remaining keys in insertion order.
+[[nodiscard]] inline std::optional<std::uint32_t> constructed_array_index(std::string_view key) {
+  if (key.empty()) return std::nullopt;
+  if (key == "0") return 0;
+  if (key.front() == '0') return std::nullopt;
+  std::uint64_t value = 0;
+  for (const char character : key) {
+    if (character < '0' || character > '9') return std::nullopt;
+    const auto digit = static_cast<std::uint64_t>(character - '0');
+    if (value > (4294967294ULL - digit) / 10ULL) return std::nullopt;
+    value = value * 10ULL + digit;
+  }
+  return static_cast<std::uint32_t>(value);
+}
+
+inline void normalize_constructed_own_order(std::vector<std::string>& keys) {
+  std::vector<std::string> indices;
+  std::vector<std::string> others;
+  indices.reserve(keys.size());
+  others.reserve(keys.size());
+  for (auto& key : keys) {
+    if (constructed_array_index(key)) indices.push_back(std::move(key));
+    else others.push_back(std::move(key));
+  }
+  std::stable_sort(indices.begin(), indices.end(), [](const std::string& left, const std::string& right) {
+    return *constructed_array_index(left) < *constructed_array_index(right);
+  });
+  keys.clear();
+  keys.reserve(indices.size() + others.size());
+  for (auto& key : indices) keys.push_back(std::move(key));
+  for (auto& key : others) keys.push_back(std::move(key));
+}
+
+} // namespace detail
+
 // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
 // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
 class RowCell {
@@ -365,6 +403,7 @@ class RowOwner {
       named_own_order_.push_back(name);
       named_own_sentinels_.emplace(name, entry.sentinel);
     }
+    detail::normalize_constructed_own_order(named_own_order_);
   }
 
   [[nodiscard]] std::optional<ConstructedKeySentinel> named_own_sentinel(std::string_view key) const {
@@ -378,6 +417,7 @@ class RowOwner {
     std::string name(key);
     if (std::find(named_own_order_.begin(), named_own_order_.end(), name) == named_own_order_.end()) {
       named_own_order_.push_back(name);
+      detail::normalize_constructed_own_order(named_own_order_);
     }
     named_own_sentinels_.insert_or_assign(name, sentinel);
   }
