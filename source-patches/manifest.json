@@ -5335,6 +5335,23 @@
       "unblocks": "Private nullable JSON root and exact original Libgdx detector compiler prerequisites. Full registration may retain independent boundaries; shared builder2 Types and the one later particles qualification remain required.",
       "expires": "When upstream supplies owner-preserving closed nullable JSON read flows and exact builtin indexed String optional-call result/presence semantics.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-erased-array-selection-and-fill",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-array-selection-and-fill.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "The original numeric helper selects an erased array owner or a fresh literal, fills a sized array against an unchanged numeric parameter, and coerces indexed nullish fallbacks; typed array-union guards and a three-argument array predicate additionally lose their emitted storage evidence.",
+      "rewrite": "Retain selected arrays and immutable aliases as Any with live checked length/index reads. Use lazy Any nullish selection and the existing JsonScalarCell only at Number. Prove complete fills from numeric parameters only when the entire module contains no assignment or update of that binding. Carry negated and guaranteed compound array-union facts through terminating guards, withdraw assigned facts, and emit variant predicates/assignment targets against their original storage. Recover an unresolved third instance-array callback parameter from the receiver array type. Concrete native-array escapes still refuse.",
+      "equivalence": "Only a source-authored fallback literal allocates. Existing array/JSON owners, aliases, element identity, mutation visibility, null versus undefined, lazy fallback order, Number coercion and exceptions remain observable. Sized construction still validates length before source writes; partial, observed, escaped, reassigned-bound or interrupted fills remain refused. A callback receives the same receiver owner and original value/index; Array.from keeps its distinct two-argument runtime contract. No global scalar ABI, native-array cast, copying, schema narrowing or replacement helper body is introduced.",
+      "verification": "PREPARATION IN PROGRESS: production strict build PASS; eight existing targeted files130/130PASS0skips on ordered112 preceding compiler stack. New portable fixture has source controls plus native owner/lazy/fill/guard/callback/Unicode/ToPrimitive controls; its newly added Symbol conversion control currently exposes a shared-runtime ToNumber TypeError gap reported to runtime owner6. Two whole untouched original helpers emitted/COMPILE/LINK/RUN300checks0FAIL after the prior shared runtime Unicode/object fix. No normal SDK or original public32 consumer qualification from these helpers; full public closure remains pending.",
+      "whyNotUpstreamFirst": "The pinned compiler has the required runtime owner and scalar-operation contracts but does not retain their representation facts through these source expressions. A pin-bound backend patch can preserve the original source algorithm without changing either sibling pin.",
+      "unblocks": "Preparation for original lottieNumericValue/handleVaries and retained array callbacks. Whole original public Lottie body/callees and32-case consumer still require further qualification.",
+      "expires": "When the upstream C++ backend preserves erased array selection, complete-fill evidence, compound array guards and contextual callback receiver arguments with the same owner and source operation semantics.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

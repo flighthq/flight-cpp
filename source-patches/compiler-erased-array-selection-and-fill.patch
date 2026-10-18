@@ -1,0 +1,598 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3410,6 +3410,38 @@
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
+   }
++  if (!variable.mutable && variable.initializer) {
++    const selected = isCppErasedArraySelectionCpp(variable.initializer, context);
++    const alias =
++      variable.initializer.kind === 'identifier' &&
++      variable.initializer.reference.kind === 'binding' &&
++      context.erasedArrayProvenBindingIds.has(variable.initializer.reference.binding.id) &&
++      hasCppErasedDynamicTestOperandCpp(
++        variable.initializer,
++        getIrExpressionTypeEvidenceCpp(variable.initializer, context),
++        context,
++      );
++    if (selected || alias) {
++      if (variable.type && !isCppAliasResolvedErasedDynamicValueTypeCpp(variable.type, context)) {
++        emissionError(
++          context,
++          'A guarded erased array retains its original Any array owner; a concrete native-array escape requires an exact represented extraction',
++          'cpp-erased-array-selection-escape-unrepresented',
++        );
++      }
++      const erased: IrType = { kind: 'unknown', source: 'unknown' };
++      context.erasedDynamicStorageBindingIds = new Set([
++        ...context.erasedDynamicStorageBindingIds,
++        variable.binding.id,
++      ]);
++      context.erasedArrayProvenBindingIds = new Set([...context.erasedArrayProvenBindingIds, variable.binding.id]);
++      context.preservedInitializerTypes.set(variable.binding.id, erased);
++      const value = selected
++        ? emitCppErasedArraySelectionCpp(variable.initializer, context, erased)
++        : emitExpression(variable.initializer, context);
++      return `const flight::Any ${getBindingTargetName(variable.binding, context)} = ${value};`;
++    }
++  }
+   if (variable.initializer && isCppJsonScalarCellExpressionCpp(variable.initializer, context)) {
+     context.jsonScalarCellBindingIds.add(variable.binding.id);
+     return `${variable.mutable ? '' : 'const '}auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context)};`;
+@@ -4607,6 +4639,10 @@
+ ): string {
+   const jsonProjection = emitCppJsonProjectionExpressionCpp(expression, context, expectedType);
+   if (jsonProjection !== undefined) return jsonProjection;
++  const erasedArraySelection = emitCppErasedArraySelectionCpp(expression, context, expectedType);
++  if (erasedArraySelection !== undefined) return erasedArraySelection;
++  const erasedNumber = emitCppErasedNumberCoercionCpp(expression, context);
++  if (erasedNumber !== undefined) return erasedNumber;
+   const indexedRead = context.indexedNullableReadExpressions?.get(expression);
+   if (indexedRead !== undefined) return indexedRead;
+   const indexedMember = emitCppGuardedIndexedNullableMemberCpp(expression, context, (next) =>
+@@ -4998,7 +5034,15 @@
+       const runtimeInstanceOf = emitCppRuntimeInstanceOfTestCpp(expression, context);
+       if (runtimeInstanceOf) return runtimeInstanceOf;
+       if (expression.operator === '??') {
+-        if (isCppNamedPropertiesValueReadCpp(expression.left, context) || isCppJsonReadValueCpp(expression.left, context)) {
++        if (
++          isCppNamedPropertiesValueReadCpp(expression.left, context) ||
++          isCppJsonReadValueCpp(expression.left, context) ||
++          hasCppErasedDynamicTestOperandCpp(
++            expression.left,
++            getIrExpressionTypeEvidenceCpp(expression.left, context),
++            context,
++          )
++        ) {
+           const value = getGeneratedTargetName('namedCoalesceValue', context);
+           context.includes.add('flight/any.hpp');
+           return `([&]() -> flight::Any { const auto ${value} = ${emitExpression(expression.left, context)}; if (!${value}.is_nullish()) return ${value}; return ${emitExpression(expression.right, context, { kind: 'unknown', source: 'unknown' })}; }())`;
+@@ -12170,6 +12214,15 @@
+     }
+     statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
+     statementContext = withdrawCppAssignedGuardedPathsCpp(statement, statementContext, true);
++    if (
++      statement.kind === 'if' &&
++      !statement.otherwise &&
++      (isCppAbruptCompletionStatement(statement.consequent) ||
++        statement.consequent.kind === 'continue' ||
++        statement.consequent.kind === 'break')
++    ) {
++      statementContext = getCppUnionOrArrayBranchContextCpp(statement.condition, false, statementContext);
++    }
+     // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
+     // `throw new Error(...)` the source writes to report the bad case -- and that runs only on the path
+     // that never falls through, so it proves nothing about the statements this one leaves behind.
+@@ -17350,6 +17403,23 @@
+ ): boolean {
+   if (isCppJsonReadValueCpp(operand, context)) return true;
+   if (isCppErasedDynamicPropertyReadCpp(operand, context)) return true;
++  if (operand.kind === 'binary' && operand.operator === '??') {
++    return hasCppErasedDynamicTestOperandCpp(
++      operand.left,
++      getIrExpressionTypeEvidenceCpp(operand.left, context),
++      context,
++    );
++  }
++  if (
++    operand.kind === 'element' &&
++    !operand.optional &&
++    operand.object.kind === 'identifier' &&
++    operand.object.reference.kind === 'binding' &&
++    context.erasedArrayProvenBindingIds.has(operand.object.reference.binding.id) &&
++    hasCppErasedDynamicTestOperandCpp(operand.object, getIrExpressionTypeEvidenceCpp(operand.object, context), context)
++  ) {
++    return true;
++  }
+   if (operand.kind === 'identifier' && operand.reference.kind === 'binding') {
+     const bindingId = operand.reference.binding.id;
+     if (context.erasedDynamicStorageBindingIds.has(bindingId)) return true;
+@@ -20117,7 +20187,10 @@
+   if (!evidence || candidate?.kind !== 'identifier') return undefined;
+   context.includes.add('flight/array.hpp');
+   context.includes.add('variant');
+-  const value = emitExpression(candidate, context);
++  const value =
++    candidate.reference.kind === 'binding'
++      ? emitInitializedBindingValueCpp(candidate.reference.binding, context)
++      : emitExpression(candidate, context);
+   // A nullable heterogeneous union stores absence outside the variant. Exclude it before visiting;
+   // the true branch can then extract the exact array alternative from that same stored variant.
+   const variant = evidence.optionalStorage ? `${value}.value()` : value;
+@@ -20290,6 +20363,33 @@
+   result: boolean,
+   context: EmitContext,
+ ): EmitContext {
++  if (condition.kind === 'unary' && condition.operator === '!') {
++    return getCppUnionOrArrayBranchContextCpp(condition.operand, !result, context);
++  }
++  if (
++    condition.kind === 'binary' &&
++    ((condition.operator === '||' && !result) || (condition.operator === '&&' && result))
++  ) {
++    // Both operands have the same known result. The second operand must not invalidate the first
++    // proof through a write or an effectful call before that proof reaches the selected branch.
++    let effectful = false;
++    analyzeIrExpressionSubtreeTraversal(condition.right, {
++      expression(expression) {
++        if (
++          expression.kind === 'assignment' ||
++          expression.kind === 'new' ||
++          (expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator)) ||
++          (expression.kind === 'call' &&
++            !getCppVariantArrayPredicateEvidenceCpp(expression, context) &&
++            !getCppVariantPropertyArrayPredicateEvidenceCpp(expression, context))
++        )
++          effectful = true;
++      },
++    });
++    if (effectful) return context;
++    const left = getCppUnionOrArrayBranchContextCpp(condition.left, result, context);
++    return getCppUnionOrArrayBranchContextCpp(condition.right, result, left);
++  }
+   const unionMemberTest = condition.kind === 'binary' ? condition.semantics.unionMemberTest : undefined;
+   const unionContext = getCppUnionMemberTestBranchContextCpp(unionMemberTest, result, context);
+   const arrayValue = getCppVariantArrayPredicateEvidenceCpp(condition, unionContext);
+@@ -29158,12 +29258,21 @@
+     context.objectEntriesTupleBindingIds.add(callbackExpression.parameters[0].binding.id);
+   }
+   const result = expression.callee.name === 'map' ? getIrArrayTypeCpp(expectedType, context, new Set()) : undefined;
+-  if (!refinedParameter && !result) return undefined;
++  const instanceCallback = ['map', 'filter', 'flatMap', 'find', 'findIndex', 'some', 'every', 'forEach'].includes(
++    expression.callee.name,
++  );
++  const third = instanceCallback && receiverArray ? callback.parameters[2] : undefined;
++  const recoveredThird = third?.type.kind === 'unknown' ? { ...third, type: receiverArray! } : undefined;
++  if (!refinedParameter && !result && !recoveredThird) return undefined;
+   return {
+     ...callback,
+-    parameters: refinedParameter
+-      ? [{ ...first!, type: refinedParameter }, ...callback.parameters.slice(1)]
+-      : callback.parameters,
++    parameters: callback.parameters.map((parameter, position) =>
++      position === 0 && refinedParameter
++        ? { ...parameter, type: refinedParameter }
++        : position === 2 && recoveredThird
++          ? recoveredThird
++          : parameter,
++    ),
+     returns: result?.element ?? callback.returns,
+   };
+ }
+@@ -31968,6 +32077,36 @@
+   return areCppStableArrayReceiverExpressionsEqualCpp(left.object, right.object, context);
+ }
+ 
++// Numeric parameters keep their value unless some source assignment changes them, including a
++// write in a captured closure. Object parameters need a separate alias/mutation proof and stay out.
++function collectCppStableDenseArrayBindingIdsCpp(module: Readonly<IrModule>): Set<string> {
++  const immutableBindingIds = new Set<string>();
++  const assignedBindingIds = new Set<string>();
++  analyzeIrModuleTraversal(module, {
++    parameter(parameter) {
++      if (parameter.type.kind === 'primitive' && parameter.type.name === 'number') {
++        immutableBindingIds.add(parameter.binding.id);
++      }
++    },
++    variable(variable) {
++      if ('binding' in variable && !variable.mutable) immutableBindingIds.add(variable.binding.id);
++    },
++    expression(expression) {
++      const target =
++        expression.kind === 'assignment'
++          ? expression.left
++          : expression.kind === 'unary' && (expression.operator === '++' || expression.operator === '--')
++            ? expression.operand
++            : undefined;
++      if (target?.kind === 'identifier' && target.reference.kind === 'binding') {
++        assignedBindingIds.add(target.reference.binding.id);
++      }
++    },
++  });
++  for (const bindingId of assignedBindingIds) immutableBindingIds.delete(bindingId);
++  return immutableBindingIds;
++}
++
+ // A sized JavaScript Array begins sparse, while flight::Array is dense. One sound bridge is an
+ // immediate sequential initializer: construct first so the length expression and RangeError occur in
+ // source order, clear the unobservable holes, then append the values that the source writes at the
+@@ -31976,7 +32115,7 @@
+ function collectIrModuleDenseArraySequentialAppendPlansCpp(
+   module: Readonly<IrModule>,
+ ): ReadonlyMap<string, Readonly<CppDenseArraySequentialAppendPlan>> {
+-  const immutableBindingIds = new Set<string>();
++  const immutableBindingIds = collectCppStableDenseArrayBindingIdsCpp(module);
+   const immutableBindingInitializers = new Map<string, Readonly<IrExpression>>();
+   analyzeIrModuleTraversal(module, {
+     variable(variable) {
+@@ -32393,12 +32532,7 @@
+ // can be observed. The proof is intentionally narrow: it covers lookup-table builders without turning
+ // an arbitrary sparse allocation into a default-filled array.
+ function collectIrModuleDenseArrayLengthBindingIdsCpp(module: Readonly<IrModule>): ReadonlySet<string> {
+-  const immutableBindingIds = new Set<string>();
+-  analyzeIrModuleTraversal(module, {
+-    variable(variable) {
+-      if ('binding' in variable && !variable.mutable) immutableBindingIds.add(variable.binding.id);
+-    },
+-  });
++  const immutableBindingIds = collectCppStableDenseArrayBindingIdsCpp(module);
+   const result = new Set<string>();
+   const inspectStatements = (statements: readonly Readonly<IrStatement>[]): void => {
+     statements.forEach((statement, statementIndex) => {
+@@ -33224,7 +33358,8 @@
+     expression.kind === 'identifier' &&
+     expression.reference.kind === 'binding' &&
+     (context.nullableBindingIds.has(expression.reference.binding.id) ||
+-      context.defaultedParameterIds.has(expression.reference.binding.id))
++      context.defaultedParameterIds.has(expression.reference.binding.id) ||
++      context.narrowedBindingTypes.has(expression.reference.binding.id))
+   ) {
+     return emitIdentifierReference(expression.reference, context);
+   }
+@@ -34279,10 +34414,82 @@
+   );
+ }
+ 
+-// A predicate proves which source value the true branch denotes, but it does not create target storage.
+-// When that binding chose Any storage, returning the guarded value would require the runtime to recover
+-// the exact array handle; using an expected branch type here would instead disguise that extraction as a
+-// conversion and either cast or rebuild the array.
++// Selecting a guarded erased array keeps its existing owner. Only the source-authored fallback
++// literal allocates; a concrete array escape still needs an exact represented recovery.
++function isCppErasedArraySelectionCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): expression is Readonly<Extract<IrExpression, { kind: 'conditional' }>> {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.kind !== 'conditional' ||
++    expression.whenFalse.kind !== 'array'
++  )
++    return false;
++  const condition = expression.condition;
++  if (
++    condition.kind !== 'call' ||
++    condition.optional ||
++    condition.arguments.length !== 1 ||
++    condition.callee.kind !== 'property' ||
++    condition.callee.optional ||
++    condition.callee.name !== 'isArray' ||
++    condition.callee.object.kind !== 'identifier' ||
++    condition.callee.object.reference.kind !== 'ambient' ||
++    condition.callee.object.reference.name !== 'Array'
++  )
++    return false;
++  const candidate = condition.arguments[0]!;
++  return (
++    candidate.kind === 'identifier' &&
++    candidate.reference.kind === 'binding' &&
++    expression.whenTrue.kind === 'identifier' &&
++    expression.whenTrue.reference.kind === 'binding' &&
++    expression.whenTrue.reference.binding.id === candidate.reference.binding.id &&
++    !isCppJsonReadValueCpp(candidate, context) &&
++    hasCppErasedDynamicTestOperandCpp(candidate, getIrExpressionTypeEvidenceCpp(candidate, context), context)
++  );
++}
++
++function emitCppErasedArraySelectionCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++  expectedType?: Readonly<IrType>,
++): string | undefined {
++  if (!isCppErasedArraySelectionCpp(expression, context)) return undefined;
++  if (expectedType && !isCppAliasResolvedErasedDynamicValueTypeCpp(expectedType, context)) {
++    emissionError(
++      context,
++      'A guarded erased array retains its original Any array owner; a concrete native-array escape requires an exact represented extraction',
++      'cpp-erased-array-selection-escape-unrepresented',
++    );
++  }
++  context.includes.add('flight/any.hpp');
++  context.includes.add('flight/array.hpp');
++  const array: IrType = { kind: 'array', readonly: false, element: { kind: 'unknown', source: 'unknown' } };
++  const yes = getCppConditionBranchContextCpp(expression.condition, true, context);
++  const no = getCppConditionBranchContextCpp(expression.condition, false, context);
++  return `(${emitCppTruthinessExpression(expression.condition, context)} ? flight::Any(${emitExpression(expression.whenTrue, yes)}) : flight::Any(${emitExpression(expression.whenFalse, no, array)}))`;
++}
++
++function emitCppErasedNumberCoercionCpp(expression: Readonly<IrExpression>, context: EmitContext): string | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.kind !== 'call' ||
++    expression.optional ||
++    expression.arguments.length !== 1 ||
++    expression.callee.kind !== 'identifier' ||
++    expression.callee.reference.kind !== 'ambient' ||
++    expression.callee.reference.name !== 'Number'
++  )
++    return undefined;
++  const value = expression.arguments[0]!;
++  if (!hasCppErasedDynamicTestOperandCpp(value, getIrExpressionTypeEvidenceCpp(value, context), context))
++    return undefined;
++  context.includes.add('flight/json_scalar.hpp');
++  return `flight::JsonScalarCell{${emitExpression(value, context)}}.to_number()`;
++}
++
+ function refuseCppErasedArrayPredicateValueCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'conditional' }>>,
+   context: EmitContext,
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedArraySelection.test.ts
+@@ -0,0 +1,257 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export function normalize(input: unknown, count: number): number[] {
++  const selected = Array.isArray(input) ? input : [input];
++  const alias = selected;
++  const result = new Array<number>(count);
++  for (let cursor = 0; cursor < count; cursor++) {
++    const numeric = Number(alias[cursor] ?? alias[0] ?? 9);
++    result[cursor] = Number.isFinite(numeric) ? numeric : -7;
++  }
++  return result;
++}
++export function retained(input: unknown): unknown {
++  const selected = Array.isArray(input) ? input : [input];
++  const alias = selected;
++  return alias;
++}
++export function lazy(input: unknown, fallback: () => unknown): number {
++  const selected = Array.isArray(input) ? input : [input];
++  return Number(selected[0] ?? fallback());
++}
++export function zeroMap(values: number[], count: number): number[][] {
++  return values.map(() => new Array<number>(count).fill(4));
++}
++export function rising(values: number[]): number[] {
++  return values.filter((value, index, all) => index === 0 || value > all[index - 1]);
++}
++export function adjusted(values: number[]): number[] {
++  return values.map((value, index, all) => { if (index === 0) all[1] = 7; return value; });
++}
++export function guardedSize(value: number | number[]): number {
++  if (!Array.isArray(value) || value.length < 2) return -1;
++  return value.length;
++}
++export function conjunctionSize(value: number | number[]): number {
++  if (!(Array.isArray(value) && value.length >= 2)) return -1;
++  return value.length;
++}
++`;
++
++function emit(text = source): string {
++  const lowered = lowerTypeScriptSource(
++    ts.createSourceFile('/flight/packages/example/src/selection.ts', text, ts.ScriptTarget.Latest, true),
++    { packageName: '@flighthq/example', upstreamDirectory: '/flight' },
++  );
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++
++it('retains erased array owners through selection and const aliases and coerces only at Number', () => {
++  const code = emit();
++  expect(code).toContain('const flight::Any selected =');
++  expect(code).toContain('const flight::Any alias = selected');
++  expect(code).toContain('.array_get(');
++  expect(code).toContain('.is_nullish()');
++  expect(code).toContain('flight::JsonScalarCell{');
++  expect(code).toContain('}.to_number()');
++  expect(code).toContain('flight::Array<double>(count)');
++  expect(code).not.toContain('flight::to_number(');
++  expect(code).not.toContain('static_cast<flight::Array');
++});
++
++it('keeps sparse construction refused when writes or observations defeat the complete-fill proof', () => {
++  const bodies = [
++    'const result=new Array<number>(count);count--;for(let i=0;i<count;i++)result[i]=i;return result;',
++    'const result=new Array<number>(count);for(let i=0;i<count;i++){count--;result[i]=i;}return result;',
++    'const result=new Array<number>(count);const observe=result[0];for(let i=0;i<count;i++)result[i]=i;return result;',
++    'const result=new Array<number>(count);for(let i=0;i<count-1;i++)result[i]=i;return result;',
++    'const result=new Array<number>(count);for(let i=0;i<count;i++){if(i===1)break;result[i]=i;}return result;',
++    'const result=new Array<number>(count);for(let i=0;i<count;i++){if(i===1)continue;result[i]=i;}return result;',
++    'const result=new Array<number>(count);for(let i=0;i<count;i++){if(i===1)return result;result[i]=i;}return result;',
++    'const result=new Array<number>(count);const mutate=()=>{count=0;};mutate();for(let i=0;i<count;i++)result[i]=i;return result;',
++  ];
++  for (const body of bodies) {
++    expect(() => emit(`export function fill(count:number):number[]{${body}}`)).toThrow(
++      'Array length construction is outside the dense flight-cpp array profile',
++    );
++  }
++});
++
++it('does not recover a concrete native array merely from an erased array predicate', () => {
++  expect(() =>
++    emit(
++      `export function local(raw:unknown):number[]{const selected:number[]=Array.isArray(raw)?raw:[0];return selected;}`,
++    ),
++  ).toThrow('a concrete native-array escape requires an exact represented extraction');
++  expect(() => emit(`export function escape(raw:unknown):number[]{return Array.isArray(raw)?raw:[0];}`)).toThrow(
++    'a concrete native-array escape requires an exact represented extraction',
++  );
++});
++
++it('withdraws typed array guard facts when a later statement assigns the binding', () => {
++  const code = emit(`export function reassigned(value:number|number[],replacement:number|number[]):number{
++    if(!Array.isArray(value)||value.length<2)return 0;
++    value=replacement;
++    if(!Array.isArray(value))return value;
++    return value.length;
++  }`);
++  expect(code).toContain('value =');
++  expect(code).toContain('std::visit(');
++});
++
++it('does not carry a typed array proof through an effectful right operand', () => {
++  const code = emit(`export function effects(value:number|number[], change:()=>boolean):number{
++    if(!Array.isArray(value)||change())return 0;
++    return Array.isArray(value)?value.length:7;
++  }`);
++  expect(code).toContain('change()');
++  expect(code).toContain('std::visit(');
++});
++
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs source-oracle conversions, lazy fallbacks, live owners, compound guards and length exceptions',
++  () => {
++    const reference = {} as {
++      normalize: (input: unknown, count: number) => number[];
++      lazy: (input: unknown, fallback: () => unknown) => number;
++      guardedSize: (input: number | number[]) => number;
++      conjunctionSize: (input: number | number[]) => number;
++      zeroMap: (input: number[], count: number) => number[][];
++      rising: (input: number[]) => number[];
++      adjusted: (input: number[]) => number[];
++    };
++    new Function(
++      'exports',
++      ts.transpileModule(source, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(reference);
++    const values: unknown[] = [
++      null,
++      0,
++      false,
++      true,
++      '',
++      '24',
++      '-2.5',
++      '0x10',
++      'bad',
++      [],
++      [4],
++      [1, 2],
++      [null],
++      [null, 4],
++      ['3', 'bad'],
++      {},
++      [[4]],
++      [[], 5],
++      ['\u00a030\u00a0'],
++      { toString: 3 },
++      [{ toString: 3 }],
++    ];
++    const number = (value: number): string =>
++      Number.isNaN(value)
++        ? 'std::numeric_limits<double>::quiet_NaN()'
++        : value === Infinity
++          ? 'std::numeric_limits<double>::infinity()'
++          : value === -Infinity
++            ? '-std::numeric_limits<double>::infinity()'
++            : Object.is(value, -0)
++              ? '-0.0'
++              : Number.isInteger(value)
++                ? `${value}.0`
++                : String(value);
++    let cpp = `#include "selection.hpp"\n#include <flight/json.hpp>\n#include <iostream>\nint main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok){++failures;std::cerr<<"failed check "<<checks<<"\\n";}};\n`;
++    for (const value of values)
++      for (const count of [0, 1, 3]) {
++        let output: number[] | undefined;
++        let error = false;
++        try {
++          output = reference.normalize(value, count);
++        } catch (caught) {
++          error = caught instanceof TypeError;
++        }
++        cpp += `{bool threw=false;try{auto result=probe::normalize(flight::Any(flight::Json::parse(flight::String(${JSON.stringify(JSON.stringify(value))}))),${number(count)});`;
++        if (output) {
++          cpp += `check(result.size()==${output.length});`;
++          for (const [index, item] of output.entries()) cpp += `check(result.element(${index})==${number(item)});`;
++        } else cpp += 'check(false);';
++        cpp += `}catch(const flight::TypeError&){threw=true;}check(threw==${error});}\n`;
++      }
++    for (const length of [-1, 0.5, NaN, Infinity, 4294967296]) {
++      expect(() => reference.normalize(3, length)).toThrow(RangeError);
++      cpp += `{bool threw=false;try{(void)probe::normalize(flight::Any(3),${number(length)});}catch(const std::range_error&){threw=true;}check(threw);}\n`;
++    }
++    for (const value of [0, [], [4], [1, 2], [null], [false], ['']]) {
++      let calls = 0;
++      const expected = reference.lazy(value, () => {
++        calls++;
++        return 7;
++      });
++      cpp += `{int calls=0;auto result=probe::lazy(flight::Any(flight::Json::parse(flight::String(${JSON.stringify(JSON.stringify(value))}))),flight::Function<flight::Any()>{[&](){++calls;return flight::Any(7);}});check(result==${number(expected)});check(calls==${calls});}\n`;
++    }
++    for (const value of [3, [], [1], [1, 2]]) {
++      const argument = Array.isArray(value) ? `flight::Array<double>{${value.map(number).join(',')}}` : number(value);
++      cpp += `check(probe::guarded_size(${argument})==${number(reference.guardedSize(value))});\n`;
++      cpp += `check(probe::conjunction_size(${argument})==${number(reference.conjunctionSize(value))});\n`;
++    }
++    cpp += `{flight::Array<flight::Any> values{flight::Any(4)};const flight::Any boxed(values);const auto selected=probe::retained(boxed);check(selected.strict_equals(boxed));values.element(0)=flight::Any(8);check(selected.array_get(0)->as_number()==8);values.push(flight::Any(9));check(selected.array_size()==2);}\n`;
++    cpp += `{const auto parsed=flight::Json::parse(flight::String("[4]"));const flight::Any boxed(parsed);const auto selected=probe::retained(boxed);check(selected.strict_equals(boxed));(*parsed.array_owner())[0]=flight::JsonValue(8);check(selected.array_get(0)->as_number()==8);}\n`;
++    cpp += `{flight::Array<flight::Any> values{flight::Any(flight::undefined),flight::Any(flight::null),flight::Any(false)};const auto result=probe::normalize(flight::Any(values),4);check(result.element(0)==9);check(result.element(1)==9);check(result.element(2)==0);check(result.element(3)==9);}\n`;
++    const callbackInput = [1, 3, 2];
++    const rising = reference.rising(callbackInput);
++    const adjusted = reference.adjusted([...callbackInput]);
++    cpp += `{flight::Array<double> input{1,3,2};auto result=probe::rising(input);check(result.size()==${rising.length});`;
++    for (const [index, value] of rising.entries()) cpp += `check(result.element(${index})==${number(value)});`;
++    cpp += '}\n';
++    cpp += '{flight::Array<double> input{1,3,2};auto result=probe::adjusted(input);';
++    for (const [index, value] of adjusted.entries()) cpp += `check(result.element(${index})==${number(value)});`;
++    cpp += 'check(input.element(1)==7); }\n';
++    cpp +=
++      '{auto result=probe::zero_map(flight::Array<double>{1,3},2);check(result.size()==2);check(result.element(0).size()==2);check(result.element(0).element(0)==4);check(result.element(0)!=result.element(1));}\n';
++    expect(() => reference.normalize(Symbol('value'), 1)).toThrow(TypeError);
++    cpp +=
++      '{bool threw=false;try{(void)probe::normalize(flight::Any(flight::Symbol(flight::String("value"))),1);}catch(const flight::TypeError&){threw=true;}check(threw);}\n';
++    cpp += 'std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}\n';
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-erased-array-selection-'));
++    try {
++      writeFileSync(path.join(directory, 'selection.hpp'), emit());
++      const input = path.join(directory, 'native.cpp');
++      const output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(input, cpp);
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toMatch(/\d+ checks, 0 failures/u);
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
