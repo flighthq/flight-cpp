@@ -65,3 +65,14 @@ package-scope pass is claimed.
 Normal shared B generation and installed original GL/public registry qualification remain separate.
 The allocation runtime is still withdrawn pending its independent full-suite gate and actual reland;
 these independent compiler fixtures do not qualify that runtime change or the dependent GL API.
+
+
+## Composition with the codec preparation
+
+After rebasing onto the codec preparation at `92ecde29`, the compiler stack has 112 patches and the
+Flight stack has 202. Every incoming declaration is retained, with only this compiler entry appended.
+The registry patch hash remains unchanged. A fresh raw-pin ordered application and strict build pass;
+the nineteen registry/related controls and sixteen codec source controls pass. Reversing and reapplying
+this patch reproduces its three compiler files exactly while retaining the codec backend additions and
+fixture. The broader baseline comparison above remains scoped to frozen110/111. This composition
+check does not regenerate the SDK or qualify the installed GL surface.
