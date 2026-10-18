@@ -230,8 +230,27 @@ class JsonScalarCell final {
 // The Any-receiver form the private parsed-JSON read path actually has. It mirrors
 // read_json_data_property's direct-read rule (a nullish receiver throws TypeError) and keeps presence:
 // a missing own key is absent, while a present value is preserved raw.
+//
+// A boxed String is part of that path: it owns exactly `length` and its UTF-16 indices, and reading
+// any other name is absent rather than throwing. Presence follows the data read's own index grammar
+// and the value comes from that read, so selecting this projection cannot drop a property the
+// existing path answered.
 [[nodiscard]] inline JsonScalarCell read_json_scalar_property(const Any& value, const String& key) {
   if (value.is_nullish()) throw TypeError("Cannot read properties of null or undefined");
+  if (value.kind() == AnyKind::string) {
+    const auto& text = value.as_string().native();
+    if (key == String("length")) return JsonScalarCell{read_json_data_property(value, key)};
+    const auto& units = key.native();
+    if (units.empty() || (units.size() > 1 && units.front() == u'0')) return JsonScalarCell{};
+    std::size_t index = 0;
+    for (const auto unit : units) {
+      if (unit < u'0' || unit > u'9') return JsonScalarCell{};
+      const auto digit = static_cast<std::size_t>(unit - u'0');
+      if (digit >= text.size() || index > (text.size() - 1 - digit) / 10) return JsonScalarCell{};
+      index = index * 10 + digit;
+    }
+    return JsonScalarCell{read_json_data_property(value, key)};
+  }
   const auto properties = named_properties(value);
   if (!properties.has(key)) return JsonScalarCell{};
   return JsonScalarCell{properties.get(key)};

@@ -4672,6 +4672,24 @@ static void test_json_scalar_any_receiver_projection() {
     threw = true;
   }
   check(threw, "Any receiver: a direct read on a nullish receiver throws TypeError as the read path does");
+
+  // A boxed String owns `length` and its UTF-16 indices; every other name reads as absent. Selecting
+  // this projection on the private read path must not drop a property the data read answers.
+  const Any boxed(flight::String("ab"));
+  const auto length = flight::read_json_scalar_property(boxed, flight::String("length"));
+  const auto first = flight::read_json_scalar_property(boxed, flight::String("0"));
+  const auto past_end = flight::read_json_scalar_property(boxed, flight::String("2"));
+  const auto leading_zero = flight::read_json_scalar_property(boxed, flight::String("01"));
+  const auto named = flight::read_json_scalar_property(boxed, flight::String("byteLength"));
+  check(length.is_present() && length.as_native_number() == 2.0,
+        "boxed string: length is present and numeric");
+  check(first.is_present() && first.type_of() == "string" && first.to_string() == flight::String("a"),
+        "boxed string: a valid index is present with its character");
+  check(past_end.is_absent() && leading_zero.is_absent() && named.is_absent(),
+        "boxed string: out-of-range, leading-zero and non-index names are absent");
+  check(flight::read_json_scalar_property(Any(8.0), flight::String("x")).is_absent() &&
+            flight::read_json_scalar_property(Any(true), flight::String("x")).is_absent(),
+        "a number or boolean receiver boxes to no own properties: absent, not a throw");
 }
 
 int main() {
