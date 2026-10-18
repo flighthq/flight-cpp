@@ -464,3 +464,12 @@ This is preparation evidence. Normal scoped generation, installed public consume
 and the four requested header measurements are pending. No inventory row or historical25 gain is
 claimed. The independent Unity, returned schema, Lottie, Aseprite, TexturePacker and glTF nominal
 JSON boundaries remain open.
+
+
+The closed mapper proof also excludes assertions, arbitrary indexed observations and opaque
+property reads. A property can invoke a getter outside the analyzed private call graph; only the
+ambient Array predicate and data reads on immutable locals from a selected original JSON producer
+are admitted. Two getter controls and an indexed-reader control retain refusal. The first normal
+run was stopped before inventory writes to add this exclusion; both declared patch sets recovered
+cleanly. Its partial emission is not qualification evidence. The original Spine module stays
+byte-identical; corrected final normal generation remains pending.

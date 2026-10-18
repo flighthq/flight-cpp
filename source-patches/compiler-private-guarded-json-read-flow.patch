@@ -98,7 +98,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    }
    const receivers = new Set<Readonly<IrExpression>>();
    const callees = new Set<Readonly<IrExpression>>();
-@@ -8915,6 +8935,400 @@
+@@ -8915,6 +8935,413 @@
  }
  
  
@@ -437,7 +437,20 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +    let safe = true;
 +    for (const statement of body) analyzeIrStatementSubtreeTraversal(statement, {
 +      expression(value) {
-+        if (value.kind === 'function' || value.kind === 'assignment' || (value.kind === 'unary' && ['++', '--', 'delete'].includes(value.operator))) safe = false;
++        if (value.kind === 'function' || value.kind === 'assignment' || value.kind === 'cast' || value.kind === 'element' ||
++            (value.kind === 'unary' && ['++', '--', 'delete'].includes(value.operator))) safe = false;
++        if (value.kind === 'property') {
++          const ambientArrayPredicate = value.name === 'isArray' && value.object.kind === 'identifier' &&
++            value.object.reference.kind === 'ambient' && value.object.reference.name === 'Array';
++          const receiver = value.object.kind === 'identifier' && value.object.reference.kind === 'binding' ? value.object.reference.binding.id : undefined;
++          const initializer = receiver ? context.bindingInitializers.get(receiver) : undefined;
++          const originalJsonLocal = receiver && context.readonlyRecordReadViewBindingIds.has(receiver) && initializer?.kind === 'call' &&
++            initializer.callee.kind === 'identifier' && initializer.callee.reference.kind === 'binding' &&
++            context.privateJsonRecordProducerIds.has(initializer.callee.reference.binding.id);
++          // An arbitrary property read can invoke a getter outside this call graph. Only the
++          // original JSON local's data view and the ambient array predicate are proven here.
++          if (!ambientArrayPredicate && !originalJsonLocal) safe = false;
++        }
 +        if (value.kind === 'new' && !(value.callee.kind === 'identifier' && value.callee.reference.kind === 'ambient' && value.callee.reference.name === 'Error')) safe = false;
 +        if (value.kind !== 'call') return undefined;
 +        const target = value.callee;
@@ -499,7 +512,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  function isCppJsonSyntaxMessageOnlyCatchCpp(catchClause: Readonly<IrCatchClause>, context: EmitContext): boolean {
    if (!catchClause.binding) return true;
    const binding = catchClause.binding.id;
-@@ -8924,6 +9338,13 @@
+@@ -8924,6 +9351,13 @@
    analyzeIrStatementSubtreeTraversal(catchClause.body, {
      expression(expression) {
        if (expression.kind === 'function') closure = true;
@@ -513,7 +526,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
        if (expression.kind === 'property' && !expression.optional && expression.name === 'message' && expression.object.kind === 'cast') {
          const type = expression.object.type;
          const source = expression.object.expression;
-@@ -10448,8 +10869,12 @@
+@@ -10448,8 +10882,12 @@
        }
        const lines = ['try {', ...indentSourceLines(emitStatementBody(statement.tryBody, context)), '}'];
        if (statement.catchClause) {
@@ -528,7 +541,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
            context.includes.add('flight/json.hpp');
            handler[0] = statement.catchClause.binding ? `catch (const flight::JsonSyntaxError& ${safeCppName(statement.catchClause.binding.name)}) {` : 'catch (const flight::JsonSyntaxError&) {';
          }
-@@ -14179,6 +14604,8 @@
+@@ -14179,6 +14617,8 @@
    context: EmitContext,
    expectedType: Readonly<IrType> | undefined,
  ): string | undefined {
@@ -537,7 +550,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || !expectedType) return undefined;
    const guard =
      expression.condition.kind === 'binary' && expression.condition.operator === '&&'
-@@ -15422,6 +15849,9 @@
+@@ -15422,6 +15862,9 @@
      return (
        initializer !== undefined &&
        (isCppErasedDynamicPropertyReadCpp(initializer, context) ||
@@ -547,7 +560,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          (initializer.kind === 'cast' && isCppErasedDynamicObjectViewAssertionCpp(initializer, context)))
      );
    }
-@@ -32019,6 +32449,9 @@
+@@ -32019,6 +32462,9 @@
          ? context.bindingInitializers.get(operand.reference.binding.id)
          : undefined;
    if (element?.kind !== 'element') return;
@@ -561,7 +574,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppPrivateGuardedJsonReadFlow.tes
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppPrivateGuardedJsonReadFlow.test.ts
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,125 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
@@ -677,4 +690,13 @@ new file mode 100644
 +  const output = emit(`function read(raw:Record<string,unknown>):number{return typeof raw.n==='number'?raw.n|0:500;}export function run(raw:Record<string,unknown>):number{return read(raw);}`);
 +  expect(output).toContain('guarded_bitwise_value');
 +  expect(output).toContain('.as_number()');
++});
++
++it.each([
++  `interface Entry{value:unknown;index:number;} export class Box{items:unknown[]=[];get n():number{this.items.pop();return 1;}} export function mapped(arr:unknown):Entry[]{if(!Array.isArray(arr))return[];return arr.map((value,index)=>({value:(value as Box).n,index}));}`,
++  `interface Entry{value:unknown;index:number;} export class Box{items:unknown[]=[];get n():number{this.items.pop();return 1;}} export function mapped(arr:unknown,box:Box):Entry[]{if(!Array.isArray(arr))return[];return arr.map((value,index)=>({value:box.n,index}));}`,
++  `interface Entry{value:unknown;index:number;} export function mapped(arr:unknown):Entry[]{if(!Array.isArray(arr))return[];return arr.map((value,index)=>({value:arr[0],index}));}`,
++])('excludes opaque getter and indexed observations from the closed mapper graph: %s', (source) => {
++  const result = attempt(source);
++  if (result.output) expect(result.output).not.toContain('mapped_erased_array');
 +});
