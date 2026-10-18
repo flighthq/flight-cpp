@@ -1,0 +1,249 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5501,6 +5501,23 @@
+   constructExpectedUnion = true,
+   denseArrayLengthInitialized = false,
+ ): string {
++  if (expectedType && getCppRuntimeProfile(context.options) === 'flight-cpp') {
++    const source = getCppSinglePresentSourceTypeCpp(getIrExpressionTypeEvidenceCpp(expression, context), context);
++    const target = getCppSinglePresentSourceTypeCpp(expectedType, context);
++    if (
++      source &&
++      target &&
++      getCppClosedReadonlyRecordViewCpp(source, context) &&
++      getCppRecordTypeArgumentsCpp(target, context, new Set()) &&
++      !getCppClosedReadonlyRecordViewCpp(target, context)
++    ) {
++      emissionError(
++        context,
++        'a readonly record view cannot escape into writable Record storage',
++        'cpp-readonly-record-writable-escape',
++      );
++    }
++  }
+   const jsonProjection = emitCppJsonProjectionExpressionCpp(expression, context, expectedType);
+   if (jsonProjection !== undefined) return jsonProjection;
+   const genericArrayRead = emitCppGenericArrayPathReadCpp(expression, context);
+@@ -7916,7 +7933,10 @@
+       const record = getCppRecordTypeArgumentsCpp(constructionType, context, new Set());
+       if (record) {
+         if (expression.members.length === 0) return `${emitType(constructionType, context)}{}`;
+-        if (expression.members.some((member) => member.kind !== 'property')) {
++        if (
++          getCppClosedReadonlyRecordViewCpp(constructionType, context) ||
++          expression.members.some((member) => member.kind !== 'property')
++        ) {
+           return emitCppOrderedRecordConstructionCpp(expression, constructionType, record, context);
+         }
+         const entries = expression.members.map((member) => {
+@@ -13893,8 +13913,67 @@
+   return `${name} (argument ${describeIrTypeForDiagnosticCpp(argument)} ${argumentResolves ? 'has a shape, so the wrapper is the gap' : 'has no shape either'})`;
+ }
+ 
++// Only an explicitly readonly ambient string Record with a closed primitive union gains the
++// live typed read facade. Mutable, generic and erased records keep their original storage contract.
++function getCppClosedReadonlyRecordViewCpp(
++  type: Readonly<IrType>,
++  context: EmitContext,
++  resolving: ReadonlySet<string> = new Set(),
++): Readonly<{ key: IrType; value: IrType }> | undefined {
++  if (type.kind !== 'named') return undefined;
++  if (type.reference.kind === 'binding') {
++    if (resolving.has(type.reference.binding.id)) return undefined;
++    const alias = resolveCppTypeAliasTarget(type, context);
++    return alias
++      ? getCppClosedReadonlyRecordViewCpp(alias, context, new Set(resolving).add(type.reference.binding.id))
++      : undefined;
++  }
++  if (type.reference.name !== 'Readonly' || type.typeArguments.length !== 1) return undefined;
++  let subject: Readonly<IrType> | undefined = type.typeArguments[0];
++  const seen = new Set(resolving);
++  while (subject?.kind === 'named' && subject.reference.kind === 'binding') {
++    if (seen.has(subject.reference.binding.id)) return undefined;
++    seen.add(subject.reference.binding.id);
++    subject = resolveCppTypeAliasTarget(subject, context);
++  }
++  if (
++    subject?.kind !== 'named' ||
++    subject.reference.kind !== 'ambient' ||
++    subject.reference.name !== 'Record' ||
++    subject.typeArguments.length !== 2
++  )
++    return undefined;
++  const record = { key: subject.typeArguments[0]!, value: subject.typeArguments[1]! };
++  const key = getIrTypeRuntimeDomainCpp(record.key, context, new Set());
++  const value = getIrTypeRuntimeDomainCpp(record.value, context, new Set());
++  const union = value ? getIrUnionTypeCpp(value, context, new Set()) : undefined;
++  if (
++    key?.kind !== 'primitive' ||
++    key.name !== 'string' ||
++    !union ||
++    union.types.length < 2 ||
++    !union.types.every((member) => member.kind === 'primitive' && ['boolean', 'number', 'string'].includes(member.name))
++  )
++    return undefined;
++  return record;
++}
++
++function getCppSinglePresentSourceTypeCpp(
++  type: Readonly<IrType> | undefined,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (!type) return undefined;
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  if (!union) return type;
++  const present = union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  return present.length === 1 ? present[0] : undefined;
++}
++
+ function emitType(type: Readonly<IrType>, context: EmitContext, representation: 'storage' | 'value' = 'value'): string {
+-  if (context.jsonDocumentViewMode && (isCppJsonDocumentResultTypeCpp(type, context) || isCppJsonDocumentProjectionTypeCpp(type, context))) {
++  if (
++    context.jsonDocumentViewMode &&
++    (isCppJsonDocumentResultTypeCpp(type, context) || isCppJsonDocumentProjectionTypeCpp(type, context))
++  ) {
+     context.includes.add('flight/json_scalar.hpp');
+     return emitCppJsonDocumentRowTypeCpp(type, context);
+   }
+@@ -13918,6 +13997,11 @@
+     }
+   }
+   if (getCppRuntimeProfile(context.options) === 'flight-cpp') {
++    const readonlyRecord = getCppClosedReadonlyRecordViewCpp(type, context);
++    if (readonlyRecord) {
++      context.includes.add('flight/readonly_record_view.hpp');
++      return `flight::ReadonlyRecordView<${emitType(readonlyRecord.value, context)}>`;
++    }
+     const externalProjection = context.referenceRepresentationPlanner.resolveExternalProjection(type, context.module);
+     if (externalProjection) return emitType(externalProjection, context, representation);
+     // A carrier whose declaration states an index signature is the runtime's keyed record: it has an open
+@@ -16406,7 +16490,11 @@
+   // key-before-value ordering. Record::set replaces an existing value without reinserting its key,
+   // so replaying those writes also preserves last-write-wins and stable property position.
+   const result = getGeneratedTargetName('recordConstruction', context);
+-  const lines = [`${emitType(constructionType, context)} ${result} = {};`];
++  const readonlyView = getCppClosedReadonlyRecordViewCpp(constructionType, context);
++  const storageType: Readonly<IrType> = readonlyView
++    ? { kind: 'named', reference: { kind: 'ambient', name: 'Record' }, typeArguments: [record.key, record.value] }
++    : constructionType;
++  const lines = [`${emitType(storageType, context)} ${result} = {};`];
+   for (const member of expression.members) {
+     if (member.kind === 'getAccessor') {
+       emissionError(context, 'Record construction does not support accessors');
+@@ -16445,7 +16533,7 @@
+       `${result}.set(${key}, ${value});`,
+     );
+   }
+-  lines.push(`return ${result};`);
++  lines.push(`return ${readonlyView ? `${emitType(constructionType, context)}(${result})` : result};`);
+   return `(${context.namespaceScope ? '[]' : '[&]'}() { ${lines.join(' ')} }())`;
+ }
+ 
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppClosedReadonlyRecordView.test.ts
+@@ -0,0 +1,105 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export type Data=boolean|number|string;
++export interface Diagnostic{ detail?:Readonly<Record<string,Data>> }
++function report(sink:Diagnostic[],detail?:Readonly<Record<string,Data>>):void{sink.push({detail});}
++export function forward(sink:Diagnostic[],detail?:Record<string,number|string>):void{report(sink,detail);}
++export function escape(detail:Record<string,number|string>):Readonly<Record<string,Data>>{return detail;}
++export function fresh():Readonly<Record<string,Data>>{return {text:'kept',value:3};}
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/filter.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++
++it('retains explicit readonly closed record contracts in parameters and stored fields', () => {
++  const output = emit();
++  expect(output).toContain('flight::ReadonlyRecordView<Data>');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('leaves mutable, generic, numeric-keyed and erased records outside the new facade', () => {
++  for (const text of [
++    'export function keep(value:Record<string,boolean|number|string>):void{}',
++    'export function keep<T>(value:Readonly<Record<string,T>>):void{}',
++    'export function keep(value:Readonly<Record<number,boolean|number|string>>):void{}',
++    'export function keep(value:Readonly<Record<string,unknown>>):void{}',
++  ])
++    expect(emit(text)).not.toContain('ReadonlyRecordView');
++});
++it('rejects a writable escape from a readonly widened view', () => {
++  expect(() =>
++    emit(
++      'export function escape(value:Readonly<Record<string,boolean|number|string>>):Record<string,boolean|number|string>{return value;}',
++    ),
++  ).toThrow('readonly record view cannot escape into writable Record storage');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles escaped diagnostic detail with live original ownership',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-readonly-record-forward-'));
++    try {
++      writeFileSync(path.join(directory, 'record.hpp'), emit());
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "record.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++flight::Record<flight::String,std::variant<double,flight::String>> source;source.set(flight::String("text"),flight::String("original"));
++flight::Array<flight::Ref<probe::Diagnostic>> sink;probe::forward(sink,source);check(sink.size()==1);check(sink.element(0)->detail.has_value());
++auto detail=sink.element(0)->detail.value();check(detail.identity()==source.identity());source.set(flight::String("text"),flight::String("changed"));check(std::get<flight::String>(detail.get(flight::String("text")).value())==flight::String("changed"));
++source.erase(flight::String("text"));check(!detail.get(flight::String("text")));auto escaped=probe::escape(source);check(escaped.identity()==source.identity());source.set(flight::String("number"),4.0);check(std::get<double>(escaped.get(flight::String("number")).value())==4);
++probe::forward(sink,std::nullopt);check(!sink.element(1)->detail.has_value());auto fresh=probe::fresh();check(std::get<flight::String>(fresh.get(flight::String("text")).value())==flight::String("kept"));check(std::get<double>(fresh.get(flight::String("value")).value())==3);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      try {
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++          { stdio: 'pipe' },
++        );
++      } catch (error) {
++        const failure = error as { status?: number; signal?: string; stdout?: Buffer; stderr?: Buffer };
++        throw Error(
++          `native compile status=${failure.status} signal=${failure.signal}: ${String(failure.stdout ?? '')}${String(failure.stderr ?? '')}`,
++        );
++      }
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
