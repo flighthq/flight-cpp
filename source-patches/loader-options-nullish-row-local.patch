@@ -1,0 +1,13 @@
+diff --git a/packages/loader/src/resourceLoader.ts b/packages/loader/src/resourceLoader.ts
+index a8df692..2f00b54 100644
+--- a/packages/loader/src/resourceLoader.ts
++++ b/packages/loader/src/resourceLoader.ts
+@@ -316,7 +316,7 @@ export function initializeResourceLoader(
+   out: EntityConstruction<ResourceLoaderInternal>,
+   options?: Readonly<ResourceLoaderOptions>,
+ ): void {
+-  const opts = options ?? {};
++  const opts: Readonly<ResourceLoaderOptions> = options ?? {};
+   const throttle =
+     opts.maxBytesPerSecond !== undefined && opts.maxBytesPerSecond > 0
+       ? createTokenBucket(opts.maxBytesPerSecond)

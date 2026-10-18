@@ -4555,6 +4555,23 @@
       "unblocks": "The shared optional Record literal cause behind17 historical headers and newly exposed SVG gradient callers. Additional header blockers remain to be measured; SVG bounds missing get_shape_bounds is a separate cause.",
       "expires": "when upstream materializes contextual nonempty Record literals before passing them through optional or union storage (docs/compiler-requests/optional-record-literal-not-materialized.md).",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "loader-options-nullish-row-local",
+      "dependency": "flight",
+      "patch": "loader-options-nullish-row-local.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/loader/src/resourceLoader.ts",
+      "package": "@flighthq/loader",
+      "answers": "refusal",
+      "refusal": "initializeResourceLoader is NOT GENERATED at `const opts = options ?? {};` because the inferred nullish type is Readonly<ResourceLoaderOptions> | {}, a contextual union the emitter cannot equate with the optional-single row source; createResourceLoader retains the call.",
+      "rewrite": "Annotates the local with its declared destination type: `const opts: Readonly<ResourceLoaderOptions> = options ?? {};`. The empty object is assignable because every ResourceLoaderOptions member is optional.",
+      "equivalence": "This is a type annotation, not a behavior change. `??` still evaluates options once, returns the provided options object unchanged (same owner/identity), and constructs a fresh `{}` lazily only when options is nullish. The declared type is the row the initializer already stores; no branch, default, ordering, exception, getter effect, enumeration or extension behavior changes.",
+      "verification": "Patch applies cleanly to the pinned loader source. Focused consumer pending the queued SDK slot: generate the loader closure, compile the original headers, and run a real createResourceLoader + initializeResourceLoader consumer checking fresh result identity, provided-options same-owner identity, lazy empty construction, getter effects/exceptions, and nullish-only semantics. No declaration-only or generated-header claim yet.",
+      "whyNotUpstreamFirst": "The downstream C++ emitter needs the destination row type to emit the nullish coalescing instead of a bare empty-object alternative; the source annotation states the same public contract TypeScript already checks. Upstream can drop it when the emitter contextually types the empty object branch itself.",
+      "unblocks": "Emits the real initializeResourceLoader body so the retained createResourceLoader call links, and lets the loader/scene3d-resources headers compile on this profile.",
+      "expires": "when the emitter contextually types an empty-object nullish branch as the declared structural row without the annotation.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
