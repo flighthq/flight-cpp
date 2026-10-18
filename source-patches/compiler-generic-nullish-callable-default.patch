@@ -1,0 +1,178 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -26484,6 +26484,72 @@
+ // first bound because a property getter, collection lookup, or call may have effects of its own. This is
+ // not only an optimization distinction: duplicating that expression around `has_value()` and `value()`
+ // would change source evaluation count and order.
++// A generic declaration is one original callable, but C++ needs its concrete specialization when
++// storing it as a monomorphic callback. Bind only an exact, uniquely inferred signature at this lazy
++// nullish fallback; do not add parameter/return conversions or adapt overloads/rest/optional slots.
++function emitCppGenericNullishCallableFallbackCpp(
++  expression: Readonly<IrExpression>,
++  targetType: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.kind !== 'identifier' ||
++    expression.reference.kind !== 'binding'
++  )
++    return undefined;
++  const declaration = getCppFunctionDeclarationForBindingCpp(expression.reference.binding.id, context);
++  const target = getCppPlainCallableTypeCpp(targetType, context);
++  if (
++    !declaration ||
++    declaration.async ||
++    declaration.overloads.length ||
++    !declaration.typeParameters.length ||
++    !target ||
++    target.typeParameters.length ||
++    declaration.parameters.length !== target.parameters.length ||
++    declaration.parameters.some((p) => p.rest || p.optional) ||
++    target.parameters.some((p) => p.rest || p.optional)
++  )
++    return undefined;
++  const ids = new Set(declaration.typeParameters.map((p) => p.binding.id));
++  const inferred = new Map<string, Readonly<IrType>>();
++  for (let index = 0; index < declaration.parameters.length; index++) {
++    if (
++      !collectCppResultTypeSubstitutionsCpp(
++        declaration.parameters[index]!.type,
++        target.parameters[index]!.type,
++        ids,
++        inferred,
++        context,
++      )
++    )
++      return undefined;
++  }
++  if (!collectCppResultTypeSubstitutionsCpp(declaration.returns, target.returns, ids, inferred, context))
++    return undefined;
++  const arguments_ = declaration.typeParameters.map((p) => inferred.get(p.binding.id) ?? p.default);
++  if (!arguments_.every((argument): argument is Readonly<IrType> => argument !== undefined)) return undefined;
++  const plan = createIrTypeParameterSubstitutionPlan(declaration.typeParameters, arguments_);
++  const probe = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  if (
++    !declaration.parameters.every((p, index) =>
++      areCppTypesRepresentationEquivalent(
++        resolveIrTypeStructuralSubstitution(p.type, plan),
++        target.parameters[index]!.type,
++        probe,
++      ),
++    ) ||
++    !areCppTypesRepresentationEquivalent(
++      resolveIrTypeStructuralSubstitution(declaration.returns, plan),
++      target.returns,
++      probe,
++    )
++  )
++    return undefined;
++  return `${emitIdentifierReference(expression.reference, context)}${emitCppTypeArguments(arguments_, context)}`;
++}
++
+ function emitCppOptionalSingleNullishCoalesceCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   leftType: Readonly<IrType> | undefined,
+@@ -26548,7 +26614,9 @@
+     const right = emitExpression(expression.right, context, expectedType, true, denseArrayLengthInitialized);
+     return `([&]() -> ${emitUnionTypeCpp(expectedUnion, context)} { auto ${source} = ${left}; if (${source}.has_value()) return ${present}; return ${right}; }())`;
+   }
+-  const right = emitExpression(expression.right, context, expectedType, true, denseArrayLengthInitialized);
++  const right =
++    emitCppGenericNullishCallableFallbackCpp(expression.right, expectedType ?? value.runtimeType, context) ??
++    emitExpression(expression.right, context, expectedType, true, denseArrayLengthInitialized);
+   if (isCppStableOptionalBindingIdentifierCpp(expression.left, context)) {
+     return `(${left}.has_value() ? ${left}.value() : ${right})`;
+   }
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGenericNullishCallableDefault.test.ts
+@@ -0,0 +1,89 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export interface Item { value:number }
++export interface Runtime<T> { sampler:(value:T)=>T }
++export function fallback<T>(value:T):T { return value; }
++export function make<T>(methods?:Readonly<Partial<Runtime<T>>>):Runtime<T> { return {sampler:methods?.sampler??fallback}; }
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/default.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++it('specializes the exact original generic declaration at a lazy nullable callable fallback', () => {
++  const output = emit();
++  expect(output).toContain('return fallback<T>;');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('keeps ambiguous generic signature inference outside the specialization', () => {
++  const output = emit(
++    'export interface Runtime{sampler:(first:number,second:string)=>boolean} export function fallback<T>(first:T,second:T):boolean{return true;} export function make(methods?:Readonly<Partial<Runtime>>):Runtime{return{sampler:methods?.sampler??fallback};}',
++  );
++  expect(output).not.toContain('return fallback<');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs the same fallback or supplied callable and retains reference results',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-generic-nullish-callable-'));
++    try {
++      writeFileSync(path.join(directory, 'fixture.hpp'), emit());
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "fixture.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++auto absent=probe::make<double>(std::nullopt);check(absent->sampler(4)==4);check(absent->sampler(0)==0);
++auto methods=flight::make_ref<probe::Runtime<double>>();int calls=0;methods->sampler=[&](double value){++calls;return value+1;};using Row=flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<probe::Runtime<double>>>>>>;auto supplied=probe::make<double>(std::optional<Row>{Row(methods)});check(calls==0);check(supplied->sampler(4)==5&&calls==1);check(methods->sampler(6)==7&&calls==2);
++auto original=flight::make_ref<probe::Item>();original->value=9;auto objects=probe::make<flight::Ref<probe::Item>>(std::nullopt);auto retained=objects->sampler(original);check(retained==original);original->value=10;check(retained->value==10);original.reset();check(retained->value==10);
++bool threw=false;methods->sampler=[](double)->double{throw flight::TypeError(flight::String("source"));};auto throwing=probe::make<double>(std::optional<Row>{Row(methods)});try{(void)throwing->sampler(1);}catch(const flight::TypeError&){threw=true;}check(threw);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      try {
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++          { stdio: 'pipe' },
++        );
++      } catch (error) {
++        const failure = error as { status?: number; stderr?: Buffer };
++        throw Error(`native compile status=${failure.status}: ${String(failure.stderr ?? '')}`);
++      }
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('9 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

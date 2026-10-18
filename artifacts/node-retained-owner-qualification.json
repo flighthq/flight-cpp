@@ -1,0 +1,57 @@
+{
+  "schema": "flight-cpp-node-retained-owner-qualification/1",
+  "typescript": "5.9.3",
+  "fullProgramRoots": 1467,
+  "sourceFile": "packages/node/src/node.ts",
+  "onlyExactParameterTextChanged": true,
+  "actualTscProgramEmit": true,
+  "jsByteIdentical": true,
+  "diagnosticsByteIdentical": true,
+  "existingCallTargetsUnchanged": true,
+  "before": {
+    "jsSha256": "fff09ab4943028334bb22f766916b94fbe2d5b96b9968eb8802ade0093edb807",
+    "diagnostics": 222,
+    "accessorCalls": 18,
+    "diagnosticsAtAccessorCallLines": 0
+  },
+  "after": {
+    "jsSha256": "fff09ab4943028334bb22f766916b94fbe2d5b96b9968eb8802ade0093edb807",
+    "diagnostics": 222,
+    "accessorCalls": 18,
+    "diagnosticsAtAccessorCallLines": 0
+  },
+  "status": "source-preparation-and-native-owner-qualified; full-original-Lottie-pending",
+  "authority": [
+    "manager-a4639758",
+    "foreman-944df1fd",
+    "foreman-16f05cf4"
+  ],
+  "nativeOwnerChecks": 16,
+  "nativeOwnerFailures": 0,
+  "nativeChecksInclude": [
+    "exactnative and widened sameowner Symbol runtime reference",
+    "originalrevision live mutation",
+    "runtime slot replacement keeps prior escaped result",
+    "lifetime after originalsource handles leave scope",
+    "compile-time readonly accessor refusal",
+    "nativeNode escape bad_cast",
+    "missing slot fails at original accessor"
+  ],
+  "genericFallback": {
+    "newTests": 3,
+    "newNativeChecks": 9,
+    "sourceBodyChange": false,
+    "baselineWholeNodeCpp": "FAIL unspecialized generic defaultcallback identical before sourceparameter change",
+    "currentWholeNodeCpp": "PASS wholeoriginalNode/revision16nativechecks"
+  },
+  "wholeOriginalPublic": {
+    "nativeCasesRun": 0,
+    "denominator": 32,
+    "buildStatus": "RUNNING",
+    "log": "/tmp/builder5-lottie-body/node-generic-public-native-build.log"
+  },
+  "sourcePatchSha256": "c04ebef3b17b94da6255da035b4d24b1cf640b816178bc7f6cd97a7bed5ef615",
+  "compilerPatchSha256": "63270bc87ce794fb48f468ae0a20613cdd9d3756279bfcc39e0dc28d9cf328ad",
+  "sdkGenerated": false,
+  "exact21Promotions": 0
+}

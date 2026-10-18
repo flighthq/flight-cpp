@@ -5539,6 +5539,40 @@
       "unblocks": "Original mask fallback, marker event payload, animation options and supplied nullable name construction; original Node mutable accessor callee boundary remains under investigation.",
       "expires": "When upstream emits equivalent original array and fresh object carriers, minimal dependent anonymous templates and original supplied nullable row-cell storage with matching native controls.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-generic-nullish-callable-default",
+      "dependency": "flight-compiler",
+      "patch": "compiler-generic-nullish-callable-default.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/node",
+      "answers": "diagnostic",
+      "refusal": "Whole original createNodeRuntime nullable callback default emits the generic function declaration without the concrete specialization its monomorphic C++ callable position requires.",
+      "rewrite": "Only a lazy nullish callable fallback naming one synchronous non-overloaded generic declaration with exact required non-rest parameter and result representations may use the uniquely inferred original specialization. Existing substitution evidence must bind every generic parameter or its declared default; conflicting inference and signature conversions remain outside this path.",
+      "equivalence": "No callback body, evaluation or source signature changes. The original function address at the same concrete signature crosses the existing callable carrier; absent/present branching stays lazy and preserves exceptions, returned reference identity and lifetime. No parameter/result adapters or native owner recovery.",
+      "verification": "PROTOTYPE production strictPASS,3testsPASS0skips including9nativechecks. Whole originalNode/revision with approved sourceparameter candidate native16checksPASS includingreadonly staticrefusal/nativeescape/lifetime. Postcommit orderedraw/retained tests and fulloriginalLottie32 stillpending0native. Baseline callback nativeerror reproduced before parameterchange.",
+      "whyNotUpstreamFirst": "The pinned emitter has generic call substitution evidence but leaves a generic function name unspecialized in a concrete nullable callable default.",
+      "unblocks": "Complete original Node runtime module parse and original Lottie callee closure without source callback specialization or body replacement.",
+      "expires": "When upstream emits equivalent exact contextual generic declaration specializations in lazy nullish callable defaults.",
+      "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "node-mutable-runtime-retained-owner-parameter",
+      "dependency": "flight",
+      "patch": "node-mutable-runtime-retained-owner-parameter.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/node.ts",
+      "package": "@flighthq/node",
+      "answers": "diagnostic",
+      "refusal": "getMutableNodeRuntime nominal Node parameter requires a nativeNode pointer from a widened row owner whose actual native object is an anonymous same-cell subject; such recovery must remain denied.",
+      "rewrite": "Change only the source parameter type Node<Traits> to already-imported EntityConstruction<Node<Traits>>, the existing mapped writable same-owner family. Original accessor body, readonly accessor, return type, every caller and runtime domain stay unchanged.",
+      "equivalence": "Actual TypeScript5.9.3 program emit of complete originalnode.ts over1467roots is byteidentical before/after, SHAfff09ab4943028334bb22f766916b94fbe2d5b96b9968eb8802ade0093edb807. All18existing sourcecall texts/targets and222existingdiagnostics identical (node.ts0, callsites0). Native accessor reads original Symbol cell directly, retains exact runtime reference/lifetime/livewrites and rejects readonly/nativeNode escape. No Node copy, fabricated require_owner or native storage cast.",
+      "verification": "Managera4639758/Foreman944df1fd approve bounded sourceparameter; Foreman16f05cf4 allows separate baseline genericdefault compilerfix. Exact fullmodule JS/sourcebody/callresolution proofPASS. Whole originalNode/revision native16checksPASS with actual accessor/callee, readonly staticnegative, denied nativeNodecast, original runtime writes/replacement/lifetime/absence. Original Lottie32 public build running; no success claim. OrderedFlightpatch and finalcoherence pending.",
+      "whyNotUpstreamFirst": "Pinned Node native parameter cannot express a retained widened owner, while its existing mapped writable family already records exactly the original cells the body reads. See docs/compiler-requests/node-runtime-retained-owner-accessor.md.",
+      "unblocks": "Original mutable Node runtime access through retained structural owners in original Node revision and Lottie callees; readonly accessor unchanged.",
+      "expires": "When upstream emits the original mutable accessor over retained writable Node owners without nativeNode recovery and matching readonly/lifetime/escape controls.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
