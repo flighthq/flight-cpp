@@ -422,3 +422,17 @@ strict backend typecheck and focused formatting/lint pass. SDK generation is hel
 G3 capacity instruction. Scoped cause-header qualification at two workers and a real previously
 blocked public consumer are still pending; no native PASS row, cause count or package tier changes
 are asserted here. Builder6 retains the in-flight SWF source/heritage repair paths.
+
+
+The ordered patch-stack check now applies and reverts all **67 compiler patches** at the
+262-entry active registry, restoring the compiler checkout clean. The combined stack passes the
+same **25 focused tests** (1,540 unrelated tests skipped) and its production compiler build.
+The initialization hunk carries narrower context so it composes with the existing exception
+bookkeeping insertion; its semantic additions are unchanged.
+
+The full-stack backend package typecheck is **not a pass**: it reports five errors in existing
+`cppDerivedRenderStateOwner.test.ts`, `cppRuntimeInstanceOf.test.ts`, and
+`cppShadowCheckedCapabilityFlow.test.ts` fixtures. A control with only the preceding 66 patches
+produces the exact same five diagnostics, with none in the heritage source or tests. Those
+foreign test-fixture failures are retained as a separate limitation. Native SDK/header/public
+consumer qualification remains pending the reserved SWF generation-slot transfer.
