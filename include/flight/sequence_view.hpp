@@ -218,6 +218,17 @@ class SequenceView {
   // owning its elements. Mirrors `Array::filter` exactly, including the (element, index) callback pair and
   // the arity adapter, so emitted code that filters an Array works unchanged on a view.
   template <typename Predicate>
+  [[nodiscard]] bool some(Predicate&& predicate) const {
+    const size_type length = size();
+    for (size_type index = 0; index < length; ++index) {
+      if (index >= size()) continue;
+      const Value element = (*this)[index];
+      if (detail::invoke_array_method_callback(predicate, element, index, *this)) return true;
+    }
+    return false;
+  }
+
+  template <typename Predicate>
   [[nodiscard]] Array<Value> filter(Predicate&& predicate) const {
     Array<Value> result;
     for (size_type index = 0; index < size(); ++index) {

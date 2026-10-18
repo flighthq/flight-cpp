@@ -37,6 +37,7 @@
 #include <flight/reference.hpp>
 #include <flight/regexp.hpp>
 #include <flight/record.hpp>
+#include <flight/readonly_record_view.hpp>
 #include <flight/rejection.hpp>
 #include <flight/set.hpp>
 #include <flight/sequence_view.hpp>

@@ -47,6 +47,33 @@ int main() {
   });
   check(viewed.element(1) == 8, "view mapping reads the same live owner");
   check(view.filter([]() { return true; }).size() == 3, "view filter supports a zero-parameter callback");
+  int some_calls = 0;
+  check(view.some([&](double value, double index, const auto& all) {
+    ++some_calls;
+    check(all.identity() == source.identity(), "some supplies the retained source view");
+    return index == 1 && value == 8;
+  }) && some_calls == 2, "some terminates at the first success");
+  check(view.some([]() { return true; }), "some supports a zero-parameter view callback");
+  check(!flight::SequenceView<double>{}.some([]() { return true; }), "some is false on an empty view");
+  flight::Array<double> changing{1, 2};
+  const flight::SequenceView<double> changing_view(changing);
+  some_calls = 0;
+  check(!changing_view.some([&](double value, double index) {
+    ++some_calls;
+    if (index == 0) { changing.push(9); changing.element(1) = 7; }
+    return value == 9;
+  }) && some_calls == 2, "some reads live elements but ignores appended indices beyond its initial length");
+  check(changing_view.some([](double value) { return value == 7; }), "some sees mutations through the original owner");
+  some_calls = 0;
+  check(!changing_view.some([&](double, double index) {
+    ++some_calls;
+    if (index == 0) changing.clear();
+    return false;
+  }) && some_calls == 1, "some skips indices removed by its callback");
+  bool some_threw = false;
+  try { (void)view.some([]() -> bool { throw std::runtime_error("some"); }); }
+  catch (const std::runtime_error&) { some_threw = true; }
+  check(some_threw, "some preserves predicate exceptions");
   check(view.flat_map([]() { return flight::Array<double>{4}; }).size() == 3, "view flatMap supports a zero-parameter callback");
   const auto arities = flight::array_from(source, [](auto... arguments) { return sizeof...(arguments); });
   check(arities.element(0) == 2, "Array.from supplies only value and index");
