@@ -60,3 +60,12 @@ The four `@flighthq/scene2d-formats` headers of cluster `invalid-operands-4b1965
 `@flighthq/skeleton2d-formats` headers share the diagnostic but not this cause. There, `Array.isArray(value)`
 then `value.length` is emitted as `named_properties(value).get("length") > 0.0`, which is
 [erased-array-element-reading](erased-array-element-reading.md).
+
+## Interim source patch (Lottie, G2)
+
+`source-patches/scene2d-formats-lottie-frame-rate-narrowed-local.patch` respells the private `isLottieDocument`.
+It returns `false` early when `layers` is not an array, then tests `const fr = record.fr; typeof fr === 'number' && fr > 0`.
+The members are read in the same order with the same short-circuit, and `fr` is read once from a JSON data record.
+The emitter lowers the narrowed local as `fr.as_number() > 0.0`, so `lottie_counts.hpp` compiles. Its exported
+`getLottieFeatureNames` is pinned by `tests/generated_scene2d_formats_lottie_counts_test.cpp`. The patch expires when
+this request lands. The member-read form above is still the request.

@@ -35,7 +35,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 6 | `other-52e846a6` | 18 | ANIM | compiler *(existing request)* | a nullable attachment array element is not lifted into the reference/null/undefined slot carrier |
 | 7 | `call-has-no-matching-47410fe2` | 16 | 2D, 3D | runtime (fixed) | Number is now a callable conversion object; G2 recheck: 2 pass, 14 fail at later compiler diagnostics |
 | 8 | `other-40da43f7` | 19 | 2D, 3D, ANIM | compiler | an optional<Record<...>> is initialised from a shape that is not its declared storage |
-| 9 | `static-cast-assertion-9674a66c` | 15 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
+| 9 | `static-cast-assertion-9674a66c` | 17 | 2D | compiler | a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>` *(request filed)* |
 | 10 | `call-has-no-matching-076d207f` | 14 | WGPU | runtime (fixed) | typed `create_pipeline_layout` descriptor overload; G2 recheck: 0 pass, 14 fail at `create_bind_group_layout` |
 | 11 | `other-e9936ce6` | 13 | 3D | compiler | a pair literal the declared element type spells as `std::tuple<A, B>` is emitted as `flight::Array{...}`, so class-template ded... *(request filed)* |
 | 12 | `call-has-no-matching-d6950545` | 12 | 2D, CORE | compiler *(existing requests)* | generic `get_node_child_count<Traits>` called without the inferred trait on a non-deducible `RowMerge` parameter (command: `NodeAny`; SVG/Lottie: `Node2D` via heritage) |
@@ -45,7 +45,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 16 | `call-has-no-matching-b569e92e` | 8 | 3D, ANIM | compiler | the emitted call to `init_joint_base` matches no declared overload |
 | 17 | `undeclared-identifier-294e632e` | 8 | ANIM | declaration repair (applied) | omitted callee declaration supplied; G2: 1 pass, 7 fail at later diagnostics; function remains unlinkable |
 | 18 | `undeclared-identifier-3e3cccce` | 8 | GL | runtime | the emitted code names `blit_offset_shaders`, which nothing declares *(G2: 1 pass, 7 to `undeclared-identifier-e7884ac7`)* |
-| 19 | `invalid-operands-4b19651b` | 7 | 2D, ANIM | compiler | a guarded `unknown` (typeof record member, or `Array.isArray` length) is still read as `flight::Any` before a numeric comparison *(request filed)* |
+| 19 | `invalid-operands-4b19651b` | 3 | ANIM | compiler *(existing request)*; Lottie rows: patch (fixed) | an `Array.isArray`-guarded erased length is still read as `flight::Any` before a numeric comparison; the 4 Lottie rows were resolved by a source patch |
 | 20 | `missing-member-fd48c0bb` | 7 | 3D | [compiler request](compiler-requests/narrowed-imported-union-into-declared-parameter.md) | the emitted code reads a member the target does not declare (`collide_physics_3d_collider_shapes`) |
 | 21 | `other-18dcce71` | 7 | ANIM | override (applied) | erased-array reads in the Spine parse helpers *(G2 resolved: 2 pass; 3 to `undeclared-identifier-99221374`, 2 to `no-matching-function-b37ddf91`)* |
 | 22 | `undeclared-identifier-7dc86326` | 7 | WGPU | declaration repair (applied) | refused scene accessor declared; G2: 2 pass, 5 later compiler failures; accessor remains unlinkable |
@@ -549,7 +549,7 @@ records the exact source semantics, missing-id debt, override rationale/expiry a
 - example: `no matching constructor for initialization of 'optional<Record<String, variant<bool, double, String>>>'`
 - compiler request: [optional-record-literal-not-materialized.md](compiler-requests/optional-record-literal-not-materialized.md) (filed; sites still failing, status unchanged)
 
-### 9. `static-cast-assertion-9674a66c` — 15 header(s)
+### 9. `static-cast-assertion-9674a66c` — 17 header(s)
 
 - cause: a TypeScript `as` on `JSON.parse` is emitted as a `static_cast` from `JsonValue` to an unrelated `Ref<T>`
 - lanes: 2D
@@ -558,6 +558,7 @@ records the exact source semantics, missing-id debt, override rationale/expiry a
 - first failure at: `flight/scene2d_formats/lottie_document.hpp:324`
 - example: `no matching conversion for static_cast from 'JsonValue' to 'flight::Ref<flight::types::LottieDocument>'`
 - compiler request: `docs/compiler-requests/json-parse-assertion-static-cast.md`
+- G2 follow-on: `flight/scene2d_formats/contract.hpp` and `_internal_index.hpp` joined from `invalid-operands-4b19651b` (cluster 19). They reach this same `lottie_document.hpp:324` site once `lottie_counts.hpp` compiles. GCC 15.2 words it as `no matching function for call to 'std::shared_ptr<flight::types::LottieDocument>::shared_ptr(flight::JsonValue)'`.
 
 ### 10. `call-has-no-matching-076d207f` — G2 recheck of 14 headers
 
@@ -763,17 +764,30 @@ That cluster therefore names both filed causes: `docs/compiler-requests/contextu
 for the two apply passes, and `docs/compiler-requests/bound-interface-weak-map-key-policy.md` for the
 `GlContext` weak-key cache. No cache-only override was taken while the apply passes are unsupplied.
 
-### 19. `invalid-operands-4b19651b` — 7 header(s)
+### 19. `invalid-operands-4b19651b` — G2 recheck of 7 header(s)
 
 - cause: a type guard narrows an `unknown`, but the emitted read after it is still the erased `flight::Any`, and `>` is applied to that `Any`
-- lanes: 2D, ANIM
-- fix route: compiler
-- why this route: G2, measured with GCC 15.2 at `-j1`. There are two causes and no runtime fix: a relational operator on `flight::Any` would have to invent JavaScript's abstract comparison, which is a permissive fake.
-  - **Lottie, 4 headers** (`lottie_counts`, `lottie_requirements`, `contract`, `_internal_index`). `typeof record.fr === 'number' && record.fr > 0` tests correctly, but reads `record.get("fr").value()` rather than `.as_number()`. Narrowed locals already use `as_number()`.
-  - **Skeleton2d, 3 headers** (`skeleton2d_json_analyzer`, `spine_json_requirements`, `spine_json_section_counts`). `Array.isArray(value)` then `value.length` is emitted as `named_properties(value).get("length") > 0.0`.
-- first failure at: `flight/scene2d_formats/lottie_counts.hpp:26`
+- lanes: ANIM (the 2D Lottie rows have left the cluster)
+- fix route: compiler for the 3 skeleton2d rows; source patch (applied) for the Lottie rows
+- why this route: measured with GCC 15.2 at `-j1`. A relational operator on `flight::Any` would have to invent JavaScript's abstract comparison, which is a permissive fake.
+  - **Skeleton2d, 3 headers** (`skeleton2d_json_analyzer`, `spine_json_requirements`, `spine_json_section_counts`). `Array.isArray(value)` then `value.length` is emitted as `named_properties(value).get("length") > 0.0`. These stay on the existing request.
+  - **Lottie, 4 headers: resolved.** The source patch `scene2d-formats-lottie-frame-rate-narrowed-local` changes only the private `isLottieDocument`. It returns `false` first when `record.layers` is not an array, then tests `const fr = record.fr; typeof fr === 'number' && fr > 0 && …ip/op…`. The emitter already lowers a narrowed local through `as_number()`. The rewrite is equivalent: the members are read in the same order (layers, fr, ip, op) with the same short-circuit, and `fr` is read once from a JSON data record. One scoped `pkg:generate @flighthq/scene2d-formats` changed only `lottie_counts.hpp` among the headers. The foreign `riveObjectGraph` binding-offset drift in `initialization.json` was not committed.
+- first failure at: `flight/skeleton2d_formats/spine_json_section_counts.hpp:33`
 - example: `invalid operands to binary expression ('Any' and 'double')`
-- compiler request: `docs/compiler-requests/typeof-narrowed-record-member-read.md` (Lottie rows); `docs/compiler-requests/erased-array-element-reading.md` (skeleton2d rows, existing)
+- compiler request: `docs/compiler-requests/erased-array-element-reading.md` (existing); related: `docs/compiler-requests/typeof-narrowed-record-member-read.md`. The patch expires when that request lands.
+
+| Lottie header | now | first failure | cluster |
+| --- | --- | --- | --- |
+| `flight/scene2d_formats/lottie_counts.hpp` | **pass** | — | patch (fixed); `tests/generated_scene2d_formats_lottie_counts_test.cpp` |
+| `flight/scene2d_formats/lottie_requirements.hpp` | fail | `lottie_requirements.hpp:22` `'collect_lottie_counts' is not a member of 'flight::scene2d_formats'` | follow-on `undeclared-identifier-ab65f464` |
+| `flight/scene2d_formats/contract.hpp` | fail | `lottie_document.hpp:324` | `static-cast-assertion-9674a66c` (cluster 9) |
+| `flight/scene2d_formats/_internal_index.hpp` | fail | `lottie_document.hpp:324` | `static-cast-assertion-9674a66c` (cluster 9) |
+
+The public consumer test builds and links against the original `lottie_counts.hpp` and runs under ctest (label `scene2d-formats`). It derives the expected catalog from the header's own four census tables, never from a copied list. It checks that `getLottieFeatureNames` returns every table value once, sorted: 23 names, 6 `layer.`, 8 `mask.` and 9 `shape.`, matching the upstream `lottieCounts.test.ts` counts. It also checks that each call returns a fresh array, that mutating one result leaks into neither later calls nor the tables, and that the patched guard keeps the original accept/reject outcomes for fr zero, negative, string and missing, non-array layers, and non-number ip/op.
+
+#### Follow-on `undeclared-identifier-ab65f464`: `lottie_requirements.hpp` calls the refused census
+
+`isReadableLottie` and `parseLottieRequirements` call `collectLottieCounts`. That function stays NOT GENERATED at `record.layers as unknown[]` (`cpp-erased-array-assertion-runtime-required`), and its two private tallies are refused at the element null test. The runtime now has `Any::array_size`/`array_get` and a working `flight::is_array(const Any&)`, but the emitter neither lowers the assertion nor iterates through them. A `declare-refused-function` repair would only move the failure to link time, and a body would be a copy, so neither is carried. Route: compiler, [erased-array reading](compiler-requests/erased-array-element-reading.md), related to the [retained omitted callee](compiler-requests/retained-declaration-calls-omitted-callee.md) request.
 
 ### 20. `missing-member-fd48c0bb` — 7 header(s)
 
