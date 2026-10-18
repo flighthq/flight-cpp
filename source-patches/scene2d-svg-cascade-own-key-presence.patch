@@ -1,0 +1,12 @@
+diff --git a/packages/scene2d-formats/src/svgStyle.ts b/packages/scene2d-formats/src/svgStyle.ts
+--- a/packages/scene2d-formats/src/svgStyle.ts
++++ b/packages/scene2d-formats/src/svgStyle.ts
+@@ -134,7 +134,7 @@
+   // the paint parser as if it were a color, yields no paint, and the geometry silently disappears.
+   const inheritedProperties = new Set<string>();
+   for (const name of Object.keys(declarations)) {
+-    if (declarations[name].trim() !== 'inherit') continue;
++    if (declarations[name]!.trim() !== 'inherit') continue;
+     inheritedProperties.add(name);
+     delete declarations[name];
+   }

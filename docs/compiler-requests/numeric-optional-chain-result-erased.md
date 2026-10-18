@@ -104,3 +104,34 @@ resolution, definition traversal or cache behavior. No native XML import, CSS co
 painting, geometry or gradient execution is claimed. The two older geometry/gradient include
 rows were not rerun and remain recorded failures; the old numeric cluster retains those two
 members. Historical G1 and prior color-check counts remain historical.
+
+## Original cascade follow-on at compiler 806d257
+
+The optional-map owner milestone makes the original public gradient lookup usable, but
+an actual full parser consumer still fails to link both declaration-only
+`resolve_svg_style` and `parse_svg_color`. The approved follow-on supplies their actual
+source bodies through shared compiler corrections, rather than replacing the helpers.
+
+The cascade needs [actual Record property deletion](record-computed-delete.md) and
+[primitive lookup absence storage](record-missing-key-nullish-coalesce.md). One erased
+assertion on the fresh local declarations dictionary states the per-key presence fact
+between its own-key snapshot and its first read; no callback or escape intervenes.
+The original inherit loop, every style property, selector filtering/specificity/order,
+inline declarations, fresh parent copy and definition-style cache remain authored code.
+
+The color parser needs two erased assertions: its successful anchored regexp always
+has a participating second group, and its private RGB component callback is called only
+with indices 0, 1 and 2 after the dense component array has length at least three.
+The entire original color body, including hex, named, RGB/HSL, alpha, invalid strings and
+numeric behavior, remains. Complete module JavaScript is byte-identical for both source
+edits, also after the previously declared source patches.
+
+A diagnostic lowering of the actual 1,467-module source graph emits the real style
+resolver and the complete color module. `collectCssRules` retains its distinct capture
+storage refusal. The dictionary correction also applies to original nested attribute
+and gradient fallbacks; every affected actual helper must be re-emitted together.
+The first partial diagnostic mixture linked but threw on an old missing-key helper,
+so it is not a runtime qualification. Full native source-case checks, the ordered
+source/compiler stack and normal scoped generation are in progress. Declaration-only
+repairs will be retired only alongside their actual emitted definitions. No complete
+SVG import, CSS collection, five-caller or package claim is made.

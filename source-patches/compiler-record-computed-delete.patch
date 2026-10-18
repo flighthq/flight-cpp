@@ -1,0 +1,207 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6862,6 +6862,8 @@
+           'cpp-external-numeric-property-view-write',
+         );
+       }
++      const recordDelete = emitCppRecordDeleteCpp(expression, context);
++      if (recordDelete) return recordDelete;
+       const structuralRowDelete = emitCppStructuralRowDeleteCpp(expression, context);
+       if (structuralRowDelete) return structuralRowDelete;
+       const nullishNegation = emitCppNullishObjectNegation(expression, context);
+@@ -30269,6 +30271,56 @@
+   return undefined;
+ }
+ 
++// Record owns configurable dictionary entries (including its shared symbol-attachment store).
++// JavaScript delete succeeds for a missing key as well as a removed key. Do not read the payload or
++// return erase's removed/not-found flag. A C++ member call sequences its receiver before the sole key
++// argument, and the comma keeps the source boolean after that one mutation of the same Record owner.
++function emitCppRecordDeleteCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'unary' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    expression.operator !== 'delete' ||
++    expression.operand.kind !== 'element' ||
++    getCppRuntimeProfile(context.options) !== 'flight-cpp'
++  )
++    return undefined;
++  const sourceType = getIrExpressionTypeEvidenceCpp(expression.operand.object, context);
++  const record = getCppRecordDeleteTypeArgumentsCpp(sourceType, context, new Set());
++  if (!record) return undefined;
++  const target = emitExpression(expression.operand.object, context);
++  const key = emitCppRequiredRecordKeyCpp(expression.operand.index, record.key, context);
++  return `(${target}.erase(${key}), true)`;
++}
++
++// Keep dictionary deletion separate from nominal/index-signature shapes and readonly views.
++// Only the actual ambient Record declaration (possibly behind aliases) proves this storage contract.
++function getCppRecordDeleteTypeArgumentsCpp(
++  type: Readonly<IrType> | undefined,
++  context: EmitContext,
++  resolvingAliases: ReadonlySet<string>,
++): Readonly<{ key: IrType; value: IrType }> | undefined {
++  if (!type || type.kind !== 'named') return undefined;
++  if (type.reference.kind === 'ambient') {
++    if (type.reference.name === 'Readonly' && type.typeArguments.length === 1) {
++      const record = getCppRecordDeleteTypeArgumentsCpp(type.typeArguments[0], context, resolvingAliases);
++      if (record)
++        emissionError(
++          context,
++          'deleting a readonly Record property is not a writable dictionary operation',
++          'cpp-readonly-record-delete',
++        );
++      return undefined;
++    }
++    return type.reference.name === 'Record' ? getCppRecordTypeArgumentsCpp(type, context, resolvingAliases) : undefined;
++  }
++  if (resolvingAliases.has(type.reference.binding.id)) return undefined;
++  const alias = resolveCppTypeAliasTarget(type, context);
++  return alias
++    ? getCppRecordDeleteTypeArgumentsCpp(alias, context, new Set(resolvingAliases).add(type.reference.binding.id))
++    : undefined;
++}
++
+ function emitCppStructuralRowDeleteCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'unary' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppRecordDeleteProperty.test.ts b/packages/compiler-backend-cpp/src/cppRecordDeleteProperty.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRecordDeleteProperty.test.ts
+@@ -0,0 +1,133 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const source = `
++  export interface Owner { value: number }
++  export function drop(record: Record<string, string>, key: string): boolean { return delete record[key]; }
++  export function dropOwner(record: Record<string, Owner>, key: string): boolean { return delete record[key]; }
++  export function dropNumber(record: Record<number, string>, key: number): boolean { return delete record[key]; }
++  export function dropSymbol(record: Record<symbol, string>, key: symbol): boolean { return delete record[key]; }
++  export function collect(declarations: Record<string, string>): string[] {
++    const inherited: string[] = [];
++    for (const name of Object.keys(declarations)) {
++      if (declarations[name]!.trim() !== 'inherit') continue;
++      inherited.push(name);
++      delete declarations[name];
++    }
++    return inherited;
++  }
++  let trace = 0;
++  function receiver(record: Record<string, string>): Record<string, string> { trace = trace * 10 + 1; return record; }
++  function key(fail: boolean): string { trace = trace * 10 + 2; if (fail) throw 7; return 'entry'; }
++  export function ordered(record: Record<string, string>, fail: boolean): boolean {
++    trace = 0; return delete receiver(record)[key(fail)];
++  }
++  export function readTrace(): number { return trace; }
++`;
++
++function emit(text = source): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/math/src/recordDelete.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('Record delete property', () => {
++  it('mutates the represented dictionary and returns true without reading its value', () => {
++    const cpp = emit();
++    expect(cpp).toContain('return (record.erase(key), true);');
++    expect(cpp).not.toContain('deletedeclarations');
++    expect(cpp).not.toContain('deleterecord');
++  });
++  it('refuses readonly dictionaries including aliases', () => {
++    for (const type of ['Readonly<Record<string, string>>', 'Alias']) {
++      expect(() =>
++        emit(`type Alias = Readonly<Record<string, string>>;
++        export function drop(record: ${type}, key: string): boolean { return delete record[key]; }
++      `),
++      ).toThrow(/readonly Record property/u);
++    }
++  });
++  it.skipIf(!toolchain || !includes.length)(
++    'runs source dictionary deletion, aliases, key order, owner release and abrupt completion',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-record-delete-'));
++      try {
++        const input = path.join(directory, 'record.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'record'));
++        writeFileSync(
++          input,
++          emit() +
++            `
++int main() {
++  namespace fixture = flighthq_math;
++  using flight::String;
++  flight::Record<String, String> record{{String("entry"), String("kept")}, {String("empty"), String("")}};
++  const auto alias = record;
++  if (!fixture::drop(record, String("entry")) || alias.has(String("entry")) || !alias.has(String("empty")) ||
++      !fixture::drop(record, String("missing")) || !fixture::drop(record, String("entry"))) return 1;
++  record.set(String("2"), String(" inherit "));
++  record.set(String("1"), String("inherit"));
++  record.set(String("color"), String("inherit"));
++  record.set(String("é😀"), String("inherit"));
++  record.set(String("last"), String("blue"));
++  auto inherited = fixture::collect(record);
++  if (inherited.size() != 4 || inherited[0] != String("1") || inherited[1] != String("2") ||
++      inherited[2] != String("color") || inherited[3] != String("é😀") || alias.size() != 2 ||
++      alias.enumerable_keys()[0] != String("empty") || alias.enumerable_keys()[1] != String("last")) return 2;
++  auto owner = flight::make_ref<fixture::Owner>();
++  std::weak_ptr<fixture::Owner> weak = owner;
++  flight::Record<String, flight::Ref<fixture::Owner>> owners{{String("held"), owner}};
++  const auto owner_alias = owners;
++  owner.reset();
++  if (weak.expired() || !fixture::drop_owner(owners, String("held")) || !weak.expired() || owner_alias.size()) return 3;
++  flight::Record<double, String> numbers{{1, String("value")}};
++  if (!fixture::drop_number(numbers, 1) || numbers.size() || !fixture::drop_number(numbers, 1)) return 4;
++  const auto symbol = flight::Symbol(String("entry"));
++  flight::Record<flight::Symbol, String> symbols{{symbol, String("value")}};
++  if (!fixture::drop_symbol(symbols, symbol) || symbols.size() || !fixture::drop_symbol(symbols, symbol)) return 5;
++  record.set(String("entry"), String("again"));
++  if (!fixture::ordered(record, false) || fixture::read_trace() != 12 || alias.has(String("entry"))) return 6;
++  record.set(String("entry"), String("kept"));
++  try { fixture::ordered(record, true); }
++  catch (double error) { return error == 7 && fixture::read_trace() == 12 && alias.has(String("entry")) ? 0 : 7; }
++  return 8;
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});

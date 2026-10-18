@@ -97,3 +97,28 @@ remains present, and the original attributes are read once without an own-key-on
 records the paired finite-callback correction, actual original-header compile/link/run of all14
 pinned cases plus numeric/owner edges, and the unchanged generated source/debt. This resolves this
 native site only; the general Record lowering request remains open.
+
+## Primitive dictionary storage at nullish boundaries
+
+The actual SVG cascade also reaches this defect through named reads, nested coalesces
+and numeric-parser arguments. A missing `values.color` is unwrapped before its fallback;
+`first ?? values['color'] ?? 'fallback'` drops the second lookup's undefined channel.
+A native baseline throws `bad_optional_access` for a missing key instead of executing
+the source fallback.
+
+`compiler-primitive-record-nullish-storage` retains the existing optional lookup storage
+for nonnullable string, number and boolean dictionary payloads. It carries that storage
+through named nullish reads, nullish result evidence, matching immutable local storage
+and contextual union arguments. A matching single optional is reused; a wider target
+receives either the original payload or exactly Undefined, keeping Null distinct.
+Receiver/key evaluation and fallback laziness are unchanged. Empty strings, false,
+signed zero and NaN remain present values. Public function ABI and erased dictionary
+or named-view storage are unchanged.
+
+The native prototype passes named/indexed/nested/optional-chain/local cases, readonly
+aliases, exact dual-sentinel arguments, primitive edges and evaluation/throw order.
+Eleven same-stack Any, unknown, readonly named-view, nullable payload, Map, non-Record,
+direct-read, optional-receiver, multi-payload and object-payload counterexamples retain
+byte-identical output or the same refusal. This is a bounded storage correction;
+other independent missing-key/nullable payload boundaries in this request remain open.
+Declared-stack and normal original public consumers are still being qualified.

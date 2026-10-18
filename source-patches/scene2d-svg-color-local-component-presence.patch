@@ -1,0 +1,16 @@
+diff --git a/packages/scene2d-formats/src/svgColor.ts b/packages/scene2d-formats/src/svgColor.ts
+--- a/packages/scene2d-formats/src/svgColor.ts
++++ b/packages/scene2d-formats/src/svgColor.ts
+@@ -33,10 +33,10 @@
+   }
+   const functionMatch = /^(rgba?|hsla?)\((.*)\)$/.exec(normalized);
+   if (functionMatch !== null) {
+-    const components = functionMatch[2].split(/[\s,/]+/).filter(Boolean);
++    const components = functionMatch[2]!.split(/[\s,/]+/).filter(Boolean);
+     if ((functionMatch[1] === 'rgb' || functionMatch[1] === 'rgba') && components.length >= 3) {
+       const component = (index: number): number => {
+-        const text = components[index];
++        const text = components[index]!;
+         return text.endsWith('%') ? (Number.parseFloat(text) * 255) / 100 : Number.parseFloat(text);
+       };
+       const r = Math.round(clamp(component(0), 0, 255));

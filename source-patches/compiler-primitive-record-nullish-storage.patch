@@ -1,0 +1,249 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3470,6 +3470,26 @@
+   }
+   const variableUnion = getIrUnionTypeCpp(variable.type, context, new Set());
+   const initializerUnion = getIrUnionTypeCpp(initializerType, context, new Set());
++  if (
++    variable.initializer.kind === 'binary' &&
++    variable.initializer.operator === '??' &&
++    getCppPrimitiveRecordReadStorageTypeCpp(variable.initializer.right, context) &&
++    initializerUnion
++  ) {
++    const initializerPlan = getCppUnionRepresentationPlan(initializerUnion, context);
++    const variableDomain = getIrTypeRuntimeDomainCpp(variable.type, context, new Set());
++    if (
++      initializerPlan.kind === 'optionalSingle' &&
++      initializerPlan.sentinels.null === 'absent' &&
++      initializerPlan.sentinels.undefined !== 'absent' &&
++      variableDomain?.kind === 'primitive' &&
++      initializerPlan.valueSlots[0]?.targetType === emitType(variableDomain, context)
++    ) {
++      // A missing dictionary key remains undefined even when the checker inferred the local as V.
++      // Keep that one lookup's actual optional storage so a later coalesce can observe the miss.
++      return initializerType;
++    }
++  }
+   if (
+     variable.initializer.kind === 'conditional' &&
+     variableUnion &&
+@@ -14084,8 +14104,32 @@
+ // is a separate question -- a `Readonly<Record<string, V>>` index read shows no union in its type
+ // while the lowering elected `std::optional` storage for it, so neither axis can be read off the
+ // other.
++function getCppPrimitiveRecordReadStorageTypeCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (
++    (expression.kind !== 'element' && expression.kind !== 'property') ||
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    isCppNamedPropertiesValueReadCpp(expression, context)
++  )
++    return undefined;
++  const record = getCppRecordTypeArgumentsCpp(
++    getIrExpressionTypeEvidenceCpp(expression.object, context),
++    context,
++    new Set(),
++  );
++  const value = record ? getIrTypeRuntimeDomainCpp(record.value, context, new Set()) : undefined;
++  if (!record || value?.kind !== 'primitive' || !['string', 'number', 'boolean'].includes(value.name)) return undefined;
++  // The dictionary lookup adds absence independently of its nonnullable primitive value. Retain that
++  // exact optional storage only at nullish boundaries; erased Any/named views and nullable payloads
++  // use their own contracts and must not be treated as this single optional layer.
++  return { kind: 'union', types: [record.value, { kind: 'undefined' }] };
++}
++
+ function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
+   if (isCppNamedPropertiesValueReadCpp(expression, context)) return false;
++  if (expression.kind === 'property' && getCppPrimitiveRecordReadStorageTypeCpp(expression, context)) return true;
+   if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
+     return hasCppBindingAbsenceStorageCpp(expression.reference.binding.id, context);
+   }
+@@ -18742,6 +18786,30 @@
+     getIrUnionTypeCpp(expectedType, context, new Set());
+   if (!union || expression.kind === 'conditional') return undefined;
+   const plan = getCppUnionRepresentationPlan(union, context);
++  const recordStorage = getCppPrimitiveRecordReadStorageTypeCpp(expression, context);
++  if (recordStorage?.kind === 'union' && plan.sentinels.undefined !== 'absent') {
++    const sourcePlan = getCppUnionRepresentationPlan(recordStorage, context);
++    const targetSlots = plan.valueSlots.filter((slot) => slot.targetType === sourcePlan.valueSlots[0]?.targetType);
++    if (sourcePlan.kind === 'optionalSingle' && targetSlots.length === 1) {
++      const read = emitOptionalExpressionCpp(expression, context, recordStorage);
++      if (
++        plan.kind === 'optionalSingle' &&
++        sourcePlan.sentinels.null === plan.sentinels.null &&
++        sourcePlan.sentinels.undefined === plan.sentinels.undefined
++      )
++        return read;
++      const lookup = getGeneratedTargetName('recordLookup', context);
++      const present = emitCppUnionValueConstruction(
++        `${lookup}.value()`,
++        targetSlots[0]!.targetType,
++        union,
++        plan.kind,
++        context,
++      );
++      const missing = emitCppUnionSentinelConstruction('undefined', union, plan.kind, context);
++      return `([&]() -> ${emitUnionTypeCpp(union, context)} { auto ${lookup} = ${read}; if (${lookup}.has_value()) return ${present}; return ${missing}; }())`;
++    }
++  }
+   if (
+     expression.kind === 'undefinedValue' ||
+     (expression.kind === 'identifier' &&
+@@ -22939,6 +23007,7 @@
+   if (preserved) return preserved.resultType;
+   const left = getIrExpressionTypeEvidenceCpp(expression.left, context);
+   const right =
++    getCppPrimitiveRecordReadStorageTypeCpp(expression.right, context) ??
+     getIrExpressionTypeEvidenceCpp(expression.right, context) ??
+     getIrExpressionTypeForUnionConstructionCpp(expression.right, [], context);
+   if (!left || !right || left.kind === 'unknown' || right.kind === 'unknown') return undefined;
+@@ -31093,6 +31162,15 @@
+   context: EmitContext,
+   expectedType: Readonly<IrType> | undefined,
+ ): string {
++  if (expression.kind === 'property' && getCppPrimitiveRecordReadStorageTypeCpp(expression, context)) {
++    const record = getCppRecordTypeArgumentsCpp(
++      getIrExpressionTypeEvidenceCpp(expression.object, context),
++      context,
++      new Set(),
++    );
++    if (record)
++      return `${emitExpression(expression.object, context)}.get(${emitCppRecordLiteralKey(expression.name, record.key, context)})`;
++  }
+   // An indexed optional-chain continuation carries two independent sources of absence: its receiver
+   // may already be absent, and the runtime collection lookup may miss. The direct `.get` paths below
+   // preserve only the latter. Keep them for a receiver the checker proved present, but let the existing
+diff --git a/packages/compiler-backend-cpp/src/cppPrimitiveRecordNullishStorage.test.ts b/packages/compiler-backend-cpp/src/cppPrimitiveRecordNullishStorage.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppPrimitiveRecordNullishStorage.test.ts
+@@ -0,0 +1,126 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const source = `
++  export interface Holder { color: string }
++  export function named(values: Record<string, string>): string { return values.color ?? 'fallback'; }
++  export function nested(first: string | null, values: Record<string, string>): string { return first ?? values['color'] ?? 'fallback'; }
++  export function optional(first: Holder | undefined, values: Record<string, string>): string { return first?.color ?? values['color'] ?? 'fallback'; }
++  export function indexed(values: Record<string, string>): string { return values['color'] ?? 'fallback'; }
++  export function numeric(values: Record<string, number>): number { return values.count ?? 7; }
++  export function flag(values: Record<string, boolean>): boolean { return values.ready ?? true; }
++  export function local(first: string | null, values: Record<string, string>): string {
++    const selected = first ?? values['color']; return selected ?? 'fallback';
++  }
++  let trace = 0;
++  function receiver(values: Record<string, string>): Record<string, string> { trace = trace * 10 + 1; return values; }
++  function key(fail: boolean): string { trace = trace * 10 + 2; if (fail) throw 7; return 'color'; }
++  function fallback(): string { trace = trace * 10 + 3; return 'fallback'; }
++  export function ordered(values: Record<string, string>, fail: boolean): string {
++    trace = 0; return receiver(values)[key(fail)] ?? fallback();
++  }
++  export function readTrace(): number { return trace; }
++  export function nestedOrdered(first: string | null, values: Record<string, string>): string {
++    trace = 0; return first ?? receiver(values)[key(false)] ?? fallback();
++  }
++  type ReadDictionary = Readonly<Record<string, string>>;
++  export function readonlyNamed(values: ReadDictionary): string { return values.color ?? 'fallback'; }
++  function classify(value: string | null | undefined): number {
++    if (value === undefined) return 1;
++    if (value === null) return 2;
++    return value.length === 0 ? 3 : 4;
++  }
++  export function indexedArgument(values: Record<string, string>): number { return classify(values['color']); }
++  export function namedArgument(values: Record<string, string>): number { return classify(values.color); }
++  export function nullArgument(): number { return classify(null); }
++`;
++
++function emit(text = source): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/math/src/recordDelete.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('primitive Record nullish storage', () => {
++  it.skipIf(!toolchain || !includes.length)(
++    'retains dictionary absence and original present primitive values through named and nested coalesces',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-record-nullish-'));
++      try {
++        const input = path.join(directory, 'record.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'record'));
++        writeFileSync(
++          input,
++          emit() +
++            `
++int main() {
++  namespace fixture = flighthq_math;
++  using flight::String;
++  flight::Record<String, String> empty;
++  if (fixture::named(empty) != String("fallback") || fixture::nested(std::nullopt, empty) != String("fallback") ||
++      fixture::optional(std::nullopt, empty) != String("fallback") || fixture::indexed(empty) != String("fallback")) return 1;
++  flight::Record<String, String> present{{String("color"), String("")}};
++  if (fixture::named(present) != String("") || fixture::nested(std::nullopt, present) != String("") ||
++      fixture::nested(String("first"), present) != String("first")) return 2;
++  auto holder = flight::make_ref<fixture::Holder>(fixture::Holder{.color = String("owner")});
++  if (fixture::optional(holder, present) != String("owner")) return 3;
++  flight::Record<String, double> numbers{{String("count"), -0.0}};
++  if (!std::signbit(fixture::numeric(numbers))) return 4;
++  numbers.set(String("count"), std::numeric_limits<double>::quiet_NaN());
++  if (!std::isnan(fixture::numeric(numbers))) return 5;
++  numbers.erase(String("count")); if (fixture::numeric(numbers) != 7) return 6;
++  flight::Record<String, bool> flags{{String("ready"), false}};
++  if (fixture::flag(flags)) return 7;
++  flags.erase(String("ready")); if (!fixture::flag(flags)) return 8;
++  if (fixture::local(std::nullopt, empty) != String("fallback") || fixture::local(std::nullopt, present) != String("")) return 9;
++  if (fixture::ordered(empty, false) != String("fallback") || fixture::read_trace() != 123 ||
++      fixture::ordered(present, false) != String("") || fixture::read_trace() != 12) return 10;
++  if (fixture::indexed_argument(empty) != 1 || fixture::named_argument(empty) != 1 ||
++      fixture::indexed_argument(present) != 3 || fixture::named_argument(present) != 3 || fixture::null_argument() != 2) return 13;
++  if (fixture::nested_ordered(String("first"), empty) != String("first") || fixture::read_trace() != 0 ||
++      fixture::nested_ordered(std::nullopt, present) != String("") || fixture::read_trace() != 12 ||
++      fixture::nested_ordered(std::nullopt, empty) != String("fallback") || fixture::read_trace() != 123 ||
++      fixture::readonly_named(empty) != String("fallback") || fixture::readonly_named(present) != String("")) return 14;
++  try { fixture::ordered(present, true); }
++  catch (double error) { return error == 7 && fixture::read_trace() == 12 ? 0 : 11; }
++  return 12;
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});
