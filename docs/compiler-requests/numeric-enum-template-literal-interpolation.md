@@ -14,7 +14,7 @@ The source is `renderRegistryGuards.ts`, the `logOnce` key `` `render:registry-m
 
 A numeric-enum operand in a template literal, or in `String(x)`, lowers to the number's own string conversion: `flight::to_string(static_cast<double>(registry))`. That gives the same text JavaScript produces for the enum's numeric value. A string enum keeps its string value. No enumerator-name table is introduced.
 
-`compiler-numeric-enum-string-conversion.patch` prepares this correction at the explicit source
+[`compiler-numeric-enum-string-conversion.patch`](../../source-patches/compiler-numeric-enum-string-conversion.patch) prepares this correction at the explicit source
 operation. Declaration identity resolves local, imported and aliased enums; numeric alternatives in
 optional and variant storage use the same conversion after their existing presence checks. The
 numeric namespace wrapper also needs this projection: the old output silently selects the runtime's
@@ -29,6 +29,13 @@ owners. Both tests fail against the old ordered 92-patch compiler, including nat
 the actual enum `to_string` calls. An independent whole emitted namespace fixture produces the old
 wrong `true` and the corrected `2`. Eighteen existing enum/template/sentinel tests pass. The full
 static comparison keeps the same baseline failures; preparation does not claim a clean static sweep.
+
+The fresh current stack of 93 prior patches plus this correction applies and builds, and the two
+new tests pass again with all 78 native comparisons. Reversing the two-file correction privately
+restores the exact current baseline backend and removes only its new test. Repository source-patch
+automation passes 2/2. The 94-patch static check retains the same diagnostic sets as the earlier
+baseline: 38 formatting paths, four lint diagnostics, 12 ordering errors and six foreign fixture type
+errors; archive-only Git metadata failures and the existing membership API report drift also remain.
 
 ## Affected
 
