@@ -195,14 +195,30 @@ void button_down_state_reports_skip() {
 }
 
 void button_absence_and_duplicate() {
-  // Character id 0 is absence, not an error: no placement and no definition.
+  // A record for character id 0 adds no placement, but the button itself is still defined: the source
+  // records the id and a one-frame sprite after the loop whether or not any record placed anything.
   auto zero_body = reader(Bytes{
-      0x34, 0x12, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00,
+      0x34, 0x12, 0x01, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00,
   });
   auto zero_state = state_with();
   swf::read_swf_button_definition(zero_body, zero_state, 1.0);
-  check(!zero_state->sprites.has(0x1234), "a zero-character record defines nothing");
-  check(!zero_state->defined_characters.has(0x1234), "an empty definition does not record the button");
+  check(zero_state->defined_characters.has(0x1234), "a zero-character record still defines the button");
+  auto zero_sprite = zero_state->sprites.get(0x1234);
+  check(zero_sprite.has_value(), "the zero-character button still owns a one-frame sprite");
+  if (zero_sprite.has_value() && zero_sprite.value()->frames.size() == 1.0) {
+    check(zero_sprite.value()->frames.element(0).size() == 0.0, "the zero-character record places nothing");
+  }
+
+  // A record list that ends immediately has the same observable result.
+  auto empty_body = reader(Bytes{0x34, 0x12, 0x00});
+  auto empty_state = state_with();
+  swf::read_swf_button_definition(empty_body, empty_state, 1.0);
+  check(empty_state->defined_characters.has(0x1234), "an empty record list still defines the button");
+  auto empty_sprite = empty_state->sprites.get(0x1234);
+  check(empty_sprite.has_value(), "an empty record list still owns a one-frame sprite");
+  if (empty_sprite.has_value() && empty_sprite.value()->frames.size() == 1.0) {
+    check(empty_sprite.value()->frames.element(0).size() == 0.0, "an empty record list places nothing");
+  }
 
   // An already-defined button is left untouched.
   auto duplicate_state = state_with();
@@ -211,7 +227,7 @@ void button_absence_and_duplicate() {
   swf::read_swf_button_definition(duplicate_body, duplicate_state, 1.0);
   check(!duplicate_state->sprites.has(0x1234), "a duplicate button id is not redefined");
 
-  // A truncated record is invalid: the source returns without a definition.
+  // A truncated record is invalid: the source returns before recording the button.
   auto short_body = reader(Bytes{0x34, 0x12, 0x01, 0x78});
   auto short_state = state_with();
   swf::read_swf_button_definition(short_body, short_state, 1.0);
