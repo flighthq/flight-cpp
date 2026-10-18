@@ -79,10 +79,18 @@ int main() {
   interface_view.set_pos(2.0);
   check(reader->pos == 2.0, "an interface cursor write is visible on the class instance");
 
+  // Provenance recovery (recover_owner / require_owner) is builder2's A-prime primitive at 3aa14b24;
+  // it is committed locally but NOT yet integrated, and the current tree's recording is not live. The
+  // provenance assertions are staged with the SWF controls and are added here when that lands; this
+  // test asserts only what the tree proves today (shared-view data, identity, lifetime, forwarding).
+
   // Lifetime: the interface view keeps the owner alive after the original reference is dropped.
+  std::weak_ptr<flight::swf::SwfReader> observed = reader;
   flight::Ref<flight::swf::SwfReader> dropped = reader;
   reader = nullptr;
-  check(interface_view.owner() != nullptr && dropped != nullptr, "the view keeps the owner alive");
+  dropped = nullptr;
+  check(!observed.expired(), "the interface view keeps the owner alive");
+  check(interface_view.owner() != nullptr, "the interface view still holds the owner");
 
   if (failures != 0) {
     std::cerr << failures << " swf owner-view fixture check(s) failed\n";
