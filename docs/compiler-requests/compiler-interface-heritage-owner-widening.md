@@ -397,3 +397,25 @@ inspection proves current compilation or all seventeen return arms. A faithful i
 same-owner results across those arms, live replacement and all null/missing-subset cases, without
 altering the existing hit-attribute outputs. This disposition changes only request/row/cluster/worklist
 links; no override, runtime, source patch, repair, manifest, pin or generated C++ is changed.
+
+
+## G3 semantic compiler patch: compatible native interface heritage (qualification pending)
+
+The initial compiler implementation is carried in
+[`compiler-interface-native-heritage-widening.patch`](../../source-patches/compiler-interface-native-heritage-widening.patch).
+It retains one compatible declared primary base, removes only the inherited duplicate declarations,
+and proves widening from the emitted relationship. It compares actual field storage and initializers
+after generic substitution, including the resolved identity of computed symbol keys. Nullable single
+and multi-owner variants preserve their absence provenance, evaluate once, and widen every present
+arm to the original base owner. Callback return compatibility uses the same native relationship.
+
+Storage-changing refinements (including runtime slots), unrepresented bases, import cycles, secondary
+base-owner paths and reverse assertions remain unsupported by this patch. They receive no copied
+owner, shadow cell or unchecked cast. The remaining source bases contribute flattened members only.
+The older request evidence above is retained; this implementation does not close the entire family.
+
+The compiler-only focused regression selection passes **24 tests** (1,519 unrelated tests skipped);
+strict backend typecheck and focused formatting/lint pass. SDK generation is held under Foreman's
+G3 capacity instruction. Scoped cause-header qualification at two workers and a real previously
+blocked public consumer are still pending; no native PASS row, cause count or package tier changes
+are asserted here. Builder6 retains the in-flight SWF source/heritage repair paths.

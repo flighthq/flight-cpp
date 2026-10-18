@@ -4420,6 +4420,23 @@
       "unblocks": "SVG definition-style parent null coalesce and the identical exact nullable Map-get projection shape; supplies no refused CSS cascade/collector body or generic lookup conversion.",
       "expires": "when flight-cpp nullable Map-get null coalescing uses the selected nested optional runtime representation through the same exact value carrier.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-interface-native-heritage-widening",
+      "dependency": "flight-compiler",
+      "patch": "compiler-interface-native-heritage-widening.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "Reference-backed interfaces flatten into independent owners, preventing declared derived-to-base widening and nullable concrete-arm return/callback boundaries; copying base fields or casting unrelated owners would break source identity and live cells.",
+      "rewrite": "Retain one compatible declared primary interface base as native C++ heritage, omit only the base-owned duplicate declarations, retain authored declaration ordering, and allow only directional represented owner widening through contextual nullable single/variant arms and callback result compatibility. Compare actual storage, initializers and resolved computed-symbol identities; storage-changing refinements, unrepresented bases, cycles, unrelated alternatives and reverse assertions keep their existing refusal boundaries.",
+      "equivalence": "Ordinary shared-pointer base conversion retains the same allocation, control block, lifetime and inherited member cells. Nullable conversion evaluates its source once, preserves the proven absence sentinel and visits every present arm without filtering. No new owner, field copy, shadow cell, unchecked cast, source branch reordering or runtime policy is introduced. Secondary source bases remain flattened and are not asserted to be native pointer paths.",
+      "verification": "24 focused backend fixtures pass, including imported/generic owners, nullable unions, inherited symbols, callback and reverse/refinement negative controls; backend strict typecheck and focused format/lint pass. Scoped SDK generation, cause-header compilation at -j2 and an actual previously blocked public consumer remain pending Foreman generation capacity; no native header gain is claimed by this initial compiler-only carry.",
+      "whyNotUpstreamFirst": "The pinned source already declares these base relations. Only the C++ backend erases them; this is a shared semantic compiler correction carried against the locked compiler pin and linked by both existing heritage requests.",
+      "unblocks": "Compatible primary interface owner widening and nullable/callback seams across the shared heritage cause; storage-changing inherited members and secondary base-owner paths remain explicit follow-on debt.",
+      "expires": "when the upstream C++ backend preserves compatible declared interface bases and directionally widens their original owners with matching nullable/callback semantics.",
+      "appliedOn": "2026-10-17"
     }
   ]
 }
