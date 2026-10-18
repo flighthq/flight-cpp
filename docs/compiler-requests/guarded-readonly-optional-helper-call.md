@@ -231,10 +231,11 @@ and no override is retired on that basis.
 | `gl_shadow_map` | Readonly camera and callback boxes; exact native Mesh/InstancedMesh owners, skin capture, geometry/upload/instance owners and optional uniform semantics remain. Normal generic trait/anonymous-name changes do not replace the native concrete world-matrix calls. |
 | `render_gl_scene_3d` | Three readonly matrix projections and a trait declaration; native default material/light owner, authored evaluation order, kind checks, registry misses and actual partition/sort/bind/draw loop remain. |
 
-Verification for this reconciliation is pending the changed original Scene3D GL render consumer and
-expanded existing public GL consumer. The latter includes the complete retained shaded prelude for
-compilation, without replacing its missing snippet-table guard. Global override integrity will be
-recorded separately from renderer/package completeness.
+The changed original upstream Scene3D GL render smoke and detached-clone consumer pass. The
+expanded existing public GL consumer also passes, including the complete retained shaded prelude
+for compilation without replacing its missing snippet-table guard. This qualifies the exercised
+native paths; it does not establish full shaded rendering or package completeness. Derived-source
+integrity remains a separate check from native behavior.
 
 
 The required real-consumer check exposed two additional native qualification defects. The existing
@@ -257,11 +258,31 @@ entry explicitly. Actual cache/cleanup testing includes an application-defined p
 with multiple inheritance, one compile across repeated cache calls, original concrete and base
 control-block identity, real GL program deletion/cache clearing, final owner release and unrelated
 entry rejection. Core coverage checks ordinary exact erasure, explicit base access, unrelated and
-private-base rejection, adjusted/live cells, copy/move, null and final lifetime. These checks are
-pending the rebuilt consumers; the observed crash is kept red until the capability fix passes.
+private-base rejection, adjusted/live cells, copy/move, null and final lifetime. These core and
+actual GL checks now pass. The source deliberately retains the cleared scene runtime for lazy reuse;
+the actual test checks that same runtime owner, an empty program cache and active-program slot,
+deleted native program handles, and deletion/reset of three IBL textures, its bake framebuffer and
+the environment source texture. The initial test incorrectly expected the runtime WeakMap entry to
+be removed; correcting that expectation preserves the pinned source behavior.
 
 Fresh `get_uniform_location` queries create distinct host handle identities even for the same GL
 location. The new test correctly compares their native GL locations and independently checks the
 readonly view's live original cell; it does not require those fresh wrapper identities to match.
 Existing classic/PBR source-key spread and classic lit-location omissions remain explicit partial
 debts. No full classic, shaded or package completion follows from these bounded checks.
+
+The final core and public GL targets build on the shared-runtime floor at `6063d1e7`; their three
+registered CTests pass. The detached-clone and upstream Scene3D render smoke passed before the later
+peer-only additions. Rebase content checks preserve every owned native header and test; the shared
+build files gained independent SVG consumer entries. No unchanged broad header sweep or new SDK
+run was needed for this native reconciliation.
+
+A separate GL render-pass owner gap remains open: `gl_render_target_view` copies concrete screen and
+texture targets into a newly allocated `GlRenderTarget`. That loses the original target/control
+block and live cells. The source refines the base nullable framebuffer field, so replacing the copy
+requires shared declaration-proven absence-subset field storage that keeps one base cell and legal
+base writes. The existing partial manifest row now names that exact gap. This cache/override carry
+does not qualify the copied target conversion or close its full-domain owner follow-up.
+
+Final derived-source integrity passes for all 226 currently declared overrides, with no stale source
+hashes or unmanifested shadow headers. All 13 copies in this reconciliation remain retained.
