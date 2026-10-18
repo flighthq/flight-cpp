@@ -79,7 +79,7 @@ inline void set_node_3d_look_at(flight::Ref<flight::types::Node3D> node, flight:
   ([&]() { auto&& typed_array_14 = m; const auto typed_index_14 = 13.0; const auto typed_value_14 = eye_y; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
   ([&]() { auto&& typed_array_15 = m; const auto typed_index_15 = 14.0; const auto typed_value_15 = eye_z; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
   ([&]() { auto&& typed_array_16 = m; const auto typed_index_16 = 15.0; const auto typed_value_16 = 1.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
-  flight::node::set_node_local_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_matrix)));
+  flight::node::set_node_local_matrix4<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::Transform3DNode<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_matrix)));
 }
 
 } // namespace flight::scene3d

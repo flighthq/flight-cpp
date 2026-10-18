@@ -120,7 +120,7 @@ inline void initialize_spritesheet_timeline_source(flight::types::EntityConstruc
   std::optional<flight::Ref<flight::types::Sprite>> bitmap = bitmaps.get(target);
   if (!bitmap.has_value()) {
     (bitmap = std::optional<flight::Ref<flight::types::Sprite>>{flight::scene2d::create_sprite(std::nullopt)});
-    flight::node::add_node_child(target, flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(bitmap.value())));
+    flight::node::add_node_child<flight::Ref<flight::types::Node2DTraits>>(target, flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(bitmap.value())));
     bitmaps.set(target, bitmap.value());
   }
   std::optional<flight::Ref<flight::types::SpritesheetFrame>> sheet_frame = flight::row_get<flight::RowKey<"frames">>(spritesheet).get(frames.element((frame - 1.0)));
@@ -143,7 +143,7 @@ inline void initialize_spritesheet_timeline_source(flight::types::EntityConstruc
   flight::textureatlas::get_texture_atlas_region_frame(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureAtlasRegion>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextureAtlasRegion>>>>(region.value())), region_frame);
   (bitmap.value()->pivot_x = (!sheet_frame.value()->pivot_x.has_value() ? 0.0 : (sheet_frame.value()->pivot_x.value() * region_frame->width)));
   (bitmap.value()->pivot_y = (!sheet_frame.value()->pivot_y.has_value() ? 0.0 : (sheet_frame.value()->pivot_y.value() * region_frame->height)));
-  flight::node::invalidate_node_local_transform(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(bitmap.value())));
+  flight::node::invalidate_node_local_transform<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sprite>>>>(bitmap.value())));
 });
 }
 

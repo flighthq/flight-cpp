@@ -118,7 +118,7 @@ inline void set_html_view_size(flight::Ref<flight::types::HtmlView> source, doub
   }
   (source->data->width = width);
   (source->data->height = height);
-  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::HtmlView>>>>(source)));
+  flight::node::invalidate_node_local_bounds<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::HtmlView>>>>(source)));
 }
 
 

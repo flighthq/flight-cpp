@@ -19,6 +19,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct LottieLayer; }
 namespace flight::types { struct LottieLayerContext; }
+namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct Shape; }
 
@@ -47,7 +48,7 @@ inline void append_lottie_solid(flight::types::DisplayObject parent, flight::Str
   flight::path::append_path_rectangle(path, 0.0, 0.0, ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"sw">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), ([&]() -> double { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"sh">>(layer); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
   flight::shape::append_shape_path(shape, path->commands.slice(), path->data.slice(), path->winding);
   flight::shape::append_shape_end_fill(shape);
-  flight::node::add_node_child(parent, flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>(shape)));
+  flight::node::add_node_child<flight::Ref<flight::types::Node2DTraits>>(parent, flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>(shape)));
 }
 
 inline void lottie_solid_layer_handler(flight::Ref<flight::types::LottieLayerContext> context) {

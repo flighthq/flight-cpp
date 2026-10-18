@@ -46,6 +46,7 @@ namespace flight::types { struct Mesh; }
 namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshMorph; }
 namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Scene3DAnimationTarget; }
@@ -103,7 +104,7 @@ inline void apply_document_node_transform(flight::Ref<flight::types::Node3D> nod
   flight::geometry::set_vector3(node->position, t->position->x, t->position->y, t->position->z);
   flight::geometry::set_quaternion(node->rotation, t->rotation->x, t->rotation->y, t->rotation->z, t->rotation->w);
   flight::geometry::set_vector3(node->scale, t->scale->x, t->scale->y, t->scale->z);
-  flight::node::invalidate_node_local_transform(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
+  flight::node::invalidate_node_local_transform<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
 }
 
 inline void attach_document_animations(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DDocument>>>> document, flight::Array<flight::Ref<flight::types::Node3D>> nodes, flight::Ref<flight::types::Scene3D> scene) {
@@ -199,7 +200,7 @@ inline flight::Array<Scene3DDocumentNodeValue> build_document_nodes(flight::Stru
             {
               std::optional<std::variant<flight::Ref<flight::types::Mesh>, flight::Ref<flight::types::Node3D>>> child = nodes.get(children.element(c));
               if (([&]() { const auto& presence_operand = child; return presence_operand.has_value(); }())) {
-                flight::node::add_node_child(nodes.element(i), child.value());
+                flight::node::add_node_child<flight::Ref<flight::types::Node3DTraits>>(nodes.element(i), child.value());
               }
             }
             (c += 1.0);
@@ -294,7 +295,7 @@ inline flight::Ref<flight::types::Scene3D> create_scene_3d_from_document(flight:
       {
         std::optional<Scene3DDocumentNodeValue> node = nodes.get(roots.element(r));
         if (([&]() { const auto& presence_operand = node; return presence_operand.has_value(); }())) {
-          flight::node::add_node_child(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)), node.value());
+          flight::node::add_node_child<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)), node.value());
         }
       }
       (r += 1.0);
@@ -322,7 +323,7 @@ inline flight::Array<flight::Ref<flight::types::Scene3D>> create_scene3_ds_from_
             {
               std::optional<Scene3DDocumentNodeValue> node = nodes.get(roots.element(r));
               if (([&]() { const auto& presence_operand = node; return presence_operand.has_value(); }())) {
-                flight::node::add_node_child(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)), node.value());
+                flight::node::add_node_child<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(scene->root)), node.value());
               }
             }
             (r += 1.0);

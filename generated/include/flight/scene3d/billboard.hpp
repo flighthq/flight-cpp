@@ -77,7 +77,7 @@ inline flight::Ref<flight::types::Billboard> create_billboard(flight::Ref<flight
 }
 
 inline flight::Ref<flight::types::NodeSignals> enable_billboard_signals(flight::Ref<flight::types::Billboard> source) {
-  return flight::node::enable_node_signals<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::NodeTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Billboard>>>>(source)));
+  return flight::node::enable_node_signals<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Billboard>>>>(source)));
 }
 
 inline flight::types::BillboardRuntime get_billboard_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Billboard>>>> source) {
@@ -85,7 +85,7 @@ inline flight::types::BillboardRuntime get_billboard_runtime(flight::StructuralR
 }
 
 inline std::optional<flight::Ref<flight::types::NodeSignals>> get_billboard_signals(flight::Ref<flight::types::Billboard> source) {
-  return flight::node::get_node_signals<flight::Ref<flight::types::NodeTraits>>(source);
+  return flight::node::get_node_signals<flight::Ref<flight::types::Node3DTraits>>(source);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_4CD147940B70E340

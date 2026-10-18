@@ -39,6 +39,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct HandleTextInputKeyboardOptions; }
 namespace flight::types { struct KeyboardEventData; }
+namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct ReplaceTextInputOptions; }
 namespace flight::types { struct RichText; }
 namespace flight::types { struct RichTextData; }
@@ -169,7 +170,7 @@ inline void apply_history_record(flight::Ref<flight::types::RichText> source, fl
   (state->caret_index = clamp_index(caret_index, static_cast<double>(text.length())));
   (state->selection_index = clamp_index(selection_index, static_cast<double>(text.length())));
   (state->desired_caret_x = desired_caret_x_unset);
-  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_local_content<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline double get_fallback_line_height(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout) {
@@ -239,7 +240,7 @@ inline void move_text_input_caret(flight::Ref<flight::types::RichText> source, d
     (state->selection_index = caret);
   }
   (state->desired_caret_x = desired_caret_x_unset);
-  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_appearance<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline void redo_text_input(flight::Ref<flight::types::RichText> source) {
@@ -256,7 +257,7 @@ inline void set_text_input_selection(flight::Ref<flight::types::RichText> source
   auto state = get_input_state(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
   (state->selection_index = clamp_index(begin_index, static_cast<double>(source->data->text.length())));
   (state->caret_index = clamp_index(end_index, static_cast<double>(source->data->text.length())));
-  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_appearance<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline void select_all_text_input(flight::Ref<flight::types::RichText> source) {
@@ -357,7 +358,7 @@ inline void get_text_input_caret_rectangle(flight::Ref<flight::types::TextSelect
     (out->line_index = 0.0);
     return;
   }
-  (out->x = get_text_layout_group_caret_x(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutGroup>>>>(group.value())), caret_index));
+  (out->x = get_text_layout_group_caret_x(group.value(), caret_index));
   (out->y = group.value()->offset_y);
   (out->width = 1.0);
   (out->height = group.value()->height);
@@ -586,7 +587,7 @@ inline void replace_text_input(flight::Ref<flight::types::RichText> source, doub
   if (((([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"skipHistory">>(optional_chain_receiver.value()); }()) != true) && (state->history_limit > 0.0))) {
     record_text_input_edit(state, text_before, data->text, caret_before, selection_before, ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"mergeKind">>(optional_chain_receiver.value()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left)) return std::optional<flight::String>{*alternative}; return std::nullopt; }()));
   }
-  flight::node::invalidate_node_local_content(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_local_content<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline void append_text_input(flight::Ref<flight::types::RichText> source, flight::String text) {
@@ -835,7 +836,7 @@ inline void move_text_input_caret_down(flight::Ref<flight::types::RichText> sour
   if (!extend_selection.value()) {
     (state->selection_index = new_caret);
   }
-  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_appearance<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline void move_text_input_caret_up(flight::Ref<flight::types::RichText> source, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>, flight::Null, flight::Undefined> layout, std::optional<bool> extend_selection = std::nullopt) {
@@ -862,7 +863,7 @@ inline void move_text_input_caret_up(flight::Ref<flight::types::RichText> source
   if (!extend_selection.value()) {
     (state->selection_index = new_caret);
   }
-  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
+  flight::node::invalidate_node_appearance<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)));
 }
 
 inline void scroll_text_input_caret_into_view(flight::Ref<flight::types::RichText> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>> layout, double viewport_width, double viewport_height) {

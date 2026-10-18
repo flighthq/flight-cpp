@@ -122,9 +122,9 @@ inline std::optional<flight::types::Node2D> find_lottie_test_node_by_kind(flight
   }
   {
     double index = 0.0;
-    while ((index < flight::node::get_node_child_count(root))) {
+    while ((index < flight::node::get_node_child_count<flight::Ref<flight::types::Node2DTraits>>(root))) {
       {
-        std::optional<flight::types::Node2D> found = find_lottie_test_node_by_kind(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at(root, index)), kind);
+        std::optional<flight::types::Node2D> found = find_lottie_test_node_by_kind(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at<flight::Ref<flight::types::Node2DTraits>>(root, index)), kind);
         if (found.has_value()) {
           return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{found.value()};
         }
@@ -141,9 +141,9 @@ inline std::optional<flight::types::Node2D> find_lottie_test_node_by_name(flight
   }
   {
     double index = 0.0;
-    while ((index < flight::node::get_node_child_count(root))) {
+    while ((index < flight::node::get_node_child_count<flight::Ref<flight::types::Node2DTraits>>(root))) {
       {
-        std::optional<flight::types::Node2D> found = find_lottie_test_node_by_name(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at(root, index)), name);
+        std::optional<flight::types::Node2D> found = find_lottie_test_node_by_name(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at<flight::Ref<flight::types::Node2DTraits>>(root, index)), name);
         if (found.has_value()) {
           return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{found.value()};
         }

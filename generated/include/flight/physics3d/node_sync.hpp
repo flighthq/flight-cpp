@@ -9,6 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/physics_3d.hpp>
 
 namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct Vector3; }
@@ -28,7 +29,7 @@ inline void sync_physics_3d_body_to_node_3d(flight::StructuralRef<flight::RowRea
   (node->rotation->y = flight::row_get<flight::RowKey<"orientationY">>(body));
   (node->rotation->z = flight::row_get<flight::RowKey<"orientationZ">>(body));
   (node->rotation->w = flight::row_get<flight::RowKey<"orientationW">>(body));
-  flight::node::invalidate_node_local_transform(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
+  flight::node::invalidate_node_local_transform<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
 }
 
 } // namespace flight::physics3d
