@@ -1,0 +1,491 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -19808,18 +19808,20 @@
+     : undefined;
+   const exactStructuralOwnerSlots = assertedStructuralOwnerTarget
+     ? plan.valueSlots.filter((slot) => {
+-        if (slot.targetType === assertedStructuralOwnerTarget) return true;
++        // Union slots are spelled in their declaring module; the asserted row is spelled here.
++        // Compare fully qualified owners before selecting the existing exact-owner projection.
++        const assertedOwner = qualifyCppDeclaringModuleTypeCpp(assertedStructuralOwnerTarget, assertionContext);
++        if (qualifyCppDeclaringModuleTypeCpp(slot.targetType, unionContext) === assertedOwner) return true;
+         // A union written as Readonly<A> | Readonly<B> stores structural views rather than the
+         // nominal references themselves. The view still records its exact underlying owner.
+         const slotStructuralRow = context.referenceRepresentationPlanner.resolveStructuralRow(
+           slot.runtimeType,
+           unionContext.module,
+         );
+-        const slotStructuralOwner = slotStructuralRow
+-          ? getCppStructuralRowObjectTypeCpp(slotStructuralRow)
+-          : undefined;
++        const slotStructuralOwner = slotStructuralRow ? getCppStructuralRowObjectTypeCpp(slotStructuralRow) : undefined;
+         return slotStructuralOwner
+-          ? emitType(slotStructuralOwner, assertionContext) === assertedStructuralOwnerTarget
++          ? qualifyCppDeclaringModuleTypeCpp(emitType(slotStructuralOwner, assertionContext), assertionContext) ===
++              assertedOwner
+           : false;
+       })
+     : [];
+@@ -20114,14 +20116,18 @@
+     const source = getGeneratedTargetName('exactStructuralSource', context);
+     const present =
+       plan.kind === 'optionalVariant'
+-        ? `std::get<${exactStructuralOwnerSlot.targetType}>(${source}.value())`
++        ? `std::get<${unionContext.module === context.module ? exactStructuralOwnerSlot.targetType : qualifyCppDeclaringModuleTypeCpp(exactStructuralOwnerSlot.targetType, unionContext)}>(${source}.value())`
+         : `${source}.value()`;
+     context.includes.add('optional');
+     return `([&]() -> ${emitType(assertedType, context)} { const auto& ${source} = ${value}; if (!${source}.has_value()) return std::nullopt; return ${narrowed(present)}; }())`;
+   }
+   if (plan.kind === 'optionalSingle') return narrowed(`${value}.value()`);
+-  if (plan.kind === 'optionalVariant') return narrowed(`std::get<${alternatives[0]!.targetType}>(${value}.value())`);
+-  return narrowed(`std::get<${alternatives[0]!.targetType}>(${value})`);
++  const selectedTarget =
++    unionContext.module === context.module
++      ? alternatives[0]!.targetType
++      : qualifyCppDeclaringModuleTypeCpp(alternatives[0]!.targetType, unionContext);
++  if (plan.kind === 'optionalVariant') return narrowed(`std::get<${selectedTarget}>(${value}.value())`);
++  return narrowed(`std::get<${selectedTarget}>(${value})`);
+ }
+ 
+ interface CppStructuralUnionAssertionAlternative {
+@@ -22356,6 +22362,27 @@
+     ? emitCppNarrowedNestedUnionMemberCpp(binding, plan, narrowedType, context)
+     : undefined;
+   if (nestedOptionalMember) return nestedOptionalMember;
++  // Removing a literal from an optional literal range does not change its native carrier.
++  // Keep undefined in that carrier; no payload read is justified or needed at this occurrence.
++  const literalRange = narrowedType ? getIrUnionTypeCpp(narrowedType, context, new Set()) : undefined;
++  if (
++    plan.kind === 'optionalSingle' &&
++    !narrowedMember &&
++    literalRange &&
++    union.types.some((member) => member.kind === 'undefined') &&
++    literalRange.types.some((member) => member.kind === 'undefined') &&
++    union.types.every((member) => member.kind === 'literal' || member.kind === 'undefined') &&
++    literalRange.types.every((member) => member.kind === 'literal' || member.kind === 'undefined') &&
++    literalRange.types.every((member) => union.types.some((original) => isDeepStrictEqual(original, member)))
++  ) {
++    const narrowedPlan = getCppUnionRepresentationPlan(literalRange, context);
++    if (
++      narrowedPlan.kind === 'optionalSingle' &&
++      narrowedPlan.valueSlots.length === 1 &&
++      plan.valueSlots[0]?.targetType === narrowedPlan.valueSlots[0]?.targetType
++    )
++      return binding;
++  }
+   if (
+     narrowedType &&
+     (plan.kind === 'optionalSingle' || plan.kind === 'optionalVariant' || plan.kind === 'dualSentinelVariant')
+@@ -30726,6 +30753,30 @@
+   }
+   const semanticType = getIrInvocationArgumentExpectedTypeCpp(expression, index);
+   const semanticArgument = expression.arguments[index];
++  // A selected mapped overload can retain its real contextual owner on the fresh literal while
++  // the optional-parameter summary records only Readonly<unknown>. Use that owner at its allocation.
++  if (
++    expression.semantics.overloadImplementation?.overloadIndex !== undefined &&
++    semanticArgument?.kind === 'object' &&
++    semanticType?.kind === 'named' &&
++    semanticType.reference.kind === 'ambient' &&
++    semanticType.reference.name === 'Readonly' &&
++    semanticType.typeArguments.length === 1 &&
++    semanticType.typeArguments[0]?.kind === 'unknown'
++  ) {
++    const contextualUnion = getIrUnionTypeCpp(semanticArgument.type, context, new Set());
++    const present = contextualUnion?.types.filter((type) => type.kind !== 'null' && type.kind !== 'undefined');
++    const contextual = present?.length === 1 ? present[0]! : semanticArgument.type;
++    const row = context.referenceRepresentationPlanner.resolveStructuralRow(contextual, context.module);
++    if (
++      row &&
++      isCppStructuralRowSchemaReadonlyCpp(row) &&
++      !getCppOpenTypeParameterName(contextual) &&
++      context.referenceRepresentationPlanner.resolveObjectShape(contextual, context.module)?.length
++    ) {
++      return semanticArgument.type;
++    }
++  }
+   const preserveStructuralSequenceView = (parameterType: Readonly<IrType> | undefined) =>
+     parameterType &&
+     semanticArgument &&
+diff --git a/packages/compiler-backend-cpp/src/cppImportedReadonlyUnionOwner.test.ts b/packages/compiler-backend-cpp/src/cppImportedReadonlyUnionOwner.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppImportedReadonlyUnionOwner.test.ts
+@@ -0,0 +1,114 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++const moduleResolution = {
++  schema: 'flight-compiler-module-resolution/1' as const,
++  edges: [
++    {
++      specifier: '@flighthq/domain/contract',
++      target: { packageName: '@flighthq/domain', source: 'packages/domain/src/contract.ts' },
++    },
++  ],
++};
++function emit() {
++  const sources = [
++    {
++      packageName: '@flighthq/domain',
++      name: 'domain/src/contract.ts',
++      text: 'export interface Item{value:number}export interface Other{other:string}export type Value=Item|Other|Record<string,unknown>;',
++    },
++    {
++      packageName: '@flighthq/probe',
++      name: 'probe/src/probe.ts',
++      text: 'import type{Item,Value}from "@flighthq/domain/contract";export function view(value:Value):Readonly<Item>{return value as Readonly<Item>;}export function fromCallback(read:()=>Value):Readonly<Item>{return read() as Readonly<Item>;}export function optional(value:Value|undefined):Readonly<Item>|undefined{return value as Readonly<Item>|undefined;}',
++    },
++  ];
++  const results = lowerTypeScriptSources(
++    sources.map((source) => ({
++      packageName: source.packageName,
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/' + source.name, source.text, ts.ScriptTarget.Latest, true),
++    })),
++    moduleResolution,
++  );
++  expect(results.flatMap((r) => r.diagnostics)).toEqual([]);
++  const modules = results.map((r) => r.module),
++    session = createCppCompilerBackend().createEmissionSession!({
++      modules,
++      moduleResolution,
++      options: {
++        runtimeProfile: 'flight-cpp',
++        packageTargets: {
++          '@flighthq/domain': { namespace: 'domain', includePrefix: 'fixture/domain' },
++          '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture/probe' },
++        },
++      },
++    });
++  return {
++    consumer: session.emitModule(modules[1]!)[0]!.contents,
++    domain: session.emitModule(modules[0]!)[0]!.contents,
++  };
++}
++it('selects an imported exact native owner for its readonly structural view', () => {
++  const output = emit().consumer;
++  expect(output).toContain('std::get<flight::Ref<domain::Item>>');
++  expect(output).toContain('flight::RowReadonly<flight::RowOf<flight::Ref<domain::Item>>>');
++  expect(output).not.toContain('static_pointer_cast');
++});
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++it.skipIf(!toolchain || includes.length === 0)(
++  'retains the exact imported owner, live values, lifetime and callback timing',
++  () => {
++    const dir = mkdtempSync(path.join(tmpdir(), 'flight-imported-readonly-owner-'));
++    try {
++      const output = emit();
++      mkdirSync(path.join(dir, 'fixture/domain'), { recursive: true });
++      writeFileSync(path.join(dir, 'fixture/domain/contract.hpp'), output.domain);
++      writeFileSync(path.join(dir, 'probe.hpp'), output.consumer);
++      const input = path.join(dir, 'native.cpp'),
++        binary = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "probe.hpp"
++#include <iostream>
++#include <type_traits>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++using Row=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<domain::Item>>>>;
++using Mutable=flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<domain::Item>>>>;
++static_assert(!std::is_convertible_v<Row,Mutable>);
++std::weak_ptr<domain::Item> lifetime;
++{auto owner=flight::make_ref<domain::Item>();owner->value=7;lifetime=owner;domain::Value value=owner;
++auto view=probe::view(value);check(view.shared_native_object().get()==owner.get());check(flight::row_get<flight::RowKey<"value">>(view)==7);
++owner->value=11;check(flight::row_get<flight::RowKey<"value">>(view)==11);
++int calls=0;auto callback=probe::from_callback([&]()->domain::Value{++calls;return value;});check(calls==1&&callback.identity()==view.identity());
++bool threw=false;try{(void)probe::from_callback([]()->domain::Value{throw flight::TypeError("original");});}catch(const flight::TypeError&){threw=true;}check(threw);
++check(!probe::optional(std::nullopt));auto optional=probe::optional(std::optional<domain::Value>{value});check(optional&&optional->identity()==view.identity());
++owner.reset();value=flight::Record<flight::String,flight::Any>{};check(!lifetime.expired());check(flight::row_get<flight::RowKey<"value">>(view)==11);}
++check(lifetime.expired());std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
++      );
++      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
++        stdio: 'pipe',
++      });
++      expect(execFileSync(binary, [], { encoding: 'utf8' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(dir, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
+diff --git a/packages/compiler-backend-cpp/src/cppOptionalLiteralRangeNarrowing.test.ts b/packages/compiler-backend-cpp/src/cppOptionalLiteralRangeNarrowing.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppOptionalLiteralRangeNarrowing.test.ts
+@@ -0,0 +1,89 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++export const source = `export interface Document{j?:0|1|2} export function align(document:Readonly<Document>):string{return document.j===1?'right':document.j===2?'center':'left';}`;
++function emit(text = source) {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++  }).contents;
++}
++it('keeps undefined in the original optional carrier when only a literal value was excluded', () => {
++  const output = emit();
++  expect(output).not.toContain('.value()');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('still refuses strict null narrowing that leaves a different sentinel reachable', () => {
++  expect(() =>
++    emit(
++      'export interface Document{j?:number|null} export function read(document:Readonly<Document>):number|undefined{if(document.j!==null)return document.j;return 0;}',
++    ),
++  ).toThrow('still admits absence');
++});
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++it.skipIf(!toolchain || includes.length === 0)(
++  'matches source equality for absence, each literal and other physical numeric values',
++  () => {
++    const dir = mkdtempSync(path.join(tmpdir(), 'flight-optional-literal-range-'));
++    try {
++      writeFileSync(path.join(dir, 'probe.hpp'), emit());
++      const js = {} as { align: (document: { j?: number }) => string };
++      new Function(
++        'exports',
++        ts.transpileModule(source, {
++          compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++        }).outputText,
++      )(js);
++      const cases = [undefined, 0, 1, 2, 3, -1, NaN, Infinity]
++        .map(
++          (value) =>
++            `{${value !== undefined},${value === undefined ? '0' : Number.isNaN(value) ? 'std::numeric_limits<double>::quiet_NaN()' : value === Infinity ? 'std::numeric_limits<double>::infinity()' : value},${JSON.stringify(js.align({ j: value }))}}`,
++        )
++        .join(',');
++      const input = path.join(dir, 'native.cpp'),
++        binary = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "probe.hpp"
++#include <iostream>
++#include <limits>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};auto owner=flight::make_ref<probe::Document>();
++using Row=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<probe::Document>>>>;Row row(owner);
++struct Case{bool present;double value;const char* expected;};for(const auto& item:std::initializer_list<Case>{${cases}}){owner->j=item.present?std::optional<double>(item.value):std::nullopt;check(probe::align(row)==flight::String(item.expected));}
++owner->j=1;check(probe::align(row)==flight::String("right"));owner->j.reset();check(probe::align(row)==flight::String("left"));
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
++      );
++      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
++        stdio: 'pipe',
++      });
++      expect(execFileSync(binary, [], { encoding: 'utf8' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(dir, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
+diff --git a/packages/compiler-backend-cpp/src/cppSelectedOverloadLiteralOwner.test.ts b/packages/compiler-backend-cpp/src/cppSelectedOverloadLiteralOwner.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppSelectedOverloadLiteralOwner.test.ts
+@@ -0,0 +1,163 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++const moduleResolution = {
++  schema: 'flight-compiler-module-resolution/1' as const,
++  edges: [
++    {
++      specifier: '@flighthq/domain/contract',
++      target: { packageName: '@flighthq/domain', source: 'packages/domain/src/contract.ts' },
++    },
++  ],
++};
++function emit(reference = false) {
++  const definitions = reference
++    ? `export interface Payload{value:number}export interface Input{kind:'item';source:Payload}export type Options=Omit<Partial<Input>,'kind'>&{readonly kind?:'item'};export interface View{readonly kind?:'item';source?:Payload}export function build(options?:Readonly<Options>):Readonly<View>|undefined;export function build(options?:Readonly<View>):Readonly<View>|undefined{return options;}`
++    : `export interface Input{kind:'item';value:number}export type Options=Omit<Partial<Input>,'kind'>&{readonly kind?:'item'};export interface View{readonly kind?:'item';value?:number}export function build(options?:Readonly<Options>):Readonly<View>|undefined;export function build(options?:Readonly<View>):Readonly<View>|undefined{return options;}`;
++  const consumer = reference
++    ? `import{build}from '@flighthq/domain/contract';import type{Payload,View}from '@flighthq/domain/contract';export function call(source:Payload):Readonly<View>|undefined{return build({kind:'item',source});}`
++    : `import{build}from '@flighthq/domain/contract';import type{View}from '@flighthq/domain/contract';export function call(next:()=>number):Readonly<View>|undefined{return build({kind:'item',value:next()});}`;
++  const results = lowerTypeScriptSources(
++    [
++      {
++        packageName: '@flighthq/domain',
++        upstreamDirectory: '/flight',
++        sourceFile: ts.createSourceFile(
++          '/flight/packages/domain/src/contract.ts',
++          definitions,
++          ts.ScriptTarget.Latest,
++          true,
++        ),
++      },
++      {
++        packageName: '@flighthq/probe',
++        upstreamDirectory: '/flight',
++        sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', consumer, ts.ScriptTarget.Latest, true),
++      },
++    ],
++    moduleResolution,
++  );
++  expect(results.flatMap((r) => r.diagnostics)).toEqual([]);
++  // Reproduce the exact weak summary captured from original lottieImageLayer.ts. The source,
++  // contextual literal type and resolved overload are retained; no semantic evidence is invented.
++  const modules = results
++    .map((r) => r.module)
++    .map((module) =>
++      module.packageName !== '@flighthq/probe'
++        ? module
++        : {
++            ...module,
++            declarations: module.declarations.map((declaration) =>
++              declaration.kind !== 'function'
++                ? declaration
++                : {
++                    ...declaration,
++                    body: declaration.body.map((statement) =>
++                      statement.kind !== 'return' || statement.expression?.kind !== 'call'
++                        ? statement
++                        : {
++                            ...statement,
++                            expression: {
++                              ...statement.expression,
++                              semantics: {
++                                ...statement.expression.semantics,
++                                optionalParameters: {
++                                  ...statement.expression.semantics.optionalParameters!,
++                                  provided: statement.expression.semantics.optionalParameters!.provided.map(
++                                    (entry) => ({
++                                      ...entry,
++                                      parameterType: {
++                                        kind: 'named' as const,
++                                        reference: { kind: 'ambient' as const, name: 'Readonly' },
++                                        typeArguments: [{ kind: 'unknown' as const, source: 'unknown' }],
++                                      },
++                                    }),
++                                  ),
++                                },
++                              },
++                            },
++                          },
++                    ),
++                  },
++            ),
++          },
++    );
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: {
++        '@flighthq/domain': { namespace: 'domain', includePrefix: 'fixture/domain' },
++        '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture/probe' },
++      },
++    },
++  });
++  return {
++    consumer: session.emitModule(modules[1]!)[0]!.contents,
++    domain: session.emitModule(modules[0]!)[0]!.contents,
++  };
++}
++it('constructs the concrete contextual readonly owner of a fresh selected-overload literal', () => {
++  const output = emit().consumer;
++  expect(output).toContain('flight::make_structural_ref<');
++  expect(output).not.toContain('domain::build({');
++});
++
++it('does not manufacture an existing nested nominal owner from an incompatible expanded member', () => {
++  expect(() => emit(true)).toThrow('not a represented runtime domain');
++});
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++it.skipIf(!toolchain || includes.length === 0)(
++  'preserves fresh owner identity, lifetime, field evaluation and exceptions',
++  () => {
++    const dir = mkdtempSync(path.join(tmpdir(), 'flight-selected-literal-owner-'));
++    try {
++      const output = emit();
++      mkdirSync(path.join(dir, 'fixture/domain'), { recursive: true });
++      writeFileSync(path.join(dir, 'fixture/domain/contract.hpp'), output.domain);
++      writeFileSync(path.join(dir, 'probe.hpp'), output.consumer);
++      const input = path.join(dir, 'native.cpp'),
++        binary = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "probe.hpp"
++#include <iostream>
++#include <memory>
++#include <type_traits>
++struct State{double value=13;};
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};int calls=0;
++auto first=probe::call([&]{++calls;return 7.0;});check(first&&calls==1);check(flight::row_get<flight::RowKey<"value">>(*first)==7);
++using Row=typename decltype(first)::value_type;using Mutable=flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<domain::View>>>>;static_assert(!std::is_convertible_v<Row,Mutable>);
++auto second=probe::call([&]{++calls;return 7.0;});check(first->identity()!=second->identity());check(calls==2&&flight::row_get<flight::RowKey<"value">>(*second)==7);check(!domain::build(std::nullopt));
++bool threw=false;try{(void)probe::call([]()->double{throw flight::TypeError("original");});}catch(const flight::TypeError&){threw=true;}check(threw);
++std::weak_ptr<State> state_lifetime;std::optional<Row> retained;{auto state=std::make_shared<State>();state_lifetime=state;retained=probe::call([state]{return state->value;});}check(state_lifetime.expired());check(flight::row_get<flight::RowKey<"value">>(*retained)==13);
++std::weak_ptr<flight::RowOwner> owner_lifetime=first->shared_owner();check(!owner_lifetime.expired());first.reset();check(owner_lifetime.expired());
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
++      );
++      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
++        stdio: 'pipe',
++      });
++      expect(execFileSync(binary, [], { encoding: 'utf8' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(dir, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
