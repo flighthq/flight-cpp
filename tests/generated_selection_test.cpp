@@ -30,8 +30,8 @@ void check(bool condition, const std::string& message) {
   ++failures;
 }
 
-template <typename Runtime>
-void check_runtime_cells(const flight::Ref<Runtime>& runtime, const std::string& label) {
+template <typename RuntimeRef>
+void check_runtime_cells(const RuntimeRef& runtime, const std::string& label) {
   flight::Ref<types::EntityRuntime> base = runtime;
   check(base.get() == runtime.get() && !base.owner_before(runtime) &&
             !runtime.owner_before(base) && &base->binding == &runtime->binding &&
@@ -128,7 +128,7 @@ void test_selection_state_and_signals() {
   auto c = make_test_node(3);
   auto missing = make_test_node(4);
   auto state = selection::create_selection_state<TestNodeRef>();
-  check_runtime_cells(state->entity_runtime_key.value(), "selection");
+  check_runtime_cells(selection::get_selection_state_runtime<TestNodeRef>(state), "selection");
 
   using ActiveSlot = std::function<void(std::optional<TestNodeRef>)>;
   using ChangeSlot = std::function<void(flight::Array<TestNodeRef>)>;
@@ -291,7 +291,7 @@ void test_pointer_policy() {
 
 void test_lasso_and_marquee() {
   auto lasso = selection::create_lasso_selection();
-  check_runtime_cells(lasso->entity_runtime_key.value(), "lasso");
+  check_runtime_cells(selection::get_lasso_selection_runtime(lasso), "lasso");
   auto lasso_path_view = selection::get_lasso_selection_path(readonly(lasso));
   auto path = lasso_path_view.shared_exact_object<types::Path>();
   check(path != nullptr && path->commands.empty() && path->data.empty() &&
@@ -339,7 +339,7 @@ void test_lasso_and_marquee() {
   check(short_matches.empty(), "lasso with fewer than three points selects nothing");
 
   auto marquee = selection::create_marquee_selection();
-  check_runtime_cells(marquee->entity_runtime_key.value(), "marquee");
+  check_runtime_cells(selection::get_marquee_selection_runtime(marquee), "marquee");
   auto rectangle_view = selection::get_marquee_rectangle(readonly(marquee));
   auto rectangle = rectangle_view.shared_exact_object<types::Rectangle>();
   check(rectangle != nullptr && rectangle->x == 0.0 && rectangle->y == 0.0 &&

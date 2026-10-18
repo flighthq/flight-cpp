@@ -482,3 +482,30 @@ The requested focused package-label check was run once and remains **FAIL** at t
 material helper's extra image/texture/types labels. The existing GL readonly test already had its
 types label; explicit includes now name the nominal types it directly uses. The new SWF test likewise
 names its direct effects/types dependencies. No unchanged GL native test was rerun.
+
+
+## G3 override reconciliation after compatible heritage emission
+
+The eight digest warnings recorded above were reconciled against the current normal generated types,
+without restoring any old generated declaration. The LassoSelectionRuntime, MarqueeSelectionRuntime
+and generic SelectionStateRuntime overrides and manifest entries are retired: normal emission now
+supplies their declared EntityRuntime base and the same own-field storage, including NodeType.
+
+Five overrides are re-derived from that normal output, preserving only their required native delta:
+
+- Log retains the identity-bearing Function sink alias and the normal Entity bases for its context,
+  span and transport owners.
+- GlContextRuntime retains its four TextureSourceValue weak-key caches and the normal EntityRuntime
+  base, with one inherited binding/uid cell pair.
+- Node retains its intrinsic Node2D transform cache storage on the same runtime, together with the
+  emitted NodeData/Entity, Node/NodeTraits and NodeRuntime/EntityRuntime relationships.
+- Sprite retains the default native Node2D runtime slot and its emitted SpriteData/Node2DData base.
+- TextLabel retains the exact TextLabelRuntime slot and native runtime inheritance, plus the emitted
+  TextLabelData/Node2DData base.
+
+The dependent GL context constructor evaluates the same authored members, constructs one runtime and
+assigns the inherited binding on that owner; it no longer uses an invalid inherited-field designator.
+Native Node fixtures likewise initialize inherited cells through their owner. Existing consumer tests
+add base/control-block and live inherited-cell checks for actual selection, Node and GL runtime owners.
+Foreign override records are unchanged, as are all generated files. The remaining partial native
+runtime-family restrictions are retained; reconciliation is not broader owner-family support.

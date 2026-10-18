@@ -14,10 +14,11 @@
 namespace flight::shape {
 
 inline flight::Ref<flight::types::ShapeData> create_shape_data() {
-  return flight::make_ref<flight::types::ShapeData>(flight::types::ShapeData{
-      .entity_runtime_key = std::nullopt,
+  auto data = flight::make_ref<flight::types::ShapeData>(flight::types::ShapeData{
       .commands = {},
   });
+  data->entity_runtime_key = std::nullopt;
+  return data;
 }
 
 inline flight::Ref<flight::types::ShapeData> create_shape_data(std::nullopt_t) {
