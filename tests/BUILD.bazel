@@ -154,6 +154,17 @@ cc_test(
 )
 
 cc_test(
+    name = "allocation_descriptor_test",
+    srcs = [
+        "allocation_descriptor_base.hpp",
+        "allocation_descriptor_peer.hpp",
+        "allocation_descriptor_test.cpp",
+    ],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "union_kind_test",
     srcs = ["union_kind_test.cpp"],
     size = "small",
