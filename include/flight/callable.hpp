@@ -111,6 +111,7 @@ class NamedFunctionOrigin final {
   [[nodiscard]] static NamedFunctionOrigin of() noexcept {
     static_assert(std::is_pointer_v<decltype(Source)> &&
                   std::is_function_v<std::remove_pointer_t<decltype(Source)>>);
+    static_assert(Source != nullptr);
     return NamedFunctionOrigin(&detail::named_function_origin_tag<Source>);
   }
   [[nodiscard]] friend bool operator==(NamedFunctionOrigin, NamedFunctionOrigin) noexcept = default;
@@ -130,14 +131,20 @@ class NamedFunction;
 template <typename Result, typename... Parameters>
 class NamedFunction<Result(Parameters...)> final {
  public:
+  using native_pointer = Result (*)(Parameters...);
   template <auto Source, typename Implementation>
     requires std::is_invocable_r_v<Result, Implementation&, Parameters...>
   [[nodiscard]] static NamedFunction from(Implementation&& implementation) {
+    native_pointer native = nullptr;
+    if constexpr (std::is_convertible_v<decltype(Source), native_pointer>) native = Source;
     return NamedFunction(NamedFunctionOrigin::of<Source>(),
-                         Function<Result(Parameters...)>(std::forward<Implementation>(implementation)));
+                         Function<Result(Parameters...)>(std::forward<Implementation>(implementation)), native);
   }
 
   [[nodiscard]] NamedFunctionOrigin origin() const noexcept { return origin_; }
+  [[nodiscard]] bool matches_native(native_pointer pointer) const noexcept {
+    return native_ != nullptr && native_ == pointer;
+  }
   Result operator()(Parameters... parameters) const {
     return implementation_(std::forward<Parameters>(parameters)...);
   }
@@ -146,10 +153,11 @@ class NamedFunction<Result(Parameters...)> final {
   }
 
  private:
-  NamedFunction(NamedFunctionOrigin origin, Function<Result(Parameters...)> implementation)
-      : origin_(origin), implementation_(std::move(implementation)) {}
+  NamedFunction(NamedFunctionOrigin origin, Function<Result(Parameters...)> implementation, native_pointer native)
+      : origin_(origin), implementation_(std::move(implementation)), native_(native) {}
   NamedFunctionOrigin origin_;
   Function<Result(Parameters...)> implementation_;
+  native_pointer native_;
 };
 
 // JavaScript function equality is reference identity. Identity-bearing runtime callables answer it
@@ -183,6 +191,8 @@ template <typename Result, typename... Parameters>
   if (left_named != nullptr && right_named != nullptr) {
     return left_named->origin() == right_named->origin();
   }
+  if (left_named != nullptr && right_pointer != nullptr) return left_named->matches_native(*right_pointer);
+  if (left_pointer != nullptr && right_named != nullptr) return right_named->matches_native(*left_pointer);
   // An identity-bearing Flight Function can deliberately cross an ABI surface that still spells
   // its callback as std::function. std::function preserves that target object on copy, so recover
   // the retained Function and compare its shared state just as the non-erased overload does. This

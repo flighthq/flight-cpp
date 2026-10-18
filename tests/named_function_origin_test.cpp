@@ -40,6 +40,10 @@ int main() {
   const std::function<Native> raw = first;
   check(flight::callable_identity_equal_named<&first>(raw) &&
         !flight::callable_identity_equal_named<&second>(raw), "native pointer compatibility without casts");
+  const std::function<Native> raw_other = second;
+  check(flight::callable_identity_equal(native, raw) && flight::callable_identity_equal(raw, native) &&
+        !flight::callable_identity_equal(native, raw_other) && !flight::callable_identity_equal(raw_other, native),
+        "same-signature native pointer and named target preserve original declaration identity");
   constexpr auto alias = &first;
   check(flight::NamedFunctionOrigin::of<alias>() == original.origin(), "source alias keeps declaration token");
   calls = 0;
