@@ -670,3 +670,14 @@ suite. No source patch, generated SDK file, header-status row, compiler pin or p
 is changed here. Existing recorded failures above remain historical evidence; no parser, easing,
 clampUnit public-header or general emitter/iterator pass follows from this runtime result alone.
 No generation, full sweep or unchanged native header compile was run.
+
+### Emitted free guard follow-up
+
+The original runtime tests above exercised the Any member guard but missed the emitted free
+`flight::is_array(Any)` spelling. Builder2's actual caller audit found that it selected array.hpp's
+generic false fallback, skipping the newly available reads. A dedicated free Any overload now
+forwards to the existing member tag check. The exact emitted spelling is tested for boxed numeric,
+Any and String arrays, const/mutable/temporary receivers, engaged/absent/null optionals, and rejected
+undefined/null/number/object/TypedArray receivers; direct Array and generic scalar behavior remain.
+Committed changed runtime build/link passed, then **1/1 runtime CTest pass, 0.01 s** (0.02 s total).
+No Spine source/header, array storage, coercion policy or caller qualification claim is changed here.

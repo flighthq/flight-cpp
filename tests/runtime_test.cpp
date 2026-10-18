@@ -1577,6 +1577,23 @@ void test_any_array_and_optional_boxing() {
 }
 
 void test_any_live_array_reads() {
+  const flight::Any typed_guard(flight::Array<double>{1.0, 2.0});
+  flight::Any dynamic_guard(flight::Array<flight::Any>{flight::Any(flight::null)});
+  check(flight::is_array(typed_guard) && flight::is_array(dynamic_guard) &&
+            flight::is_array(flight::Any(flight::Array<flight::String>{})),
+        "the emitted free Array.isArray guard must recognize every boxed Flight Array type");
+  check(flight::is_array(std::optional<flight::Any>{typed_guard}) &&
+            !flight::is_array(std::optional<flight::Any>{}) &&
+            !flight::is_array(std::optional<flight::Any>{flight::Any(flight::null)}),
+        "the optional Array.isArray guard must inspect an engaged Any rather than its wrapper");
+  check(!flight::is_array(flight::Any()) && !flight::is_array(flight::Any(flight::null)) &&
+            !flight::is_array(flight::Any(3.0)) &&
+            !flight::is_array(flight::Any::object(flight::make_ref<TestReference>(TestReference{{}, 1}))) &&
+            !flight::is_array(flight::Any::external(flight::Float32Array(2U))),
+        "the emitted erased-array guard must reject nonarrays and typed-array buffers");
+  check(flight::is_array(flight::Array<double>{}) && !flight::is_array(3.0),
+        "the Any guard overload must retain direct typed-array and generic nonarray behavior");
+
   flight::Array<double> numbers{0.25, -0.0};
   const flight::Any boxed(numbers);
   const auto alias = boxed;

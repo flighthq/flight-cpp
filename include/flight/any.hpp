@@ -637,6 +637,10 @@ struct SameValueZero<Any> {
   bool operator()(const Any& left, const Any& right) const { return left.same_value_zero(right); }
 };
 
+// The emitter uses this free spelling for Array.isArray on unknown values. The generic fallback
+// in array.hpp cannot inspect erased storage; dispatch through the existing exact array tag.
+[[nodiscard]] inline bool is_array(const Any& value) noexcept { return value.is_array(); }
+
 // A container entry that may be missing. `std::optional<Any>()` is "no such entry" and
 // `AnySlot(Any())` is "an entry whose value is undefined"; nothing in the runtime conflates them.
 using AnySlot = std::optional<Any>;

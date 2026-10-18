@@ -60,6 +60,8 @@ Named string properties and symbol attachments stay separate spaces. A symbol-ke
 
 `flight::Array` compares by identity. An array is an object, so `a === b` asks whether two names denote the same array and never whether they hold equal elements; copies of a `flight::Array` share one storage and are therefore one array. Deep comparison is deliberately absent, because JavaScript has none for arrays and a container-style `operator==` would silently give every emitted `!==` the wrong answer.
 
+The emitted free `flight::is_array(const Any&)` guard dispatches to the erased array tag,
+including when reached through an engaged optional; it does not use the generic false fallback.
 Erased arrays expose checked, live reads through `Any::array_size()` and `Any::array_get(double)`.
 Both consult the existing exact `Array<T>` handle retained by `AnyArray`; neither snapshots length
 nor converts the storage to `Array<Any>`. Later pushes, replacements, splices and clears through
