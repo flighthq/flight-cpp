@@ -44,3 +44,44 @@ The annotation is type-only: the callback, the fresh array (one `null` per vocab
 object are the same at runtime. It is carried with the registry renderer group's coordinated regeneration. On
 the live base, `@flighthq/registry` is 3/3 modules emitted with no refusal records: `registryTable.ts`, `contract`
 and `index` are all emitted, and all 3 headers compile.
+
+## Scoped optional-map owner correction at compiler 806d257
+
+The same allocation boundary appears in the original `parseSvgGradient` at Flight
+`a62784923f3be814463286c9fb28edfe6ab15789`:
+
+```ts
+const resolvedStops = stops.length === 0
+  ? (inherited?.stops.map((stop) => ({ color: { ...stop.color }, offset: stop.offset })) ?? [])
+  : stops;
+```
+
+The compiler already gives a direct fresh concise object `map` its unique contextual element owner.
+At compiler `806d257d2f4100de745cc97340e61c2f301b0f24`, the optional property-call emitter drops that
+context, and the nullish wrapper names the inferred anonymous array while its empty fallback names
+`SvgGradientStop[]`. This is an emitted native diagnostic at `svg_gradient.hpp:174`, independently of
+the preceding optional Record diagnostic at line 106.
+
+The declared compiler patch
+[`compiler-contextual-optional-map-owner`](../../source-patches/compiler-contextual-optional-map-owner.patch)
+threads the existing unique fresh-object allocation proof through those two wrappers. The original map
+allocates its array, each stop and each authored color spread directly with the declared native owner.
+The supplied nonempty `stops` array and callbacks returning existing objects keep their original owners.
+This introduces no conversion or copied replacement for an existing array. A held array, a block callback
+without the existing concise allocation proof, competing array owners or incompatible existing nested
+owners retains its prior boundary.
+
+The exact assigned subset is `svg_container_element.hpp`, `svg_document.hpp`,
+`svg_element_handlers.hpp`, `svg_text_element.hpp` and `svg_use_element.hpp`. All five belong to
+`@flighthq/scene2d-formats`; its pinned package declares no host environment, so all five apply to the
+native profile. The direct gradient header is a supporting root, not a sixth assigned row. The separate
+SVG bounds callers remain outside this subset.
+
+Code-first checks: seven focused groups pass, including compilation, linking and execution of the
+unannotated conditional/local shape above, fresh versus retained array/stop/color identity, live aliases,
+missing and empty inheritance, receiver evaluation once, callback/property order and exact thrown owner.
+On the identical preceding 72-patch stack, the two positive groups fail at the anonymous array boundary
+and the five refusal controls remain unchanged. Production compiler build and touched-file lint pass.
+Normal declared stack application and original public SVG consumer/header qualification are pending;
+these focused checks do not promote any header or resolve the broader nullable-element request above.
+The registry callback annotation remains carried pending its own expiry audit.

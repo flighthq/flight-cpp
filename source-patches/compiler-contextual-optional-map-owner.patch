@@ -1,0 +1,292 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4390,7 +4390,7 @@
+       const mathHypot = emitCppMathHypotCallCpp(expression, context);
+       if (mathHypot) return mathHypot;
+       if (expression.optional) return emitOptionalCallExpressionCpp(expression, context);
+-      const optionalPropertyCall = emitOptionalPropertyCallExpressionCpp(expression, context);
++      const optionalPropertyCall = emitOptionalPropertyCallExpressionCpp(expression, context, expectedType);
+       if (optionalPropertyCall) return optionalPropertyCall;
+       if (isCppAmbientObjectMemberCallCpp(expression, 'assign')) {
+         const recordAssigned = emitRecordObjectAssignCpp(expression, context);
+@@ -19359,6 +19359,21 @@
+   return matches.length === 1 ? matches[0] : undefined;
+ }
+ 
++// Optional chaining and nullish fallback are control-flow wrappers around the same fresh map
++// allocation. They may carry its contextual array owner through the wrapper only under the existing
++// unique fresh-object proof; a held array or a callback returning an existing owner is never retyped.
++function getCppFreshMappedArrayContextualResultTypeCpp(
++  expression: Readonly<IrExpression>,
++  expectedType: Readonly<IrType> | undefined,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (!expectedType || (expression.kind === 'call' && expression.optional)) return undefined;
++  const union = getIrUnionTypeCpp(expectedType, context, new Set());
++  const slots = union ? getCppUnionRepresentationPlan(union, context).valueSlots : [{ runtimeType: expectedType }];
++  const selected = getCppFreshMappedArrayUnionValueSlotCpp(expression, slots, context);
++  return selected === undefined ? undefined : slots[selected]!.runtimeType;
++}
++
+ // A presence-proved read carries an optional storage type in its checker flow evidence even though the
+ // expression itself has already excluded absence. Remove that sentinel only when the remaining value
+ // slots are exactly the destination slots. Primitive single-slot reads and exact multi-variant reads can
+@@ -21858,12 +21873,17 @@
+       : undefined;
+   const value = plan?.kind === 'optionalSingle' && plan.valueSlots.length === 1 ? plan.valueSlots[0] : undefined;
+   if (!value) return undefined;
+-  const left = emitOptionalExpressionCpp(expression.left, context, leftType);
++  const contextualArray = getCppFreshMappedArrayContextualResultTypeCpp(expression.left, expectedType, context);
++  const valueTarget = contextualArray ? emitType(contextualArray, context) : value.targetType;
++  const left = contextualArray
++    ? emitExpression(expression.left, context, contextualArray)
++    : emitOptionalExpressionCpp(expression.left, context, leftType);
+   context.includes.add('optional');
+   const expectedUnion = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
+   const expectedPlan = expectedUnion ? getCppUnionRepresentationPlan(expectedUnion, context) : undefined;
+   const expectedSlots = expectedPlan?.valueSlots.filter(
+-    (slot) => slot.representationKey === value.representationKey || slot.targetType === value.targetType,
++    (slot) =>
++      (!contextualArray && slot.representationKey === value.representationKey) || slot.targetType === valueTarget,
+   );
+   if (expectedUnion && expectedPlan && expectedSlots?.length === 1) {
+     const source = getGeneratedTargetName('nullishCoalesceLeft', context);
+@@ -21881,7 +21901,7 @@
+   if (isCppStableOptionalBindingIdentifierCpp(expression.left, context)) {
+     return `(${left}.has_value() ? ${left}.value() : ${right})`;
+   }
+-  return `([&]() -> ${value.targetType} { auto nullish_coalesce_left = ${left}; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return ${right}; }())`;
++  return `([&]() -> ${valueTarget} { auto nullish_coalesce_left = ${left}; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return ${right}; }())`;
+ }
+ 
+ function isCppStableOptionalBindingIdentifierCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
+@@ -30912,6 +30932,7 @@
+ function emitOptionalPropertyCallExpressionCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
++  expectedType: Readonly<IrType> | undefined,
+ ): string | undefined {
+   const callee = expression.callee;
+   if (callee.kind !== 'property' || !callee.optional) return undefined;
+@@ -30922,9 +30943,10 @@
+   // alternative is the complete proof, and the same exact alternative is read once the test succeeds. It
+   // refuses only when the receiver has several value domains, where a visitor would have to prove that every
+   // domain supports the call.
++  const contextualArray = getCppFreshMappedArrayContextualResultTypeCpp(expression, expectedType, context);
+   const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
+   if (semantics.receiverNullish === 'excluded') {
+-    return emitExpression({ ...expression, callee: { ...callee, optional: false } }, context);
++    return emitExpression({ ...expression, callee: { ...callee, optional: false } }, context, contextualArray);
+   }
+   const primitiveMemberCall = emitCppOptionalPrimitiveMemberCallCpp(
+     expression,
+@@ -30953,7 +30975,13 @@
+   // `fn?.()` attempts to call `std::function<void(std::optional<T>)>` with no C++ argument at all.
+   const arguments_ = appendCppOmittedInvocationArguments(
+     expression,
+-    expression.arguments.map((argument) => emitExpression(argument, context)),
++    expression.arguments.map((argument, index) =>
++      emitExpression(
++        argument,
++        context,
++        contextualArray ? getCppContextualArrayCallbackTypeCpp(expression, contextualArray, index, context) : undefined,
++      ),
++    ),
+     context,
+   ).join(', ');
+   // The member is spelled the same way here as everywhere else. This path wrote `safeCppName` of the
+@@ -30966,7 +30994,9 @@
+   if (returns.kind === 'primitive' && returns.name === 'void') {
+     return `([&]() { auto optional_chain_receiver = ${receiver}; if (${receiverProjection.absent}) return; ${invocation}; }())`;
+   }
+-  const payload = emitOptionalChainPayloadTypeCpp(returns, context);
++  const payload = contextualArray
++    ? emitType(contextualArray, context)
++    : emitOptionalChainPayloadTypeCpp(returns, context);
+   return `([&]() -> std::optional<${payload}> { auto optional_chain_receiver = ${receiver}; if (${receiverProjection.absent}) return std::nullopt; return ${invocation}; }())`;
+ }
+ 
+diff --git a/packages/compiler-backend-cpp/src/cppContextualFreshMapOwner.test.ts b/packages/compiler-backend-cpp/src/cppContextualFreshMapOwner.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppContextualFreshMapOwner.test.ts
+@@ -0,0 +1,178 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++
++function emitFixture(
++  source = `
++    export interface Color { rgb: number; alpha: number }
++    export interface Stop { color: Color; offset: number }
++    export interface Gradient { stops: Stop[] }
++    export function resolve(inherited: Gradient | undefined, stops: Stop[]): Stop[] {
++      const resolvedStops = stops.length === 0
++        ? (inherited?.stops.map((stop) => ({ color: { ...stop.color }, offset: stop.offset })) ?? [])
++        : stops;
++      return resolvedStops;
++    }
++    let effects = 0;
++    let receivers = 0;
++    let fail = false;
++    function pick(inherited: Gradient | undefined): Gradient | undefined { receivers++; return inherited; }
++    function readColor(stop: Stop): Color {
++      effects = effects * 10 + stop.offset;
++      if (fail && stop.offset === 3) throw stop.color;
++      return stop.color;
++    }
++    function readOffset(stop: Stop): number { effects = effects * 10 + stop.offset + 1; return stop.offset; }
++    export function ordered(inherited: Gradient | undefined, shouldFail: boolean): Stop[] {
++      effects = 0; receivers = 0; fail = shouldFail;
++      return pick(inherited)?.stops.map((stop) => ({ color: { ...readColor(stop) }, offset: readOffset(stop) })) ?? [];
++    }
++    export function readEffects(): number { return effects; }
++    export function readReceivers(): number { return receivers; }
++    export function retainedOwners(inherited: Gradient | undefined): Stop[] {
++      return inherited?.stops.map((stop) => stop) ?? [];
++    }
++  `,
++): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/math',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/math/src/contextualFreshMap.ts',
++        source,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  const cpp = emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++  return cpp;
++}
++
++describe('fresh map contextual owners through optional chaining and nullish fallback', () => {
++  it('elects declared owners at the original map, stop and nested spread allocations', () => {
++    const cpp = emitFixture();
++    expect(cpp).toContain('flight::make_ref<Stop>');
++    expect(cpp).not.toMatch(/make_ref<color_offset_/u);
++  });
++  it.each([
++    ['held arrays', 'return rows ?? [];'],
++    ['existing mapped owners', 'return rows?.map((row) => row) ?? [];'],
++    [
++      'block callback without the concise allocation proof',
++      'return rows?.map((row) => { return { value: row.value }; }) ?? [];',
++    ],
++  ])('retains the refusal for %s at a different declared owner', (_name, body) => {
++    expect(() =>
++      emitFixture(`
++      interface Source { value: number }
++      interface Target { value: number }
++      export function carry(rows: Source[] | undefined): Target[] | null { ${body} }
++    `),
++    ).toThrow(/contextual optionalSingle construction requires expression type evidence/u);
++  });
++  it('does not choose between two compatible contextual array owners', () => {
++    expect(() =>
++      emitFixture(`
++      interface First { value: number }
++      interface Second { value: number }
++      export function carry(rows: number[] | undefined): First[] | Second[] | null {
++        return rows?.map((value) => ({ value })) ?? [];
++      }
++    `),
++    ).toThrow(/cannot select one of multiple array element domains/u);
++  });
++  it('does not copy an existing nested owner to match a fresh stop destination', () => {
++    expect(() =>
++      emitFixture(`
++      interface SourceColor { rgb: number }
++      interface TargetColor { rgb: number }
++      interface Stop { color: TargetColor }
++      export function carry(rows: SourceColor[] | undefined): Stop[] | null {
++        return rows?.map((color) => ({ color })) ?? [];
++      }
++    `),
++    ).toThrow(/contextual optionalSingle construction requires expression type evidence/u);
++  });
++  it.skipIf(!toolchain || !includes.length)(
++    'compiles and retains source allocation and alias identities',
++    () => {
++      if (!toolchain) throw new Error('toolchain missing');
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-contextual-fresh-map-'));
++      try {
++        const source = path.join(directory, 'fresh.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain, 'fresh'));
++        writeFileSync(
++          source,
++          emitFixture() +
++            `
++int main() {
++  namespace fixture = flighthq_math;
++  auto color = flight::make_ref<fixture::Color>(fixture::Color{.rgb = 12, .alpha = 0.5});
++  auto stop = flight::make_ref<fixture::Stop>(fixture::Stop{.color = color, .offset = 0.75});
++  flight::Array<flight::Ref<fixture::Stop>> stops{stop};
++  auto gradient = flight::make_ref<fixture::Gradient>(fixture::Gradient{.stops = stops});
++  auto retained = fixture::resolve(gradient, stops);
++  if (retained.identity() != stops.identity() || retained[0] != stop) return 1;
++  flight::Array<flight::Ref<fixture::Stop>> empty;
++  auto copied = fixture::resolve(gradient, empty);
++  if (copied.identity() == stops.identity() || copied.identity() == empty.identity() || copied.size() != 1 ||
++      copied[0] == stop || copied[0]->color == color || copied[0]->color->rgb != 12 || copied[0]->offset != 0.75) return 2;
++  color->rgb = 99;
++  stop->offset = 0.1;
++  if (copied[0]->color->rgb != 12 || copied[0]->offset != 0.75 || retained[0]->color->rgb != 99) return 3;
++  auto reused = fixture::retained_owners(gradient);
++  if (reused.identity() == stops.identity() || reused[0] != stop || reused[0]->color != color || reused[0]->color->rgb != 99) return 10;
++  auto absent = fixture::resolve(std::nullopt, empty);
++  if (!absent.empty() || absent.identity() == empty.identity()) return 4;
++  auto empty_gradient = flight::make_ref<fixture::Gradient>(fixture::Gradient{.stops = empty});
++  auto mapped_empty = fixture::resolve(empty_gradient, empty);
++  if (!mapped_empty.empty() || mapped_empty.identity() == empty.identity()) return 5;
++  auto second = flight::make_ref<fixture::Stop>(fixture::Stop{.color = color, .offset = 3});
++  auto third = flight::make_ref<fixture::Stop>(fixture::Stop{.color = color, .offset = 5});
++  stop->offset = 1;
++  auto ordered_gradient = flight::make_ref<fixture::Gradient>(fixture::Gradient{.stops = {stop, second, third}});
++  auto ordered = fixture::ordered(ordered_gradient, false);
++  if (ordered.size() != 3 || fixture::read_effects() != 123456 || fixture::read_receivers() != 1) return 6;
++  auto skipped = fixture::ordered(std::nullopt, true);
++  if (!skipped.empty() || fixture::read_effects() != 0 || fixture::read_receivers() != 1) return 7;
++  try { fixture::ordered(ordered_gradient, true); }
++  catch (flight::Ref<fixture::Color> error) {
++    return error == color && fixture::read_effects() == 123 && fixture::read_receivers() == 1 ? 0 : 8;
++  }
++  return 9;
++}
++`,
++        );
++        execFileSync(toolchain.command, createCppExecutableArguments(toolchain, source, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120000,
++  );
++});
