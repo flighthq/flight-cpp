@@ -55,3 +55,17 @@ The required lowering is the same as above: the local keeps the provider's exact
 `Ref<WgpuEffectPipeline>`. An anonymous re-expansion would copy the pipeline record and erase its WebGPU
 handles. Nothing is carried: no conversion between the two structs, no copied pipeline, and no narrowed
 domain.
+
+## G3 regression exposed by typed descriptors: `effects_wgpu/wgpu_color_lut_pass.hpp` (pending this root)
+
+Before `compiler-external-object-field-literal-type`, the emitter refused `applyColorLutPassToWgpu` with
+`cpp-contextual-union-value-type-unrepresented`. The header compiled only because the function was missing. With typed
+descriptor construction the function now emits, and its local `const fs = getWgpuEffectPassState(state)` is
+re-expanded into a header-local anonymous struct whose WebGPU handle members are erased to `flight::Any`
+(`uniform_bg_texture_bglayout_uniform_bglayout_sampler_acquire_slot_write_slot_begin_pass_9b3f1c7cd42b6c60`). The
+providing module declares the same shape with typed handles (`..._6e85051ce2e6ac30`). That is this request's shape:
+the inferred local must keep the provider's carrier.
+
+The header fails at `wgpu_color_lut_pass.hpp:178` (`no viable conversion from Ref<..._6e85...> to Ref<..._9b3f...>`).
+It is recorded as a lost pass, with the row moved to `no-viable-conversion-7e6bb150`, and nothing is suppressed.
+`uploadLutTexture` (refused separately) is the next failure in the same function.

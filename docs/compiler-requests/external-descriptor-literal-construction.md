@@ -161,3 +161,15 @@ above is the same gap.
 
 Every method remains the existing `unavailable` body. A compiling call proves boundary availability, not a
 successful GPU operation.
+
+**Measured G3 result.** The scoped generation of the four WebGPU packages on the 73-patch stack, followed by `-j2`
+header compiles, clears the descriptor failure on all 132 rows of both clusters:
+- 1 row passes: `wgpu_fullscreen_pass`.
+- 117 rows move to the heritage-refused `bindWgpuRenderPassTarget` (`undeclared-identifier-aef2cf8f`).
+- 14 rows move to the readonly viewport row (`no-matching-function-a7c6e418`).
+
+`effects_wgpu/wgpu_color_lut_pass.hpp` regressed. It now emits a formerly refused function into the imported-alias
+local cause (see `compiler-imported-alias-local-flow-abi.md`).
+
+Four effects-wgpu overrides were re-derived onto the new emission. The gradient-ramp override was dropped: its public
+consumer test runs on the emitted header and stops at the runtime's unavailable `createTexture`.

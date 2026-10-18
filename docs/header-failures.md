@@ -27,7 +27,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
+| 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler patch (applied) | bound WebGPU descriptor literals emitted untyped *(G3 resolved: descriptor failure cleared; 0 pass, all 117 to `undeclared-identifier-aef2cf8f`)* |
 | 2 | `missing-member-b1a6d5cf` | 40 | 2D | retire obsolete repair | own same-namespace using repair inserts lookup before definition *(compiler request withdrawn; G3 original-consumer qualification pending)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
@@ -125,7 +125,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 96 | `variant-cast-37507e07` | 2 | 3D | compiler | G2: recorded 0/2 retained; glTF guarded indexed light optional is cast without projection; existing flow/heritage requests, no rerun |
 | 97 | `call-has-no-matching-00dc04ad` | 1 | 2D | override (applied) | the texture override dropped the emitted readonly-row `get_texture_uv_matrix` overload *(G2: 1/1 pass)* |
 | 98 | `call-has-no-matching-35224a3f` | 1 | 3D | source patch (fixed) | private readonly GlContext helper retains its native carrier; G2: 1/1 pass, request linked |
-| 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler | `create_bind_group_layout` entries are emitted as anonymous nested owners inside an untyped braced descriptor *(request filed)* |
+| 99 | `call-has-no-matching-4c12e411` | 15 | WGPU | compiler patch (applied) | `create_bind_group_layout` entries emitted as anonymous owners *(G3 resolved: 1 pass (`wgpu_fullscreen_pass`), 14 to `no-matching-function-a7c6e418`)* |
 | 100 | `call-has-no-matching-76a6a61a` | 1 | 2D | compiler | optional slot-resolver result is coalesced as a variant; [existing carrier request](compiler-requests/compiler-flattened-optional-chain-union-storage.md#g2-scene2d-slot-resolver-coalesces-an-optional-callback-result) |
 | 101 | `call-has-no-matching-7f4ae181` | 1 | 2D | compiler | guarded blendMode read retains optional<String> at the String helper call; [existing request](compiler-requests/narrowed-optional-template-argument.md#g2-scene2d-kind-usage-passes-a-guarded-member-as-optional-storage) |
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
@@ -297,6 +297,22 @@ deleting or stubbing behaviour.
 - first failure at: `flight/render_wgpu/wgpu_render_pass.hpp:146`
 - example: `no matching member function for call to 'begin_render_pass'`
 - compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
+
+**G3 resolved (builder2).** The fix ships as compiler patch `compiler-external-object-field-literal-type`, together with the sdl-wgpu
+profile's typed member parameters and field literal types and the runtime render-pass, shader-module and
+texture-view descriptors. It was measured with a scoped `pkg:generate` of render-wgpu, effects-wgpu, scene2d-wgpu
+and scene3d-wgpu on the full 73-patch stack, then their headers compiled at `-j2` (Clang 22.1.8).
+
+Every one of these 117 rows is past the descriptor failure, and now fails first on
+`wgpu_render_pass.hpp`'s call to `bindWgpuRenderPassTarget`. The compiler refuses that function at the
+`WgpuRenderTarget` to `WgpuTextureRenderTarget` reference assertion (`cpp-reference-assertion-without-heritage`), so all
+117 move to `undeclared-identifier-aef2cf8f`, linked to the
+[heritage owner-widening request](compiler-requests/compiler-interface-heritage-owner-widening.md).
+
+The `set_viewport`/scissor/vertex/index/draw-indexed/stencil-reference gap that typed descriptors uncovered next
+was closed in the runtime. Those methods report unavailable like their siblings.
+
+**Numbers: 0/117 pass.**
 
 ### 2. `missing-member-b1a6d5cf` — 40 header(s) (34 at G1; 4 joined in G2 from cluster 61; 1 from cluster 123; 1 from `no-viable-conversion-c997578d`)
 
@@ -2750,6 +2766,18 @@ drift remain under `/tmp/builder4-g2-custom-shader-guards/`.
 - first failure at: `flight/render_wgpu/wgpu_fullscreen_pass.hpp:148`
 - example: `no matching member function for call to 'create_bind_group_layout'`
 - compiler request: `docs/compiler-requests/external-descriptor-literal-construction.md`
+
+**G3 resolved (builder2).** The fix ships as compiler patch `compiler-external-object-field-literal-type`, together with the sdl-wgpu
+profile's typed member parameters and field literal types and the runtime render-pass, shader-module and
+texture-view descriptors. It was measured with a scoped `pkg:generate` of render-wgpu, effects-wgpu, scene2d-wgpu
+and scene3d-wgpu on the full 73-patch stack, then their headers compiled at `-j2` (Clang 22.1.8).
+
+`render_wgpu/wgpu_fullscreen_pass.hpp` now compiles. The other 14 rows fail first on `wgpu_shader.hpp`, which passes
+a readonly `WgpuRenderPassViewport` row to `setWgpuMatrixFromTransform`'s writable parameter. They move to
+`no-matching-function-a7c6e418`, linked to the [readonly-to-writable request](compiler-requests/readonly-view-to-writable.md).
+The `blend: isMaskWrite ? undefined : blend` field in the same header is now lowered as the branch it is.
+
+**Numbers: 1/15 pass.**
 
 ### 100. `call-has-no-matching-76a6a61a` — 1 header(s)
 
