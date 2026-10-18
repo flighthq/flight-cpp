@@ -30,6 +30,8 @@ int main() {
   check(!view.get("false").as_boolean() && view.get("zero").as_number() == 0 &&
         view.get("str").as_string() == String("s"), "falsy and string primitives retain their kinds");
   const auto object = view.get("obj");
+  check(object.object_if<flight::JsonObject>() == doc.as_object().get("obj")->object_owner(),
+        "exact erased object recovery returns the original parsed owner");
   check(object.strict_equals(view.get("obj")) && object.identity() == doc.as_object().get("obj")->object_owner().get(),
         "repeated nested object reads retain parsed identity");
   check(!object.strict_equals(Any(flight::Json::parse("{\"n\":1}"))), "equal-looking parses have distinct object identity");

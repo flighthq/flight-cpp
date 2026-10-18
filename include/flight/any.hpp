@@ -411,7 +411,7 @@ class Any final {
   // Recovers an object reference at the exact type it was stored as. An empty result means this
   // value holds something else, so a caller selects rather than reinterprets.
   template <typename Object>
-  [[nodiscard]] Ref<Object> object_if() const noexcept {
+  [[nodiscard]] std::shared_ptr<Object> object_if() const noexcept {
     const auto* stored = std::get_if<detail::AnyObject>(&value_);
     if (!stored || stored->type != std::type_index(typeid(Object))) return {};
     return std::static_pointer_cast<Object>(stored->object);

@@ -249,3 +249,41 @@ behavior results in this unit. No C++, runtime, binding, source patch, repair, o
 inventory change is carried, so no changed normal generation needs reproducing. The owned root/row
 remains failed with compiler route. No native feature, parser, resource, header or functionality gain
 is claimed; earlier JSON cases and all foreign glTF ledger/edge corrections retain their evidence.
+
+### Original JSON owner read views (2026-10-17)
+
+The first applicable public consumer is `collectSpineJsonSectionCounts` in
+`skeleton2d-formats`. Its source keeps one `JSON.parse` result, rejects a null or
+non-object root, asserts a string-keyed unknown Record for reads, and passes that
+same owner to readonly helpers. Arrays remain objects in the source's domain.
+
+The runtime now exposes the parsed container's original shared owner to `Any`
+and `NamedProperties`. Reading a member boxes just that value; nested objects and
+arrays retain their original owners. Readonly views observe later alias updates,
+missing properties read undefined, and own integer keys precede other keys.
+JSON array views enumerate present indices, retain nonenumerable `length`, and
+support the erased array reads without rebuilding an `Array<Any>`. A native
+`Record<String, Any>` can supply the same live readonly read contract over its
+existing shared storage.
+
+`compiler-readonly-json-record-view` carries that view through exact
+`Readonly<Record<string, unknown>>` helpers and aliases. Its reads return bare
+`Any`, whose own tags answer null/undefined tests. Nullish coalescing evaluates its
+left side once and preserves the lazy source fallback, including
+`anim.drawOrder ?? anim.draworder`. Readonly literal arguments still construct the
+original ordinary Record once and then retain its storage through a view.
+Ordinary mutable and concrete-valued Record carriers remain unchanged; the
+separate typed Record missing-key patch composes with this route.
+
+The patch also recognizes a no-binding catch around one built-in `JSON.parse`
+assignment from an already-string binding or literal and catches
+`JsonSyntaxError` there. It does not catch unrelated native resource failures.
+Other catch bodies retain their original lowering.
+
+This is a dynamic read capability, not evidence that `LottieDocument`, Aseprite,
+TexturePacker, or glTF nominal document carriers are represented. No schema
+validation, copied Record/document, replacement parser, or unchecked nominal
+owner assertion is supplied. Historical applicability remains 25/25; the two
+current related follow-on rows are tracked separately. Header and consumer gains
+must be measured after normal scoped generation rather than inferred from this
+runtime capability or a compiler fixture.
