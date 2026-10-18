@@ -2824,7 +2824,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 189,
+      "line": 206,
       "module": "packages/loader/src/resourceLoader.ts",
       "package": "@flighthq/loader",
       "reason": "cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a reference assertion from flight::Ref<flight::types::ResourceLoader> to flight::Ref<ResourceLoaderInternal> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",

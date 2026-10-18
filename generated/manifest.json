@@ -6508,7 +6508,7 @@
       "sourceModules": 14
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/loader",
       "cppNamespace": "flight::loader",
       "emittedModules": 3,

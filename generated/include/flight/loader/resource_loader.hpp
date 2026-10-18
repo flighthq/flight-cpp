@@ -3,15 +3,11 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function disposeResourceLoader -- source line 189
 //   missing: function enableResourceLoaderItemSignals -- source line 206
 //   missing: function getResourceLoadBytes -- source line 221
 //   missing: function getResourceLoadCounts -- source line 252
-//   missing: function getResourceLoadItemStatus -- source line 265
-//   missing: function getResourceLoadProgress -- source line 287
 //   missing: function pauseResourceLoad -- source line 351
 //   missing: function resetResourceLoader -- source line 433
-//   missing: function setResourceLoadPriority -- source line 485
 //   missing: function abortSignalPromise -- source line 546
 //   missing: function cancelResourceLoad -- source line 140
 //   missing: function delay -- source line 781
@@ -171,35 +167,21 @@ struct ResourceLoaderInternal : public flight::types::ResourceLoader {
   double weight_loaded;
 };
 
-
-// NOT GENERATED: function disposeResourceLoader -- source line 189
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function disposeResourceLoader(loader: ResourceLoader): void {
-//     clearSignal(loader.onCancel);
-//     clearSignal(loader.onComplete);
-//     clearSignal(loader.onError);
-//     clearSignal(loader.onPause);
-//     clearSignal(loader.onProgress);
-//     clearSignal(loader.onResume);
-//   
-//     const internal = loader as ResourceLoaderInternal;
-//     if (internal.itemSignals !== null) {
-//       clearSignal(internal.itemSignals.onItemComplete);
-//       clearSignal(internal.itemSignals.onItemError);
-//       clearSignal(internal.itemSignals.onItemRetry);
-//       clearSignal(internal.itemSignals.onItemStart);
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a reference assertion from
-// flight::Ref<flight::types::ResourceLoader> to flight::Ref<ResourceLoaderInternal> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+inline void dispose_resource_loader(flight::Ref<flight::types::ResourceLoader> loader) {
+  flight::signals::clear_signal<std::function<void()>>(loader->on_cancel);
+  flight::signals::clear_signal<std::function<void(flight::Array<flight::Ref<flight::types::ResourceLoadReport>>)>>(loader->on_complete);
+  flight::signals::clear_signal<std::function<void(flight::Any, flight::String)>>(loader->on_error);
+  flight::signals::clear_signal<std::function<void()>>(loader->on_pause);
+  flight::signals::clear_signal<std::function<void(double)>>(loader->on_progress);
+  flight::signals::clear_signal<std::function<void()>>(loader->on_resume);
+  auto internal = flight::StructuralMemberView<flight::Ref<flight::types::ResourceLoader>>(loader);
+  if (([&]() { const auto& member_view_read = (internal).read<std::optional<flight::Ref<flight::types::ResourceLoaderItemSignals>>>("itemSignals"); return !((member_view_read.has_value() && !member_view_read.value().has_value())); }())) {
+    flight::signals::clear_signal<std::function<void(flight::String, flight::Any)>>((internal).read<std::optional<flight::Ref<flight::types::ResourceLoaderItemSignals>>>("itemSignals").value().value()->on_item_complete);
+    flight::signals::clear_signal<std::function<void(flight::String, flight::Any, double)>>((internal).read<std::optional<flight::Ref<flight::types::ResourceLoaderItemSignals>>>("itemSignals").value().value()->on_item_error);
+    flight::signals::clear_signal<std::function<void(flight::String, double, double)>>((internal).read<std::optional<flight::Ref<flight::types::ResourceLoaderItemSignals>>>("itemSignals").value().value()->on_item_retry);
+    flight::signals::clear_signal<std::function<void(flight::String)>>((internal).read<std::optional<flight::Ref<flight::types::ResourceLoaderItemSignals>>>("itemSignals").value().value()->on_item_start);
+  }
+}
 
 
 // NOT GENERATED: function enableResourceLoaderItemSignals -- source line 206
@@ -325,81 +307,51 @@ struct ResourceLoaderInternal : public flight::types::ResourceLoader {
 // ResourceLoaderInternal row where initialization establishes those cells, rather than widening
 // Readonly<ResourceLoader> at the use site.
 
+inline flight::types::ResourceLoadItemStatus get_resource_load_item_status(flight::Ref<flight::types::ResourceLoader> loader, flight::String key) {
+  auto internal = flight::StructuralMemberView<flight::Ref<flight::types::ResourceLoader>>(loader);
+  auto report = (internal).read<flight::Array<flight::Ref<flight::types::ResourceLoadReport>>>("reports")->find(flight::Function<bool(flight::Ref<flight::types::ResourceLoadReport>)>{[=](flight::Ref<flight::types::ResourceLoadReport> r) { return (r->key == key); }});
+  if (report.has_value()) {
+    return report.value()->status;
+  }
+  if ((internal).read<flight::Array<flight::Ref<PendingEntry>>>("pending")->some(flight::Function<bool(flight::Ref<PendingEntry>)>{[=](flight::Ref<PendingEntry> p) { return (p->key == key); }})) {
+    return flight::String("pending");
+  }
+  for (auto entry : (internal).read<flight::Set<flight::Ref<PendingEntry>>>("inFlight")) {
+    if ((entry->key == key)) {
+      return flight::String("running");
+    }
+  }
+  return flight::String("pending");
+}
 
-// NOT GENERATED: function getResourceLoadItemStatus -- source line 265
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function getResourceLoadItemStatus(loader: ResourceLoader, key: string): ResourceLoadItemStatus {
-//     const internal = loader as ResourceLoaderInternal;
-//     const report = internal.reports.find((r) => r.key === key);
-//     if (report !== undefined) return report.status;
-//     if (internal.pending.some((p) => p.key === key)) return 'pending';
-//     for (const entry of internal.inFlight) {
-//       if (entry.key === key) return 'running';
-//     }
-//     return 'pending';
-//   }
-//   
-//   // The 0..1 completion fraction, and the single answer to "how far along is this batch" — the same
-//   // number `onProgress` emits. Weighted by each item's `weight` (default 1), so an unweighted batch is
-//   // the item fraction and a weighted one reflects the work the caller said each item represents.
-//   //
-//   // Weight is the contract currency because it is knowable before the first byte moves: the caller
-//   // supplies it, so the bar starts at a truthful 0 and never rescales. Bytes cannot play that role —
-//   // `bytesHint` is optional per item, so a byte denominator grows as headers arrive and the bar slides
-//   // backwards. Bytes are reporting, via `getResourceLoadBytes`; counts are a separate question, via
-//   // `getResourceLoadCounts`.
-//   //
-//   // Never returns NaN: every division below is guarded by the zero check in front of it.
-// cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a reference assertion from
-// flight::Ref<flight::types::ResourceLoader> to flight::Ref<ResourceLoaderInternal> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
-
-
-// NOT GENERATED: function getResourceLoadProgress -- source line 287
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function getResourceLoadProgress(loader: ResourceLoader, group?: string): number {
-//     const internal = loader as ResourceLoaderInternal;
-//     if (!internal.started) return 0;
-//   
-//     if (group !== undefined) {
-//       const groupReports = internal.reports.filter((r) => r.group === group);
-//       const groupPending = internal.pending.filter((p) => p.group === group);
-//       let groupInFlight = 0;
-//       for (const entry of internal.inFlight) {
-//         if (entry.group === group) groupInFlight++;
-//       }
-//       const groupTotal = groupReports.length + groupPending.length + groupInFlight;
-//       if (groupTotal === 0) return 0;
-//       return groupReports.length / groupTotal;
-//     }
-//   
-//     // A batch of nothing is complete rather than un-started: callers await a loader and branch on 1, and
-//     // reporting 0 for an empty batch would strand that. Also the only guard against dividing by zero on
-//     // `total` below.
-//     if (internal.total === 0) return 1;
-//     if (internal.totalWeight > 0) {
-//       return internal.weightLoaded / internal.totalWeight;
-//     }
-//     // Reached only when every item was explicitly given `weight: 0`, which makes the weighted fraction
-//     // undefined; the item fraction is the sensible answer for a batch that declined to weight itself.
-//     return internal.loaded / internal.total;
-//   }
-//   
-// cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a reference assertion from
-// flight::Ref<flight::types::ResourceLoader> to flight::Ref<ResourceLoaderInternal> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+inline double get_resource_load_progress(flight::Ref<flight::types::ResourceLoader> loader, std::optional<flight::String> group = std::nullopt) {
+  auto internal = flight::StructuralMemberView<flight::Ref<flight::types::ResourceLoader>>(loader);
+  if (!(internal).read<bool>("started")) {
+    return 0.0;
+  }
+  if (group.has_value()) {
+    flight::Array<flight::Ref<flight::types::ResourceLoadReport>> group_reports = (internal).read<flight::Array<flight::Ref<flight::types::ResourceLoadReport>>>("reports")->filter(flight::Function<bool(flight::Ref<flight::types::ResourceLoadReport>)>{[=](flight::Ref<flight::types::ResourceLoadReport> r) { return (r->group == group.value()); }});
+    flight::Array<flight::Ref<PendingEntry>> group_pending = (internal).read<flight::Array<flight::Ref<PendingEntry>>>("pending")->filter(flight::Function<bool(flight::Ref<PendingEntry>)>{[=](flight::Ref<PendingEntry> p) { return (p->group == group.value()); }});
+    double group_in_flight = 0.0;
+    for (auto entry : (internal).read<flight::Set<flight::Ref<PendingEntry>>>("inFlight")) {
+      if ((entry->group == group.value())) {
+        group_in_flight++;
+      }
+    }
+    const double group_total = ((static_cast<double>(group_reports.size()) + static_cast<double>(group_pending.size())) + group_in_flight);
+    if ((group_total == 0.0)) {
+      return 0.0;
+    }
+    return (static_cast<double>(group_reports.size()) / group_total);
+  }
+  if (((internal).read<double>("total") == 0.0)) {
+    return 1.0;
+  }
+  if (((internal).read<double>("totalWeight") > 0.0)) {
+    return ((internal).read<double>("weightLoaded") / (internal).read<double>("totalWeight"));
+  }
+  return ((internal).read<double>("loaded") / (internal).read<double>("total"));
+}
 
 inline void initialize_resource_loader(flight::types::EntityConstruction<flight::Ref<ResourceLoaderInternal>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>> options = std::nullopt) {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>> opts = (options.has_value() ? options.value() : flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ResourceLoaderOptions>>>>());
@@ -505,26 +457,13 @@ inline flight::Ref<flight::types::ResourceLoader> create_resource_loader(std::op
 // validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
 // replacement row, or invent side storage
 
-
-// NOT GENERATED: function setResourceLoadPriority -- source line 485
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function setResourceLoadPriority(loader: ResourceLoader, key: string, priority: number): void {
-//     const internal = loader as ResourceLoaderInternal;
-//     const entry = internal.pending.find((p) => p.key === key);
-//     if (entry !== undefined) {
-//       entry.priority = priority;
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/loader/packages/loader/src/resourceLoader.ts: a reference assertion from
-// flight::Ref<flight::types::ResourceLoader> to flight::Ref<ResourceLoaderInternal> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+inline void set_resource_load_priority(flight::Ref<flight::types::ResourceLoader> loader, flight::String key, double priority) {
+  auto internal = flight::StructuralMemberView<flight::Ref<flight::types::ResourceLoader>>(loader);
+  auto entry = (internal).read<flight::Array<flight::Ref<PendingEntry>>>("pending")->find(flight::Function<bool(flight::Ref<PendingEntry>)>{[=](flight::Ref<PendingEntry> p) { return (p->key == key); }});
+  if (entry.has_value()) {
+    (entry.value()->priority = priority);
+  }
+}
 
 inline void sort_pending_by_priority(flight::Array<flight::Ref<PendingEntry>> pending) {
   pending.sort(flight::Function<double(flight::Ref<PendingEntry>, flight::Ref<PendingEntry>)>{[=](flight::Ref<PendingEntry> a, flight::Ref<PendingEntry> b) { return (b->priority - a->priority); }});

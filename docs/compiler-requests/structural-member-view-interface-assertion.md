@@ -51,3 +51,26 @@ runtime absence/owner behavior already covered by `runtime_test.cpp`'s
 `test_structural_member_view_absence`. It expires when the C++ emitter lowers this interface
 assertion itself, or when the runtime contract offers a checked dynamic-owner recovery that the
 emitter elects instead.
+
+## Downstream finding: the factory's finishEntity exact-owner recovery
+
+With the header compiling, the public factory consumer reaches `create_resource_loader` and aborts
+with `std::bad_cast`. The stack is `flight::entity::finish_entity` →
+`structural_ref_cast<Ref<ResourceLoader>>(EntityConstruction<Ref<ResourceLoaderInternal>>)`: the
+emitter instantiated `finishEntity` with the function's declared RETURN type (the public
+`ResourceLoader`) rather than the construction's own owner (`ResourceLoaderInternal`), and the
+runtime's exact-owner recovery (`RowOwner::native_type() == typeid(Object)`) rejects the derived
+owner. The faithful lowering finishes the exact construction owner and widens the returned
+reference through the shared-pointer derive-to-base conversion:
+
+```cpp
+return flight::Ref<flight::types::ResourceLoader>(
+    flight::entity::finish_entity<flight::Ref<ResourceLoaderInternal>>(out));
+```
+
+This is a separate emitter touch point (finishEntity specialization / return widening), not the
+member-view lowering; the member-view root is measured complete, and the factory consumer is
+recorded as an explicit incomplete consumer until that specialization is fixed. The three remaining
+`flight/loader` headers (`_internal_index`, `contract`, `load`) now fail past this root on a net
+boundary (`no matching conversion ... 'NetResponseBody'`), recorded as
+`no-viable-conversion-e509cc4b`.
