@@ -576,6 +576,7 @@ struct SceneDocumentYamlSubsetParser : public flight::ReferenceEnabled {
     return parse_failure;
   }
 };
+inline const bool flight_class_prototype_SceneDocumentYamlSubsetParser = flight::register_class_prototype<SceneDocumentYamlSubsetParser>(flight::ClassPrototype{{"lineAt", "tokenAt", "parse", "addMappingEntry", "checkCollection", "checkNode", "createRefusal", "getRefusal", "parseBlock", "parseBlockMapping", "parseBlockSequence", "parseFlowMapping", "parseInline", "parseNull", "parseScalar", "parseSequenceMapping", "refuse"}, {}, std::nullopt, false});
 
 inline flight::Record<flight::String, flight::String> double_quoted_escapes = {{flight::String("\""), flight::String("\"")}, {flight::String("\\"), flight::String("\\")}, {flight::String("/"), flight::String("/")}, {flight::String("b"), flight::String("\b")}, {flight::String("f"), flight::String("\f")}, {flight::String("n"), flight::String("\n")}, {flight::String("r"), flight::String("\r")}, {flight::String("t"), flight::String("\t")}};
 
@@ -829,6 +830,7 @@ struct SceneDocumentYamlSubsetLexer : public flight::ReferenceEnabled {
     return create_scene_document_yaml_subset_refusal(kind, flight::make_ref<SceneDocumentYamlSubsetPosition>(SceneDocumentYamlSubsetPosition{.offset = offset, .line = line, .column = column}), limit.value(), actual.value());
   }
 };
+inline const bool flight_class_prototype_SceneDocumentYamlSubsetLexer = flight::register_class_prototype<SceneDocumentYamlSubsetLexer>(flight::ClassPrototype{{"lex", "lexDoubleQuotedScalar", "lexPlainScalar", "lexQuotedScalar", "lexSingleQuotedScalar", "appendDecodedScalar", "refuse"}, {}, std::nullopt, false});
 
 inline SceneDocumentYamlSubsetResult parse_scene_document_yaml_subset(flight::String source) {
   if ((static_cast<double>(source.length()) > max_document_code_units)) {

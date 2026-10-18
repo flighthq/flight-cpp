@@ -125,5 +125,6 @@ struct SwfReader : public flight::types::SwfTagReader {
     return value;
   }
 };
+inline const bool flight_class_prototype_SwfReader = flight::register_class_prototype<SwfReader>(flight::ClassPrototype{{"alignToByte", "readEncodedUint32", "readFixed8", "readSignedBits", "readString", "readUint8", "readUint16", "readUint32", "readUnsignedBits"}, {}, std::nullopt, false});
 
 } // namespace flight::swf

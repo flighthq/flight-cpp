@@ -96,6 +96,7 @@ struct DeflateBitWriter : public flight::ReferenceEnabled {
     ([&]() { auto&& typed_array = this->bytes; const auto typed_index = this->length++; const auto typed_value = value; return typed_array.set_index(typed_index, typed_value); }());
   }
 };
+inline const bool flight_class_prototype_DeflateBitWriter = flight::register_class_prototype<DeflateBitWriter>(flight::ClassPrototype{{"writeBits", "writeCode", "alignToByte", "writeByte", "finish", "writeBit", "push"}, {"byteLength"}, std::nullopt, false});
 
 inline void write_literal_symbol(flight::Ref<DeflateBitWriter> writer, double symbol) {
   if ((symbol <= 143.0)) {

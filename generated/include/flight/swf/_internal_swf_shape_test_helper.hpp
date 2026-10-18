@@ -221,5 +221,6 @@ struct ShapeWriter : public flight::ReferenceEnabled {
     }
   }
 };
+inline const bool flight_class_prototype_ShapeWriter = flight::register_class_prototype<ShapeWriter>(flight::ClassPrototype{{"toBytes", "toReader", "writeByte", "writeCurvedEdge", "writeEndShape", "writeFillStyleCount", "writeGradient", "writeBitmapFillStyle", "writeScaleMatrix", "writeIdentityMatrix", "writeZeroScaleMatrix", "writeLineStyleCount", "writeSolidFillStyles", "writeStraightEdge", "writeNewStylesRecord", "writeStyleBits", "writeStyleChange", "writeUint16", "align", "writeSigned", "writeUnsigned"}, {}, std::nullopt, false});
 
 } // namespace flight::swf

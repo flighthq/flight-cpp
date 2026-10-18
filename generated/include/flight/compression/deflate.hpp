@@ -159,6 +159,7 @@ struct InflateState : public flight::ReferenceEnabled {
     ([&]() { auto&& typed_array = this->output; const auto typed_index = this->output_length++; const auto typed_value = byte; return typed_array.set_index(typed_index, typed_value); }());
   }
 };
+inline const bool flight_class_prototype_InflateState = flight::register_class_prototype<InflateState>(flight::ClassPrototype{{"readBit", "readBits", "writeByte"}, {}, std::nullopt, false});
 
 inline void inflate_stored_block(flight::Ref<InflateState> state) {
   (state->bit_buffer = 0.0);

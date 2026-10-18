@@ -5675,6 +5675,23 @@
       "whyNotUpstreamFirst": "The downstream C++ emitter cannot represent the dual-sentinel optional chain; the explicit conditional is the same source semantics in one domain. It expires when the emitter lowers it itself.",
       "unblocks": "readLegacyPlaceObject emission and the retained swf_place_object_handler/swf_placement_tag_family calls.",
       "expires": "when the C++ emitter lowers a nullable optional-chain with a required-nullable member without an explicit source local."
+    },
+    {
+      "id": "compiler-erased-member-query",
+      "dependency": "flight-compiler",
+      "patch": "compiler-erased-member-query.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "(1) `key in value` on an erased (unknown/any) receiver is emitted as raw text, `flight::String(\"x\") in value`, which does not compile (scene2d-formats lottieDocument, particles-formats registerBuiltInParticleFormats). (2) `typeof (x as T).m` on an erased x lowers through a checked object_if<T> that throws logic_error for every object of another type, where the source answers the property's typeof (textureatlas-formats hasFrameDuration, particles-formats mode check).",
+      "rewrite": "Erased `in` with a string key lowers to flight::has_property(value, key); `typeof (x as T).m` with an erased x lowers to flight::member_typeof(x, \"m\"); each non-generic emitted class registers its prototype methods and accessors with flight::register_class_prototype so both queries see class members.",
+      "equivalence": "has_property follows the source order: a non-object throws TypeError, own cells answer, then the registered class chain, then Object.prototype; receivers the runtime cannot answer (functions, externals, arrays, accessors, classes with unproven subclasses) raise the out-of-profile family rather than answering. member_typeof throws TypeError on null/undefined, returns the own cell's typeof, \"function\" for an inherited method or Object.prototype name, \"undefined\" otherwise, and calls no getter. Registration adds no storage and no operation.",
+      "whyNotUpstreamFirst": "Carried through the established compiler patch stack against the exact pin; it replaces raw text and a throwing assertion with the source's own answers.",
+      "unblocks": "The four emitted sites now lower to runtime queries: scene2d-formats reportLottieExpression and the particles-formats pixi detector (erased `in`), textureatlas-formats hasFrameDuration and particles-formats hasMinMaxCurveMode (asserted-member typeof). Eight errors leave lottie_document.hpp and register_built_in_particle_formats.hpp and none are added, but all three headers stay blocked on other causes, so no header gain is claimed. Nine non-generic classes (abc, compression, scene-document, swf) register their prototype methods; path-boolean EventHeap is shadowed by its override and was not taken.",
+      "expires": "when upstream lowers erased membership and asserted-member typeof to runtime member queries and records class prototypes.",
+      "appliedOn": "2026-10-18",
+      "verification": "cppErasedMemberQuery, cppMembershipTest and cppSymbolOwnPresence 12/12; full backend+semantic failure set identical with and without (0 new) over the 113-patch stack; scoped generation of the eight packages kept only the in/typeof lines and registration lines, with no new header errors. tests/generated_class_prototype_presence_test.cpp checks AbcReader and SwfReader; tests/structural_row_test.cpp pins each emitted expression on JSON values plus the TypeError, getter and refusal boundaries; a mutant answering absent for unbound native keys is killed."
     }
   ]
 }

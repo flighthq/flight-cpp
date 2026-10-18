@@ -118,6 +118,7 @@ struct AbcReader : public flight::ReferenceEnabled {
     return (static_cast<double>(this->source.size()) - this->pos);
   }
 };
+inline const bool flight_class_prototype_AbcReader = flight::register_class_prototype<AbcReader>(flight::ClassPrototype{{"readBytes", "readDouble", "readVarInt", "readString", "readUint8", "readUint16", "readVarUint", "remaining"}, {}, std::nullopt, false});
 
 template <typename T>
 inline bool read_abc_pool(flight::Ref<AbcReader> reader, flight::Array<T> out, std::function<std::optional<T>()> read) {

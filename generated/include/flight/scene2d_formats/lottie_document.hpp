@@ -846,7 +846,7 @@ inline void report_lottie_expression(flight::Any value, flight::Ref<flight::type
   if ((([&]() { const auto& presence_operand = value; return presence_operand.is_null(); }()) || (value.type_of() != flight::String("object")))) {
     return;
   }
-  if (((flight::String("x") in value) && (flight::named_properties(value).get(flight::String("x")).type_of() == flight::String("string")))) {
+  if ((flight::has_property(value, flight::String("x")) && (flight::named_properties(value).get(flight::String("x")).type_of() == flight::String("string")))) {
     report_lottie_skip(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieImportContext>>>>(context)), flight::String("lottie.unsupported-expression"), flight::String("reportLottieExpression"), std::nullopt);
   }
   for (auto child : ([&]() { const auto named_view = flight::named_properties(value); flight::Array<flight::Any> named_entries; for (const auto& named_key : named_view.keys()) { named_entries.push(named_view.get(named_key)); } return named_entries; }())) {

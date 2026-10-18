@@ -83,7 +83,7 @@ struct duration_f3fad96c6b778b38 : public flight::ReferenceEnabled {
 
 inline bool has_frame_duration(flight::Any frames) {
   auto frame = first_frame(frames);
-  return ((([&]() { const auto& presence_operand = frame; return !presence_operand.is_null(); }()) && (frame.type_of() == flight::String("object"))) && (([&]() -> flight::String { const auto& typeof_value = ([&]() -> flight::Ref<duration_f3fad96c6b778b38> { const auto& erased_value = frame; auto erased_object = erased_value.object_if<duration_f3fad96c6b778b38>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())->duration; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("number")));
+  return ((([&]() { const auto& presence_operand = frame; return !presence_operand.is_null(); }()) && (frame.type_of() == flight::String("object"))) && (flight::member_typeof(frame, flight::String("duration")) == flight::String("number")));
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_APP_9796DB2F8FF654CB

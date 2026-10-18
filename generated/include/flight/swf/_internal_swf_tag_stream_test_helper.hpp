@@ -161,6 +161,7 @@ struct SwfBitWriter : public flight::ReferenceEnabled {
     }
   }
 };
+inline const bool flight_class_prototype_SwfBitWriter = flight::register_class_prototype<SwfBitWriter>(flight::ClassPrototype{{"toBytes", "writeSigned", "writeUnsigned"}, {}, std::nullopt, false});
 
 inline flight::Uint8Array create_swf_rectangle_record(double x_min, double x_max, double y_min, double y_max) {
   flight::Ref<SwfBitWriter> writer = flight::make_ref<SwfBitWriter>();
