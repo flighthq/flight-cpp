@@ -833,7 +833,6 @@
         "flight/render_gl/enable_gl_render_state_guards.hpp",
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
         "flight/scene3d/enable_scene_3d_guards.hpp",
-        "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
         "flight/skeleton3d/enable_skeleton_3d_guards.hpp",
         "flight/snapshot/enable_snapshot_guards.hpp",
         "flight/swf/enable_swf_guards.hpp",
@@ -3638,6 +3637,12 @@
     {
       "files": [],
       "id": "scene2d-formats-svg-declare-refused-style"
+    },
+    {
+      "files": [
+        "flight/skeleton2d/skeleton2d_animation_target.hpp"
+      ],
+      "id": "skeleton2d-declare-refused-binder-registry"
     }
   ],
   "sourcePatches": [
@@ -7297,7 +7302,7 @@
       "sourceModules": 10
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/skeleton2d",
       "cppNamespace": "flight::skeleton2d",
       "emittedModules": 19,
@@ -7310,7 +7315,7 @@
       "sourceModules": 25
     },
     {
-      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "bindingProfileSet": "sha256:2602f15df98afbc4055416765f444e85bee83a6c5fad13b420301f8fa344ca71",
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
       "emittedModules": 50,

@@ -1,14 +1,14 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 0e920ac..dbfdcf1 100644
+index 0e920ac..0d81670 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -4023,7 +4023,27 @@ function emitExpression(
+@@ -4023,7 +4023,24 @@ function emitExpression(
          expression.operator === '='
            ? emitCppForeignAnonymousPropertyObjectCpp(expression.left, expression.right, context)
            : undefined;
-+      // The destination may represent both sentinels while the assigned value is a single optional.
-+      // An indexed read lifts through Array::get's outer/inner distinction; any other single-sentinel
-+      // source lifts with the source union's own sentinel.
++      // The destination may represent both sentinels while the assigned value is a nullable array
++      // element. That read lifts through Array::get's outer/inner distinction; a conditional adapts
++      // its own branches to the destination, and no other expression shape is lifted here.
 +      const assignmentDestUnion =
 +        expression.operator === '=' && assignmentType && !erasedIndexNamedProperty && !exactCallableFieldAssignment
 +          ? getIrUnionTypeCpp(assignmentType, context, new Set())
@@ -19,60 +19,18 @@ index 0e920ac..dbfdcf1 100644
 +      const liftedAssignmentRight =
 +        assignmentDestUnion &&
 +        assignmentDestPlan?.kind === 'dualSentinelVariant' &&
-+        // A conditional adapts its own branches to the destination.
-+        expression.right.kind !== 'conditional'
-+          ? expression.right.kind === 'element'
-+            ? emitCppNullableElementIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
-+            : emitCppSingleSentinelIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
++        expression.right.kind === 'element'
++          ? emitCppNullableElementIntoDualSentinelCpp(expression.right, assignmentDestUnion, context)
 +          : undefined;
        const right =
 +        liftedAssignmentRight ??
          foreignAnonymousObject ??
          emitExpression(
            expression.right,
-@@ -30652,6 +30672,86 @@ function emitCppRequiredRecordKeyCpp(
+@@ -30652,6 +30669,47 @@ function emitCppRequiredRecordKeyCpp(
    return emitExpression(expression, context, targetType);
  }
  
-+// A source union with ONE sentinel is stored as a single std::optional: its empty state means that
-+// sentinel and nothing else. A destination carrier that represents BOTH sentinels cannot take the
-+// optional, because lifting it must name which arm the absence becomes -- null for a `T | null`
-+// element, undefined for a `T | undefined` one -- and guessing or collapsing the two would change the
-+// source's domain. Lift it without copying the owner: an engaged optional selects the value arm with
-+// the same reference, an empty one selects exactly the source's own sentinel arm. The other sentinel
-+// stays reachable only from source-level undefined code, which this conversion never produces.
-+function emitCppSingleSentinelIntoDualSentinelCpp(
-+  expression: Readonly<IrExpression>,
-+  expectedUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
-+  context: EmitContext,
-+): string | undefined {
-+  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
-+  const sourceType = getIrExpressionTypeEvidenceCpp(expression, context);
-+  const sourceUnion = sourceType ? getIrUnionTypeCpp(sourceType, context, new Set()) : undefined;
-+  const sourcePlan = sourceUnion ? getCppUnionRepresentationPlan(sourceUnion, context) : undefined;
-+  if (!sourceUnion || sourcePlan?.kind !== 'optionalSingle' || sourcePlan.valueSlots.length !== 1) return undefined;
-+  const nullAbsence = sourcePlan.sentinels.null !== 'absent';
-+  const undefinedAbsence = sourcePlan.sentinels.undefined !== 'absent';
-+  if (nullAbsence === undefinedAbsence) return undefined;
-+  const expectedPlan = getCppUnionRepresentationPlan(expectedUnion, context);
-+  if (expectedPlan.kind !== 'dualSentinelVariant') return undefined;
-+  const sentinel = nullAbsence ? 'null' : 'undefined';
-+  const valueName = getGeneratedTargetName('liftedOptional', context);
-+  const valueSlot = sourcePlan.valueSlots[0]!;
-+  const present = emitCppUnionValueConstruction(
-+    `${valueName}.value()`,
-+    valueSlot.targetType,
-+    expectedUnion,
-+    expectedPlan.kind,
-+    context,
-+  );
-+  const absence = emitCppUnionSentinelConstruction(sentinel, expectedUnion, expectedPlan.kind, context);
-+  const resultType = emitUnionTypeCpp(expectedUnion, context);
-+  context.includes.add('optional');
-+  context.includes.add('variant');
-+  return `([&]() -> ${resultType} { auto ${valueName} = ${emitExpression(expression, context)}; if (!${valueName}.has_value()) return ${absence}; return ${present}; }())`;
-+}
-+
 +// A nullable array element has TWO distinct absences in the runtime: `Array::get(double)` answers an
 +// empty OUTER optional for an index JavaScript reads as undefined (fractional, NaN, negative, or past
 +// the end) and an engaged outer optional holding an empty INNER optional for a stored null element.
@@ -117,15 +75,12 @@ index 0e920ac..dbfdcf1 100644
  function emitCppConditionalBranchCpp(
    expression: Readonly<IrExpression>,
    context: EmitContext,
-@@ -30659,6 +30759,13 @@ function emitCppConditionalBranchCpp(
+@@ -30659,6 +30717,10 @@ function emitCppConditionalBranchCpp(
  ): string {
    const union = expectedType ? getIrUnionTypeCpp(expectedType, context, new Set()) : undefined;
    const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
-+  if (union && plan?.kind === 'dualSentinelVariant') {
-+    const lifted =
-+      expression.kind === 'element'
-+        ? emitCppNullableElementIntoDualSentinelCpp(expression, union, context)
-+        : emitCppSingleSentinelIntoDualSentinelCpp(expression, union, context);
++  if (union && plan?.kind === 'dualSentinelVariant' && expression.kind === 'element') {
++    const lifted = emitCppNullableElementIntoDualSentinelCpp(expression, union, context);
 +    if (lifted) return lifted;
 +  }
    if (plan?.kind !== 'optionalSingle') return emitExpression(expression, context, expectedType);
