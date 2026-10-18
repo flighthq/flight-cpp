@@ -4,7 +4,7 @@
 #include <iostream>
 #include <optional>
 
-struct Item { double value; };
+struct Item : flight::ReferenceEnabled { double value; };
 
 int main() {
   int checks = 0;
@@ -27,7 +27,8 @@ int main() {
   const flight::Array<double> empty;
   check(empty.flat().empty() && empty.flat().identity() != empty.identity());
   check(flight::Array<flight::Array<double>>{{}, {}}.flat().empty());
-  const auto item = flight::make_ref<Item>(Item{4});
+  const auto item = flight::make_ref<Item>();
+  item->value = 4;
   flight::Array<flight::Array<flight::Ref<Item>>> objects{{item}};
   const auto retained = objects.flat();
   check(retained.element(0) == item);
