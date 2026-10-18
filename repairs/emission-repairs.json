@@ -9482,6 +9482,19 @@
       "defect": "The mutable-local lowering confuses rebinding `current` with mutating its readonly referent and inserts an invalid readonly-to-writable structural conversion before storing the value in the binding cell; the cell value is already the readonly target view, so the round trip establishes nothing. This is the same defect already carried for effects-canvas and effects-wgpu. Keep the same live target owner and the same rebind sequence; no writable authority, cast relaxation, copied target, or effect/runner behavior. Request: docs/compiler-requests/readonly-view-to-writable.md.",
       "expectedWhen": "always",
       "expires": "when a rebindable readonly structural view initializes its binding cell without a writable round trip; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "scene2d-formats-svg-declare-refused-style",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/scene2d_formats/svg_style.hpp",
+      "symbol": "resolve_svg_style",
+      "refusedFunction": "resolveSvgStyle",
+      "declaration": "flight::Ref<flight::types::SvgStyle> resolve_svg_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::XmlElement>>>> element, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgStyle>>>> parent_style, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SvgImportContext>>>> context);",
+      "sourceDeclaration": "packages/scene2d-formats/src/svgStyle.ts -- resolveSvgStyle(element: Readonly<XmlElement>, parentStyle: Readonly<SvgStyle>, context: Readonly<SvgImportContext>): SvgStyle; omitted while resolveSvgDefinitionStyle retains its exact three readonly-row call.",
+      "diagnostic": "use of undeclared identifier 'resolve_svg_style' after correcting the selector-specificity numeric carrier",
+      "defect": "The compiler refuses the cascade body on a record-index present-payload projection but retains its caller. Declare only the exact three readonly row parameter carriers and original Ref<SvgStyle> result already required by that retained call. No body, cache, copied owner, default style replacement or cascade success; direct/definition-style calls stay unavailable at link. Existing winding/declaration bodies are exercised through the original whole header.",
+      "expectedWhen": "always",
+      "expires": "when resolveSvgStyle emits and its exact NOT GENERATED marker disappears; sdk:check rejects an obsolete repair."
     }
   ]
 }

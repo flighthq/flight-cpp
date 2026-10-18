@@ -1,0 +1,19 @@
+--- a/packages/scene2d-formats/src/svgStyle.ts
++++ b/packages/scene2d-formats/src/svgStyle.ts
+@@ -60,4 +60,14 @@
+ function getCssSelectorSpecificity(selector: string): number {
+-  const ids = selector.match(/#[\w-]+/g)?.length ?? 0;
+-  const classes = selector.match(/\.[\w-]+/g)?.length ?? 0;
++  const idMatches = selector.match(/#[\w-]+/g);
++  let ids = 0;
++  if (idMatches != null) {
++    const length = idMatches.length;
++    if (length != null) ids = length;
++  }
++  const classMatches = selector.match(/\.[\w-]+/g);
++  let classes = 0;
++  if (classMatches != null) {
++    const length = classMatches.length;
++    if (length != null) classes = length;
++  }
+   const hasType = /^[a-zA-Z_][\w-]*/.test(selector) ? 1 : 0;

@@ -4369,6 +4369,23 @@
       "expires": "when upstream lowers a for-of over an erased array through the runtime array reads and records the loop binding's erased storage (docs/compiler-requests/erased-array-element-reading.md).",
       "appliedOn": "2026-10-18",
       "verification": "New cppErasedArrayIteration.test.ts: 2 pass (indexed lowering with is_null/type_of; range-for retained for unknown[] and number[]). compiler-backend-cpp typecheck exit 0; focused cppLengthProvenNullableArrayRead + cppBindingTypeInference: 8 pass. Scratch CLI runs of the refusing shapes at 806d257 + patch: 3/3 and 2/2 modules emitted, 0 refused (before: 1 refused each with cpp-presence-test-without-absence-storage); the emitted headers compile in a consumer TU against the flight-cpp runtime. No committed inventory regeneration was run; the header compile and blocked-consumer gates await a granted slot."
+    },
+    {
+      "id": "scene2d-svg-selector-numeric-match-length",
+      "dependency": "flight",
+      "patch": "scene2d-svg-selector-numeric-match-length.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "Private getCssSelectorSpecificity optional-chain numeric lengths become optional<Any>, so svg_style.hpp cannot initialize its two double counters.",
+      "rewrite": "Names each original global-regexp match once, initializes its counter to zero, and assigns the original length after explicit nullish match and length guards. Public exports, regexps, weights, comparison/evaluation order and other bodies stay unchanged.",
+      "equivalence": "The original match is evaluated once, then its length once only when the match is present; null or undefined at either boundary selects zero. The explicit guards preserve both nullish branches, zero/NaN values, property-read effects and thrown exceptions without copying match storage, coercing Any or narrowing selector strings. The id count is completed before the class match, then the same type test and 100/10/1 sum run.",
+      "verification": "Compare actual original/patched source helpers across selector cases and instrumented nullish/length/effect/throw controls. Normal pinned module generation must emit numeric counters, retain both unrelated refused bodies, and consume the exact refused-resolver declaration repair. Qualify actual original public header and winding/declaration/scorer native consumer; used refused resolver must still fail to link.",
+      "whyNotUpstreamFirst": "The numeric optional-chain result is erased at this compiler pin. Explicit source guards express the same scalar computation without adding an Any conversion or moving an exported API.",
+      "unblocks": "Existing SVG winding and style-declaration helpers through their original full svg_style.hpp; does not implement the refused CSS-rule collector or style cascade.",
+      "expires": "when numeric optional-chain results retain their numeric carrier through nullish coalescing, or Flight adopts the equivalent explicit guards.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
