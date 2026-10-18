@@ -110,12 +110,13 @@ inline void copy_matrix(flight::Ref<flight::types::Matrix4> out,
 }
 
 inline flight::Ref<flight::types::Matrix4> fresh_matrix() {
-  return flight::make_ref<flight::types::Matrix4>(flight::types::Matrix4{
-      .entity_runtime_key = std::nullopt,
-      .m = flight::Float32Array(flight::Array<double>{
-          1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-          0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}),
-  });
+  auto elements = flight::Float32Array(flight::Array<double>{
+      1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
+  auto result = flight::make_ref<flight::types::Matrix4>(
+      flight::types::Matrix4{.m = elements});
+  result->entity_runtime_key = std::nullopt;
+  return result;
 }
 
 template <typename Target>

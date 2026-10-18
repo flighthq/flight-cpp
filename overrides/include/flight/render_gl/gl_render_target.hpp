@@ -456,16 +456,24 @@ inline void resize_gl_texture_render_target(
     flight::Ref<GlTextureRenderTarget> target,
     double width,
     double height) {
-  auto requested = flight::make_ref<ResolvedRenderTargetDescriptor>(
-      ResolvedRenderTargetDescriptor{
-          .width = flight::maximum(1.0, std::ceil(width)),
-          .height = flight::maximum(1.0, std::ceil(height)),
-          .format = target->requested_axes->format,
-          .color_attachments = target->requested_axes->color_attachments,
-          .color_formats = target->requested_axes->color_formats.slice(),
-          .sample_count = target->requested_axes->sample_count,
-          .depth = target->requested_axes->depth,
-          .color_space = target->requested_axes->color_space});
+  // Evaluate the authored values before constructing their one inherited owner.
+  const auto requested_width = flight::maximum(1.0, std::ceil(width));
+  const auto requested_height = flight::maximum(1.0, std::ceil(height));
+  const auto requested_format = target->requested_axes->format;
+  const auto requested_attachments = target->requested_axes->color_attachments;
+  const auto requested_formats = target->requested_axes->color_formats.slice();
+  const auto requested_samples = target->requested_axes->sample_count;
+  const auto requested_depth = target->requested_axes->depth;
+  const auto requested_color_space = target->requested_axes->color_space;
+  auto requested = flight::make_ref<ResolvedRenderTargetDescriptor>();
+  requested->width = requested_width;
+  requested->height = requested_height;
+  requested->format = requested_format;
+  requested->color_attachments = requested_attachments;
+  requested->color_formats = requested_formats;
+  requested->sample_count = requested_samples;
+  requested->depth = requested_depth;
+  requested->color_space = requested_color_space;
   const auto effective = resolve_effective_gl_render_target_axes(
       state->gl, requested, flight::String("preferred"));
   if (!effective.has_value()) return;

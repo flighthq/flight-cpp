@@ -106,7 +106,18 @@ inline void recycle_draw_entries(flight::Array<flight::Ref<flight::types::GlScen
   }
 }
 
-inline flight::Ref<flight::types::Material3D> default_material = flight::make_ref<flight::types::Material3D>(flight::types::Material3D{.kind = flight::types::standard_material_kind, .alpha_cutoff = 0.5, .alpha_mode = flight::String("opaque"), .blend_mode = flight::types::blend_mode->normal, .double_sided = false});
+inline flight::Ref<flight::types::Material3D> default_material = [] {
+  auto kind = flight::types::standard_material_kind;
+  auto alpha_cutoff = 0.5;
+  auto alpha_mode = flight::String("opaque");
+  auto blend_mode = flight::types::blend_mode->normal;
+  auto double_sided = false;
+  auto material = flight::make_ref<flight::types::Material3D>(flight::types::Material3D{
+      .alpha_cutoff = alpha_cutoff, .alpha_mode = alpha_mode,
+      .blend_mode = blend_mode, .double_sided = double_sided});
+  material->kind = kind;
+  return material;
+}();
 
 inline flight::Ref<flight::types::Scene3DLightBlock> default_light_block =
     flight::make_ref<flight::types::Scene3DLightBlock>(

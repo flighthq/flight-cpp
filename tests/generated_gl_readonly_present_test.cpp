@@ -6,7 +6,6 @@
 #include <flight/scene3d_gl/present_gl_scene_3d.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
-#include <flight/types/gl_texture_render_target.hpp>
 
 #include <array>
 #include <cmath>
