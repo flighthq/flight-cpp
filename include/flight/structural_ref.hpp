@@ -1038,6 +1038,17 @@ class StructuralMemberView final {
     return MemberValue<Member>{};
   }
 
+  // Live write through the SAME owner: a name the native object declares updates its real member;
+  // any other name is stored in the owner's named cells and read back by later views of that object.
+  // The object is never replaced. False means no binding metadata exists, so there is no same-object
+  // storage to write through.
+  template <typename Member>
+  bool write(std::string_view name, Member value) const {
+    if (!owner_) return false;
+    owner_->set_named_value(name, std::move(value));
+    return true;
+  }
+
  private:
   Ref<Base> object_{};
   std::shared_ptr<RowOwner> owner_{};

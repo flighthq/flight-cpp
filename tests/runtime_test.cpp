@@ -4455,6 +4455,19 @@ static void test_structural_member_view_absence() {
   }
   check(use_failed, "an explicit value() of an absent member fails at the use");
 
+  // Writable capability: the same owner, live, with native-vs-by-name semantics.
+  const auto writable = flight::StructuralMemberView<MemberViewBase>(public_ref);
+  check(writable.write<int>("started", 7) && derived->started == 7 &&
+            writable.read<int>("started").value() == 7,
+        "a native member write through the view updates the original object's real member");
+  const void* before = derived.get();
+  check(writable.write<double>("shadow", 2.5) && derived.get() == before,
+        "a by-name write uses the owner's cells and never replaces the object");
+  check(writable.read<double>("shadow").value() == 2.5 &&
+            flight::StructuralMemberView<MemberViewBase>(public_ref).read<double>("shadow").value() == 2.5,
+        "a by-name write is visible through another view of the same owner");
+  check(derived->total == 2.0, "a by-name write does not fabricate a native member");
+
   // Source numeric semantics for a present `started` with missing total/loaded/totalWeight:
   // `undefined === 0` is false, `undefined > 0` is false, `undefined / undefined` is NaN -- no
   // generic conversion throw. Member calls on an absent array still fail AT the call (TypeError).
