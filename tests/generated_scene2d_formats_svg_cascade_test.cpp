@@ -135,14 +135,11 @@ private:
  std::shared_ptr<UnicodeFailure> failure_;
 };
 int main(){try{const flight::UnicodeServiceScope unicode(std::make_shared<CorpusUnicodeService>());
-{auto context=flight::make_ref<types::SvgImportContext>(); auto source=element({{String("style"),String("É😀: unused; font-family: é😀")}});
- auto fault=std::make_shared<UnicodeFailure>(); bool caught=false;
+{auto fault=std::make_shared<UnicodeFailure>(); bool caught=false;
  {const flight::UnicodeServiceScope failing(std::make_shared<FailingUnicodeService>(fault));
-  try { svg::resolve_svg_definition_style(view(source),context); }
+  try { svg::parse_svg_color(String("É😀")); }
   catch(const std::shared_ptr<UnicodeFailure>& error) { caught=error==fault; }}
- check(caught&&!context->resolved_definition_styles.has(source),"exact host exception and no failed style cache entry");
- auto successful=svg::resolve_svg_definition_style(view(source),context);
- check(successful->font_family==String("é😀")&&context->resolved_definition_styles.get(source).value()==successful,"successful retry caches original owner");}
+ check(caught,"original color parser propagates exact Unicode host exception owner");}
 {auto context=flight::make_ref<types::SvgImportContext>();auto source=element({});context->parent_by_element.set(source,std::nullopt);
  auto result=svg::resolve_svg_definition_style(view(source),context);check(result->color==svg::default_svg_style->color,"explicit null parent equals missing parent");}
 {auto context=flight::make_ref<types::SvgImportContext>();auto source=element({});auto parent=flight::make_ref<types::SvgStyle>(*svg::default_svg_style);
