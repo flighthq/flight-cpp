@@ -1287,6 +1287,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_swf_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_swf COMMAND flight_cpp_generated_swf_tests)
 
+add_executable(flight_cpp_generated_swf_retained_callees_tests generated_swf_retained_callees_test.cpp)
+target_include_directories(
+  flight_cpp_generated_swf_retained_callees_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_swf_retained_callees_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_swf_retained_callees COMMAND flight_cpp_generated_swf_retained_callees_tests)
+
 add_executable(flight_cpp_generated_physics2d_tests generated_physics2d_test.cpp)
 target_include_directories(
   flight_cpp_generated_physics2d_tests
