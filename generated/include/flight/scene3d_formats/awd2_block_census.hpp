@@ -45,6 +45,14 @@ struct source_view_5898de4c756cf2a0 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_SOURCE_VIEW_5898DE4C756CF2A0
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_SOURCE_VIEW_DE91E31C696B3D30
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_SOURCE_VIEW_DE91E31C696B3D30
+struct source_view_de91e31c696b3d30 : public flight::ReferenceEnabled {
+  flight::Uint8Array source;
+  flight::DataView view;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_SOURCE_VIEW_DE91E31C696B3D30
+
 inline std::optional<flight::Map<flight::String, double>> collect_awd2_block_counts(flight::Uint8Array source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> deflate, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> lzma) {
   if (!flight::scene3d_formats::parse_awd2_header(source, deflate, lzma).has_value()) {
     return std::nullopt;

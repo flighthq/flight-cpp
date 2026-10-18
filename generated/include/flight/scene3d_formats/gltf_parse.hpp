@@ -384,6 +384,23 @@ inline double normalize_component(flight::types::GltfComponentType component_typ
   throw std::logic_error("Flight function completed without a value");
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_C487182D39B298B1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_C487182D39B298B1
+struct khr_materials_anisotropy_khr_materials_clearcoat_khr_materials_emissive_strength_khr_materials_ior_khr_materials_iridescence_khr_materials_pbr_specular_glossiness_khr_materials_sheen_khr_materials_unlit_khr_materials_specular_khr_materials_transmission_khr_materials_volume_c487182d39b298b1 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::GltfMaterialsAnisotropy>> khr_materials_anisotropy;
+  std::optional<flight::Ref<flight::types::GltfMaterialsClearcoat>> khr_materials_clearcoat;
+  std::optional<flight::Ref<flight::types::GltfMaterialsEmissiveStrength>> khr_materials_emissive_strength;
+  std::optional<flight::Ref<flight::types::GltfMaterialsIor>> khr_materials_ior;
+  std::optional<flight::Ref<flight::types::GltfMaterialsIridescence>> khr_materials_iridescence;
+  std::optional<flight::Ref<flight::types::GltfMaterialsPbrSpecularGlossiness>> khr_materials_pbr_specular_glossiness;
+  std::optional<flight::Ref<flight::types::GltfMaterialsSheen>> khr_materials_sheen;
+  std::optional<flight::Record<flight::String, std::monostate>> khr_materials_unlit;
+  std::optional<flight::Ref<flight::types::GltfMaterialsSpecular>> khr_materials_specular;
+  std::optional<flight::Ref<flight::types::GltfMaterialsTransmission>> khr_materials_transmission;
+  std::optional<flight::Ref<flight::types::GltfMaterialsVolume>> khr_materials_volume;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_KHR_MATERIALS_ANISOTROPY_KHR_MATERIALS_CLEARCOAT_KHR_MATERIALS_EMISSIVE_STRENGTH_KHR_MATERIALS_IOR_KHR_MATERIALS_IRIDESCENCE_KHR_MATERIALS_PBR_SPECULAR_GLOSSINESS_KHR_MATERIALS_SHEEN_KHR_MATERIALS_UNLIT_KHR_MATERIALS_SPECULAR_KHR_MATERIALS_TRANSMISSION_KHR_MATERIALS_VOLUME_C487182D39B298B1
+
 inline bool reads_gltf_tangent_space(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfDocument>>>> doc, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfPrimitive>>>> primitive) {
   const std::optional<double> material_index = flight::row_get<flight::RowKey<"material">>(primitive);
   if (!material_index.has_value()) {

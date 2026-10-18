@@ -59,7 +59,7 @@ inline flight::Ref<flight::types::Scene3D> import_md5_mesh(flight::String mesh_s
     flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("md5mesh.animation-no-skeleton"), flight::String("importMd5Mesh"), std::nullopt);
     return scene;
   }
-  auto clip = flight::scene3d_formats::parse_md5_anim(anim_source.value(), joints.value(), diagnostics);
+  auto clip = flight::scene3d_formats::parse_md5_anim(anim_source.value().value(), joints.value(), diagnostics);
   if (clip.has_value()) {
     (scene->animations.get(flight::String("default")).value() = clip.value());
   }
