@@ -59,10 +59,13 @@ using flight::types::LogData;
 // type it is building -- a different C++ type, so no conversion exists (log-native-compile-defects.md, row 12).
 // The source marks the object it is given as an entity (its runtime cell present and undefined) and returns that
 // same object. Every caller here builds the entity's own nominal type directly, which is equivalent: the literal
-// is never observable except as the returned entity.
+// is never observable except as the returned entity. The undefined write goes through the runtime's symbol
+// row_set, which records it, so `EntityRuntimeKey in entity` answers true as it does in the source; a plain
+// field assignment would leave the key indistinguishable from one never written.
 template <typename Pointer>
 [[nodiscard]] inline Pointer initialize_log_entity(Pointer entity) {
-  entity->entity_runtime_key = std::nullopt;
+  flight::row_set(flight::StructuralRef<flight::RowWritable<flight::RowOf<Pointer>>>(entity), flight::types::entity_runtime_key,
+                  std::nullopt);
   return entity;
 }
 
