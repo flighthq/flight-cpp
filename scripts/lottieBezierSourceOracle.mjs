@@ -45,7 +45,7 @@ function loader(directory) {
 const sources = [loader(raw), loader(patched)];
 const cases=[];
 function measure(source, kind){
- let reads=0,writes=0,sourceObject;
+ let reads=0,writes=0,sourceObject;const order=[];
  let input;
  switch(kind){
   case 'undefined':input=undefined;break;
@@ -69,6 +69,7 @@ function measure(source, kind){
     const host={get v(){++reads;if(kind==='getter-throws-v')throw new RangeError('original v getter');return 7;},set v(value){++writes;}};
     sourceObject=kind==='inherited-getter-v'?Object.create(host):host;input=sourceObject;break;
   }
+  case 'flatten-string-coordinate':{sourceObject={get v(){++reads;order.push('v');return [['x',2]];},get i(){order.push('i');return [];},get o(){order.push('o');return [];}};input=sourceObject;break;}
   case 'changing-getter-v':{
     sourceObject={get v(){++reads;return reads===1?[[1,2]]:undefined;},set v(value){++writes;}};input=sourceObject;break;
   }
@@ -79,7 +80,8 @@ function measure(source, kind){
  const selection={present:selected!==undefined,sameOwner:selected!==undefined&&selected===sourceObject,reads,writes,error:selectionError??null};
  let later;
  if(selected!==undefined){
-  if(kind==='live-owner'||kind==='live-wrapped-owner'){
+  if(kind==='flatten-string-coordinate'){const values=source.api.flattenLottieShapePath(selected);later={values,types:values.map(value=>typeof value),order,reads,writes};}
+  else if(kind==='live-owner'||kind==='live-wrapped-owner'){
    sourceObject.v=7;later={sameOwner:selected===sourceObject,live:selected.v===7};
   }else{
    try{const path=source.api.createLottieBezierPath(selected);later={returned:true,kind:path.kind,reads,writes};}
@@ -88,14 +90,15 @@ function measure(source, kind){
  }
  return {selection,later:later??null};
 }
-for(const kind of ['undefined','null','number','string','empty-array','wrapper-hole','empty-object','wrong-number-v','present-undefined-v','wrapped-wrong-v','inherited-v','empty-v','one-point','live-owner','live-wrapped-owner','getter-wrong-v','getter-throws-v','inherited-getter-v','changing-getter-v']){
+for(const kind of ['undefined','null','number','string','empty-array','wrapper-hole','empty-object','wrong-number-v','present-undefined-v','wrapped-wrong-v','inherited-v','empty-v','one-point','live-owner','live-wrapped-owner','getter-wrong-v','getter-throws-v','inherited-getter-v','changing-getter-v','flatten-string-coordinate']){
  const pair=sources.map(source=>measure(source,kind));cases.push({kind,raw:pair[0],patched:pair[1],equal:JSON.stringify(pair[0])===JSON.stringify(pair[1])});
 }
 const hash=directory=>createHash('sha256').update(fs.readFileSync(path.join(directory,relative))).digest('hex');
 const result={schema:'flight-lottie-bezier-original-source-boundary/1',rawPin:pin,rawSourceSha256:hash(raw),patchedSourceSha256:hash(patched),wholeOriginalModule:true,replacementBodies:false,loadedModuleCounts:sources.map(source=>source.cache.size),summary:{cases:cases.length,pass:cases.filter(row=>row.equal).length,fail:cases.filter(row=>!row.equal).length},cases};
 const get=kind=>cases.find(row=>row.kind===kind).raw;
-for(const kind of ['wrong-number-v','present-undefined-v','wrapped-wrong-v','inherited-v','getter-wrong-v','getter-throws-v','inherited-getter-v','changing-getter-v']){
+for(const kind of ['wrong-number-v','present-undefined-v','wrapped-wrong-v','inherited-v','getter-wrong-v','getter-throws-v','inherited-getter-v','changing-getter-v','flatten-string-coordinate']){
  const r=get(kind);if(!r.selection.present||!r.selection.sameOwner||r.selection.reads!==0||r.selection.writes!==0)throw Error('assertion read or copied owner: '+kind);
 }
+if(JSON.stringify(get('flatten-string-coordinate').later.values)!==JSON.stringify(['x',2])||JSON.stringify(get('flatten-string-coordinate').later.order)!==JSON.stringify(['v','i','o']))throw Error('flatten source-domain narrowing');
 if(get('getter-wrong-v').later.reads!==2||get('getter-throws-v').later.reads!==1||get('empty-v').later.returned!==true||get('one-point').later.returned!==true||!get('live-owner').later.live||!get('live-wrapped-owner').later.live)throw Error('source boundary expectation drift');
 fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result.summary));if(result.summary.fail)process.exitCode=1;
