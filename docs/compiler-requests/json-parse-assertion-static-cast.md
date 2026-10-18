@@ -601,3 +601,34 @@ The emitter's assertion lowering must therefore emit
 `Row::from_owner(flight::named_properties(<jsonValue>).shared_owner())`, not `structural_ref_cast` over the
 `JsonObject`. The probe is two lines and worth running in the emitted fixture, because the wrong spelling does
 not fail to compile -- it silently reads absence.
+
+## Implementation notes for the emitter lane (exact edit points)
+
+Both halves are located, and one simplifies the other.
+
+**(a) Assertion -> JSON-backed row.** The generic assertion fallback is
+`cppCompilerBackend.ts:5661` (`static_cast<${emitType(expression.type)}>(<source>)`). When the source is a
+`JSON.parse` call (the shape `isCppSyntaxOnlyJsonParseTryCpp` already recognizes: property `parse` on the
+ambient `JSON`, one argument) and the target is a row-representable object type, emit
+`<RowType>::from_owner(flight::named_properties(<parse>).shared_owner())` instead. `<RowType>` comes from the
+structural row plan for `expression.type`; the surrounding `StructuralRef<...>(...)` conversion accepts a row
+of the same schema. Use `from_owner`, not `structural_ref_cast` over the `JsonObject` -- see the probe above.
+
+**(b) Row reads need no interprocedural provenance.** `read_json_scalar_row_member(row, key)` reads through
+`NamedProperties(row)`, which serves a native owner (typed cell -> erased Any) and a JSON owner (raw value)
+identically. So the substitution does not need to know which function produced the row, and does not need a
+`jsonRowBindingIds` flow at all. It applies at the structural-row member read,
+`cppCompilerBackend.ts:6800`, whenever the declared member type is number/boolean/string.
+
+**What the substitution then requires.** The read returns a `JsonScalarCell`, so every use site of that exact
+expression must lower by operation: `Number.isFinite` -> `cell.is_finite()`; arithmetic/relational operands
+-> the cell's operators or `to_number()`; `typeof` -> `type_of()`; truthiness -> `to_boolean()`; string
+context -> `to_string()`; and a destination declared as a native `double` (variable initializer, argument,
+return, array element) -> `as_native_number()`. The last one is the escape boundary and the only place a
+non-number may fail. A per-expression marker recorded when the read is emitted, consulted by the operation
+emitters, is the mechanism; the predicate must key on that marker, not on the row type, so a native document
+and a parsed one take the same path.
+
+The multi-site operation half is the remaining edit. It cannot be landed as the read substitution alone: the
+cell has no implicit numeric conversion, so an unmapped use site fails to compile rather than silently
+coercing -- which is the intended safety property, and also why the two halves must land together.
