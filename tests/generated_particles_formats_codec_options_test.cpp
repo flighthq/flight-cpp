@@ -172,5 +172,12 @@ int main() {
           &flight::particles_formats::parse_libgdx_particle>(flight::particles_formats::parse_libgdx_particle);
   check(flight::callable_identity_equal_named<&flight::particles_formats::parse_libgdx_particle>(lib_named),
         "original libGDX named declaration identity is represented");
+  const std::function<flight::Ref<LibResult>(flight::String, std::optional<flight::Ref<LibOptions>>)> lib_document_named =
+      flight::NamedFunction<flight::Ref<LibResult>(flight::String, std::optional<flight::Ref<LibOptions>>)>::from<
+          &flight::particles_formats::parse_libgdx_particle_document>(flight::particles_formats::parse_libgdx_particle_document);
+  check(flight::callable_identity_equal_named<&flight::particles_formats::parse_libgdx_particle_document>(lib_document_named) &&
+        !flight::callable_identity_equal(lib_named, lib_document_named) &&
+        lib_document_named(lib_input, lib_options)->config->scale_min == 8,
+        "libGDX document origin is distinct from config and invokes the original live-options body");
   return failures == 0 ? 0 : 1;
 }
