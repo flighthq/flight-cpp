@@ -1,0 +1,187 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8039,7 +8039,9 @@
+                     hasFlightReferenceRepresentationCpp(expectedPayload, context) ||
+                     hasFlightStructuralRowRepresentationCpp(expectedPayload, context))
+                 ? expectedPayload
+-                : expression.type;
++                : expectedType && getCppRuntimeProfile(context.options) === 'flight-cpp'
++                  ? (getCppFreshContextualAllocationTypeCpp(expression, expectedPayload ?? expectedType, context) ?? expression.type)
++                  : expression.type;
+       // Storage and construction must use the same elected layout. The ordinary named-object
+       // construction then caches field evaluations in source order before ordering its initializers.
+       const checkedOwner = plannedConstructionType.kind === 'object'
+@@ -27397,6 +27399,22 @@
+     : undefined;
+ }
+ 
++// A closed mapped/indexed target can already spell an anonymous Ref while the nominal planner
++// cannot classify the utility expression itself. At a fresh allocation only, use its fully checked
++// object shape when both spell exactly the same carrier. Existing values never enter this path.
++function getCppFreshContextualAllocationTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'object' }>>,
++  target: Readonly<IrType>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (!getCppContextualObjectUnionRuntimeTypeCpp(expression, [{ runtimeType: target }], context, true)) return undefined;
++  const properties = context.referenceRepresentationPlanner.resolveObjectShape(target, context.module);
++  if (!properties) return undefined;
++  const object: IrType = { kind: 'object', properties };
++  const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  return emitType(object, isolatedContext) === emitType(target, isolatedContext) ? object : undefined;
++}
++
+ function getCppContextualObjectUnionRuntimeTypeCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'object' }>>,
+   valueSlots: readonly Readonly<{
+@@ -27405,6 +27423,7 @@
+     sourceAlternatives?: readonly IrType[];
+   }>[],
+   context: EmitContext,
++  requireAllMembers = false,
+ ): Readonly<IrType> | undefined {
+   if (expression.members.some((member) => member.kind !== 'property')) return undefined;
+   const members = expression.members as readonly Readonly<
+@@ -27443,7 +27462,7 @@
+         getCppLiteralDiscriminantMatchCpp(member.value, targetByName.get(member.name)!.type, context),
+       );
+       if (discriminants.some((match) => match === false)) return false;
+-      if (discriminants.some((match) => match === true)) return true;
++      if (!requireAllMembers && discriminants.some((match) => match === true)) return true;
+       return members.every((member) =>
+         isCppExpressionRepresentableAsRuntimeTypeCpp(member.value, targetByName.get(member.name)!.type, context),
+       );
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppFreshNestedOptionalOwner.test.ts
+@@ -0,0 +1,131 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++const moduleResolution = {
++  schema: 'flight-compiler-module-resolution/1' as const,
++  edges: [
++    {
++      specifier: '@flighthq/domain/contract',
++      target: { packageName: '@flighthq/domain', source: 'packages/domain/src/contract.ts' },
++    },
++    {
++      specifier: '@flighthq/factory/contract',
++      target: { packageName: '@flighthq/factory', source: 'packages/factory/src/contract.ts' },
++    },
++  ],
++};
++function emit(probeSource?: string) {
++  const sources = [
++    {
++      packageName: '@flighthq/domain',
++      name: 'domain/src/contract.ts',
++      text: 'export interface A{value:number}export interface B{other:string}export type Value=A|B;export const marker:unique symbol=Symbol();export interface Marker{value:number}export interface Holder{data:{[marker]?:Marker;tag:string;source:Value|null}}',
++    },
++    {
++      packageName: '@flighthq/factory',
++      name: 'factory/src/contract.ts',
++      text: 'import type{A,B}from "@flighthq/domain/contract";export function make(read:()=>void):A;export function make(read:()=>void,kind:"b"):B;export function make(read:()=>void,kind?:"b"):A|B{read();if(kind===\'b\')return{other:\'b\'};return{value:7};}',
++    },
++    {
++      packageName: '@flighthq/probe',
++      name: 'probe/src/probe.ts',
++      text: 'import type{Holder}from "@flighthq/domain/contract";export interface Options{data?:Partial<Holder["data"]>}import{make}from "@flighthq/factory/contract";export function build(options:Readonly<Options>):Readonly<Options>{return options;}export function call(read:()=>void):Readonly<Options>{return build({data:{source:make(read)}});}',
++    },
++  ];
++  if (probeSource) sources[2]!.text = probeSource;
++  const results = lowerTypeScriptSources(
++    sources.map((s) => ({
++      packageName: s.packageName,
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/' + s.name, s.text, ts.ScriptTarget.Latest, true),
++    })),
++    moduleResolution,
++  );
++  expect(results.flatMap((r) => r.diagnostics)).toEqual([]);
++  const modules = results.map((r) => r.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: {
++        '@flighthq/domain': { namespace: 'domain', includePrefix: 'fixture/domain' },
++        '@flighthq/factory': { namespace: 'factory', includePrefix: 'fixture/factory' },
++        '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture/probe' },
++      },
++    },
++  });
++  return {
++    consumer: session.emitModule(modules[2]!)[0]!.contents,
++    domain: session.emitModule(modules[0]!)[0]!.contents,
++    factory: session.emitModule(modules[1]!)[0]!.contents,
++  };
++}
++it('allocates a fresh nested optional literal under the selected overload return owner', () => {
++  const output = emit();
++  expect(output.consumer).not.toMatch(/make_ref<source_/);
++  expect(output.consumer).toMatch(/make_ref<marker_tag_source_/);
++});
++
++it('refuses an existing anonymous lookalike instead of electing a nominal union owner', () => {
++  expect(() => emit('import type{Holder}from "@flighthq/domain/contract";interface Wrong{value:number}export interface Options{data?:Partial<Holder["data"]>}export function build(options:Readonly<Options>):Readonly<Options>{return options;}export function call(read:()=>Wrong):Readonly<Options>{return build({data:{source:read()}});}')).toThrow(/not a represented runtime domain|agrees with no alternative/);
++});
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs the original overload and retains the fresh mapped owner and result reference',
++  () => {
++    const dir = mkdtempSync(path.join(tmpdir(), 'flight-fresh-mapped-owner-'));
++    try {
++      const output = emit();
++      for (const name of ['domain', 'factory']) mkdirSync(path.join(dir, 'fixture', name), { recursive: true });
++      writeFileSync(path.join(dir, 'fixture/domain/contract.hpp'), output.domain);
++      writeFileSync(path.join(dir, 'fixture/factory/contract.hpp'), output.factory);
++      writeFileSync(path.join(dir, 'probe.hpp'), output.consumer);
++      const input = path.join(dir, 'native.cpp'),
++        binary = path.join(dir, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "probe.hpp"
++#include <iostream>
++#include <type_traits>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++using Read=flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<probe::Options>>>>;
++using Write=flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<probe::Options>>>>;
++static_assert(!std::is_convertible_v<Read,Write>);
++std::weak_ptr<domain::A> lifetime;
++{int calls=0;auto result=probe::call([&]{++calls;});check(calls==1);
++auto first=flight::row_get<flight::RowKey<"data">>(result);check(first.has_value());
++auto data=first.value();check(!data->tag.has_value());check(data->source.index()==0);
++auto source=std::get<flight::Ref<domain::A>>(data->source);lifetime=source;check(source->value==7);
++auto second=flight::row_get<flight::RowKey<"data">>(result).value();check(second.get()==data.get());
++source->value=19;check(std::get<flight::Ref<domain::A>>(second->source)->value==19);
++source.reset();check(!lifetime.expired());}
++check(lifetime.expired());bool threw=false;try{(void)probe::call([]{throw flight::TypeError("original");});}catch(const flight::TypeError&e){threw=std::string(e.what())=="original";}check(threw);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
++      );
++      execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, [dir, ...includes]), {
++        stdio: 'pipe',
++      });
++      expect(execFileSync(binary, [], { encoding: 'utf8' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(dir, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

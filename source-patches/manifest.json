@@ -5811,6 +5811,23 @@
       "unblocks": "Source-faithful getter semantics through the original texture factory and the bounded readonly 2D native entry point; no SDK header gain claim.",
       "expires": "When the downstream texture option-view/source-presence transformations retain the original common-field evaluation order and nullish domains directly.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-fresh-mapped-indexed-object-allocation",
+      "dependency": "flight-compiler",
+      "patch": "compiler-fresh-mapped-indexed-object-allocation.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "The original image nested fresh Partial<Sprite[data]> literal selects its expected anonymous Ref carrier, but allocation falls back to the narrower texture-only owner or raw aggregate braces because the nominal planner cannot classify the mapped indexed-access type.",
+      "rewrite": "At fresh object allocation only, validate all authored properties against the unique closed contextual shape, including every nondiscriminant member. Normalize that shape to an object allocation only when it emits exactly the contextual carrier already chosen by storage; reuse normal ordered field evaluation, make_ref, and authored-own-key annotation.",
+      "equivalence": "One original fresh allocation retains the source member evaluation order, absence, union arm, identity and lifetime. No existing value is retyped or copied, no nominal owner is recovered, and no new storage family, guard, source body or scalar ABI is introduced. Unknown, incompatible, duplicate-key, spread and unproved shapes keep existing paths/refusals.",
+      "verification": "Qualification in progress. Computed-symbol mapped-indexed fixture reproduces raw-brace failure before the change; source emission controls pass after. All four whole original Lottie helper bodies still emit without refusals. Actual original image header and focused native owner tests are being verified; no SDK or Exact21 gain claimed.",
+      "whyNotUpstreamFirst": "The pinned backend already emits a concrete anonymous Ref for this mapped target and proves each fresh member fits, but its allocation classification drops that evidence.",
+      "unblocks": "Fresh nested mapped indexed-access object allocation in the whole original image caller; downstream original callee ABI remains separately qualified.",
+      "expires": "When upstream uses the same proven concrete object carrier for fresh allocation and contextual storage.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }
