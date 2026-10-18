@@ -727,6 +727,25 @@ extended with the actual storage provenance and all nine sites rather than dupli
 **G1 status retained: 0/9 pass, 9 fail.** No C++ recompile was run because code did not change, per
 G2's scoped-only-when-changed rule. Only these owned rows gained request links and cast locations.
 
+**G2 remeasurement at `6b75fcb0`** (compiler `806d257` / Flight `a627849`, Clang 22.1.8, `-j2`):
+13 attempted in one run, **12 pass, 1 fail, 0 unattempted**. All twelve renderers compile: the
+effective emission now passes the guarded program payload through as a readonly row, so the
+writable round trip this section names no longer appears in their first failing line. The
+thirteenth row, `contract.hpp`, was compiled in that run before the override edit below and was
+recompiled alone afterwards; its first failure is now the documented outcome-variant literal at
+`explain_gl_scene_3d_coverage.hpp:64` (cluster 85, [existing request](compiler-requests/object-literal-into-outcome-variant.md)),
+not the readonly handoff.
+
+The recompile also exposed a stale carry in this cluster's path: the
+`native-e2e-scene3d_gl-gl_pbr_extension_registry` override still declared
+`explain_gl_pbr_extensions`, `resolve_gl_pbr_extension_contributions` and `bind_gl_pbr_extensions`
+over `Array<Ref<PbrExtension>>` while the regenerated module and the including PBR guard name the
+`PbrExtensionValue` union, so `enable_gl_pbr_extension_guards.hpp:96` could not convert the
+argument. `6b75fcb0` re-derives those three signatures to the emitted union and reads `kind`
+through `std::visit`, keeping the override's native Texture, texture-unit and UV-helper
+corrections unchanged; `overrides:check` still matches all 226 entries to their `derivedFrom`
+hash. No runtime, source, replacement body or narrowed member domain is carried.
+
 ### 16. `call-has-no-matching-b569e92e` — 8 header(s)
 
 - cause: the emitted call to `init_joint_base` matches no declared overload
