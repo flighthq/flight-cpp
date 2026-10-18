@@ -41,7 +41,7 @@ void check(bool condition, const char* message) {
 }
 
 template <typename Target>
-void check_target_base_cells(const flight::Ref<Target>& target) {
+void check_target_base_cells(const std::shared_ptr<Target>& target) {
   // The pending Types snapshot adds this heritage. Keep the same public consumer
   // buildable on the preceding flat declarations as well as that snapshot.
   if constexpr (std::is_base_of_v<types::GlRenderTarget, Target>) {
