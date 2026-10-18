@@ -43,7 +43,7 @@ void check(const char* label, bool result) {
 }
 
 // Reads the exact declared physical optional before projecting its live fields.
-template<class Object> Common common_for(const flight::Ref<Object>& source) {
+template<class Object> Common common_for(const std::shared_ptr<Object>& source) {
   const auto runtime = flight::row_get<decltype(Object::entity_runtime_key)>(
       View<Object>(source), flight::types::entity_runtime_key).value();
   return Common(View<typename decltype(runtime)::element_type>(runtime));
@@ -53,7 +53,7 @@ Common common_for(Node source) {
   if (auto generic = source.shared_exact_object<GenericNode>()) return common_for(generic);
   throw std::bad_cast();
 }
-template<class Object> Node node_view(const flight::Ref<Object>& source) {
+template<class Object> Node node_view(const std::shared_ptr<Object>& source) {
   return Node::from_owner(View<Object>(source).shared_owner());
 }
 void invalidate_world_bounds(Node source) {
@@ -66,8 +66,8 @@ void invalidate_world_bounds(Node source) {
 }
 
 template<class Object, class Runtime>
-void common_operations(const flight::Ref<Object>& source,
-                       flight::Ref<Runtime> runtime, Node parent) {
+void common_operations(const std::shared_ptr<Object>& source,
+                       std::shared_ptr<Runtime> runtime, Node parent) {
   source->entity_runtime_key = runtime;
   auto common = common_for(source);
   check("common view keeps exact allocation", common.shared_native_object().get() == runtime.get());
