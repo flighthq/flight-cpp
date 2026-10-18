@@ -731,3 +731,24 @@ parse, spine_parse), `Any`→double (section counts), the `transform_mode_2d` he
 therefore **not yet met on a public header**; the lowering itself is verified by the compiler tests
 and the scratch generated consumer. No 96 claim: this subcause covers the erased-array for-of sites
 only.
+
+## G2 erased-array length and index reads after an Array.isArray guard
+
+Same root as the for-of section above, one read family further: after
+`if (!Array.isArray(raw)) return`, a `raw.length` emitted
+`flight::named_properties(raw).get("length")` (an `Any` reaching a numeric assignment) and `raw[i]`
+emitted a C++ subscript on `flight::Any`, which has none. The guard proves the receiver is an array,
+and the runtime already provides the checked reads (`array_size`, `array_get`).
+
+Source patch `compiler-erased-array-length-index` records the guard proof for the statements it
+dominates (both `if (!Array.isArray(x)) <exit>` and `if (Array.isArray(x)) { ... } else <exit>`, with
+return/throw/continue/break treated as exits), withdraws it when the binding is assigned, and under
+it lowers `length` to `static_cast<double>(x.array_size())` and `x[i]` to
+`x.array_get(i).value_or(Any(undefined))`. Reads without the proof keep the dynamic named lookup,
+which is the source's own operation on a possibly non-array object.
+
+Measured: new `cppErasedArrayLengthIndex.test.ts` 3 pass; package typecheck exit 0; focused
+`cppErasedArrayIteration`/`cppArrayLengthAssignment`/`cppLengthProvenNullableArrayRead` 7 pass
+together; the emitted scratch header compiles, links and runs (live length 2, present element,
+absent index → undefined). No committed regeneration yet: the generation slot is queued after
+builder2's descriptor run.

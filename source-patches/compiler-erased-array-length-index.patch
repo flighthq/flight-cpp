@@ -1,0 +1,234 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 145a6da..fd0cb5f 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -364,6 +364,11 @@ interface EmitContext {
+   // asks this rather than the declared type, because the two disagree in both directions and each
+   // direction is a shape the SDK writes.
+   erasedDynamicStorageBindingIds: ReadonlySet<string>;
++  // A binding the source proved to hold an array: an `Array.isArray(binding)` guard whose surviving
++  // branch excludes the non-array case. The runtime's erased array reads are only valid under that
++  // proof -- a non-array receiver throws where JavaScript answers undefined -- so the fact is scoped
++  // to the statements the guard dominates and is withdrawn when the binding is assigned.
++  erasedArrayProvenBindingIds: ReadonlySet<string>;
+   // A bare `object` parameter normally carries identity only, which is the ABI used by WeakMap
+   // keys and attached Record views. Parameters in this set cross a storage boundary that later
+   // recovers their concrete type, so they must retain the type tag carried by `ErasedRef`.
+@@ -663,6 +668,7 @@ function emitIrModuleCppWithContext(
+     dependentCallablePacks: collectIrModuleDependentCallablePacksCpp(module),
+     directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
+     erasedDynamicStorageBindingIds,
++    erasedArrayProvenBindingIds: new Set(),
+     erasedObjectParameterBindingIds,
+     exceptionPointerBindingIds: collectCppExceptionPointerBindingIdsCpp(module, bindingTypes),
+     externalCallResultPresenceBindings: new Map(),
+@@ -5257,6 +5263,22 @@ function emitExpression(
+           'cpp-union-element-access-without-carrier',
+         );
+       }
++      // After an `Array.isArray` guard proved the receiver is an erased array, an indexed read is the
++      // runtime's checked array read: a present element keeps its erased value (including null and
++      // undefined, which stay engaged), and an absent index answers JavaScript's `undefined`. Without
++      // the proof the read stays the dynamic named lookup, which is the source's own operation on an
++      // object rather than an array.
++      if (
++        expression.object.kind === 'identifier' &&
++        expression.object.reference.kind === 'binding' &&
++        context.erasedArrayProvenBindingIds.has(expression.object.reference.binding.id) &&
++        hasCppErasedDynamicTestOperandCpp(expression.object, objectType, context)
++      ) {
++        const erasedArray = getGeneratedTargetName('erasedArrayReceiver', context);
++        const erasedIndex = getGeneratedTargetName('erasedArrayIndex', context);
++        context.includes.add('flight/any.hpp');
++        return `([&]() -> flight::Any { const auto& ${erasedArray} = ${object}; const double ${erasedIndex} = ${index}; return ${erasedArray}.array_get(${erasedIndex}).value_or(flight::Any(flight::undefined)); }())`;
++      }
+       return record || expression.semantics.receivers.every((receiver) => receiver === 'object')
+         ? `${object}[${index}]`
+         : `${object}[static_cast<size_t>(${index})]`;
+@@ -9330,6 +9352,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+         narrowedBindingTypes: new Map(statementContext.narrowedBindingTypes).set(narrowing.bindingId, narrowing.type),
+       };
+     }
++    const arrayProof = getCppErasedArrayGuardProvenBindingIdsCpp(statement, statementContext);
++    if (arrayProof.length > 0) {
++      statementContext = {
++        ...statementContext,
++        erasedArrayProvenBindingIds: new Set([
++          ...statementContext.erasedArrayProvenBindingIds,
++          ...arrayProof,
++        ]),
++      };
++    }
+     statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
+   }
+   return emitted;
+@@ -9403,14 +9435,62 @@ function getCppImmediateDenseArrayElementPresenceCpp(
+ // longer true, and the read after the write has to resolve without one -- which either finds its own
+ // proof or refuses.
+ function withdrawCppAssignedNarrowingsCpp(statement: Readonly<IrStatement>, context: EmitContext): EmitContext {
+-  if (context.narrowedBindingTypes.size === 0) return context;
+-  const withdrawn = collectCppAssignedBindingIdsCpp(statement).filter((bindingId) =>
+-    context.narrowedBindingTypes.has(bindingId),
+-  );
+-  if (withdrawn.length === 0) return context;
+-  const narrowedBindingTypes = new Map(context.narrowedBindingTypes);
+-  for (const bindingId of withdrawn) narrowedBindingTypes.delete(bindingId);
+-  return { ...context, narrowedBindingTypes };
++  if (context.narrowedBindingTypes.size === 0 && context.erasedArrayProvenBindingIds.size === 0) return context;
++  const assigned = collectCppAssignedBindingIdsCpp(statement);
++  if (assigned.length === 0) return context;
++  let next = context;
++  const withdrawnNarrowings = assigned.filter((bindingId) => context.narrowedBindingTypes.has(bindingId));
++  if (withdrawnNarrowings.length > 0) {
++    const narrowedBindingTypes = new Map(context.narrowedBindingTypes);
++    for (const bindingId of withdrawnNarrowings) narrowedBindingTypes.delete(bindingId);
++    next = { ...next, narrowedBindingTypes };
++  }
++  const withdrawnArrayProofs = assigned.filter((bindingId) =>
++    context.erasedArrayProvenBindingIds.has(bindingId),
++  );
++  if (withdrawnArrayProofs.length > 0) {
++    const erasedArrayProvenBindingIds = new Set(next.erasedArrayProvenBindingIds);
++    for (const bindingId of withdrawnArrayProofs) erasedArrayProvenBindingIds.delete(bindingId);
++    next = { ...next, erasedArrayProvenBindingIds };
++  }
++  return next;
++}
++
++// `if (!Array.isArray(x)) <abrupt>` and `if (Array.isArray(x)) { ... } else <abrupt>` both leave the
++// rest of the block with x proved to hold an array. Record that only for a binding whose emitted
++// storage is the erased dynamic value: a concretely represented array already lowers from its type,
++// while the erased reads (length, index) need the proof to choose the runtime array accessors
++// instead of a dynamic named-property read. The fact is statement-local and assignment-withdrawn, so
++// it cannot cross a call, alias or mutation.
++function getCppErasedArrayGuardProvenBindingIdsCpp(
++  statement: Readonly<IrStatement>,
++  context: EmitContext,
++): readonly string[] {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || statement.kind !== 'if') return [];
++  const exits = (branch: Readonly<IrStatement> | undefined): boolean =>
++    branch !== undefined &&
++    (isCppAbruptCompletionStatement(branch) || branch.kind === 'continue' || branch.kind === 'break');
++  let tested: Readonly<IrExpression> | undefined;
++  if (
++    statement.condition.kind === 'unary' &&
++    statement.condition.operator === '!' &&
++    !statement.otherwise &&
++    exits(statement.consequent)
++  ) {
++    tested = statement.condition.operand;
++  } else if (statement.otherwise && exits(statement.otherwise)) {
++    tested = statement.condition;
++  }
++  if (!tested || tested.kind !== 'call' || tested.optional || tested.arguments.length !== 1) return [];
++  if (tested.callee.kind !== 'property' || tested.callee.optional || tested.callee.name !== 'isArray') return [];
++  if (tested.callee.object.kind !== 'identifier' || tested.callee.object.reference.kind !== 'ambient') return [];
++  if (tested.callee.object.reference.name !== 'Array') return [];
++  const candidate = tested.arguments[0]!;
++  if (candidate.kind !== 'identifier' || candidate.reference.kind !== 'binding') return [];
++  if (!hasCppErasedDynamicTestOperandCpp(candidate, getIrExpressionTypeEvidenceCpp(candidate, context), context)) {
++    return [];
++  }
++  return [candidate.reference.binding.id];
+ }
+ 
+ function collectCppAssignedBindingIdsCpp(statement: Readonly<IrStatement>): readonly string[] {
+@@ -13695,6 +13775,19 @@ function emitCppErasedDynamicPropertyReadCpp(
+   if (!isCppErasedDynamicPropertyReadCpp(expression, context)) return undefined;
+   context.includes.add('flight/any.hpp');
+   context.includes.add('flight/structural_ref.hpp');
++  // After an `Array.isArray` guard proved the receiver is an array, `length` is the runtime's erased
++  // array size rather than a dynamic own-name lookup: `flight::Any` holds the array in its own
++  // alternative and `array_size()` reads the live original storage. Outside that proof the read
++  // stays the named-property lookup, because `length` on a non-array object is the source's own
++  // dynamic read and there is no proof it would answer.
++  if (
++    expression.name === 'length' &&
++    expression.object.kind === 'identifier' &&
++    expression.object.reference.kind === 'binding' &&
++    context.erasedArrayProvenBindingIds.has(expression.object.reference.binding.id)
++  ) {
++    return `static_cast<double>(${emitExpression(expression.object, context)}.array_size())`;
++  }
+   return `flight::named_properties(${emitExpression(expression.object, context)}).get(${emitLiteral(expression.name, context)})`;
+ }
+ 
+diff --git a/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
+new file mode 100644
+index 0000000..721f1cb
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
+@@ -0,0 +1,73 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/erasedArrayLengthIndex.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('reads length and elements through the runtime array accessors after an is_array guard', () => {
++  const output = emit(`
++    export function lengthOf(raw: unknown): number {
++      if (!Array.isArray(raw)) return 0;
++      return raw.length;
++    }
++    export function firstOf(raw: unknown): unknown {
++      if (!Array.isArray(raw)) return undefined;
++      return raw[0];
++    }
++  `);
++
++  expect(output).toContain('static_cast<double>(raw.array_size())');
++  expect(output).toContain('array_get(erased_array_index).value_or(flight::Any(flight::undefined))');
++  expect(output).not.toContain('get(flight::String("length"))');
++});
++
++it('proves the array across a continue guard, and withdraws the proof on assignment', () => {
++  const output = emit(`
++    export function guardedContinue(items: unknown[]): number {
++      let total = 0;
++      for (const item of items) {
++        if (!Array.isArray(item)) continue;
++        total += item.length;
++      }
++      return total;
++    }
++    export function reassigned(raw: unknown): number {
++      if (!Array.isArray(raw)) return 0;
++      raw = { a: 1 };
++      return (raw as Record<string, unknown>).length as number;
++    }
++  `);
++
++  expect(output).toContain('static_cast<double>(item.array_size())');
++  expect(output).toContain('named_properties(raw).get(flight::String("length"))');
++});
++
++it('keeps dynamic named reads when no array guard proves the receiver', () => {
++  const output = emit(`
++    export function dynamicLength(record: Record<string, unknown>): unknown {
++      return record.length;
++    }
++    export function dynamicIndex(record: Record<string, unknown>): unknown {
++      return record["a"];
++    }
++  `);
++
++  expect(output).toContain('get(flight::String("length"))');
++  expect(output).not.toContain('array_size()');
++  expect(output).not.toContain('array_get(');
++});
