@@ -392,3 +392,16 @@ groups pass. The independently transpiled raw `806d257` backend and a separately
 origin spotcheck, not a full raw compiler build. Writable and invalid-readonly-call controls retain
 byte-identical output. Normal generation and the actual previously blocked public consumer remain
 required; no header, renderer or package promotion is claimed by this preparation.
+
+The declared 73-patch compiler stack applies and builds. Its nine focused groups pass. A native
+fixture matching the existing readonly bind-to-draw storage compiles, links and runs with the emitted
+candidate: original row/native owner and control block, live signed-zero/NaN cells, null/undefined
+guards, attachment replacement, single evaluation, exact thrown owner and final release are checked.
+The preceding compiler's output fails at the writable intermediate; the readonly-to-writable negative
+remains rejected. The writable-call and invalid-readonly-call emitted controls remain byte-identical.
+
+The compiler static check retains four preexisting failing gates: formatting, lint, import ordering
+and five foreign fixture type diagnostics. Touched-file lint and the new test's formatting pass. The
+source archive initially lacked Git index context for documentation/license enumeration; both gates
+pass with the pinned index used read-only against that archive. No dependency checkout is modified.
+Normal SDK generation and the original public-consumer check remain pending capacity coordination.

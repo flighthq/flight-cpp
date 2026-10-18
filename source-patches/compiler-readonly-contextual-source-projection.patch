@@ -1,7 +1,7 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -7259,7 +7259,14 @@
+@@ -7259,7 +7259,13 @@
    if (targetRow && !sourceRow) {
      const sourceProjection = getCppStructuralProjectionRowCpp(sourceType, context);
      if (!sourceProjection) return undefined;
@@ -9,10 +9,9 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +    // A readonly destination needs only a read view of the nominal source. In particular, flow
 +    // evidence may name that subject while the retained value already has readonly row storage;
 +    // constructing a writable intermediate would claim authority the call does not require.
-+    const contextualProjection: Readonly<CompilerCppStructuralRowPlan> =
-+      isCppStructuralRowSchemaReadonlyCpp(targetRow)
-+        ? { kind: 'readonly', row: sourceProjection.kind === 'writable' ? sourceProjection.row : sourceProjection }
-+        : sourceProjection;
++    const contextualProjection: Readonly<CompilerCppStructuralRowPlan> = isCppStructuralRowSchemaReadonlyCpp(targetRow)
++      ? { kind: 'readonly', row: sourceProjection.kind === 'writable' ? sourceProjection.row : sourceProjection }
++      : sourceProjection;
 +    const sourceView = `${emitCppStructuralRowReferenceTypeCpp(contextualProjection, context)}(${source})`;
      return `flight::structural_ref_cast<${emitType(expectedType, context)}>(${sourceView})`;
    }
