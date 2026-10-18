@@ -134,6 +134,12 @@ template <typename Result, typename... Parameters>
   if (left_identified != nullptr && right_identified != nullptr) {
     return *left_identified == *right_identified;
   }
+  // A declared function and a retained closure are distinct source objects. Both identities are
+  // represented here; only an unrecognized target below has lost its identity through erasure.
+  if ((left_pointer != nullptr && right_identified != nullptr) ||
+      (left_identified != nullptr && right_pointer != nullptr)) {
+    return false;
+  }
   throw std::logic_error(
       "callable identity is unavailable after std::function erasure");
 }

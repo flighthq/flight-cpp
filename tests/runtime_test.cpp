@@ -3163,6 +3163,25 @@ void test_new_runtime_services() {
         "std::function preserves an explicitly retained Flight Function identity");
   check(!flight::callable_identity_equal(erased_first, erased_second),
         "distinct Flight Function identities survive std::function erasure");
+  const std::function<void()> declared_function = +[] {};
+  const std::function<void()> declared_copy = declared_function;
+  const std::function<void()> other_declared_function = +[] {};
+  check(flight::callable_identity_equal(declared_function, declared_copy) &&
+            !flight::callable_identity_equal(declared_function, other_declared_function),
+        "declared function copies retain their represented function identity");
+  check(!flight::callable_identity_equal(declared_function, erased_first) &&
+            !flight::callable_identity_equal(erased_first, declared_function),
+        "a declared function and a retained closure have distinct represented identities");
+  const std::function<void()> unidentified_function = [] {};
+  for (const auto& represented : {declared_function, erased_first}) {
+    bool rejected = false;
+    try {
+      (void)flight::callable_identity_equal(represented, unidentified_function);
+    } catch (const std::logic_error&) {
+      rejected = true;
+    }
+    check(rejected, "unidentified erased targets still reject identity comparison");
+  }
 
   int identified_ignored_calls = 0;
   const auto identified_ignored_arguments =
