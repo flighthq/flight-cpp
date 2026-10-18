@@ -849,3 +849,49 @@ A real consumer that calls the exported `read_swf_filter_list` through the origi
 drop-shadow, inner-shadow, outer-glow, inner-glow and blur lists (5/5), each yielding one `Effect` with
 the expected `kind` and the inherited cell read through the base reference. The repairs are superseded
 when normal emission supplies the declared heritage with the same base and the same removed cells.
+
+
+## G3 SWF: normal compatible heritage replaces nine Effect repairs
+
+The raw locked compiler source at `806d257` confirms the root independently of these workarounds:
+`emitInterface` emits a separate `ReferenceEnabled` struct and every flattened property. The source
+at Flight `a627849` declares `BlurEffect extends Effect extends Entity`; its literal kind uses the
+same string storage and its runtime key uses the same optional owner cell. This is source inspection,
+not an extra raw-emission or native test.
+
+Normal scoped types/SWF generation with the semantic patch emits all 1,032 types modules and 46 of
+58 SWF modules, retaining 12 SWF refusals. All nine Effect subtype bodies match the previously
+qualified repairs after normalizing only equivalent namespace qualification. Each repair's generated
+provenance has an empty file list, proving that the normal emitter supplied the relation before the
+repair pass. After notifying the previous owner, only those nine repair entries and their empty
+manifest records were retired. The source patch `swf-filter-effect-owner-pushes` is byte-unchanged:
+this compiler patch does not supply a common C++ conditional type for sibling shared pointers.
+
+The durable `generated_swf_filter_heritage_test.cpp` includes the original public
+`flight/swf/swf_filter.hpp`. Its CMake target builds and links, and CTest passes **1/1**. It parses the
+same five actual byte lists (drop shadow, inner shadow, outer glow, inner glow and blur), checking one
+Effect, no adjustments and the expected kind for each. It additionally checks all nine ordinary
+concrete-to-Effect conversions at compile time, then checks the real blur factory's pointer and
+shared control block, addresses of inherited kind/runtime cells, live runtime replacement and
+absence through the two views, and final release through aliased effect arrays. No reverse cast,
+copied base owner or substituted parser is used.
+
+The remaining heritage family stays open. Storage-changing refinements, secondary native base paths,
+import cycles and reverse assertions remain outside this compatible-storage patch; class/interface
+owner conversion and other retained SWF refusals are separate boundaries. The preceding full-stack
+package typecheck's five foreign fixture errors remain a limitation, as documented above.
+
+
+The scoped Clang 22.1.8 header check completes at two workers in 238 seconds: **2/6 pass, 4 fail,
+0 unattempted**. `swf_filter.hpp` and `enable_swf_guards.hpp` pass. The index and contract still stop
+at `swf_jpeg_bitmap_handler.hpp:216` (optional Record construction); both placement headers still stop
+at `swf_place_object3_handler.hpp:54` (SwfTagReader/SwfReader owner conversion). These are the same
+already-recorded follow-on roots, so no new header PASS, cluster reduction or package tier is claimed.
+The gate also reports eight override digest mismatches after types regeneration (log sink, three
+selection runtimes, GL context runtime, native Node and Sprite, and TextLabel). Their headers and
+manifest hashes were not rewritten to hide that drift; separate ownership/re-derivation is pending.
+
+The requested focused package-label check was run once and remains **FAIL** at the unrelated OBJ
+material helper's extra image/texture/types labels. The existing GL readonly test already had its
+types label; explicit includes now name the nominal types it directly uses. The new SWF test likewise
+names its direct effects/types dependencies. No unchanged GL native test was rerun.

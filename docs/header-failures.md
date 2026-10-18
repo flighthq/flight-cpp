@@ -1350,6 +1350,15 @@ adjustments empty and the inherited kind cell read through the base reference. O
 the optional-record cluster (their first site is an unpatched diagnostic in another SWF module), and the
 two placement handlers move to the reader-interface cluster.
 
+**G3 compiler qualification.** Normal scoped types/SWF emission now supplies the same nine Effect
+bases and shared cells without applying their repairs; those nine entries were retired after the
+original public parser's durable CTest passed (five real lists plus explicit owner/control-block,
+inherited-cell/live absence and lifetime checks). The source branch patch remains. A fresh six-header
+Clang22.1.8 jobs2 check is **2 pass / 4 fail / 0 unattempted**, preserving exactly the two optional-record
+and two reader-owner follow-on failures above; no extra PASS or package gain. Eight types override
+hash mismatches from regeneration remain visible and await separate ownership. See the
+[G3 qualification and limits](compiler-requests/interface-heritage-widening.md#g3-swf-normal-compatible-heritage-replaces-nine-effect-repairs).
+
 ### 47. `other-43523429` — 4 header(s)
 
 - cause: heritage-based Node2D type arguments are not substituted at `addNodeChild`, leaving a free `Traits` identifier
