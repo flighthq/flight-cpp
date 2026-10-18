@@ -146,3 +146,51 @@ normal compiler leaf-module routing and structural-key renderer over the actual 
 graph; it does not replace production helpers. The two declaration-only repairs are
 retired in preparation for normal generation of their actual definitions. Final normal
 SDK and registered-consumer qualification remain required.
+
+## Final original style/color/gradient qualification, 2026-10-18
+
+The one normal generation on the captured 81-compiler/201-Flight-patch stack exits
+zero: the closure emits 1,399/1,467 modules with 68 refusals; the selected package emits
+49/80 with 31 refusals. It changes 33 package headers, the normal global structural-key
+table and five metadata files. Every existing function definition and refusal marker
+is retained. Exactly two new bodies, `resolve_svg_style` and `parse_svg_color`, replace
+their two old refusal markers; their declaration-only repairs are retired. Both pinned
+checkouts restore cleanly. Source provenance remains uniform at `a627849`. The existing
+binding-profile transition warning remains; actual native consumers compose the selected
+package with the committed dependency inventory. No dependencies were moved speculatively.
+
+After reconciling the delivered runtime base, the registered original public consumer
+and gradient lookup both build, link and pass CTest: **2/2 PASS**. The consumer matches
+untouched pinned TypeScript for **34 whole-style cases covering all 22 fields** and
+**88 color cases**. It checks presentation/rule/inline precedence, stable equal-priority
+rules, inherited/reset/invalid/numeric values, fresh styles, live rule declarations,
+original cache keys/owners, explicit-null parents and cache invalidation. Its explicit
+Unicode test-host service handles the corpus; an exact thrown host owner propagates
+through the original color parser. An earlier cache-exception fixture was rejected:
+the style resolver performs no case conversion and could not trigger that host hook.
+No production body changed for the corrected fixture.
+
+The same consumer calls the actual public gradient parser for absent/default stops,
+inherited fresh arrays/stops/colors, stable sorting, shared-color aliases, later source
+mutation, authored parent/currentColor/opacity/offset and exact unresolved/recursive
+reference diagnostics. There are no substituted helper definitions or narrowed parser
+inputs. All four standalone color/style/XML/gradient headers pass (Clang22.1.8, one
+worker, 128 seconds). Their compile command exits one only because the separate13
+Scene3DGL override source hashes are stale; builder4 owns that reconciliation. No older
+27/51 survey or the five Matrix callers was repeated, and no new header promotion is
+claimed by this follow-on.
+
+The ordered compiler/source stack applies with exact tested bytes, builds, passes
+14 focused groups and reverses cleanly. Source-patch/repair automation passes33/33;
+package-label validation passes1/1. The full compiler check retains its four known
+failing gates and five foreign fixture type errors. The selected existing groups
+are16/17 on both the preceding77 and candidate79 stacks; builder7 subsequently fixed
+that independent nullable-lift fallback. This generation keeps its captured81 provenance.
+The broad packageScope automation could not finish because fixture copies exhausted
+temporary disk. Its failed1.5GB directory was removed; that full suite is not claimed
+as passed. Bounded checks above completed after cleanup.
+
+`collectCssRules` still refuses the independent regexp-capture present-payload read
+(`cpp-member-projection-without-present-storage`). It is not replaced. Full XML import,
+CSS collection, package completion and the separately owned five-caller Matrix lane
+remain outside this qualified parser/cascade closure.

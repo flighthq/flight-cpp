@@ -27,3 +27,10 @@ passes all 14 focused tests and reverses both pins cleanly. The selected existin
 are 16 pass/1 unchanged failure on both the preceding 77 stack and this candidate. The
 full compiler check retains the same four failing gates and five foreign fixture errors,
 with no new fixture errors. Normal generation and final original consumers remain pending.
+
+Final qualification: the declared81compiler/201Flight stack builds and passes14focused
+groups, with clean ordered apply/revert. Normal scene2d-formats generation emits the
+actual style/color bodies and retains every prior definition/refusal. Registered original
+gradient/cascade/color+lookup consumers build/link/CTest2/2PASS; standalone four SVG
+roots compile. See [the final original closure evidence](numeric-optional-chain-result-erased.md#final-original-stylecolorgradient-qualification-2026-10-18)
+for full source cases, exact scope and independent gate limitations.

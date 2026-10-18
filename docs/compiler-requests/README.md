@@ -691,9 +691,9 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   `Ref<MovieClip>` parameters without `structural_ref_cast<Ref<T>>`. The recovery compiles in scratch but is
   checked where the assertion is not, so nothing is carried.
 - [A numeric optional-chain result must retain its numeric payload](numeric-optional-chain-result-erased.md) —
-  explicit source guards plus a compiler nullable-Map coalesce projection make winding/declaration
-  calls consumable through the original style header; collector/cascade bodies remain refused.
-  Two older geometry/gradient include rows remain unrerun failures.
+  explicit guards and shared dictionary/presence mechanisms now emit the original full style/color
+  closure: actual gradient/cascade/color+lookup consumers pass2/2CTest; the separate collector remains
+  refused. Four SVG roots compile; older geometry/Matrix callers remain independently scoped.
 - [A typed array passed to a `readonly unknown[]` parameter needs a readonly element view](typed-array-into-readonly-unknown-array-parameter.md) —
   `@flighthq/scene3d-gl` fake GL error audit: `number[]` into `setError(..., readonly unknown[])` lowers as
   `Array<double>` against `Array<Any>`. Nothing is carried.
@@ -701,4 +701,5 @@ patch has retired because the fix landed upstream keep their row, marked, as the
 - [Computed Record deletion must remove the property](record-computed-delete.md) —
   shared mutable dictionary deletion, primitive missing-key storage and erased local
   presence assertions enable the actual SVG style/color parser closure. Code-first
-  whole-body consumers pass; normal generation/final qualification is in progress.
+  whole-body consumers and normal generation are qualified: actual native consumers2/2PASS,
+  all22style fields/88colors retained, no source body replacement or full-import claim.

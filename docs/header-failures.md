@@ -5646,3 +5646,15 @@ readonly Matrix payload. Their historical failure rows remain failed. Only the m
 is promoted, without changing the original sweep totals. The real public gradient lookup passes CTest1/1.
 The real parser compiles but cannot link the declaration-only style and color parsers; its approved
 cascade follow-on remains active. See the [allocation request](compiler-requests/fresh-null-array-into-nullable-element-union.md).
+
+## Original SVG style/color closure
+
+The normal81compiler/201Flight generation adds the actual `resolve_svg_style` and
+`parse_svg_color` bodies and retires their two declaration-only repairs. All four
+color/style/XML/gradient headers independently compile, and registered original public
+gradient/cascade/color+lookup consumers pass2/2CTest, including34whole styles/all22fields,
+88colors and real parser/cache/owner/reference cases. These four rows were already
+passes: this follow-on adds functionality with **zero new header promotions**. The five
+Matrix callers remain separately owned by builder4; no repeat survey was made. The
+header command still exits one for its13known Scene3DGL override hash drifts. Independent
+CSS collection and whole SVG import/package completion remain open.
