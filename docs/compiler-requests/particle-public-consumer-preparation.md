@@ -42,8 +42,11 @@ The rule is `cpp-empty-array-element-type-unproven`. The fallback's empty array 
 element domain at that branch. Builder2's reply41be5180 confirms that its generic lazy-nullish
 patch does not cover this earlier empty-literal branch and that there is no ownership overlap.
 This is a specific remaining body root, not a reason to rewrite the original source. No fix is
-included. The saved-graph diagnostic is scoped to compiler113; the future actual117 normal run
-must report its own result rather than inherit that observation.
+included. The source refusal also reproduces with the exact117 backend composed after the unchanged113
+prefix. That follow-up uses a transpile-only diagnostic; all four new patches change only the
+backend and tests, so its other runtime JavaScript dependencies are unchanged from qualified113.
+It is not a new strict-build or normal-run qualification. The actual117 normal run must still report
+its own result.
 
 ## Separate public options ABI boundary
 

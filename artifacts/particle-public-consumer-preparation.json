@@ -1,0 +1,258 @@
+{
+  "schema": "flight-cpp-particle-public-consumer-preparation/1",
+  "authority": "Foreman6ec9df8e; shared B sequencing Foreman69d290e7",
+  "scope": "Original-source public consumer controls and prepared pending native consumer only. No new production compiler/runtime/profile/source patch, SDK, installed callback/header or ledger promotion.",
+  "implementationCommit": "3c6ab7f4",
+  "pins": {
+    "flight": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "compiler": "806d257d2f4100de745cc97340e61c2f301b0f24"
+  },
+  "floor": "bd769ad4a1fd15b7ab54a4714573e67696ac73ea",
+  "source": {
+    "strictOriginalConsumerGraph": "pass",
+    "originalPublicContractAndBodies": true,
+    "checks": 129,
+    "groups": {
+      "installation": 10,
+      "identity": 12,
+      "detectors": 32,
+      "dispatch": 5,
+      "options": 36,
+      "result": 8,
+      "errors": 26
+    },
+    "sourceHashes": {
+      "particles-formats/src/contract.ts": "965cfcaaf5b6859b1402e09ba3d682ef2f48b93a46f2d649ee8264223ddb83a7",
+      "particles-formats/src/particlesFormatRequirements.ts": "85fd490dcf5125446c37ad1bf3cff59ea52d0b6ad0a2f6725c50111a9d6892b2",
+      "particles-formats/src/detect.ts": "4bfc90c37d41c8554be4ea234c67e6c3e5bdf0d520421534c5ed41a59987ef08",
+      "particles-formats/src/formatRegistry.ts": "d2be4a574bdcdbad130117db7647e79a961f8b89b9595d2b36a8e05be3131281",
+      "importdiagnostics/src/importDiagnosticCollector.ts": "5aab6518a367bf77e95168a553875de04ea9fa91d2ac7e561d76c76e12efa215",
+      "particles/src/particleEmitterConfig.ts": "77a2f7a28c06a03a73d0e7b52d93f3e739448351b985bc6f697c78e5459e30ac",
+      "particles/src/curve.ts": "a0af9f5497161fde7072a877fb8d1cb5b89e7ce5fb4e0eefb83717ef5688ecc5",
+      "types/src/ImportDiagnostic.ts": "b56593c1baf28ae733c9fdce62e96fee96bfa9ea3628a7c271a8464f45bdf8ae",
+      "types/src/ParticleFormatKind.ts": "f64c52f3f0fc9302eb7ab89ce298f3e78bbc67ea1db2be66822bd63630601ba5",
+      "types/src/ParticleConfigParse.ts": "9f6112360c2e8c354e0ed476bc7ea15d926e50cf549a4bfd0dd0a43cbeb84be2",
+      "types/src/ParticleFormatCodec.ts": "358ac4621fdef099551a33aa08afc27e16a31d9f9fb7280ffc817cc6b04dfbcf",
+      "types/src/ParticleFormatDescriptor.ts": "2f05ed87e4bceaa861e834053141a30eb464eed7a1ea31f8e979ad6b1692f5d3",
+      "types/src/ParticleEmitterConfig.ts": "95b0764b4cbc447ef74f1ff89d537a19c64c01cfb237e7718986868ae31715a5",
+      "types/src/ParticleCurve.ts": "19b9ce4d922cea06abb6091cb055bf4bb64812d2250a2e9e0dd161e254eeaf88",
+      "types/src/ParticleSerializeResult.ts": "1b46b9b8ff6772a4199e629a01f67ea485bcf4192a1d37baa3d1b86b6533ed7b",
+      "types/src/NonEntityCreateResult.ts": "27250e4d661f90b18c29fbb8335628b453c8eba3d3c39e450920c426c09f5fe7",
+      "types/src/LibgdxParticleSchema.ts": "40c97ed6d2416159c3f41c6d883c05fdf6ad92a1d848d6b732efa4bcbcfa32c2",
+      "types/src/ParticleDesignerSchema.ts": "5f12c203d88f5535daa1eaae6f9c08e8680b994d279ce82ecbb578bed1a6fc36",
+      "types/src/PixiParseResult.ts": "b626a71483f4eab2e53d3686cfc837e113b616bd50681eab29c239e45e4bc81e",
+      "types/src/SpineParticleSchema.ts": "2d1f9144aaa4e1a06d23d21fe0fed83b0337af349111a4c0c75073b024f263ce",
+      "types/src/StarlingPexSchema.ts": "e593d0dc15f11f697364a416f93b8604fc3a9f2c1da27763b0204e5b96736bce",
+      "types/src/UnitySchema.ts": "63041525e043df157215f132d4270e1f1efb28e295de4183311cc39c9353a9df",
+      "particles-formats/src/libgdxParse.ts": "d14d5f6a3750a39886ee8cb64a3841c5433d38b5a02aa05bab3e415a7c8cae1d",
+      "math/src/constants.ts": "81b1771fa6df3dbaf350ce79a7d43ec8981ee60e7349eebcdd2af92e4412aedf",
+      "particles-formats/src/libgdxSerialize.ts": "c2c3017898d0d5ef8dc978eacd9f87e9d86cf2b48a8f08f00f7760d48ab97ad9",
+      "particles-formats/src/parseParticleConfig.ts": "64f4478308016bb37b67ca688e36fc18dad6b1155fe8b93d48fbcf4117a7f7eb",
+      "particles-formats/src/particleDesignerParse.ts": "45b23388fc116f2b0d73da2fb60dc25ea06f186f8ee325621f9affabe38e9fc4",
+      "particles-formats/src/particleDesignerSerialize.ts": "8f0613d0d51f98de2a5916b1249e2f4f86fa99e1333400276b7d0a525bf76dc5",
+      "particles-formats/src/pixiParse.ts": "13cb19a58dfd4c6559b170bfd496487339e1abfbba99cb3fa8552dbb557391ab",
+      "particles-formats/src/registerBuiltInParticleFormats.ts": "cc4e0d3e1200a304c0fe4e8b2d5a73e153d1b8975059e5fa501d32f5603ce519",
+      "particles-formats/src/spineParse.ts": "51485edfdac2fc2fad2865f94100b138e32d003c09c0750282ffdff8c7075de5",
+      "particles-formats/src/spineSerialize.ts": "10f2be14e0ee558c2eafcfac128c7013430731bbc017f294092324eca9b0ed21",
+      "particles-formats/src/starlingPexParse.ts": "83b73cce886b40ea0cf5f5ac9b249ded35232fb387090ec1daa2ec47d2e66af0",
+      "particles-formats/src/starlingPexSerialize.ts": "9e12809c95be05f999c74d6c738ca4bd73756e053b6cb5f0777dbe35979c7bc0",
+      "particles-formats/src/unityParse.ts": "105d29c1d9abbf99f3968fc0404c289cf6b1ec82c0694d06c81f66a944b182db",
+      "particles-formats/src/unitySerialize.ts": "fad0e1c330071cd9f3cfa1a0405340ec7d6ae2ad797b2cb5d1541fcc67e1bfa6"
+    },
+    "nativeConsumer": {
+      "fixture": "scripts/fixtures/particlePublicConsumer.cpp",
+      "sha256": "ff8d6ad18f08aa4fcf733ceb1e1cf632c668c020087ab58392226fea91ff678d",
+      "compiled": false,
+      "status": "prepared; qualification pending actual shared Types and authorized particles output"
+    },
+    "normalSdk": false,
+    "scope": "Actual original TypeScript public registration/detection/registry/callback/parser edge controls. No compiler emission, installed native callback/header, SDK or ledger claim."
+  },
+  "boundaries": {
+    "qualified113Diagnostic": {
+      "inputContextSha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+      "originalGraphDiagnostic": [
+        {
+          "source": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
+          "emitted": false,
+          "rule": "cpp-empty-array-element-type-unproven",
+          "message": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site"
+        },
+        {
+          "source": "packages/particles-formats/src/particlePublicConsumer.ts",
+          "emitted": true,
+          "files": [
+            {
+              "file": "flight/particles_formats/particle_public_consumer.hpp",
+              "sha256": "14db209ea02336a1af57661c35f0b98585a54a2a1d724dd5b51e097f93516514"
+            }
+          ],
+          "readonlyOptionsForwardedWithoutNativeConversion": true
+        }
+      ],
+      "approvedTypeOnlyEquivalent": "Required on two already-required writable result fields",
+      "installedAbiCounterexample": {
+        "reproduced": true,
+        "compilerExit": 0,
+        "diagnostic": "",
+        "source": "scripts/fixtures/particlePublicReadonlyAbiBoundary.cpp",
+        "headers": [
+          {
+            "file": "flight/particles_formats/parse_particle_config.hpp",
+            "sha256": "21ce9f68b8cfdea3c43f955ca756506781b7100fa24ca5e262abc26a2cfe08fb"
+          },
+          {
+            "file": "flight/particles_formats/format_registry.hpp",
+            "sha256": "36caf928afcaf3202ebc3f12f8e3641e4cd36e3cbdd9b55d2eb325d423b9f6c0"
+          },
+          {
+            "file": "flight/types/particle_config_parse.hpp",
+            "sha256": "2265c00c98c55f4b1fb0e22d3060e9185fb3016ebeb73059bde45d328d2ee2c5"
+          },
+          {
+            "file": "flight/types/particle_format_codec.hpp",
+            "sha256": "8048732959b3ba9160bc5811ca04a8d031952e5ed0f368c82e521f1f1c7797cd"
+          }
+        ],
+        "unchangedDuringBuild": true,
+        "meaning": "Object compile PASS means current automatic public config/document functions reject optional readonly structural options, while parseRegisteredParticleFormat accepts them. It is a retained boundary, not positive native consumer qualification."
+      },
+      "normalSdk": false,
+      "scope": "Saved original graph and exact current installed ABI diagnostic only. No current normal SDK, actual eight callback/native registry success or header promotion."
+    },
+    "current117TranspileOnlyDiagnostic": {
+      "inputContextSha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+      "originalGraphDiagnostic": [
+        {
+          "source": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
+          "emitted": false,
+          "rule": "cpp-empty-array-element-type-unproven",
+          "message": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site"
+        },
+        {
+          "source": "packages/particles-formats/src/particlePublicConsumer.ts",
+          "emitted": true,
+          "files": [
+            {
+              "file": "flight/particles_formats/particle_public_consumer.hpp",
+              "sha256": "14db209ea02336a1af57661c35f0b98585a54a2a1d724dd5b51e097f93516514"
+            }
+          ],
+          "readonlyOptionsForwardedWithoutNativeConversion": true
+        }
+      ],
+      "approvedTypeOnlyEquivalent": "Required on two already-required writable result fields",
+      "installedAbiCounterexample": {
+        "reproduced": true,
+        "compilerExit": 0,
+        "diagnostic": "",
+        "source": "scripts/fixtures/particlePublicReadonlyAbiBoundary.cpp",
+        "headers": [
+          {
+            "file": "flight/particles_formats/parse_particle_config.hpp",
+            "sha256": "21ce9f68b8cfdea3c43f955ca756506781b7100fa24ca5e262abc26a2cfe08fb"
+          },
+          {
+            "file": "flight/particles_formats/format_registry.hpp",
+            "sha256": "36caf928afcaf3202ebc3f12f8e3641e4cd36e3cbdd9b55d2eb325d423b9f6c0"
+          },
+          {
+            "file": "flight/types/particle_config_parse.hpp",
+            "sha256": "2265c00c98c55f4b1fb0e22d3060e9185fb3016ebeb73059bde45d328d2ee2c5"
+          },
+          {
+            "file": "flight/types/particle_format_codec.hpp",
+            "sha256": "8048732959b3ba9160bc5811ca04a8d031952e5ed0f368c82e521f1f1c7797cd"
+          }
+        ],
+        "unchangedDuringBuild": true,
+        "meaning": "Object compile PASS means current automatic public config/document functions reject optional readonly structural options, while parseRegisteredParticleFormat accepts them. It is a retained boundary, not positive native consumer qualification."
+      },
+      "normalSdk": false,
+      "scope": "Saved original graph and exact current installed ABI diagnostic only. No current normal SDK, actual eight callback/native registry success or header promotion."
+    },
+    "current117Inputs": {
+      "compilerPatches": 117,
+      "totalActive": 319,
+      "qualified113PrefixIdentical": true,
+      "allNewRuntimeChangesOnlyBackend": true,
+      "added": [
+        {
+          "dependency": "flight-compiler",
+          "digest": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507",
+          "id": "compiler-erased-array-selection-and-fill",
+          "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+          "package": "@flighthq/scene2d-formats"
+        },
+        {
+          "dependency": "flight-compiler",
+          "digest": "2190c726952f0094779da59a6fddc76bcbf50873a3ef6ffd1d59c417da1f968b",
+          "id": "compiler-erased-host-result-evidence",
+          "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+          "package": "@flighthq/render-wgpu"
+        },
+        {
+          "dependency": "flight-compiler",
+          "digest": "58871773838c4eb4fed581bc7ab90466eb75045a90459f83622d57985e8de758",
+          "id": "compiler-lazy-nullish-fallback",
+          "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+          "package": "@flighthq/render-wgpu"
+        },
+        {
+          "dependency": "flight-compiler",
+          "digest": "2064d76712c6322c4142ee492c3bf7e34482927138b110a3a9699982e9c79d81",
+          "id": "compiler-structural-value-carrier-host-handle-read",
+          "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+          "package": "@flighthq/render-wgpu"
+        }
+      ],
+      "backendSha256": "3fe45d0593b916926296274238abfb31d456f181ab273a78ce8c8259e4924e1d",
+      "build": "Transpile-only diagnostic over exact117 backend and unchanged qualified113 runtime JavaScript dependencies; not a new strict build or SDK qualification."
+    },
+    "emptyArrayOriginalBody": {
+      "source": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
+      "line": 36,
+      "function": "applyParticleImportOptions",
+      "expression": "options.formats ?? []",
+      "rule": "cpp-empty-array-element-type-unproven",
+      "peerOwnership": "builder2-41be5180 confirms not covered by its earlier generic lazy-fallback work; no overlap",
+      "implementationChange": false
+    },
+    "automaticParserReadonlyOptions": {
+      "originalApi": "parseParticleConfig / parseParticleConfigDocument",
+      "strictSourceConsumer": "publicConfig / publicDocument in scripts/fixtures/particlePublicConsumer.ts",
+      "sourceType": "optional Readonly<ParseParticleConfigOptions>",
+      "emittedConsumerCarrier": "optional readonly StructuralRef of ParseParticleConfigOptions",
+      "installedOriginalApiCarrier": "optional Ref<ParseParticleConfigOptions>",
+      "registeredReadonlyRoute": "parseRegisteredParticleFormat accepts the readonly view",
+      "implementationChange": false
+    }
+  },
+  "preparedNative": {
+    "file": "scripts/fixtures/particlePublicConsumer.cpp",
+    "sha256": "ff8d6ad18f08aa4fcf733ceb1e1cf632c668c020087ab58392226fea91ff678d",
+    "actualOriginalCallbacks": 8,
+    "replacementBodiesOrAdapters": false,
+    "fakeGeneratedKeys": false,
+    "compiled": false,
+    "run": false,
+    "scope": "Actual public contract callback/registered-dispatch controls pending real Types and particles output. Automatic parser native checks use the original nominal ABI and do not qualify schema-only bags through that separate edge."
+  },
+  "verification": {
+    "strictOriginalConsumerGraph": "pass",
+    "sourceAssertions": 129,
+    "installedAbiNegativeWitnessObjectCompile": "pass; reproduces retained missing readonly automatic-parser edge",
+    "nativeFullConsumer": "pending; no positive native pass claimed",
+    "scriptsSyntax": "pass",
+    "diffCheck": "pass"
+  },
+  "sharedB": {
+    "reportedStarted": true,
+    "author": "builder2",
+    "frozenCompiler": 117,
+    "frozenTotal": 319,
+    "authorHead": "6bb680fc",
+    "actualOutputConsumed": false,
+    "requiredNext": "Actual exit/commit/floor receipt, then builder3 single particles run and all8 callbacks/JSONhelper/detector/exact4headers/publicconsumers."
+  }
+}
