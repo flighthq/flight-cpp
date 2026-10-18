@@ -1,0 +1,150 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -23141,10 +23141,23 @@
+   const narrowed = getCppEffectiveNarrowedBindingTypeCpp(expression, context);
+   if (!narrowed && !expression.narrowedMember) return undefined;
+   const declared = getCppBindingTypeCpp(expression.reference.binding.id, context);
+-  const union = declared ? getIrVariantUnionTypeCpp(declared, context, new Set()) : undefined;
++  const union = declared ? getIrUnionTypeCpp(declared, context, new Set()) : undefined;
+   if (!union) return undefined;
+-  const representation = getCppVariantRepresentationForInspection(union, context);
+-  if (representation.direct) return undefined;
++  const plan = getCppUnionRepresentationPlan(union, { ...context, anonymousStructs: new Map(), includes: new Set() });
++  if (
++    hasIrTypeAbsentMember(union) &&
++    (!hasCppPresentBindingStorageProofCpp(expression, context) || !narrowed || hasIrTypeAbsentMember(narrowed))
++  )
++    return undefined;
++  if (plan.kind !== 'multiVariant' && plan.kind !== 'optionalVariant') return undefined;
++  const representation: CppVariantRepresentation = {
++    direct: false,
++    alternatives: plan.valueSlots.map((slot) => ({
++      members: slot.sourceAlternatives,
++      runtimeType: slot.runtimeType,
++      targetType: slot.targetType,
++    })),
++  };
+   const named = expression.narrowedMember
+     ? representation.alternatives.filter((alternative) =>
+         alternative.members.some((member) => getIrUnionMemberNameCpp(member) === expression.narrowedMember),
+@@ -26237,6 +26250,18 @@
+   ) {
+     context.includes.add('flight/structural_ref.hpp');
+     return `flight::has_property(${emitExpression(expression.right.expression, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
++  }
++  if (
++    expression.left.kind === 'literal' &&
++    typeof expression.left.value === 'string' &&
++    hasCppErasedDynamicTestOperandCpp(
++      expression.right,
++      getIrExpressionTypeEvidenceCpp(expression.right, context),
++      context,
++    )
++  ) {
++    context.includes.add('flight/structural_ref.hpp');
++    return `flight::has_property(${emitExpression(expression.right, context)}, flight::String::from_utf8(flight::RowKey<${JSON.stringify(expression.left.value)}>::name.view()))`;
+   }
+   if (getCppNamedPropertiesViewExpressionCpp(expression.right, context)) {
+     emissionError(
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppOriginalOptionalUnionSlot.test.ts
+@@ -0,0 +1,99 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export interface Active<T> { mode:1; value:T }
++export interface Static<T> { mode?:0; value:T }
++export type Choice<T> = Active<T>|Static<T>;
++function active<T>(value:Readonly<Choice<T>>):value is Readonly<Active<T>>{return value.mode===1;}
++function same<T>(value:Choice<T>):Choice<T>{return value;}
++export function selected<T>(value:Choice<T>|undefined):Choice<T>|undefined{
++ if(value===undefined)return undefined;
++ if(!active(value))return undefined;
++ return same(value);
++}
++export function hasX(value:unknown):boolean{
++ if(value===null||typeof value!=='object')return false;
++ return 'x' in value;
++}
++export function requireX(value:any):boolean{return 'x' in value;}
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/filter.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++
++it('forwards the original present native union slot without recasting a native reference', () => {
++  const output = emit();
++  expect(output).not.toContain('structural_ref_cast<flight::Ref<');
++  expect(output).toContain('std::get<1>(value.value())');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('uses source property presence over raw erased owners and retains the row-key vocabulary', () => {
++  expect(emit()).toContain('flight::has_property(value, flight::String::from_utf8(flight::RowKey<"x">::name.view()))');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles original optional native slots and erased membership with live identity',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-optional-original-slot-'));
++    try {
++      writeFileSync(path.join(directory, 'slot.hpp'), emit());
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "slot.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++auto active=flight::make_ref<probe::Active<double>>();active->mode=1;active->value=4;
++auto result=probe::selected<double>(std::optional<probe::Choice<double>>{probe::Choice<double>{active}});
++check(result.has_value());check(std::get<flight::Ref<probe::Active<double>>>(result.value())==active);
++active->value=9;check(std::get<flight::Ref<probe::Active<double>>>(result.value())->value==9);
++auto stopped=flight::make_ref<probe::Static<double>>();stopped->mode=0;stopped->value=7;
++check(!probe::selected<double>(std::optional<probe::Choice<double>>{probe::Choice<double>{stopped}}));check(!probe::selected<double>(std::nullopt));
++const auto object=flight::Json::parse(flight::String("{\\\"x\\\":null}"));check(probe::has_x(object));
++check(!probe::has_x(flight::Json::parse(flight::String("{}"))));check(!probe::has_x(flight::Any(flight::null)));check(!probe::has_x(flight::Any(2.0)));
++bool threw=false;try{(void)probe::require_x(flight::Any(2.0));}catch(const flight::TypeError&){threw=true;}check(threw);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('10 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
