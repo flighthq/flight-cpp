@@ -842,52 +842,6 @@ concept variant_alternative_rows_as =
 
 } // namespace detail
 
-// A member the derived interface AUTHORS, read through the deferred owner view.
-//
-// The source object is extensible: on a base-only owner `runtime.currentAlpha` is undefined and
-// `runtime.currentAlpha = 0.5` adds the property to the SAME object, while `runtime.teardowns.push`
-// fails only at the push. This helper has the same shape. A concrete owner with the derived
-// capability answers with its native field's storage. A base-only owner answers with the existing
-// dynamic named cell on ITS EXISTING ROW OWNER -- absent until written, and then visible through
-// every view of that same object. Absence is returned, never thrown, so the failure happens at the
-// later operation that requires a value.
-template <typename Derived, typename Base, typename Field>
-[[nodiscard]] std::optional<Field*> refined_member_storage(
-    const RefinedOwnerView<Derived, Base>& view,
-    std::string_view name,
-    Field Derived::*member) {
-  static_assert(std::derived_from<Derived, Base>,
-                "a refined member read narrows along declared native heritage");
-  if (const auto derived = view.as(); derived.has_value()) {
-    return std::optional<Field*>{std::addressof((*derived.value()).*member)};
-  }
-  const auto owner = detail::owner_for(view.base());
-  if (!owner) return std::nullopt;
-  if (auto* stored = owner->template named_value_if<Field>(name)) {
-    return std::optional<Field*>{stored};
-  }
-  return std::nullopt;
-}
-
-// The write half of the same rule. A native derived owner assigns its field; a base-only owner
-// stores the added member in the same owner's dynamic named cells, so the write is visible through
-// every view of that object and the object itself is never copied or replaced.
-template <typename Derived, typename Base, typename Field>
-void write_refined_member(const RefinedOwnerView<Derived, Base>& view,
-                          std::string_view name,
-                          Field Derived::*member,
-                          Field value) {
-  static_assert(std::derived_from<Derived, Base>,
-                "a refined member write narrows along declared native heritage");
-  if (const auto derived = view.as(); derived.has_value()) {
-    (*derived.value()).*member = std::move(value);
-    return;
-  }
-  const auto owner = detail::owner_for(view.base());
-  if (!owner) throw std::bad_weak_ptr();
-  owner->set_named_value(name, std::move(value));
-}
-
 } // namespace flight
 
 #if __has_include(<flight/sdk/structural_members.hpp>)
@@ -1654,11 +1608,7 @@ template <typename Schema, typename... Fields>
     (detail::initialize_row_field<Schema>(result, std::forward<Fields>(fields)), ...);
     return result;
   } else {
-    auto object = std::make_shared<Object>();
-    // Structural materialization is a real construction path in the generated entity code; the
-    // concrete allocation is recorded here exactly as make_ref records it.
-    RefinementConstructionRegistration<Object>::register_owner(object);
-    StructuralRef<Schema> result(std::move(object));
+    StructuralRef<Schema> result(std::make_shared<Object>());
     (detail::initialize_row_field<Schema>(result, std::forward<Fields>(fields)), ...);
     return result;
   }
@@ -1689,7 +1639,6 @@ template <typename To, typename Schema>
 [[nodiscard]] StructuralRef<RowWritable<RowOf<Ref<To>>>> materialize_row(
     const StructuralRef<Schema>& source) {
   auto object = std::make_shared<To>();
-  RefinementConstructionRegistration<To>::register_owner(object);
   auto owner = detail::owner_for(object);
   if (const auto& from = source.shared_owner()) {
     // A member the new object answers for itself wins the CELL -- it reads and writes the real
