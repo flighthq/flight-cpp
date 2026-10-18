@@ -43,7 +43,7 @@ inline void present_gl_scene_3d(flight::Ref<flight::types::GlRenderState> state,
   }
   flight::render_gl::end_gl_render_pass(pass);
   if (finally_exception) std::rethrow_exception(finally_exception);
-  flight::render_gl::present_gl_render_target(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(target)), std::nullopt);
+  flight::render_gl::present_gl_render_target(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>(target)), std::nullopt);
 }
 
 } // namespace flight::scene3d_gl

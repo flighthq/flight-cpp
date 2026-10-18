@@ -92,11 +92,11 @@ inline bool is_gl_environment_source_cube_current(flight::Ref<flight::types::GlS
 inline void upload_gl_environment_image(flight::host_sdl::WebGl2Context gl, double target, flight::types::TextureSourceValue image, std::optional<double> internal_format = std::nullopt) {
   internal_format = internal_format.value_or(gl.rgba);
   if ((std::visit([](const auto& value) { return value->kind; }, image) == flight::types::bitmap_texture_source_kind)) {
-    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>> bitmap = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>(std::get<flight::Ref<flight::types::Bitmap>>(image)));
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>> bitmap = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Bitmap>>>>(std::get<flight::Ref<flight::types::Bitmap>>(image)));
     flight::render_gl::upload_gl_texture_data(gl, target, flight::row_get<flight::RowKey<"width">>(bitmap), flight::row_get<flight::RowKey<"height">>(bitmap), flight::row_get<flight::RowKey<"data">>(bitmap), internal_format.value());
   }
   else {
-    flight::render_gl::upload_gl_texture_image_resource(gl, target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>(std::get<flight::Ref<flight::types::ImageResource>>(image)))), internal_format.value());
+    flight::render_gl::upload_gl_texture_image_resource(gl, target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageResource>>>>(std::get<flight::Ref<flight::types::ImageResource>>(image)))), internal_format.value());
   }
 }
 

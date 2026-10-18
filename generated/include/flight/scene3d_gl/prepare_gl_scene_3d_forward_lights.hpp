@@ -153,9 +153,9 @@ inline flight::Ref<flight::types::BoundingSphere> scratch_world_sphere = flight:
 
 inline void set_mesh_world_bounding_sphere(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh) {
   flight::scene3d::get_node_3d_world_bounds(scratch_world_bounds, mesh);
-  flight::geometry::set_bounding_sphere_from_aabb(scratch_world_sphere, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Aabb>>>>(scratch_world_bounds)));
+  flight::geometry::set_bounding_sphere_from_aabb(scratch_world_sphere, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AabbLike>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Aabb>>>>(scratch_world_bounds)));
   if ((scratch_world_sphere->radius < 0.0)) {
-    flight::Float32Array world = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4(mesh));
+    flight::Float32Array world = flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4<flight::Ref<flight::types::Node3DTraits>>(mesh));
     (scratch_world_sphere->center->x = world.get_index(12.0));
     (scratch_world_sphere->center->y = world.get_index(13.0));
     (scratch_world_sphere->center->z = world.get_index(14.0));
@@ -176,9 +176,9 @@ inline flight::Ref<flight::types::GlScene3DForwardLightList> prepare_gl_scene_3d
     while ((mesh_index < flight::row_get<flight::RowKey<"meshCount">>(scene_render_list))) {
       {
         auto mesh = flight::row_get<flight::RowKey<"visibleMeshes">>(scene_render_list).element(mesh_index);
-        set_mesh_world_bounding_sphere(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(mesh)));
-        flight::lighting::select_scene_3d_forward_lights(prepared->selection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(lights), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::BoundingSphere>>>>(scratch_world_sphere)), std::nullopt);
-        double block_index = find_prepared_block(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PreparedGlScene3DForwardLights>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<PreparedGlScene3DForwardLights>>>>(prepared)), prepared->selection->indices);
+        set_mesh_world_bounding_sphere(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(mesh)));
+        flight::lighting::select_scene_3d_forward_lights(prepared->selection, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(lights), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundingSphere>>>>(scratch_world_sphere)), std::nullopt);
+        double block_index = find_prepared_block(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PreparedGlScene3DForwardLights>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PreparedGlScene3DForwardLights>>>>(prepared)), prepared->selection->indices);
         if ((block_index < 0.0)) {
           (block_index = prepared->block_count++);
           auto block = ensure_prepared_block(prepared, block_index);
@@ -188,7 +188,7 @@ inline flight::Ref<flight::types::GlScene3DForwardLightList> prepare_gl_scene_3d
           (selected_lights->hemisphere = flight::row_get<flight::RowKey<"hemisphere">>(lights));
           (selected_lights->point = std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>>>>{prepared->selection->point});
           (selected_lights->spot = std::optional<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>>{prepared->selection->spot});
-          flight::render::pack_scene_3d_light_block(block->lights, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene3DLights>>>>(selected_lights)));
+          flight::render::pack_scene_3d_light_block(block->lights, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLights>>>>(selected_lights)));
         }
         (out->mesh_light_blocks.element(mesh_index) = prepared->blocks.element(block_index)->lights);
       }

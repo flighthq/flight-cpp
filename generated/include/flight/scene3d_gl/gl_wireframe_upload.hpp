@@ -126,7 +126,7 @@ inline flight::Ref<flight::types::GlWireframeUpload> ensure_gl_wireframe_upload(
       {
         auto attribute = attributes.element(i);
         if ((((attribute->semantic == flight::String("position")) || (attribute->semantic == flight::String("joints0"))) || (attribute->semantic == flight::String("weights0")))) {
-          flight::scene3d_gl::bind_gl_vertex_attribute(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>(attribute)), stride);
+          flight::scene3d_gl::bind_gl_vertex_attribute(gl, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttribute>>>>(attribute)), stride);
         }
       }
       (i += 1.0);

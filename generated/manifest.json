@@ -778,10 +778,6 @@
         "flight/scene2d_gl/enable_gl_color_adjustment_guards.hpp",
         "flight/scene2d_wgpu/enable_wgpu_color_adjustment_guards.hpp",
         "flight/scene3d/enable_scene_3d_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene_3d_color_space_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene_3d_custom_shader_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene_3d_deform_guards.hpp",
-        "flight/scene3d_gl/enable_gl_scene_3d_forward_light_selection_guards.hpp",
         "flight/scene3d_wgpu/enable_wgpu_scene_3d_custom_shader_guards.hpp",
         "flight/scene3d_wgpu/enable_wgpu_scene_3d_forward_light_selection_guards.hpp",
         "flight/skeleton2d/enable_skeleton_2d_guards.hpp",
@@ -4558,6 +4554,13 @@
       "package": "@flighthq/types"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f",
+      "id": "compiler-readonly-contextual-source-projection",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppReadonlyHelperProjection.test.ts",
+      "package": "@flighthq/scene3d-gl"
+    },
+    {
       "dependency": "flight",
       "digest": "a1dc6af147821589af10933ae25b8c3ba1f2f8b9bc9bf12c3b01ebbd29ff1d86",
       "id": "scene3d-gl-uniform-location-locals",
@@ -4594,6 +4597,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
+      "id": "texture-like-concrete-value-arms",
+      "module": "packages/types/src/Texture.ts",
+      "package": "@flighthq/types"
+    },
+    {
+      "dependency": "flight",
       "digest": "e3a94d937f70c7e5323f0db007cd94a6046ae926ede981756be96b418f5fd49b",
       "id": "scene3d-gl-viewport-number-domain",
       "module": "packages/scene3d-gl/src/glViewportAspect.ts",
@@ -4601,10 +4611,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
-      "id": "texture-like-concrete-value-arms",
-      "module": "packages/types/src/Texture.ts",
-      "package": "@flighthq/types"
+      "digest": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699",
+      "id": "texture-source-concrete-value-arms",
+      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
+      "package": "@flighthq/types and @flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
@@ -4618,20 +4628,6 @@
       "digest": "62a9c86008af8745b4bfb370731c4db0d24e162b611ea9fb10cca5a5ee719273",
       "id": "scene3d-gl-mesh-runtime-accessor",
       "module": "packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts",
-      "package": "@flighthq/scene3d-gl"
-    },
-    {
-      "dependency": "flight",
-      "digest": "46526af800682ccebd727e30e9c41cc649d7eadfc3f1ee40a802c8a73e774139",
-      "id": "scene3d-gl-stable-modifier-property-reads",
-      "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
-      "package": "@flighthq/scene3d-gl"
-    },
-    {
-      "dependency": "flight",
-      "digest": "466ddb08cc387fd21fc0c9a40709484e87f8fd6c1f2e163a44eda5cc2be9c759",
-      "id": "scene3d-gl-stable-fog-mode-reads",
-      "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
       "package": "@flighthq/scene3d-gl"
     },
     {
@@ -4685,9 +4681,9 @@
     },
     {
       "dependency": "flight",
-      "digest": "483d4bed307b5700bd262041c0f83eb1eb5c76cef3e7043ccad4afa9eb892c12",
-      "id": "scene3d-gl-particle-capability-guard",
-      "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
+      "digest": "46526af800682ccebd727e30e9c41cc649d7eadfc3f1ee40a802c8a73e774139",
+      "id": "scene3d-gl-stable-modifier-property-reads",
+      "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
       "package": "@flighthq/scene3d-gl"
     },
     {
@@ -4755,16 +4751,16 @@
     },
     {
       "dependency": "flight",
-      "digest": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699",
-      "id": "texture-source-concrete-value-arms",
-      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
-      "package": "@flighthq/types and @flighthq/scene3d-gl"
+      "digest": "466ddb08cc387fd21fc0c9a40709484e87f8fd6c1f2e163a44eda5cc2be9c759",
+      "id": "scene3d-gl-stable-fog-mode-reads",
+      "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
+      "package": "@flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
-      "digest": "9892adf102a3937f72052b817a2a487c10e3ab959d6af8287b01718755141521",
-      "id": "scene3d-gl-lazy-uniform-location-boundaries",
-      "module": "packages/scene3d-gl/src/glMeshProgram.ts",
+      "digest": "483d4bed307b5700bd262041c0f83eb1eb5c76cef3e7043ccad4afa9eb892c12",
+      "id": "scene3d-gl-particle-capability-guard",
+      "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
       "package": "@flighthq/scene3d-gl"
     },
     {
@@ -4986,10 +4982,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "490783733951b1607487544bc6b55a26f26cc86a98d4ae2b192c36fd23c43694",
-      "id": "scene3d-readonly-transform-query-boundaries",
-      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
-      "package": "@flighthq/node and @flighthq/scene3d-gl"
+      "digest": "9892adf102a3937f72052b817a2a487c10e3ab959d6af8287b01718755141521",
+      "id": "scene3d-gl-lazy-uniform-location-boundaries",
+      "module": "packages/scene3d-gl/src/glMeshProgram.ts",
+      "package": "@flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
@@ -5270,6 +5266,13 @@
       "id": "registry-ordinal-table-nullable-entries",
       "module": "packages/registry/src/registryTable.ts",
       "package": "@flighthq/registry"
+    },
+    {
+      "dependency": "flight",
+      "digest": "490783733951b1607487544bc6b55a26f26cc86a98d4ae2b192c36fd23c43694",
+      "id": "scene3d-readonly-transform-query-boundaries",
+      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
+      "package": "@flighthq/node and @flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
