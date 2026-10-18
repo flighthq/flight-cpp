@@ -216,3 +216,23 @@ direct, star and diamond controls pass either way. The updated focused run passe
 this cause plus five existing owner/default/template regressions), including the emitted named-facade
 header graph compiled through its actual includes. Scoped SDK/public-consumer qualification remains
 pending in the now-granted generation slot.
+
+
+## G3 exact-cohort qualification
+
+The shared [checked invocation carry](generic-call-argument-uses-unsubstituted-parameter-type.md#g3-scoped-qualification-one-measured-header-gain)
+is qualified over the frozen 51-header historical cohort, including these fifteen effective-primary
+heritage rows: four Movieclip, five Billboard and six scene2d-formats. They are all attempted and still
+fail native compilation at other exposed boundaries; none is counted as a pass from inferred type
+evidence alone. The Billboard call now explicitly names checked `Node3DTraits`, while its underlying
+node ABI still rejects the argument. No trait default, cast, copied owner or narrower accepted domain
+is substituted to make that call compile. The other six command-trait rows and the separate
+out-of-trait-owner cluster remain outside this assignment.
+
+Across the full historical cohort the phase-composed latest result is one pass and 50 failures, zero
+unattempted; excluding the two packages declaring web leaves one pass and 48 failures among 49
+applicable headers. The one native gain is Shape default registration, jointly requiring the generic
+carry, retained callable identity and faithful restoration of our own omitted callback definitions.
+The original full Shape registry/bounds consumer and all twelve normal callback bodies pass the
+existing project native target. This does not claim fifteen heritage header gains or close their
+remaining owner/ABI boundaries.

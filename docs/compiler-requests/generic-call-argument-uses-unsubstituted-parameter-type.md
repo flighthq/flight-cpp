@@ -108,7 +108,7 @@ still requires the omitted callback during global initialization. Its original o
 **0/1 pass**, and a scratch exact declaration fails the unused positive link on this same handler.
 No declaration, owner copy, fake mask/handler/body, source rewrite or narrowed mask domain is carried.
 
-## G3 shared compiler substitution carry (qualification pending)
+## G3 shared compiler substitution carry
 
 [`compiler-inferred-invocation-type-arguments.patch`](../../source-patches/compiler-inferred-invocation-type-arguments.patch)
 retains the checker's complete resolved type arguments on each invocation, separately from explicit
@@ -125,8 +125,8 @@ also checked. All **11 cases pass**, including three native syntax fixtures; a p
 nine. Root strict TypeScript, focused format/lint, composition with the existing 67 compiler patches,
 and that composed production build pass.
 
-This initial carry claims compiler evidence only. SDK generation awaits an explicit Foreman capacity
-grant. Assigned qualification is **51 historical rows**: 30 `Traits`, six `K`, four Movieclip, five
+The initial carry established compiler evidence; the granted scoped SDK runs now provide the
+qualification described below. Assigned qualification is **51 historical rows**: 30 `Traits`, six `K`, four Movieclip, five
 Billboard and six scene2d-formats rows whose effective primary request is heritage argument deduction.
 The other six command-trait rows and the separate out-of-trait-owner cluster are outside this scope.
 No header status or runtime capability is promoted until scoped compilation and an actual previously
@@ -138,5 +138,59 @@ therefore use the generic parameters of the actual declared function. Three faca
 anonymous argument owner under the prior direct-only lookup and retain `Command<string>` with the fix;
 direct, star and diamond controls pass either way. The updated focused run passes **21 cases** (16 for
 this cause plus five existing owner/default/template regressions), including the emitted named-facade
-header graph compiled through its actual includes. Scoped SDK/public-consumer qualification remains
-pending in the now-granted generation slot.
+header graph compiled through its actual includes. The granted scoped generation and original public
+consumer proof are described below.
+
+
+## G3 scoped qualification: one measured header gain
+
+The exact historical cohort contains 51 headers: 30 `Traits`, six `K`, four Movieclip, five
+Billboard and six effective-primary scene2d-formats heritage rows. All 51 were attempted at `-j2`: the
+first phase reports **0 pass, 51 fail, zero unattempted**. After the Shape input changes, the six K
+headers were checked again against the committed tree: **one pass, five fail, zero unattempted**.
+The latest observations across the same 51 distinct headers are therefore **one pass and 50 fail**.
+This is a phase-composed result, not a claim of a final-floor rerun of all 51. The initial run used live
+include roots; its last ten headers resumed with the original runtime/overrides frozen.
+
+| Historical cohort | Headers | Latest pass | Latest fail |
+| --- | ---: | ---: | ---: |
+| `Traits` | 30 | 0 | 30 |
+| `K` | 6 | 1 | 5 |
+| Movieclip heritage | 4 | 0 | 4 |
+| Billboard heritage | 5 | 0 | 5 |
+| scene2d-formats heritage | 6 | 0 | 6 |
+
+Two historical headers, `scene2d_canvas/canvas_text_input.hpp` and
+`scene2d_dom/dom_text_input.hpp`, belong to packages declaring `environment: web` in the generated
+manifest. With `applicableEnvironments: []`, they remain evidence but create no current work or
+shippable debt. This leaves **49 applicable observations: one pass, 48 fail**. No applicability is
+inferred from names or referenced browser types. Remaining fail rows keep their historical assignment
+labels; those labels do not assert that the same generic diagnostic remains their first failure.
+
+The passing header is `flight/shape/register_default_shape_bounds_commands.hpp`. Its original public
+function now constructs all sixteen commands with the checked string key instantiation. The existing
+`flight_cpp.generated_shape_bounds` project CMake/CTest target also compiles, links and runs: all sixteen
+keys, exact revision increments, null handlers, repeat-registration function identity, retained handlers
+after unregister/clear, all twelve actual callback bodies, live array mutation, negative zero/NaN/infinity,
+path opcodes and cursor read/exception order pass alongside the existing owner/guard/traversal controls.
+
+This gain is composite. The generic carry and the
+[shared callable identity carry](local-handler-callable-identity.md#g3-shape-registry-carry-retained-literals-and-strict-nullable-comparison)
+are both required, followed by restoration of eleven definitions our old PARTIAL bounds override had
+omitted. Normal emission already supplied all twelve callbacks: these omissions were not eleven
+upstream compiler refusals. The same override is rederived with byte-identical normal callback
+definitions and remains PARTIAL for the prior detached weak-cursor getter lifetime limitation and
+normal cursor/traversal boundaries. No copied helper, replacement owner or reduced consumer is carried.
+
+The five changed SVG headers now stop at `svg_gradient.hpp:106`, an optional `Record` construction,
+with no native pass claimed. Other observations expose RichText readonly/native conversion, signal
+argument ABI, merged-row recovery, an absent Shape bounds callee, a Lottie child projection, the raw
+`in` operator, or matrix-owner conversion. Billboard's normally emitted call visibly uses checked
+`Node3DTraits`; its native dependency mismatch does not make that evidence a header gain. Peer-owned
+node regeneration and membership activation are separate work, not presumed fixes or repeated checks.
+
+All thirteen selected normal module headers are carried without losing an existing function definition
+or adding refused-function markers. Full committed dependency/consumer ledgers are preserved: the
+scoped Movieclip output omits the full graph's refused sprite/atlas dependencies, so it cannot replace
+that dependency-incomplete record. Shared runtime/compiler checks and normal locked-pin cleanup remain
+as recorded above; no broad SDK or unchanged native rerun is claimed.

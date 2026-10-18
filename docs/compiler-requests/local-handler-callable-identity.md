@@ -152,5 +152,9 @@ report 56 passes and one render-owner refusal reproduced on the preceding 70-pat
 static check still reports existing peer fixture types, formatting, lint and import-order failures.
 
 This is a bounded carry, not closure of every site above: generic or incompatible callable signatures,
-async literals, and ABI-changing adapters retain their existing boundaries. Original Shape public
-consumer and normal all-callback qualification remain pending; no header row is promoted by this proof.
+async literals, and ABI-changing adapters retain their existing boundaries. The original Shape public
+consumer now compiles, links and runs with all sixteen registry keys and twelve byte-identical normal
+callback definitions; its project CMake/CTest target passes.
+The one measured header gain is recorded in the [generic qualification](generic-call-argument-uses-unsubstituted-parameter-type.md#g3-scoped-qualification-one-measured-header-gain).
+The same bounds override stays PARTIAL for its prior weak-cursor detached-getter lifetime debt; that
+independent constructor repair is not silently promoted by the retained registry-handler proof.
