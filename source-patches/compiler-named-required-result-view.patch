@@ -34,7 +34,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  }
  
  // A callable object already owns the callable state and any attached properties. Viewing it as a plain
-@@ -28046,6 +28057,34 @@
+@@ -28114,6 +28125,37 @@
      return originalIdentity !== undefined && originalIdentity === targetIdentity &&
        emitType(original.type, context) === emitType(property.type, context);
    });
@@ -65,11 +65,14 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +  if (!config || config.type.kind !== 'named' || config.type.reference.kind !== 'binding' ||
 +      !diagnostics || diagnostics.type.kind !== 'array' || diagnostics.type.readonly ||
 +      diagnostics.type.element.kind !== 'named' || diagnostics.type.element.reference.kind !== 'binding') return false;
++  const probe = { ...context, includes: new Set<string>(), anonymousStructs: new Map() };
++  if ([declaration.returns, config.type, diagnostics.type.element].some(type =>
++      !emitType(type, probe).startsWith('flight::Ref<'))) return false;
 +  return hasCppReadonlyCallableResultViewCpp(declaration.returns, target.returns, context);
  }
  
  function emitCppReadonlyNamedCallableCpp(
-@@ -39216,8 +39255,10 @@
+@@ -39284,8 +39326,10 @@
    const leftCallable = left ? getCppPlainCallableTypeCpp(left, context) : undefined;
    const rightCallable = right ? getCppPlainCallableTypeCpp(right, context) : undefined;
    if (!leftCallable || !rightCallable || leftCallable.typeParameters.length || rightCallable.typeParameters.length) return undefined;
@@ -86,7 +89,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppNamedRequiredResultView.test.t
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppNamedRequiredResultView.test.ts
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,84 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +import { lowerTypeScriptSource, lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
@@ -130,6 +133,8 @@ new file mode 100644
 + ['extra target cell', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', 'Required<{config:Config;diagnostics:Diagnostic[];document:Document}>')],
 + ['renamed target cell', selected.replace('Required<{config:Config;diagnostics:Diagnostic[]}>', 'Required<{value:Config;diagnostics:Diagnostic[]}>')],
 + ['primitive diagnostic cells', selected.replaceAll('Diagnostic[]', 'number[]')],
++ ['primitive config alias', selected.replace('interface Config{size:number}', 'type Config=number;').replace('config:{size:1}', 'config:1')],
++ ['primitive diagnostic alias', selected.replace('interface Diagnostic{code:number}', 'type Diagnostic=number;')],
 + ['readonly source config', selected.replace('Result{config:Config;', 'Result{readonly config:Config;')],
 + ['optional source config', selected.replace('Result{config:Config;', 'Result{config?:Config;')],
 + ['readonly source diagnostics', selected.replace('Result{config:Config;diagnostics:Diagnostic[];', 'Result{config:Config;readonly diagnostics:Diagnostic[];')],
