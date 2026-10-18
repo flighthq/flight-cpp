@@ -20,6 +20,7 @@
 #include <flight/equality.hpp>
 #include <flight/erased_ref.hpp>
 #include <flight/error.hpp>
+#include <flight/json.hpp>
 #include <flight/math.hpp>
 #include <flight/number.hpp>
 #include <flight/presence.hpp>
@@ -158,6 +159,7 @@ struct AnyArray final {
   const void* identity{nullptr};
   std::size_t (*size)(const std::any&){nullptr};
   std::optional<Any> (*get)(const std::any&, double){nullptr};
+  std::shared_ptr<void> (*row_owner)(const std::any&){nullptr};
 
   [[nodiscard]] friend bool operator==(const AnyArray& left, const AnyArray& right) noexcept {
     return left.identity == right.identity;
@@ -193,6 +195,38 @@ class Any final {
   Any(String value) : value_(std::move(value)) {}
   Any(const char* value) : value_(String(value)) {}
   Any(Symbol value) : value_(std::move(value)) {}
+
+  // JSON primitives are values; containers retain their parser-owned shared identity. Boxing
+  // reads one value only, without walking, validating, or copying its object/array descendants.
+  template <typename Value>
+    requires std::same_as<std::remove_cvref_t<Value>, JsonValue>
+  Any(const Value& value) {
+    switch (value.kind()) {
+      case JsonValue::Kind::null: value_ = Null{}; break;
+      case JsonValue::Kind::boolean: value_ = value.as_boolean(); break;
+      case JsonValue::Kind::number: value_ = value.as_number(); break;
+      case JsonValue::Kind::string: value_ = value.as_string(); break;
+      case JsonValue::Kind::object: *this = object(value.object_owner()); break;
+      case JsonValue::Kind::array: {
+        using Owner = std::remove_cvref_t<decltype(value.array_owner())>;
+        const auto& owner = value.array_owner();
+        value_ = detail::AnyArray{
+            std::make_shared<const std::any>(owner), std::type_index(typeid(Owner)), owner.get(),
+            [](const std::any& stored) { return std::any_cast<const Owner&>(stored)->size(); },
+            [](const std::any& stored, double index) -> std::optional<Any> {
+              const auto& array = *std::any_cast<const Owner&>(stored);
+              if (!std::isfinite(index) || index < 0 || std::floor(index) != index ||
+                  index >= static_cast<double>(array.size())) return std::nullopt;
+              return Any(array[static_cast<std::size_t>(index)]);
+            },
+            [](const std::any& stored) {
+              return detail::AnyRowOwnerFactory<typename Owner::element_type>::make(
+                  std::any_cast<const Owner&>(stored));
+            }};
+        break;
+      }
+    }
+  }
 
   template <typename Value>
   Any(Array<Value> value)
@@ -435,6 +469,9 @@ class Any final {
   // The erased row owner of a held object, or null for every other kind and for an object whose
   // type never reached the row machinery. Callers go through `flight::named_properties`.
   [[nodiscard]] std::shared_ptr<void> erased_row_owner() const {
+    if (const auto* array = std::get_if<detail::AnyArray>(&value_)) {
+      return array->row_owner ? array->row_owner(*array->value) : nullptr;
+    }
     const auto* stored = std::get_if<detail::AnyObject>(&value_);
     if (stored == nullptr || !stored->object || stored->row_owner == nullptr) return nullptr;
     return stored->row_owner(stored->object);

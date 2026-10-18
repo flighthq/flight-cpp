@@ -11,6 +11,13 @@ cc_test(
 )
 
 cc_test(
+    name = "json_dynamic_view_test",
+    srcs = ["json_dynamic_view_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "nullish_or_test",
     srcs = ["nullish_or_test.cpp"],
     size = "small",

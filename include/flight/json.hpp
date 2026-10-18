@@ -68,6 +68,15 @@ class JsonValue {
   [[nodiscard]] JsonObject& as_object() { return *require<std::shared_ptr<JsonObject>>(); }
   [[nodiscard]] const JsonObject& as_object() const { return *require<std::shared_ptr<JsonObject>>(); }
 
+  // These handles retain the parsed container itself. A dynamic property/array reader must not
+  // rebuild it as Record or Array storage: aliases of the parsed value share this exact owner.
+  [[nodiscard]] const std::shared_ptr<JsonArray>& array_owner() const {
+    return require<std::shared_ptr<JsonArray>>();
+  }
+  [[nodiscard]] const std::shared_ptr<JsonObject>& object_owner() const {
+    return require<std::shared_ptr<JsonObject>>();
+  }
+
  private:
   template <typename Value>
   [[nodiscard]] Value& require() {
@@ -402,6 +411,16 @@ void append_json_erased(std::string& output, const Erased& value, std::size_t in
       append_json_string(output, value.as_string());
       return;
     case std::remove_cvref_t<decltype(value.kind())>::object:
+      if constexpr (requires { value.template object_if<JsonObject>(); }) {
+        if (const auto object = value.template object_if<JsonObject>()) {
+          append_json_value(output, *object, indentation, depth);
+          return;
+        }
+        if (const auto* array = value.template external_if<std::shared_ptr<JsonArray>>()) {
+          append_json_value(output, **array, indentation, depth);
+          return;
+        }
+      }
       if constexpr (requires { value.is_array(); }) {
         if (value.is_array() && (append_json_erased_array<Erased, Erased>(output, value, indentation, depth) ||
                                  append_json_erased_array<Erased, double>(output, value, indentation, depth) ||

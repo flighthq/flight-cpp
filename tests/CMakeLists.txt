@@ -14,6 +14,11 @@ flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
 
 add_test(NAME flight_cpp.runtime COMMAND flight_cpp_runtime_tests)
 
+add_executable(flight_cpp_json_dynamic_view_tests json_dynamic_view_test.cpp)
+target_link_libraries(flight_cpp_json_dynamic_view_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_json_dynamic_view_tests)
+add_test(NAME flight_cpp.json_dynamic_view COMMAND flight_cpp_json_dynamic_view_tests)
+
 add_executable(flight_cpp_nullish_or_tests nullish_or_test.cpp)
 target_link_libraries(flight_cpp_nullish_or_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_nullish_or_tests)

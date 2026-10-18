@@ -194,6 +194,12 @@ class Record {
     return attachment_ ? static_cast<const void*>(attachment_.get()) : storage_.get();
   }
 
+  // Retains the same storage for readonly named-property views; no entries are copied.
+  [[nodiscard]] std::shared_ptr<void> shared_owner() const noexcept {
+    if (attachment_) return attachment_;
+    return storage_;
+  }
+
   // This record as an object key: an `ErasedRef` whose identity is `identity()`, so copies of one
   // record -- which share their entries, as two bindings of one JavaScript object do -- give equal
   // keys and two records never do. It recovers no type; it exists for `Map<object, ...>` membership.

@@ -21,6 +21,7 @@
 #include <flight/any.hpp>
 #include <flight/attachment.hpp>
 #include <flight/reference.hpp>
+#include <flight/record.hpp>
 #include <flight/symbol.hpp>
 
 namespace flight {
@@ -588,6 +589,81 @@ void bind_construction_bootstrap_members(RowOwner& owner, const std::shared_ptr<
   }
 }
 
+// A readonly live property reader. JSON keys are looked up again on every read, so a retained
+// view observes updates and vector reallocations through another alias of the parsed owner.
+class ReadonlyNamedCell final : public RowCell {
+ public:
+  explicit ReadonlyNamedCell(std::function<Any()> read) : read_(std::move(read)) {}
+  [[nodiscard]] std::type_index value_type() const noexcept override { return typeid(Any); }
+  [[nodiscard]] std::optional<Any> as_any() const override { return read_(); }
+  bool assign_from(RowCell&) override { return false; }
+  bool assign_any(const Any&) override { return false; }
+  bool assign_absent() override { return false; }
+ private:
+  std::function<Any()> read_;
+};
+
+template <typename Object>
+class JsonRowOwner final : public RowOwner {
+ public:
+  explicit JsonRowOwner(const std::shared_ptr<Object>& object) : object_(object) {}
+  [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override { return object_.lock(); }
+  [[nodiscard]] std::type_index native_type() const noexcept override { return typeid(Object); }
+  [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
+    const auto object = object_.lock();
+    if (!object) return {};
+    const auto key = String::from_utf8(name);
+    if constexpr (std::same_as<Object, JsonObject>) {
+      if (!object->has(key)) return {};
+      return std::make_shared<ReadonlyNamedCell>([weak = object_, key] {
+        const auto owner = weak.lock();
+        const auto value = owner ? owner->get(key) : std::nullopt;
+        return value ? Any(*value) : Any(undefined);
+      });
+    } else {
+      if (name == "length") {
+        return std::make_shared<ReadonlyNamedCell>([weak = object_] {
+          const auto owner = weak.lock();
+          return owner ? Any(static_cast<double>(owner->size())) : Any(undefined);
+        });
+      }
+      const auto index = record_array_index(key);
+      if (!index || *index >= object->size()) return {};
+      return std::make_shared<ReadonlyNamedCell>([weak = object_, index = *index] {
+        const auto owner = weak.lock();
+        return owner && index < owner->size() ? Any((*owner)[index]) : Any(undefined);
+      });
+    }
+  }
+  [[nodiscard]] bool has_named_cell(std::string_view key) const override {
+    return named_cell(key) != nullptr;
+  }
+  [[nodiscard]] const std::vector<std::string>& named_keys() const override {
+    keys_.clear();
+    const auto object = object_.lock();
+    if (!object) return keys_;
+    if constexpr (std::same_as<Object, JsonObject>) {
+      // Own integer-index keys precede other string keys in numeric order. Stable sorting keeps
+      // insertion order for ordinary names, including "01" and the non-index "4294967295".
+      for (const auto& [key, value] : *object) keys_.push_back(key.to_utf8());
+      std::stable_sort(keys_.begin(), keys_.end(), [](const auto& left, const auto& right) {
+        const auto a = record_array_index(String::from_utf8(left));
+        const auto b = record_array_index(String::from_utf8(right));
+        if (a && b) return *a < *b;
+        return a.has_value() && !b.has_value();
+      });
+    } else {
+      for (std::size_t index = 0; index < object->size(); ++index) {
+        keys_.push_back(String::from_number(static_cast<double>(index)).to_utf8());
+      }
+    }
+    return keys_;
+  }
+ private:
+  std::weak_ptr<Object> object_;
+  mutable std::vector<std::string> keys_;
+};
+
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
   auto& registry = owner_registry();
@@ -598,7 +674,9 @@ template <typename Object>
     registry.entries.erase(found);
   }
   sweep_owner_registry(registry);
-  auto owner = std::make_shared<NativeRowOwner<Object>>(object);
+  using Owner = std::conditional_t<std::same_as<Object, JsonObject> || std::same_as<Object, JsonArray>,
+                                   JsonRowOwner<Object>, NativeRowOwner<Object>>;
+  auto owner = std::make_shared<Owner>(object);
   owner->adopt_attachment(attachment_for(std::static_pointer_cast<void>(object)));
   bind_generated_row_members(*owner, object);
   bind_construction_bootstrap_members(*owner, object);
@@ -1759,6 +1837,10 @@ class NamedProperties final {
   explicit NamedProperties(std::shared_ptr<RowOwner> owner)
       : object_(owner ? owner->native_object() : nullptr), owner_(std::move(owner)) {}
 
+  // A readonly Record parameter accepts ordinary keyed storage through this same live read
+  // contract. Its shared storage, missing entries, and present undefined values remain intact.
+  NamedProperties(const Record<String, Any>& record);
+
   [[nodiscard]] explicit operator bool() const noexcept { return owner_ != nullptr; }
 
   // Own enumerable string keys, in source declaration order.
@@ -1880,6 +1962,47 @@ template <typename Schema>
   auto owner = value.erased_row_owner();
   if (!owner) return {};
   return NamedProperties(std::static_pointer_cast<RowOwner>(std::move(owner)));
+}
+
+[[nodiscard]] inline NamedProperties named_properties(const JsonValue& value) {
+  if (value.kind() == JsonValue::Kind::object) return named_properties(value.object_owner());
+  if (value.kind() == JsonValue::Kind::array) return named_properties(value.array_owner());
+  return {};
+}
+
+namespace detail {
+class RecordReadRowOwner final : public RowOwner {
+ public:
+  explicit RecordReadRowOwner(Record<String, Any> record) : record_(std::move(record)) {}
+  [[nodiscard]] std::shared_ptr<void> native_object() const noexcept override {
+    return record_.shared_owner();
+  }
+  [[nodiscard]] std::type_index native_type() const noexcept override {
+    return typeid(Record<String, Any>);
+  }
+  [[nodiscard]] std::shared_ptr<RowCell> named_cell(std::string_view name) const override {
+    const auto key = String::from_utf8(name);
+    if (!record_.has(key)) return {};
+    return std::make_shared<ReadonlyNamedCell>([record = record_, key] {
+      return record.get(key).value_or(Any(undefined));
+    });
+  }
+  [[nodiscard]] const std::vector<std::string>& named_keys() const override {
+    keys_.clear();
+    for (const auto& key : record_.enumerable_keys()) keys_.push_back(key.to_utf8());
+    return keys_;
+  }
+ private:
+  Record<String, Any> record_;
+  mutable std::vector<std::string> keys_;
+};
+} // namespace detail
+
+inline NamedProperties::NamedProperties(const Record<String, Any>& record)
+    : NamedProperties(std::make_shared<detail::RecordReadRowOwner>(record)) {}
+
+[[nodiscard]] inline NamedProperties named_properties(const Record<String, Any>& record) {
+  return NamedProperties(record);
 }
 
 // `row[key]` for a string key known only at run time, read as the member type the caller states. This
