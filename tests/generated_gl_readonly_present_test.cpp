@@ -118,11 +118,11 @@ void check_rederived_program_and_callbacks(const State& state) {
               !cached->declared_base_as<types::GlClassicProgram>(),
           "the generic cache inferred a type or replaced its declared base owner");
     const auto ibl = flight::make_ref<types::GlScene3DIbl>();
-    ibl->brdf_lut = gl.create_texture().value();
-    ibl->irradiance_cube = gl.create_texture().value();
-    ibl->prefiltered_cube = gl.create_texture().value();
-    const auto bake_framebuffer = gl.create_framebuffer().value();
-    const auto environment_cube = gl.create_texture().value();
+    ibl->brdf_lut = gl.create_texture();
+    ibl->irradiance_cube = gl.create_texture();
+    ibl->prefiltered_cube = gl.create_texture();
+    const auto bake_framebuffer = gl.create_framebuffer();
+    const auto environment_cube = gl.create_texture();
     runtime->ibl = ibl;
     runtime->ibl_bake_framebuffer = bake_framebuffer;
     runtime->environment_source_cube = environment_cube;
