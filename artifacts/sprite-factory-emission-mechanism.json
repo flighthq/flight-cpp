@@ -1,0 +1,274 @@
+{
+  "schema": "flight-sprite-factory-emission-mechanism/1",
+  "status": "PARTIAL SCRATCH PREP; no activation",
+  "assignment": "Foreman-ae2104ab",
+  "repoHeadAtWholeEmission": "c485c525e438effe40cef32e2e30151e6488fd39",
+  "scope": "Independent constrained fresh-native-owner allocation and original callback/data forwarding evidence. Original source factory bodies retained. No Types, caller, binding profile, normal source-patch manifest or SDK output change.",
+  "fourOriginalRefusals": [
+    {
+      "function": "initializeSpriteRendererData",
+      "sourceLine": 72,
+      "refusal": "cpp-reference-assertion-without-heritage",
+      "classification": "target-runtime"
+    },
+    {
+      "function": "isSpriteRendererDirty",
+      "sourceLine": 84,
+      "refusal": "cpp-structural-assertion-owner-unproven",
+      "classification": "source-portability"
+    },
+    {
+      "function": "createSpriteRuntime",
+      "sourceLine": 55,
+      "refusal": "cpp-reference-assertion-without-heritage",
+      "classification": "target-runtime"
+    },
+    {
+      "function": "createSprite",
+      "sourceLine": 39,
+      "refusal": "cpp-contextual-union-value-type-unrepresented",
+      "classification": "compiler-restriction"
+    }
+  ],
+  "inactiveCompilerPatch": {
+    "path": "artifacts/sprite-factory-emission-mechanism-compiler.patch",
+    "sha256": "1ec24f0eeb0947a8117f615d0f47dfe29ff9286b116170df9837e423339151d3",
+    "baselineBackendSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
+    "candidateBackendSha256": "3de742467978159a155bf22b41c8442445c7792d835855c224c4a9e5a39f70ca",
+    "file": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+    "activation": "INACTIVE: reviewable prototype only; not listed in any applied compiler-patch manifest",
+    "mechanism": "For fresh property-only literals targeted at a constrained native interface type parameter, type each original expression from the constraint, evaluate once in source order, allocate typename R::element_type once, write its physical cells, and record original constructed own keys.",
+    "qualificationLimit": "Bounded concrete native Ref owners only. Does not prove arbitrary derived state, non-native/structural/union generic carriers, callback variance, data projection, or the entity allocation primitive.",
+    "archivedContextPatchSha256": "e831835a580db4fc79e579d4a0257cb061345ddfd841c0aca89cf8b0ce1030a9",
+    "applyCommand": "git apply --unidiff-zero artifacts/sprite-factory-emission-mechanism-compiler.patch (in an isolated baseline compiler checkout only)"
+  },
+  "checks": {
+    "compilerStrictBuild": {
+      "command": "npm run build --silent",
+      "exitCode": 0,
+      "log": "candidate-compiler-build.log"
+    },
+    "baselineLiteralNativeCompile": {
+      "exitCode": 1,
+      "log": "baseline-literal-native-build.log"
+    },
+    "candidateLiteralNativeCompile": {
+      "exitCode": 0,
+      "log": "candidate-literal-native-build.log"
+    },
+    "candidateLiteralNativeRun": {
+      "exitCode": 0,
+      "stdout": "PASS 11 native owner/cell/callback/lifetime checks\n",
+      "evidence": "Observed actual native executable tool output before source-order qualification; receipt recorded without rerunning unchanged tests."
+    },
+    "wrongCallbackNativeCompile": {
+      "exitCode": 1,
+      "expectedRejection": true,
+      "log": "wrong-callback-native-build.log",
+      "reason": "No viable std::function<BaseRef> assignment from function pointer accepting unrelated OtherRef"
+    },
+    "sourceOrder": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS source evaluation order/one evaluation each/original thrown value and prefix\n",
+      "stderr": ""
+    },
+    "readonlyDataCounterexample": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS compatible structural-data cell preserves nested identity/live writes\nOBSERVED same-owner Ref<Data> to optional readonly-partial Data row fails at first data read: std::bad_cast\nOBSERVED unrelated data cell also fails at first data read: std::bad_cast\nPASS counterexample receipt; desired generic readonly data projection remains unsupported\n",
+      "stderr": "",
+      "qualification": "counterexample only; generic projection unsupported; prior v1 receipt failed an invalid row-identity-vs-native-address test and is retained separately"
+    }
+  },
+  "negativeControls": {
+    "count": 9,
+    "baselineAndCandidate": 18,
+    "unchangedEmittedBytes": [
+      "ordinary_named_literal",
+      "unconstrained_type_parameter",
+      "unknown_object_constraint",
+      "undeclared_literal_member",
+      "spread_fresh_owner"
+    ],
+    "sameRefusal": [
+      "nonfresh_base_assertion",
+      "getter_fresh_owner",
+      "unrelated_owner_assertion"
+    ],
+    "wrongCallbackOwner": "Candidate backend emits, but actual native instantiation fails at typed std::function assignment as required; no unchecked callback cast.",
+    "qualificationLimit": "Unchanged pre-existing emission is not a native qualification for unsupported generic cases."
+  },
+  "originalSourceEvidence": {
+    "sourceClosureCount": 1211,
+    "selectedModuleCount": 3,
+    "transpiledJavaScriptTokens": [
+      {
+        "file": "packages/scene2d/src/sprite.ts",
+        "transpiledJavaScriptTokensEqual": true
+      },
+      {
+        "file": "packages/scene2d/src/displayObject.ts",
+        "transpiledJavaScriptTokensEqual": true
+      },
+      {
+        "file": "packages/node/src/node.ts",
+        "transpiledJavaScriptTokensEqual": true
+      }
+    ],
+    "factoryBodyReplacements": 0,
+    "emittedOriginalFactories": [
+      "createSprite",
+      "createSpriteRuntime",
+      "createNode2D",
+      "createNode2DRuntime",
+      "createNodeRuntime"
+    ],
+    "selectedModuleEmissions": [
+      {
+        "path": "flight/node/node.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/scene2d/display_object.hpp",
+        "refused": [
+          "// NOT GENERATED: function getNode2DRuntime -- source line 81",
+          "// NOT GENERATED: function getDisplayObjectRuntime -- source line 77"
+        ]
+      },
+      {
+        "path": "flight/scene2d/sprite.hpp",
+        "refused": [
+          "// NOT GENERATED: function initializeSpriteRendererData -- source line 72",
+          "// NOT GENERATED: function isSpriteRendererDirty -- source line 84"
+        ]
+      }
+    ],
+    "frontendDiagnostics": [
+      {
+        "code": "unsupported-typescript",
+        "column": 4,
+        "line": 31,
+        "message": "unsupported type ConditionalType",
+        "packageName": "@flighthq/types",
+        "severity": "warning",
+        "source": "packages/types/src/ElectronHost.ts"
+      },
+      {
+        "code": "unsupported-typescript",
+        "column": 31,
+        "line": 6,
+        "message": "unsupported type MappedType",
+        "packageName": "@flighthq/types",
+        "severity": "warning",
+        "source": "packages/types/src/Tween.ts"
+      }
+    ],
+    "strictTypeScript": [
+      {
+        "variant": "baseline",
+        "diagnosticCount": 220,
+        "ownedDiagnosticCount": 2,
+        "ownedDiagnostics": [
+          {
+            "file": "packages/scene2d/src/displayObject.ts",
+            "line": 50,
+            "code": 2345,
+            "message": "Argument of type 'Readonly<PartialNode<Node2D>> | undefined' is not assignable to parameter of type 'Readonly<NodeInitialization<Node2DData>> | undefined'.\n  Type 'Readonly<PartialNode<Node2D>>' is not assignable to type 'Readonly<NodeInitialization<Node2DData>>'.\n    Types of property 'data' are incompatible.\n      Type 'Partial<(NodeData & Node2DData) | null> | undefined' is not assignable to type 'Readonly<Partial<Node2DData>> | undefined'.\n        Type 'null' is not assignable to type 'Readonly<Partial<Node2DData>> | undefined'."
+          },
+          {
+            "file": "packages/scene2d/src/sprite.ts",
+            "line": 56,
+            "code": 2345,
+            "message": "Argument of type 'SpriteRuntimeRunner' is not assignable to parameter of type 'Readonly<Partial<MethodsOf<Node2DRuntime> & Pick<Node2DRuntime, \"isLocalBoundsRectangleValid\">>>'.\n  Types of property 'computeLocalBoundsRectangle' are incompatible.\n    Type '(out: Rectangle, source: Readonly<Sprite>) => void' is not assignable to type '(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>) => void'.\n      Types of parameters 'source' and 'source' are incompatible.\n        Type 'Readonly<BoundsNode<Node2DTraits>>' is not assignable to type 'Readonly<Sprite>'.\n          Types of property 'data' are incompatible.\n            Type '(NodeData & Node2DData) | null' is not assignable to type 'SpriteData'.\n              Type 'null' is not assignable to type 'SpriteData'."
+          }
+        ]
+      },
+      {
+        "variant": "candidate",
+        "diagnosticCount": 220,
+        "ownedDiagnosticCount": 2,
+        "ownedDiagnostics": [
+          {
+            "file": "packages/scene2d/src/displayObject.ts",
+            "line": 53,
+            "code": 2345,
+            "message": "Argument of type 'Readonly<PartialNode<N>> | undefined' is not assignable to parameter of type 'Readonly<NodeInitialization<D>> | undefined'.\n  Type 'Readonly<PartialNode<N>>' is not assignable to type 'Readonly<NodeInitialization<D>>'.\n    Types of property 'data' are incompatible.\n      Type 'PartialNode<N>[\"data\"] | undefined' is not assignable to type 'Readonly<Partial<D>> | undefined'.\n        Type '(Partial<N extends { data: infer U; } ? U : never> & N[\"data\"]) | undefined' is not assignable to type 'Readonly<Partial<D>> | undefined'.\n          Type 'Partial<N extends { data: infer U; } ? U : never> & N[\"data\"]' is not assignable to type 'Readonly<Partial<D>> | undefined'.\n            Type 'Partial<N extends { data: infer U; } ? U : never> & N[\"data\"]' is not assignable to type 'Readonly<Partial<D>>'."
+          },
+          {
+            "file": "packages/scene2d/src/sprite.ts",
+            "line": 56,
+            "code": 2345,
+            "message": "Argument of type 'SpriteRuntimeRunner' is not assignable to parameter of type 'Readonly<Partial<MethodsOf<Node2DRuntime> & Pick<Node2DRuntime, \"isLocalBoundsRectangleValid\">>>'.\n  Types of property 'computeLocalBoundsRectangle' are incompatible.\n    Type '(out: Rectangle, source: Readonly<Sprite>) => void' is not assignable to type '(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>) => void'.\n      Types of parameters 'source' and 'source' are incompatible.\n        Type 'Readonly<BoundsNode<Node2DTraits>>' is not assignable to type 'Readonly<Sprite>'.\n          Types of property 'data' are incompatible.\n            Type '(NodeData & Node2DData) | null' is not assignable to type 'SpriteData'.\n              Type 'null' is not assignable to type 'SpriteData'."
+          }
+        ]
+      }
+    ],
+    "qualification": "Whole selected original module emission is PARTIAL. Two selected Sprite renderer assertions and two readonly runtime getters remain refused. Equal strict diagnostic counts do not prove zero regression; the data mismatch changed."
+  },
+  "remainingCauses": [
+    {
+      "cause": "data relation and nested structural carrier",
+      "exactSource": "createNode2D generic N and D are independently constrained; PartialNode<N>.data is not proved to satisfy NodeInitialization<D>. Original base options additionally admit null unlike initialization.",
+      "observedNativeCounterexample": "The outer structural_ref_cast preserves its RowOwner; a bare native Ref<Data> cell read as optional readonly-partial<Data> throws std::bad_cast at the first data read. Exact compatible nested row cells preserve owner and live writes.",
+      "ownership": "Exact source/IR/native counterexample sent to Builder5 for compatibility facts; no fourteen-file migration expansion requested. Types changes remain Builder2 only."
+    },
+    {
+      "cause": "runtime callback variance",
+      "exactSource": "SpriteRuntimeRunner.computeLocalBoundsRectangle accepts Readonly<Sprite>; Node2DRuntime methods expects Readonly<BoundsNode<Node2DTraits>> whose data may be null. Strict callback diagnostic remains unchanged.",
+      "ownership": "Included in Builder5 compatibility evidence and Builder2 freeze inputs; not solved by the fresh native literal prototype."
+    },
+    {
+      "cause": "generic function value and NoInfer evidence",
+      "exactEmission": "create_node_2d fallback retains static_cast<NodeRuntimeFactory<R>>(static_cast<Any>(create_node_2d_runtime)) without selecting a generic function instantiation; emitted original create_node_runtime callback type is NodeOf<Any> rather than proven Traits-specific evidence.",
+      "qualification": "Emission alone is not native qualification. Explicit function value instantiation experiment was excluded because the frontend does not support ExpressionWithTypeArguments; its best-effort omission is not a successful emission."
+    },
+    {
+      "cause": "base entity allocation identity",
+      "exactSource": "Original allocateEntity<Type> constructs an anonymous empty owner and casts its row; finishEntity later casts it to Type. Existing materialize_row fallback can allocate another owner.",
+      "ownership": "Builder2 separately approved primitive; exact original source/IR/emission sent with ownership question. Builder4 made no entity allocation changes.",
+      "nativeActualFactory": "NOTRUN"
+    },
+    {
+      "cause": "renderer/runtime recovery",
+      "preserved": "Original initializeSpriteRendererData and isSpriteRendererDirty remain separate refusals. New readonly runtime-getter refusals are recorded separately.",
+      "ownership": "Compatible Builder2/Builder5 carrier and accessor freeze required."
+    }
+  ],
+  "priorSource39": {
+    "artifact": "artifacts/sprite-factory-source-controls.json",
+    "status": "Existing 39 raw and 39 effective source controls retained; type-only JavaScript token identity does not promote them into native controls."
+  },
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "gate": "Run actual original factory/image39 only after a compatible Builder2/Builder5 freeze and the recorded dependent callback/data/allocation mechanisms are resolved.",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-emission-mechanism-proof.tgz",
+    "sha256": "bbce084d1f90c74b4c3cefb4915ca4bf75e21ca2659152bc7f103b52fc7d531f",
+    "bytes": 27268345,
+    "memberCount": 13098,
+    "checksummedFileCount": 10934
+  },
+  "allocationCounterexampleArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-entity-allocation-counterexample.tgz",
+    "sha256": "3533cfff4cff78306d40e848e83830ba5dacfc8e625f38499fd4d6668aed37e3",
+    "bytes": 4092,
+    "memberCount": 6
+  },
+  "dataCallbackCounterexampleArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-data-callback-counterexample.tgz",
+    "sha256": "04ca4671c8eb2e2629d9bb41c22f11a5c88f74b174d4103e5b4085da2c3916b4",
+    "bytes": 42598,
+    "memberCount": 37
+  },
+  "verifyCommand": "node scripts/spriteFactoryEmissionMechanismProof.mjs [path-to-proof-archive.tgz]",
+  "verificationScope": "Validates retained hashes, inactive patch identity, native positive/negative receipts, all three token comparisons, strict diagnostic counts, selected module evidence, and original four refusals; does not rerun or qualify actual native Sprite/image39.",
+  "coordination": {
+    "builder2": "Exact original allocation source/IR/header archive3533cfff sent with ownership question; answer pending at proof commit.",
+    "builder5": {
+      "parcel": "builder5-cb79ce86",
+      "confirmed": "Builder5 verified the exact data/callback archive and confirmed no approved fourteen-file migration hunk resolves N.data/D, NodeInitialization/PartialNode.data, generic factory Any instantiation, or Sprite-only callback variance. Its same-owner runtime accessor and eighteen metadata bindings provide no generic nested-data adapter.",
+      "scope": "No new migration request, Types change, or family; actual factory/image39 remains an independent gate."
+    }
+  }
+}

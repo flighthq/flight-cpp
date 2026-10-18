@@ -1,0 +1,46 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8050,0 +8051,2 @@
++      const genericOwnerConstruction = emitCppConstrainedNativeReferenceLiteralCpp(expression, constructionType, context);
++      if (genericOwnerConstruction) return genericOwnerConstruction;
+@@ -31908,0 +31911,40 @@
++// A native-reference type parameter is its value carrier (Ref<Owner>), never Owner itself.
++// Read only members declared by the native constraint; preserve one allocation and source order.
++function emitCppConstrainedNativeReferenceLiteralCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'object' }>>,
++  target: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const parameter = getCppTypeParameterDeclarationCpp(target, context);
++  const constraint = parameter?.constraint;
++  if (!constraint || !hasFlightReferenceRepresentationCpp(constraint, context)) return undefined;
++  const plan = context.referenceRepresentationPlanner.plan(constraint, context.module);
++  if (plan.kind !== 'represented' || plan.category !== 'interface') return undefined;
++  const members = context.referenceRepresentationPlanner.resolveObjectShape(constraint, context.module);
++  if (!members || expression.members.some((member) => member.kind !== 'property')) return undefined;
++  const properties = expression.members.filter(
++    (member): member is typeof member & { kind: 'property' } => member.kind === 'property',
++  );
++  if (new Set(properties.map((member) => member.name)).size !== properties.length) return undefined;
++  const declared = properties.map((property) => members.find((member) => member.name === property.name));
++  if (declared.some((member) => !member)) return undefined;
++  const values = properties.map((property, index) => ({
++    property,
++    member: declared[index]!,
++    name: getGeneratedTargetName(`objectMember_${property.name}`, context),
++  }));
++  const evaluations = values.map(({ property, member, name }) =>
++    `auto ${name} = ${emitExpression(property.value, context, member.type)};`,
++  );
++  const owner = getGeneratedTargetName('genericNativeOwner', context);
++  const carrier = emitType(target, context);
++  const writes = values.map(({ property, name }) => `${owner}->${safeCppName(property.name)} = ${name};`);
++  const keys = values.map(({ property, member }) =>
++    `{flight::String(${JSON.stringify(property.name)}), flight::ConstructedKeySentinel::${getCppConstructedMemberSentinelCpp(member.type, context)}}`,
++  );
++  context.includes.add('flight/structural_ref.hpp');
++  context.includes.add('initializer_list');
++  return `([&]() -> ${carrier} { ${evaluations.join(' ')} auto ${owner} = flight::make_ref<typename ${carrier}::element_type>(); ${writes.join(' ')} return flight::mark_constructed_own_named_properties(${owner}, std::initializer_list<flight::ConstructedOwnKey>{${keys.join(', ')}}); }())`;
++}
++
