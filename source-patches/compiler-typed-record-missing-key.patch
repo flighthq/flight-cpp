@@ -1,0 +1,92 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 460a08d..8b85e01 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5552,7 +5552,16 @@ function emitExpression(
+       }
+       const record = getCppRecordTypeArgumentsCpp(objectType, context, new Set());
+       if (record && getCppRuntimeProfile(context.options) === 'flight-cpp') {
+-        return `${object}.get(${emitCppRequiredRecordKeyCpp(expression.index, record.key, context)}).value()`;
++        const lookup = `${object}.get(${emitCppRequiredRecordKeyCpp(expression.index, record.key, context)})`;
++        // A typed Record read of a key the dictionary does not hold is `undefined` in the source, not
++        // an absent carrier: the runtime lookup answers nullopt, and an erased value read keeps the
++        // erased carrier so the missing key reads undefined exactly as the indexed access does. A
++        // present undefined or null stays engaged, and the lookup is still evaluated once.
++        if (isCppAliasResolvedErasedDynamicValueTypeCpp(record.value, context)) {
++          context.includes.add('flight/any.hpp');
++          return `${lookup}.value_or(flight::Any(flight::undefined))`;
++        }
++        return `${lookup}.value()`;
+       }
+       const closedKeys = getCppClosedElementKeyNamesCpp(expression, context);
+       if (closedKeys) return emitCppClosedKeyElementSelectionCpp(expression, closedKeys, context);
+@@ -6748,7 +6757,14 @@ function emitExpression(
+           ? getCppRecordTypeArgumentsCpp(receiverEvidence, context, new Set())
+           : undefined;
+         if (record && emitType(record.key, context) === 'flight::String') {
+-          return `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)})).value()`;
++          const lookup = `${emitExpression(expression.object, context)}.get(flight::String(${JSON.stringify(expression.name)}))`;
++          // Same rule as the indexed read: a missing own key is `undefined` for an erased value type,
++          // not an absent carrier, so the read keeps the erased value and answers undefined.
++          if (isCppAliasResolvedErasedDynamicValueTypeCpp(record.value, context)) {
++            context.includes.add('flight/any.hpp');
++            return `${lookup}.value_or(flight::Any(flight::undefined))`;
++          }
++          return `${lookup}.value()`;
+         }
+       }
+       return `${emitExpression(expression.object, context)}${memberOp(expression.object, context)}${safeCppName(expression.name)}`;
+diff --git a/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts b/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts
+new file mode 100644
+index 0000000..045a197
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppTypedRecordMissingKey.test.ts
+@@ -0,0 +1,48 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/typedRecordMissingKey.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('reads a missing erased record key as undefined through the indexed and named forms', () => {
++  const output = emit(`
++    export function countSection(record: Record<string, unknown>, key: string): number {
++      const value = record[key];
++      if (!Array.isArray(value) || value.length === 0) return 0;
++      return value.length;
++    }
++    export function armatureOf(record: Record<string, unknown>): unknown {
++      return record.armature;
++    }
++  `);
++
++  expect(output).toContain('record.get(key).value_or(flight::Any(flight::undefined))');
++  expect(output).toContain('record.get(flight::String("armature")).value_or(flight::Any(flight::undefined))');
++  expect(output).not.toContain('record.get(key).value()');
++});
++
++it('keeps the strict read for a concrete record value type', () => {
++  const output = emit(`
++    export function total(record: Record<string, number>): number {
++      return record.total;
++    }
++  `);
++
++  expect(output).toContain('.get(flight::String("total")).value()');
++  expect(output).not.toContain('value_or');
++});

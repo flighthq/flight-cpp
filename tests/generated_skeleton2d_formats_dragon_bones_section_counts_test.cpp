@@ -5,9 +5,8 @@
 // receiver take the source's early return and set no key, the timeline tally accumulates the live
 // length, and the animation walk feeds the same counters through the erased for-of.
 //
-// An absent key is deliberately not exercised: the emitted typed Record read calls .value() on its
-// optional and throws for a missing entry, where the source returns early. That is a separate
-// typed-read root, recorded rather than asserted here.
+// The absent-key case is the typed Record missing-key root: a key the dictionary does not hold reads
+// undefined and the counter returns early, rather than throwing on an empty optional.
 #include <flight/skeleton2d_formats/dragon_bones_section_counts.hpp>
 
 #include <flight/any.hpp>
@@ -50,9 +49,20 @@ int main() {
       counts, armature, String("bone"), String("bones"));
   formats::count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(
       counts, armature, String("slot"), String("slots"));
+  formats::count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(
+      counts, armature, String("missing"), String("missing"));
+  armature.set(String("undefined"), Any(flight::undefined));
+  formats::count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(
+      counts, armature, String("undefined"), String("undefined"));
+  armature.set(String("null"), Any(flight::null));
+  formats::count_section_flight_value_function_count_u000053_ection_flight_private_fee4bf3fb73047fb(
+      counts, armature, String("null"), String("null"));
 
   check(counts.get(String("bones")).value_or(-1.0) == 3.0, "a non-empty section counts its live length");
   check(!counts.get(String("slots")).has_value(), "an empty section takes the early return and sets no key");
+  check(!counts.get(String("missing")).has_value(), "an absent section key reads undefined and sets no key");
+  check(!counts.get(String("undefined")).has_value(), "a present undefined section sets no key");
+  check(!counts.get(String("null")).has_value(), "a present null section sets no key");
 
   formats::tally_timeline_flight_value_function_tally_u000054_imeline_flight_private_fee4bf3fb73047fb(
       counts, Any(Array<Any>{Any(1.0), Any(2.0), Any(3.0), Any(4.0)}), String("tallied"));

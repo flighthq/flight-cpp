@@ -763,6 +763,7 @@ counter consumer `tests/generated_skeleton2d_formats_dragon_bones_section_counts
 compiling, linking and running (non-empty, empty, non-array, tally, animation walk). Two headers
 that v1 broke on an `optional<Any>` receiver are fixed by v2 and advance to their next roots; the
 remaining changed headers keep distinct roots (`NamedProperties`/`Record`, `optional<Record>`, the
-next omitted callees, and the value_type/variant timeline roots). The emitted Record read still
-calls `.value()` for an absent key and throws where the source returns early — a separate typed-read
-root, recorded rather than hidden. No 96-load claim.
+next omitted callees, and the value_type/variant timeline roots). The emitted Record read's absent-key throw is a separate typed-read root, now carried by
+[the typed Record missing-key request](typed-record-missing-key-read.md) and source patch
+`compiler-typed-record-missing-key` (present undefined and null stay engaged; only a missing key
+reads undefined). No 96-load claim.

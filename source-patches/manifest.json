@@ -4589,6 +4589,23 @@
       "unblocks": "The JsonValue/named-property/readonly-Record boundary in collectSpineJsonSectionCounts; this alone does not qualify the historical 25 nominal/dynamic JSON headers.",
       "expires": "when upstream keeps owner-preserving JSON read views through readonly Record helper, property, presence and lazy coalescing boundaries.",
       "appliedOn": "2026-10-17"
+    },
+    {
+      "id": "compiler-typed-record-missing-key",
+      "dependency": "flight-compiler",
+      "patch": "compiler-typed-record-missing-key.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a run-time absence bug. A typed Record read of a key the dictionary does not hold emitted `record.get(key).value()`; the optional is empty for a missing key, so the read threw std::bad_optional_access where JavaScript reads undefined. Measured on dragon_bones_section_counts countSection with an absent section key.",
+      "rewrite": "In the indexed and named property read paths for a string-keyed typed Record whose value type is the erased dynamic value, the lookup is emitted with `.value_or(flight::Any(flight::undefined))`. A present undefined or null element stays engaged and reads as itself; a missing key reads undefined. Records with a concrete value type keep the strict `.value()`.",
+      "equivalence": "JavaScript's `record[key]` on a missing own key is undefined. Record::get answers nullopt only for a missing key, while a present undefined or null element is an engaged Any, so value_or maps exactly the missing case to undefined and leaves the present cases untouched. The lookup is evaluated once and the erased carrier's identity is unchanged. No cast, copy, or permissive fallback is added for concrete element types.",
+      "whyNotUpstreamFirst": "The runtime already distinguishes a missing key (nullopt) from a present undefined; the emitter's read is what loses the distinction. Upstream receives docs/compiler-requests/typed-record-missing-key-read.md.",
+      "unblocks": "The absent-key behavior of the DragonBones/Spine section counters and every erased typed-Record read; the counters' existing header pass is preserved.",
+      "expires": "when upstream lowers a typed Record read of an erased value at a missing key to undefined (docs/compiler-requests/typed-record-missing-key-read.md).",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppTypedRecordMissingKey.test.ts: 2 pass (indexed and named erased forms use value_or(Any(undefined)); a concrete Record value type keeps .value()). The patch applies at its stack position: all 72 compiler patches in order, stacked build exit 0, focused cppErasedArrayLengthIndex still 5 pass. Scratch emission is exact and a runtime consumer proves the behavior: missing, present-undefined, present-null and empty-array keys set no counter and do not throw, a present array counts its size, and a missing named read (and a present undefined named read) is undefined. Committed counter consumer gains the missing-key case; scoped regeneration/consumer run follows in an available slot."
     }
   ]
 }
