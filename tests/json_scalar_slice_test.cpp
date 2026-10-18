@@ -140,6 +140,46 @@ void test_json_assertion_row_adapter() {
 
 } // namespace
 
+
+namespace {
+
+// Wrong-typed parsed-JSON composites in a declared numeric field. The Node oracle for these:
+//   typeof object, truthy (even empty); Number([])=0, [30]=30, [1,2]=NaN, {}=NaN, [null]=0;
+//   String([])="", [30]="30", [1,2]="1,2", {}="[object Object]", [[1,2],[3]]="1,2,3";
+//   []+2="2", [30]+2="302", {}+2="[object Object]2", [1,2]+"x"="1,2x";
+//   []<1 true (0<1), [30]<5 false, [30]<"5" true (lexical), {}<1 false (NaN).
+void test_json_composite_operations() {
+  const auto cell = [](const char* text) {
+    return flight::JsonScalarCell{flight::Any(flight::Json::parse(flight::String(text)))};
+  };
+  const auto empty_array = cell("[]");
+  const auto one = cell("[30]");
+  const auto two = cell("[1,2]");
+  const auto object = cell("{}");
+  const auto nested = cell("[[1,2],[3]]");
+  const auto null_element = cell("[null]");
+  const auto zero = flight::JsonScalarCell{flight::Any(0.0)};
+  const auto thirty = flight::JsonScalarCell{flight::Any(30.0)};
+  const auto five_text = flight::JsonScalarCell{flight::Any(flight::String("5"))};
+  const auto x_text = flight::JsonScalarCell{flight::Any(flight::String("x"))};
+
+  assert(empty_array.type_of() == "object" && empty_array.to_boolean() && object.to_boolean());
+  assert(empty_array.to_number() == 0.0 && one.to_number() == 30.0 && std::isnan(two.to_number()) &&
+         std::isnan(object.to_number()) && null_element.to_number() == 0.0);
+  assert(empty_array.to_string() == flight::String("") && one.to_string() == flight::String("30") &&
+         two.to_string() == flight::String("1,2") &&
+         object.to_string() == flight::String("[object Object]") &&
+         nested.to_string() == flight::String("1,2,3"));
+  assert((empty_array + 2.0).to_string() == flight::String("2") &&
+         (one + 2.0).to_string() == flight::String("302") &&
+         (object + 2.0).to_string() == flight::String("[object Object]2") &&
+         (two + x_text).to_string() == flight::String("1,2x"));
+  assert((empty_array < 1.0) && !(one < 5.0) && (one < five_text) && !(object < 1.0));
+  assert(empty_array.loose_equals(zero) && one.loose_equals(thirty));
+}
+
+} // namespace
+
 int main() {
   using flight::Any;
   using flight::JsonScalarCell;
@@ -148,6 +188,7 @@ int main() {
   test_json_structural_row();
   test_json_assertion_row();
   test_json_assertion_row_adapter();
+  test_json_composite_operations();
   test_json_scalar_utf16_relational();
 
   const auto document = flight::Json::parse(flight::String("{\"fr\":30,\"bad\":\"x\"}"));

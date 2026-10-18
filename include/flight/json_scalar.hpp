@@ -70,7 +70,11 @@ class JsonScalarCell final {
       case AnyKind::undefined: return std::numeric_limits<double>::quiet_NaN();
       case AnyKind::boolean: return value_.as_boolean() ? 1.0 : 0.0;
       case AnyKind::string: return parse_number(value_.as_string());
-      default: return std::numeric_limits<double>::quiet_NaN();
+      default:
+        // ToNumber of a composite is ToNumber(ToPrimitive(x)): [] -> "" -> 0, [30] -> "30" -> 30,
+        // [1,2] -> "1,2" -> NaN, {} -> "[object Object]" -> NaN.
+        if (value_.kind() == AnyKind::object) return parse_number(composite_primitive_string(value_));
+        return std::numeric_limits<double>::quiet_NaN();
     }
   }
 
@@ -89,7 +93,21 @@ class JsonScalarCell final {
   }
 
   [[nodiscard]] String to_string() const {
-    return present_ ? flight::to_string(value_) : flight::String("undefined");
+    if (!present_) return flight::String("undefined");
+    return is_composite() ? composite_primitive_string(value_) : flight::to_string(value_);
+  }
+
+  // ToPrimitive for a parsed JSON composite, which is what makes the source's numeric and string uses
+  // of an array or object field faithful: an array joins its elements with ',' (a null element
+  // contributes the empty string, a nested array flattens by the same rule) and a plain object is
+  // "[object Object]". So ToNumber([]) is 0, ToNumber([30]) is 30, ToNumber([1,2]) and ToNumber({})
+  // are NaN, and String({}) / String([1,2]) are "[object Object]" / "1,2" -- not a blanket NaN.
+  [[nodiscard]] String to_primitive_string() const {
+    return present_ ? composite_primitive_string(value_) : flight::String("undefined");
+  }
+
+  [[nodiscard]] bool is_composite() const noexcept {
+    return present_ && value_.kind() == AnyKind::object;
   }
 
   // A member that is not present reads as `undefined`, exactly like a member whose value is
@@ -225,6 +243,33 @@ class JsonScalarCell final {
   }
 
  private:
+  // The JavaScript ToPrimitive string of a parsed JSON value. An array joins with ',', a null element
+  // contributes nothing, nested arrays flatten by the same rule, and an ordinary object is
+  // "[object Object]" -- the primitive the source's numeric and string operations actually see.
+  [[nodiscard]] static String composite_primitive_string(const Any& value) {
+    switch (value.kind()) {
+      case AnyKind::null: return String("null");
+      case AnyKind::undefined: return String("undefined");
+      case AnyKind::boolean: return value.as_boolean() ? String("true") : String("false");
+      case AnyKind::number: return flight::to_string(value);
+      case AnyKind::string: return value.as_string();
+      default: break;
+    }
+    if (value.is_array()) {
+      String joined;
+      const auto size = value.array_size();
+      for (std::size_t index = 0; index < size; ++index) {
+        if (index != 0) joined = joined + String(",");
+        const auto element = value.array_get(static_cast<double>(index));
+        // A null (or absent) element contributes the empty string, as Array.prototype.join does.
+        if (!element || element->is_nullish()) continue;
+        joined = joined + composite_primitive_string(*element);
+      }
+      return joined;
+    }
+    return String("[object Object]");
+  }
+
   [[nodiscard]] static double parse_number(const String& text) {
     const std::string raw = text.to_utf8();
     std::size_t begin = 0;
