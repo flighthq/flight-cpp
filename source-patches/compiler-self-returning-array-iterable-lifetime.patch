@@ -1,0 +1,88 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -10954,6 +10954,29 @@
+           '}',
+         ];
+       }
++      // `array.sort()`, `reverse()` and `fill()` return a reference to their receiver. Over a
++      // temporary receiver that reference dangles before the loop body runs, so the loop silently
++      // iterated nothing. Bind the call's array value first; the source's array is a fresh temporary
++      // here (a spread or a literal), so iterating the bound value is the same array.
++      if (
++        iterableExpression.kind === 'call' &&
++        iterableExpression.callee.kind === 'property' &&
++        iterableExpression.callee.member?.receiver === 'array' &&
++        cppArraySelfReturningMethods.has(iterableExpression.callee.member.name) &&
++        (iterableExpression.callee.object.kind === 'call' || iterableExpression.callee.object.kind === 'array')
++      ) {
++        const iterableSourceName = getGeneratedTargetName('forOfIterable', context);
++        return [
++          '{',
++          ...indentSourceLines([
++            `const auto ${iterableSourceName} = ${iterable};`,
++            `for (auto ${variableName} : ${iterableSourceName}) {`,
++            ...indentSourceLines(emitStatementBody(statement.body, context)),
++            '}',
++          ]),
++          '}',
++        ];
++      }
+       return [
+         `for (auto ${variableName} : ${iterable}) {`,
+         ...indentSourceLines(emitStatementBody(statement.body, context)),
+diff --git a/packages/compiler-backend-cpp/src/cppSelfReturningIterableLifetime.test.ts b/packages/compiler-backend-cpp/src/cppSelfReturningIterableLifetime.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppSelfReturningIterableLifetime.test.ts
+@@ -0,0 +1,50 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/selfReturningIterableLifetime.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('binds a self-returning array call over a temporary before iterating it', () => {
++  const output = emit(`
++    export function keys(features: ReadonlySet<string>): string[] {
++      const out: string[] = [];
++      for (const feature of [...features].sort()) out.push(feature);
++      return out;
++    }
++  `);
++
++  // Array::sort returns a reference to its receiver; over a temporary that reference dangles before
++  // the loop body runs. The bound value keeps the array alive for the loop.
++  expect(output).toMatch(/const auto for_of_iterable = .*\.sort\(\);/u);
++  expect(output).toContain('for (auto feature : for_of_iterable) {');
++  expect(output).not.toMatch(/for \(auto feature : .*\.sort\(\)\)/u);
++});
++
++it('leaves an iterated named array untouched', () => {
++  const output = emit(`
++    export function keys(features: string[]): string[] {
++      const out: string[] = [];
++      for (const feature of features.sort()) out.push(feature);
++      return out;
++    }
++  `);
++
++  // A named receiver outlives the loop, so the in-place call is iterated directly.
++  expect(output).toContain('for (auto feature : features.sort()) {');
++  expect(output).not.toContain('for_of_iterable');
++});

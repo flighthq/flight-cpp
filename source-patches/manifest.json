@@ -5149,6 +5149,23 @@
       "unblocks": "Compatible inherited callable-variant initializer storage, including the native registries base relation required by the approved GL registries live-cell view. Supplies neither of the two GL payload bridges, owner registration, membership helper or public consumer qualification. The inherited-alias and callback fixture body assertions permit compiler-emitted native-base metadata while retaining duplicate-cell exclusions and native identity controls.",
       "expires": "when the C++ backend compares inherited initializers with the same declaration-owner qualification as their native field storage.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-self-returning-array-iterable-lifetime",
+      "dependency": "flight-compiler",
+      "patch": "compiler-self-returning-array-iterable-lifetime.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "silent miscompilation: `for (const x of [...items].sort())` emits `for (auto x : (lambda).sort())`; Array::sort returns `Array&` to its receiver, and over a temporary that reference dangles before the loop body runs, so the loop iterated zero times (the md5/obj requirement builders returned empty requirement sets)",
+      "rewrite": "A for-of over a call to a self-returning array method (sort, reverse, fill) whose receiver expression is a fresh temporary (a spread/lambda result or an array literal) binds the call's array value to a `const auto` local first and iterates that local. A named receiver keeps the direct in-place form because it outlives the loop.",
+      "equivalence": "Array::sort/reverse/fill sort or fill the same storage and return it. Binding the call result first keeps the array alive for the loop; the source's array is a temporary the program cannot observe elsewhere, so iterating the bound value is the same array in the same order. Named arrays are untouched.",
+      "whyNotUpstreamFirst": "The runtime models the JS in-place return; only the emitter's iterable lifetime is wrong. docs/compiler-requests/self-returning-array-iterable-lifetime.md records the request.",
+      "unblocks": "scene3d-formats parseMd5MeshRequirements/parseObjRequirements and any for-of over a spread sorted in place",
+      "expires": "when the emitter keeps a temporary receiver alive for the loop without this binding, or the runtime offers an iterable that owns the call result",
+      "appliedOn": "2026-10-18",
+      "verification": "New cppSelfReturningIterableLifetime.test.ts: 2 pass (a spread.sort() iterable is bound first and iterated; a named array's sort stays direct). A native probe of the two shapes confirms direct iteration yields 0 elements and the bound form yields all elements. Patched compiler build exit 0; stack applies/reverts clean."
     }
   ]
 }
