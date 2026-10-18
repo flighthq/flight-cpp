@@ -273,6 +273,14 @@ class Any final {
     return result;
   }
 
+  // The source `new`-value form of the box above: a value-class constructor creates one object, and
+  // this moves that freshly constructed value into the box. The constructor runs once, at the same
+  // argument position; no observable copy or second construction occurs.
+  template <typename Object>
+  [[nodiscard]] static Any object_reference_value(Object value) {
+    return object_reference(std::make_shared<Object>(std::move(value)));
+  }
+
   // Recovers an explicitly boxed object reference at its exact type. A different type is empty; the
   // answer is the SAME object (shared identity/lifetime), never a value copy.
   template <typename Object>

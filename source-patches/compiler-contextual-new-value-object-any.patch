@@ -1,0 +1,22 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 39df038..8189fc4 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -26942,7 +26942,16 @@ function emitCppContextualErasedDynamicValueCpp(
+       'cpp-erased-structural-row-construction-unrepresented',
+     );
+   }
+-  if (!hasFlightReferenceRepresentationCpp(source, context)) return undefined;
++  if (!hasFlightReferenceRepresentationCpp(source, context)) {
++    // A source `new` of a value-class constructor creates one object. At an erased boundary the
++    // object is boxed by reference so the box keeps the object's identity, lifetime and observable
++    // class properties; passing a value temporary would lose identity and may not convert at all.
++    if (expression.kind === 'new' && source.kind === 'named') {
++      context.includes.add('flight/any.hpp');
++      return `flight::Any::object_reference_value(${emitExpression(expression, context, source)})`;
++    }
++    return undefined;
++  }
+   context.includes.add('flight/any.hpp');
+   return `flight::Any::object(${emitExpression(expression, context, source)})`;
+ }

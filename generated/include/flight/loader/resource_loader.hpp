@@ -630,8 +630,8 @@ inline void cancel_remaining_entries(flight::Ref<ResourceLoaderInternal> interna
     entry->abort_controller.abort();
     flight::Ref<flight::types::ResourceLoadReport> report = flight::make_ref<flight::types::ResourceLoadReport>(flight::types::ResourceLoadReport{.attempts = 0.0, .bytes = 0.0, .elapsed_ms = 0.0, .group = entry->group, .key = entry->key, .status = flight::String("skipped")});
     internal->reports.push(report);
-    entry->reject(flight::DOMException(flight::String("Load skipped due to fail-fast error policy"), flight::String("AbortError")));
-    count_entry_settled(internal, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<PendingEntry>>>>(entry)));
+    entry->reject(flight::Any::object_reference_value(flight::DOMException(flight::String("Load skipped due to fail-fast error policy"), flight::String("AbortError"))));
+    count_entry_settled(internal, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>(entry)));
     release_pending_entry(entry);
   }
   (internal->pending = flight::Array<flight::Ref<PendingEntry>>{});
@@ -891,7 +891,7 @@ inline void settle_entry(flight::Ref<PendingEntry> entry, flight::Ref<ResourceLo
 
 inline void settle_entry(flight::Ref<PendingEntry> entry, flight::Ref<ResourceLoaderInternal> internal, flight::Ref<flight::types::ResourceLoader> loader) {
   internal->in_flight.erase(entry);
-  count_entry_settled(internal, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<PendingEntry>>>>(entry)));
+  count_entry_settled(internal, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PendingEntry>>>>(entry)));
   flight::signals::emit_signal<std::function<void(double)>>(loader->on_progress, get_resource_load_progress(loader, std::nullopt));
   release_pending_entry(entry);
   if ((internal->loaded == internal->total)) {

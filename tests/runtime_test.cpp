@@ -4354,6 +4354,12 @@ static void test_any_object_reference_boxing() {
     auto copy = boxed;
     check(copy.object_reference_if<flight::DOMException>() == exception,
           "copying the Any preserves the boxed object's identity");
+    const auto boxed_value = flight::Any::object_reference_value(
+        flight::DOMException(flight::String("moved"), flight::String("AbortError")));
+    check(boxed_value.object_reference_if<flight::DOMException>() &&
+              boxed_value.object_reference_if<flight::DOMException>()->message == flight::String("moved") &&
+              boxed_value.object_reference_if<flight::DOMException>()->name == flight::String("AbortError"),
+          "a value-class new value is moved once into the box with its properties intact");
     std::shared_ptr<flight::DOMException> rejected;
     std::function<void(flight::Any)> reject = [&](flight::Any value) {
       rejected = value.object_reference_if<flight::DOMException>();

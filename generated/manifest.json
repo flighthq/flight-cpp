@@ -4084,6 +4084,13 @@
       "package": "@flighthq/midi"
     },
     {
+      "dependency": "flight-compiler",
+      "digest": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709",
+      "id": "compiler-contextual-new-value-object-any",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/loader"
+    },
+    {
       "dependency": "flight",
       "digest": "cfee5309ac1273a21742f6edcd8405530e813a9038678d553a3c5fb2df930290",
       "id": "loader-request-options-return-type",
