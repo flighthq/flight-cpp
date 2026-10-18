@@ -1,0 +1,184 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4731,6 +4731,34 @@
+   ];
+ }
+ 
++// Only a readonly structural-array call parameter may receive this lazy original-owner view.
++// Owning storage and mutable parameters keep their existing refusal/recovery paths.
++function emitCppJsonReadonlySequenceArgumentCpp(
++  call: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  index: number,
++  context: EmitContext,
++  expectedType?: Readonly<IrType>,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const argument = call.arguments[index];
++  if (argument?.kind !== 'property' || argument.optional) return undefined;
++  const plan = getCppJsonProjectionRowCpp(argument.object, context);
++  if (plan?.optional) return undefined;
++  const receiver =
++    getCppJsonDocumentExpressionTypeCpp(argument.object, context) ??
++    (plan ? getCppStructuralRowObjectTypeCpp(plan.row) : undefined);
++  const member = receiver ? getCppJsonDocumentMemberTypeCpp(receiver, argument.name, context) : undefined;
++  if (!member || !getIrArrayTypeCpp(member, context, new Set())) return undefined;
++  const parameter = getIrInvocationArgumentExpectedTypeCpp(call, index) ?? expectedType;
++  const array = getIrArrayTypeCpp(parameter, context, new Set());
++  if (!array?.readonly) return undefined;
++  const projection = context.referenceRepresentationPlanner.resolveStructuralRow(array.element, context.module);
++  if (!projection || !isCppStructuralRowSchemaReadonlyCpp(projection)) return undefined;
++  const row = emitType(array.element, context);
++  context.includes.add('flight/json_scalar.hpp');
++  return `flight::json_readonly_sequence<${row}>(flight::read_json_scalar_row_member(${emitExpression(argument.object, context)}, ${emitLiteral(argument.name, context)}).raw())`;
++}
++
+ function emitCppJsonDocumentViewExpressionCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+@@ -5030,9 +5058,18 @@
+     expression.callee.object.reference.kind === 'ambient' &&
+     expression.callee.object.reference.name === 'Array' &&
+     expression.arguments.length === 1 &&
+-    getCppJsonDocumentExpressionTypeCpp(expression.arguments[0]!, context)
++    expression.arguments[0]
+   ) {
+-    return `flight::json_row_is_array(${emitExpression(expression.arguments[0]!, context)})`;
++    const argument = expression.arguments[0];
++    if (
++      argument.kind === 'property' &&
++      !argument.optional &&
++      getCppJsonDocumentExpressionTypeCpp(argument.object, context)
++    ) {
++      return `flight::is_array(flight::json_row_member(${emitExpression(argument.object, context)}, flight::String(flight::RowKey<${JSON.stringify(argument.name)}>::name.view())))`;
++    }
++    if (getCppJsonDocumentExpressionTypeCpp(argument, context))
++      return `flight::json_row_is_array(${emitExpression(argument, context)})`;
+   }
+   if (
+     expression.kind === 'cast' &&
+@@ -6446,6 +6483,13 @@
+               expectedType,
+               typeArguments,
+             );
++            const jsonSequence = emitCppJsonReadonlySequenceArgumentCpp(
++              expression,
++              index,
++              context,
++              argumentExpectedType,
++            );
++            if (jsonSequence) return jsonSequence;
+             assertCppPresentOptionalCollectionArgumentCpp(expression, argument, index, argumentExpectedType, context);
+             // A receiver passed as an argument cannot become the reference its parameter wants. Where the
+             // parameter's type is known the receiver expression refuses on its own, because that type has a
+@@ -21397,6 +21441,13 @@
+   context: EmitContext,
+ ): string | undefined {
+   const argument = expression.arguments[0];
++  if (isCppAmbientArrayPredicateCpp(expression) && argument?.kind === 'property' && !argument.optional) {
++    const row = getCppJsonProjectionRowCpp(argument.object, context);
++    if (row && !row.optional) {
++      context.includes.add('flight/json_scalar.hpp');
++      return `flight::is_array(flight::read_json_scalar_row_member(${emitExpression(argument.object, context)}, ${emitLiteral(argument.name, context)}).raw())`;
++    }
++  }
+   if (
+     isCppAmbientArrayPredicateCpp(expression) &&
+     argument &&
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppJsonReadonlySequenceArgument.test.ts
+@@ -0,0 +1,95 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++interface Layer { value:number }
++interface Document { layers:Layer[] }
++export function parse(source:string):Readonly<Document>{ return JSON.parse(source) as Readonly<Document>; }
++export function array(document:Readonly<Document>):boolean { return Array.isArray(document.layers); }
++export function count(layers:readonly Readonly<Layer>[]):number { let total=0; for(const layer of layers){total++;} return total; }
++export function first(layers:readonly Readonly<Layer>[]):Readonly<Layer>{ return layers[0]; }
++export function forward(document:Readonly<Document>):number { return count(document.layers); }
++export function forwardFirst(document:Readonly<Document>):Readonly<Layer> { return first(document.layers); }
++export function ignore(layers:readonly Readonly<Layer>[]):number { return 5; }
++export function ignored(document:Readonly<Document>):number { return ignore(document.layers); }
++`;
++function emit(text = source): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', text, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/probe': { namespace: 'probe', includePrefix: 'fixture' } },
++  }).contents;
++}
++it('inspects raw original members and passes a lazy view only at readonly structural sequence calls', () => {
++  const output = emit();
++  expect(output).toContain(
++    'flight::is_array(flight::read_json_scalar_row_member(document, flight::String("layers")).raw())',
++  );
++  expect(output).toContain('flight::json_readonly_sequence<flight::StructuralRef<flight::RowReadonly<');
++  expect(output).not.toContain('NOT GENERATED');
++  expect(output).not.toContain('row_get<flight::RowKey<"layers">>(document)');
++});
++it('does not manufacture a readonly view for owning array return storage', () => {
++  const output = emit(source + 'export function owning(document:Readonly<Document>):Layer[]{return document.layers;}');
++  const body = output.split(' owning(')[1]!.split('\n}')[0]!;
++  expect(body).not.toContain('json_readonly_sequence');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs original array validation, forwarding and lazy error timing',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-json-readonly-sequence-'));
++    try {
++      writeFileSync(path.join(directory, 'fixture.hpp'), emit());
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "fixture.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++for(const char* text:{"{\\"layers\\":[]}","{\\"layers\\":null}","{\\"layers\\":{}}","{\\"layers\\":2}","{}"}){const auto doc=probe::parse(flight::String(text));check(probe::array(doc)==(flight::String(text)==flight::String("{\\"layers\\":[]}")));check(probe::ignored(doc)==5);}
++auto doc=probe::parse(flight::String("{\\"layers\\":[{\\"value\\":1},null,2]}"));check(probe::forward(doc)==3);
++const auto raw=flight::read_json_scalar_row_member(doc,flight::String("layers")).raw();auto owner=raw.array_owner_if<std::shared_ptr<flight::JsonArray>>();
++auto first=probe::forward_first(doc);check(first.identity()==(*owner)[0].object_owner().get());
++owner->push(flight::JsonValue(7));check(probe::forward(doc)==4);
++(*owner)[0]=flight::Json::parse(flight::String("{\\"value\\":9}"));auto replacement=probe::forward_first(doc);check(replacement.identity()!=first.identity());
++check(flight::read_json_scalar_row_member(first,flight::String("value")).as_native_number()==1);
++check(flight::read_json_scalar_row_member(replacement,flight::String("value")).as_native_number()==9);
++bool threw=false;try{(void)probe::forward(probe::parse(flight::String("{\\"layers\\":null}")));}catch(const flight::TypeError&){threw=true;}check(threw);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}`,
++      );
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('17 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);

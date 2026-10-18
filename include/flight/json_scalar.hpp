@@ -23,6 +23,7 @@
 #include <flight/boolean.hpp>
 #include <flight/out_of_profile.hpp>
 #include <flight/json.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 
@@ -801,6 +802,16 @@ template <typename Schema>
   if (!owner) return Any();
   if (const auto raw = owner->raw_value()) return *raw;
   return Any();
+}
+
+// A readonly call parameter observes the original array, including later appends and replacements.
+// Each requested element enters the existing assertion-row lane without reading any of its fields.
+template <typename Row>
+  requires detail::schema_readonly<typename Row::schema_type>
+[[nodiscard]] inline SequenceView<Row> json_readonly_sequence(const Any& value) {
+  return SequenceView<Row>::from_erased_array(value, [](const Any& element) {
+    return json_assertion_row<typename Row::schema_type>(element);
+  });
 }
 
 } // namespace flight

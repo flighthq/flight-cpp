@@ -5590,6 +5590,23 @@
       "unblocks": "Original Pixi/Spine descriptor result conversion while preserving the two native parser signatures; readonly Record named-dependency coherence remains separate.",
       "expires": "When upstream emits the same bounded same-owner result projection with named identity and equivalent exclusions/native semantic controls.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-json-readonly-sequence-owner",
+      "dependency": "flight-compiler",
+      "patch": "compiler-json-readonly-sequence-owner.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "A structural JSON document array predicate and readonly structural array argument demand typed native array storage before inspecting or forwarding the original retained JSON member.",
+      "rewrite": "Inspect raw member values for Array.isArray; only a readonly structural sequence call parameter receives an existing SequenceView over the original erased array, projecting each requested readonly row lazily. Owning/mutable array storage remains outside this path.",
+      "equivalence": "Retain actual original outer array and element identities, live size/element replacement and lifetime; no copied array, native element fabrication, scalar-family change, field validation or eager element read. Original source bodies, callees and domain remain unchanged; deferred use retains exceptions. Foremanfe7cf6c6 authorizes the bounded existing-family bridge.",
+      "verification": "IN PROGRESS: emitted positive/owning-negative controlsPASS; whole original5module closure reemitted and actual32case compile running. Runtime owner/lifetime/elementguard/error-timing and formal orderedpatch/native tests pending; no public/SDK claim.",
+      "whyNotUpstreamFirst": "Pinned emitter already has retained JSON row and readonly SequenceView carriers but chooses native row_get before the raw predicate and lacks the same-owner readonly array argument projection.",
+      "unblocks": "Original Array.isArray(document.layers) and forwarding document.layers into original appendLottieLayers readonly parameter without materialization.",
+      "expires": "When upstream inspects the raw retained member and emits equivalent readonly same-owner array projections with native identity/mutation/lifetime/error-timing controls.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

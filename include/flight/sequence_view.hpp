@@ -161,6 +161,26 @@ class SequenceView {
     return SequenceView(std::move(source));
   }
 
+  // Keep the erased array's original owner and project only the element actually requested.
+  // Construction neither reads an element nor validates its declared structural fields.
+  template <typename Projection>
+    requires std::copy_constructible<Projection> && std::invocable<Projection, const Any&> &&
+             std::constructible_from<Value, std::invoke_result_t<Projection, const Any&>>
+  [[nodiscard]] static SequenceView from_erased_array(Any source, Projection projection) {
+    SequenceView result;
+    result.identity_ = source.identity();
+    result.size_ = [source] {
+      if (!source.is_array()) throw TypeError("value is not iterable");
+      return source.array_size();
+    };
+    result.get_ = [source, projection = std::move(projection)](size_type index) {
+      if (!source.is_array()) throw TypeError("value is not iterable");
+      const Any element = source.array_get(static_cast<double>(index)).value_or(Any(undefined));
+      return Value(std::invoke(projection, element));
+    };
+    return result;
+  }
+
   [[nodiscard]] Value operator[](size_type index) const { return get_(index); }
 
   [[nodiscard]] std::optional<Value> at(std::ptrdiff_t index) const {
