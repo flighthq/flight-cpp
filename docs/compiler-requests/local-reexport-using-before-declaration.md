@@ -1,5 +1,10 @@
 # An obsolete repair inserts a same-namespace `using` before its definition
 
+**Withdrawn from Principal batch 1 as a compiler request.** The same-namespace lookup defect is
+introduced by this repository's repair, not a local re-export lowering defect. This path remains the
+historical failure reference and repair-retirement audit. The adjacent readonly-return correction and
+remaining teardown owner boundary are separate compiler obligations, identified below.
+
 G3 corrects this request's original attribution. At Flight `a627849` and compiler `806d257`,
 `canvasRenderState.ts` directly declares `export function getCanvasRenderStateRuntime`; it has no
 local re-export. The compiler represents that export as an IR local binding and emits the function

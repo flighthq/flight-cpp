@@ -28,7 +28,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | # | cluster | headers | lanes | fix route | cause |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `call-has-no-matching-9c08d665` | 117 | WGPU | compiler | bound WebGPU descriptor object literals are emitted as untyped source-order braced initializers with anonymous nested owners *(request filed)* |
-| 2 | `missing-member-b1a6d5cf` | 40 | 2D | compiler | scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined *(request filed)* |
+| 2 | `missing-member-b1a6d5cf` | 40 | 2D | retire obsolete repair | own same-namespace using repair inserts lookup before definition *(compiler request withdrawn; G3 original-consumer qualification pending)* |
 | 3 | `in-operator-not-lowered-b1eae4af` | 32 | 2D, 3D, GL, PLAT, WGPU | compiler | the TypeScript `in` operator is emitted verbatim; G2 particle3D joins this existing cause *(existing request extended)* |
 | 4 | `undeclared-identifier-993e82f1` | 30 | 2D, 3D, PLAT, TEXT, WGPU | compiler | the template parameter name `Traits` leaks into emitted code as a free identifier *(request filed; builder4/G2)* |
 | 5 | `call-has-no-matching-3882b3e9` | 28 | 2D, 3D, TEXT | compiler | bare object literals passed to SDK create_texture do not construct the TypeScript-selected owned options carrier *(request filed; builder4/G2; +1 from `obj_standard_pbr_material_handler.hpp` after its module emitted; +1 from `md5_skeleton_handler.hpp` after the mesh override bridges)* |
@@ -296,14 +296,31 @@ deleting or stubbing behaviour.
 
 ### 2. `missing-member-b1a6d5cf` — 40 header(s) (34 at G1; 4 joined in G2 from cluster 61; 1 from cluster 123; 1 from `no-viable-conversion-c997578d`)
 
-- cause: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
+- cause: the obsolete `scene2d-canvas-unqualified-scene2d-canvas-names` emission repair inserts a same-namespace using before its own definition
 - subject: `get_canvas_render_state_runtime`
 - lanes: 2D
-- fix route: compiler
-- why this route: scene2d-canvas emits `using ...get_canvas_render_state_runtime;` before the function it names is defined
+- fix route: retire the obsolete emission repair; separate readonly-return and teardown-owner compiler boundaries remain
+- why this route: pinned source directly exports the function, and the compiler already omits local/same-package re-export using-declarations; the broad repair adds the bad lookup and self-include
 - first failure at: `flight/scene2d_canvas/canvas_render_state.hpp:69`
 - example: `no member named 'get_canvas_render_state_runtime' in namespace 'scene2d_canvas'`
 - compiler request: `docs/compiler-requests/local-reexport-using-before-declaration.md`
+
+#### G3 origin correction and withdrawn re-export request
+
+The re-export request is withdrawn from Principal batch 1: this is a repository repair defect.
+The candidate removes that repair, whose recorded footprint is exactly the Canvas render-state and
+surface headers. Focused compiler graphs retain the real dependency include, exact callable binding
+and qualified calls; the declared-repair regression preserves them byte for byte. The historical
+40 rows and their diagnostics remain unchanged until actual original-header qualification.
+
+The actual whole-header consumer first reaches a guarded readonly host return, handled separately by
+[`compiler-present-readonly-row-context.patch`](../source-patches/compiler-present-readonly-row-context.patch)
+under the [readonly-view request](compiler-requests/readonly-view-to-writable.md#g3-matching-present-readonly-returns).
+The next diagnostic boundary is Canvas destruction's refined runtime-owner conversion into
+`destroy_render_state(Ref<RenderState>)`, in the existing
+[teardown heritage request](compiler-requests/interface-heritage-widening.md#g2-gl-view-destruction-instantiates-the-deferred-state-teardown).
+That mechanism is being coordinated separately. No whole-header/public-consumer pass, automatic
+40-header promotion, copied helper, stub, suppressed teardown or weakened readonly protection is claimed.
 
 ### 3. `in-operator-not-lowered-b1eae4af` — 32 current header(s), 31 in G1
 
