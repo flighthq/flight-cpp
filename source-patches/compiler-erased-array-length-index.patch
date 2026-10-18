@@ -1,8 +1,8 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 145a6da..fd0cb5f 100644
+index 67857d0..ba27f9d 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -364,6 +364,11 @@ interface EmitContext {
+@@ -374,6 +374,11 @@ interface EmitContext {
    // asks this rather than the declared type, because the two disagree in both directions and each
    // direction is a shape the SDK writes.
    erasedDynamicStorageBindingIds: ReadonlySet<string>;
@@ -14,15 +14,15 @@ index 145a6da..fd0cb5f 100644
    // A bare `object` parameter normally carries identity only, which is the ABI used by WeakMap
    // keys and attached Record views. Parameters in this set cross a storage boundary that later
    // recovers their concrete type, so they must retain the type tag carried by `ErasedRef`.
-@@ -663,6 +668,7 @@ function emitIrModuleCppWithContext(
-     dependentCallablePacks: collectIrModuleDependentCallablePacksCpp(module),
+@@ -704,6 +709,7 @@ function emitIrModuleCppWithContext(
+     reusedDependentCallablePackIds: collectIrModuleReusedDependentCallablePackIdsCpp(module),
      directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
      erasedDynamicStorageBindingIds,
 +    erasedArrayProvenBindingIds: new Set(),
      erasedObjectParameterBindingIds,
-     exceptionPointerBindingIds: collectCppExceptionPointerBindingIdsCpp(module, bindingTypes),
-     externalCallResultPresenceBindings: new Map(),
-@@ -5257,6 +5263,22 @@ function emitExpression(
+     exceptionPointerBindingIds: exceptionPointerBindings.exceptionPointers,
+     reboundExceptionPointers: exceptionPointerBindings.rebound,
+@@ -5620,6 +5626,22 @@ function emitExpression(
            'cpp-union-element-access-without-carrier',
          );
        }
@@ -45,7 +45,7 @@ index 145a6da..fd0cb5f 100644
        return record || expression.semantics.receivers.every((receiver) => receiver === 'object')
          ? `${object}[${index}]`
          : `${object}[static_cast<size_t>(${index})]`;
-@@ -9330,6 +9352,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+@@ -9857,6 +9879,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
          narrowedBindingTypes: new Map(statementContext.narrowedBindingTypes).set(narrowing.bindingId, narrowing.type),
        };
      }
@@ -60,9 +60,9 @@ index 145a6da..fd0cb5f 100644
 +      };
 +    }
      statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
-   }
-   return emitted;
-@@ -9403,14 +9435,62 @@ function getCppImmediateDenseArrayElementPresenceCpp(
+     statementContext = withdrawCppAssignedGuardedPathsCpp(statement, statementContext, true);
+     // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
+@@ -9940,14 +9972,62 @@ function getCppImmediateDenseArrayElementPresenceCpp(
  // longer true, and the read after the write has to resolve without one -- which either finds its own
  // proof or refuses.
  function withdrawCppAssignedNarrowingsCpp(statement: Readonly<IrStatement>, context: EmitContext): EmitContext {
@@ -133,7 +133,7 @@ index 145a6da..fd0cb5f 100644
  }
  
  function collectCppAssignedBindingIdsCpp(statement: Readonly<IrStatement>): readonly string[] {
-@@ -13695,6 +13775,19 @@ function emitCppErasedDynamicPropertyReadCpp(
+@@ -14412,6 +14492,19 @@ function emitCppErasedDynamicPropertyReadCpp(
    if (!isCppErasedDynamicPropertyReadCpp(expression, context)) return undefined;
    context.includes.add('flight/any.hpp');
    context.includes.add('flight/structural_ref.hpp');
