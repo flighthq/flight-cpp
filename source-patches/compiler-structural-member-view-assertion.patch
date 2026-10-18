@@ -1,0 +1,325 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -426,6 +426,10 @@
+   interfaceHeritageImporterIndex: CppModuleImporterIndex;
+   interfaceHeritageResolution?: Readonly<CompilerModuleResolutionPlan> | undefined;
+   structuralCastBindingRows: ReadonlyMap<string, Readonly<CompilerCppStructuralRowPlan>>;
++  // Bindings whose initializer asserts one interface to another it extends. They are emitted as
++  // `flight::StructuralMemberView<CppBase>` and read through `read<Member>`; the set is what tells the
++  // declaration, property, and escape sites apart.
++  structuralMemberViewBindingIds: ReadonlySet<string>;
+   // `Object.entries` physically returns std::tuple rows even when both slots have the same type.
+   // Keep that runtime representation attached to immutable array storage, callback parameters, and
+   // destructuring bindings, since the ordinary homogeneous TypeScript tuple is a flight::Array.
+@@ -680,6 +684,7 @@
+   const uninitializedCaptureStorageBindingIds = collectIrModuleUninitializedBindingIdsCpp(module);
+   const preservedInitializerTypes = collectCppExplicitCollectionConstructionBindingTypesCpp(module);
+   const structuralCastBindingRows = new Map<string, Readonly<CompilerCppStructuralRowPlan>>();
++  const structuralMemberViewBindingIds = new Set<string>();
+   const structuralCloneRecordBindingIds = new Set<string>();
+   const erasedDynamicStorageBindingIds = new Set<string>();
+   const erasedObjectParameterBindingIds = new Set<string>();
+@@ -749,6 +754,7 @@
+     sharedCaptureTargetNames,
+     sourceModules,
+     structuralCastBindingRows,
++    structuralMemberViewBindingIds,
+     objectEntriesTupleArrayBindingIds: new Set(),
+     objectEntriesTupleBindingIds: new Set(),
+     optionalParameterBindingIds: collectCppOptionalParameterBindingIds(module),
+@@ -777,6 +783,9 @@
+   for (const bindingId of collectIrModuleLengthProvenNullableArrayElementBindingIdsCpp(module, context)) {
+     lengthProvenNullableArrayElementBindingIds.add(bindingId);
+   }
++  for (const bindingId of collectCppStructuralMemberViewBindingIdsCpp(module, context)) {
++    structuralMemberViewBindingIds.add(bindingId);
++  }
+   for (const [bindingId, targetType] of collectCppContextualBindingStorageTargetTypesCpp(module, context)) {
+     contextualBindingStorageTargetTypes.set(bindingId, targetType);
+   }
+@@ -3094,6 +3103,13 @@
+   }
+   const caughtValueRebinding = 'pattern' in declaration ? undefined : emitCppCaughtValueRebindingCpp(declaration, context);
+   if (caughtValueRebinding) return [caughtValueRebinding];
++  const structuralMemberView =
++    context.structuralMemberViewBindingIds.has(declaration.binding.id)
++      ? getCppStructuralMemberViewInitializerCpp(declaration.initializer, context)
++      : undefined;
++  if (structuralMemberView) {
++    return [`inline ${emitBindingConstnessCpp(declaration.mutable, declaration.type)}auto ${getBindingTargetName(declaration.binding, context)} = ${structuralMemberView};`];
++  }
+   const name = getBindingTargetName(declaration.binding, context);
+   const arrayElement = context.arrayElementBindingIds.has(declaration.binding.id);
+   const externalCallResultPresence = context.externalCallResultPresenceBindings.get(declaration.binding.id);
+@@ -3148,6 +3164,12 @@
+   const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
+   if (caughtValueRebinding) return caughtValueRebinding;
+   const name = getBindingTargetName(variable.binding, context);
++  const structuralMemberView = context.structuralMemberViewBindingIds.has(variable.binding.id)
++    ? getCppStructuralMemberViewInitializerCpp(variable.initializer, context)
++    : undefined;
++  if (structuralMemberView) {
++    return `${emitBindingConstnessCpp(variable.mutable, variable.type)}auto ${name} = ${structuralMemberView};`;
++  }
+   const arrayElement = context.arrayElementBindingIds.has(variable.binding.id);
+   const lengthProvenNullableArrayElement =
+     arrayElement && context.lengthProvenNullableArrayElementBindingIds.has(variable.binding.id);
+@@ -5874,6 +5896,16 @@
+     case 'identifier': {
+       if (
+         expression.reference.kind === 'binding' &&
++        context.structuralMemberViewBindingIds.has(expression.reference.binding.id)
++      ) {
++        emissionError(
++          context,
++          `the asserted local ${expression.reference.binding.name} is represented as a structural member view: only readonly member reads, calls through those reads, and iteration over an array member are emitted for it. Passing, returning, assigning, or mutating the view has no surviving carrier; keep the value at its declared interface, or construct the asserted owner explicitly`,
++          'cpp-structural-member-view-escape',
++        );
++      }
++      if (
++        expression.reference.kind === 'binding' &&
+         context.dependentCallablePacks.has(expression.reference.binding.id)
+       ) {
+         emissionError(
+@@ -6611,6 +6643,8 @@
+       return construction(initializer);
+     }
+     case 'property': {
++      const structuralMemberViewRead = emitCppStructuralMemberViewReadCpp(expression, context);
++      if (structuralMemberViewRead) return structuralMemberViewRead;
+       if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
+         context.includes.add('flight/structural_ref.hpp');
+         const key = emitLiteral(expression.name, context);
+@@ -16969,6 +17003,129 @@
+   return resolveCppClassForTypeCpp(type, context) !== undefined;
+ }
+ 
++// The interface declaration a named type names, wherever it was declared. Interfaces flatten into
++// independent C++ structs, so this declaration is the heritage evidence the member-view lowering
++// reads; a class, an unresolved import, or any other type yields undefined and keeps the refusal.
++function getCppInterfaceDeclarationCpp(
++  type: Readonly<IrType>,
++  context: EmitContext,
++  module: Readonly<IrModule> = context.module,
++): Readonly<IrInterfaceDeclaration> | undefined {
++  if (type.kind !== 'named' || type.reference.kind !== 'binding') return undefined;
++  const direct = context.directBindingOwners.get(type.reference.binding.id)?.declaration;
++  if (direct?.kind === 'interface') return direct;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(type, module, context);
++  return owner?.declaration.kind === 'interface' ? owner.declaration : undefined;
++}
++
++// Whether the interface `derived` names reaches the interface `base` names through authored
++// `extends` edges. The identity is the EMITTED SPELLING, as in the class-heritage walk: a chain
++// that crosses a package boundary names its base with the declaring module's binding, while both
++// sides spell the same C++ type. This relation does not make one flattened owner a C++ base of the
++// other; it is the member evidence that lets the same owner be read through its base interface.
++function isCppInterfaceHeritageRelatedCpp(
++  derived: Readonly<IrType>,
++  base: Readonly<IrType>,
++  context: EmitContext,
++): boolean {
++  if (!getCppInterfaceDeclarationCpp(base, context)) return false;
++  const isolatedContext: EmitContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  const baseSpelling = emitType(base, isolatedContext);
++  const visited = new Set<string>();
++  const queue: Readonly<{ module: Readonly<IrModule>; type: Readonly<IrType> }>[] = [
++    { module: context.module, type: derived },
++  ];
++  while (queue.length > 0) {
++    const current = queue.pop();
++    if (current === undefined) continue;
++    const declaration = getCppInterfaceDeclarationCpp(current.type, context, current.module);
++    if (!declaration) continue;
++    if (visited.has(declaration.binding.id)) continue;
++    visited.add(declaration.binding.id);
++    if (emitType(current.type, isolatedContext) === baseSpelling) return true;
++    for (const heritage of declaration.extends) queue.push({ module: current.module, type: heritage });
++  }
++  return false;
++}
++
++// The source interface a member-view assertion names, when the assertion is representable without
++// copying or reinterpreting the owner: a cast between two interface declarations where the target
++// transitively extends the source. The view reads the SAME object's recorded cells, so exactly one
++// represented owner survives and every member read keeps its declared type and absence.
++function getCppStructuralMemberViewCastSourceCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.kind !== 'cast') return undefined;
++  // The asserted value must be an EXISTING object handle, not a factory result: a factory allocated
++  // and returned the base owner itself, so the target's cells were never recorded on it and asserting
++  // them would read absence the construction never wrote. Only a reference that can carry the
++  // construction handle's recorded row is a member view.
++  if (expression.expression.kind !== 'identifier') return undefined;
++  const source = getIrExpressionTypeEvidenceCpp(expression.expression, context);
++  if (!source || isCppErasedDynamicValueTypeCpp(source)) return undefined;
++  if (isCppClassDeclarationCpp(source, context) || isCppClassDeclarationCpp(expression.type, context)) return undefined;
++  if (!getCppInterfaceDeclarationCpp(expression.type, context)) return undefined;
++  if (!getCppInterfaceDeclarationCpp(source, context)) return undefined;
++  if (!hasFlightReferenceRepresentationCpp(source, context)) return undefined;
++  return isCppInterfaceHeritageRelatedCpp(expression.type, source, context) ? source : undefined;
++}
++
++// The view expression a recognized assertion local is initialized with. It holds the source
++// reference and its recorded row owner; nothing is copied, cast to a derived owner, or materialized.
++function getCppStructuralMemberViewInitializerCpp(
++  initializer: Readonly<IrExpression> | undefined,
++  context: EmitContext,
++): string | undefined {
++  if (initializer === undefined) return undefined;
++  const source = getCppStructuralMemberViewCastSourceCpp(initializer, context);
++  if (source === undefined || initializer.kind !== 'cast') return undefined;
++  context.includes.add('flight/structural_ref.hpp');
++  return `flight::StructuralMemberView<${emitType(source, context)}>(${emitExpression(initializer.expression, context)})`;
++}
++
++function collectCppStructuralMemberViewBindingIdsCpp(
++  module: Readonly<IrModule>,
++  context: EmitContext,
++): ReadonlySet<string> {
++  const result = new Set<string>();
++  analyzeIrModuleTraversal(module, {
++    variable(variable) {
++      if (!('binding' in variable) || variable.initializer === undefined) return;
++      if (getCppStructuralMemberViewCastSourceCpp(variable.initializer, context)) result.add(variable.binding.id);
++    },
++  });
++  return result;
++}
++
++// A member read on a member-view binding: the SAME owner's recorded cell, named by the member's
++// emitted C++ type. A member the object does not declare reads as absence, which MemberValue keeps
++// distinct from a stored false/0 and turns into NaN, falsiness, or a use-time failure.
++function emitCppStructuralMemberViewReadCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (expression.object.kind !== 'identifier' || expression.object.reference.kind !== 'binding') return undefined;
++  if (!context.structuralMemberViewBindingIds.has(expression.object.reference.binding.id)) return undefined;
++  if (expression.optional) {
++    emissionError(
++      context,
++      `optional member read ${expression.name} on a structural member view is not represented: the view reads one named cell, and an optional chain would need a second absence state beside the member's own`,
++      'cpp-structural-member-view-optional-read-unrepresented',
++    );
++  }
++  const memberType = getIrExpressionTypeEvidenceCpp(expression, context);
++  if (memberType === undefined) {
++    emissionError(
++      context,
++      `a structural member view read of ${expression.name} requires the member's declared type: the view's read is typed by the emitted C++ member carrier`,
++      'cpp-structural-member-view-member-type-missing',
++    );
++  }
++  context.includes.add('flight/structural_ref.hpp');
++  return `(${emitIdentifierReference(expression.object.reference, context)}).read<${emitType(memberType, context)}>(${JSON.stringify(expression.name)})`;
++}
++
+ function getCppNamedBindingIdCpp(type: Readonly<IrType>): string | undefined {
+   return type.kind === 'named' && type.reference.kind === 'binding' ? type.reference.binding.id : undefined;
+ }
+@@ -34164,6 +34321,16 @@
+ function memberOp(object: Readonly<IrExpression>, context: EmitContext): string {
+   if (isSuperAccess(object)) return '::';
+   if (isThisAccess(object)) return '->';
++  // A member read from a structural member view yields a MemberValue; calls and size reads go through
++  // the value its operator-> exposes, which fails AT the operation when the source member is absent.
++  if (
++    object.kind === 'property' &&
++    object.object.kind === 'identifier' &&
++    object.object.reference.kind === 'binding' &&
++    context.structuralMemberViewBindingIds.has(object.object.reference.binding.id)
++  ) {
++    return '->';
++  }
+   // A binding whose storage an external binding declared holds exactly what the profile named: a result
+   // the profile holds by reference is read through the reference and one it holds by value is read
+   // directly. These bindings have no IR type to ask -- the source type erased to `any` -- so the
+diff --git a/packages/compiler-backend-cpp/src/cppStructuralMemberView.test.ts b/packages/compiler-backend-cpp/src/cppStructuralMemberView.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppStructuralMemberView.test.ts
+@@ -0,0 +1,80 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/example/src/structuralMemberView.ts',
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const result = lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/example',
++    upstreamDirectory: '/flight',
++  });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('reads an asserted interface local through the same owner member view', () => {
++  const output = emit(`
++    interface ResourceLoader { onProgress: number }
++    interface ResourceLoaderInternal extends ResourceLoader {
++      started: boolean;
++      total: number;
++      totalWeight: number;
++      weightLoaded: number;
++      loaded: number;
++      xs: number[];
++    }
++    export function progress(loader: ResourceLoader): number {
++      const internal = loader as ResourceLoaderInternal;
++      if (!internal.started) return 0;
++      let n = internal.total + internal.totalWeight;
++      for (const x of internal.xs) n += x;
++      return n + internal.xs.length + internal.loaded / internal.weightLoaded;
++    }
++  `);
++
++  // The local is the view, never a nominal reference to the asserted owner: no cast, no copy.
++  expect(output).toContain('auto internal = flight::StructuralMemberView<flight::Ref<ResourceLoader>>(loader);');
++  expect(output).not.toContain('flight::Ref<ResourceLoaderInternal> internal');
++  // No owner cast, no materialized replacement owner.
++  expect(output).not.toContain('static_cast<flight::Ref<ResourceLoaderInternal>>');
++  expect(output).not.toContain('structural_ref_cast');
++  // Every member read names its declared carrier and goes through the view's own named-cell read.
++  expect(output).toContain('(internal).read<bool>("started")');
++  expect(output).toContain('(internal).read<double>("total")');
++  expect(output).toContain('(internal).read<flight::Array<double>>("xs")->size()');
++  // Iteration is a range-for over the live member handle.
++  expect(output).toContain('for (auto x : (internal).read<flight::Array<double>>("xs"))');
++});
++
++it('refuses to pass, return, assign, or mutate a structural member view', () => {
++  expect(() =>
++    emit(`
++      interface ResourceLoader { onProgress: number }
++      interface ResourceLoaderInternal extends ResourceLoader { started: boolean }
++      export function escape(loader: ResourceLoader): ResourceLoaderInternal {
++        const internal = loader as ResourceLoaderInternal;
++        return internal;
++      }
++    `),
++  ).toThrow(/structural member view/);
++});
++
++it('keeps the refusal when the asserted interface does not extend the source', () => {
++  expect(() =>
++    emit(`
++      interface ResourceLoader { onProgress: number }
++      interface Other { started: boolean }
++      export function bad(loader: ResourceLoader): number {
++        const other = loader as Other;
++        return other.started ? 1 : 0;
++      }
++    `),
++  ).toThrow(/no heritage to cast along/);
++});
