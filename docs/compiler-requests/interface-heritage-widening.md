@@ -961,3 +961,46 @@ targets were rebuilt once at two workers on the `fa4846be` floor. The build pass
 CTest run passes **6/6** in **1.09 seconds**, including the real GL resize/readback and pooled-handle
 checks. The later `b723961b` base changes only compiler patches and request documentation; none of
 these native consumer inputs change, so no additional native or SDK run is made.
+
+
+## G3 RenderState inherited alias storage (preparation)
+
+The current pinned `Scene3DGraphSyncPolicy` is a string-literal union declared in
+`types/RenderState.ts`. Interface-inheritance lowering synthesizes an import for the inherited member in
+`GlRenderState` and `WgpuRenderState` after the reference planner has indexed the original modules.
+Planning that unresolved synthetic binding classifies it as an object reference: the base stores
+`Scene3DGraphSyncPolicy`, while its derived declaration stores `Ref<Scene3DGraphSyncPolicy>`. This is a
+storage defect even where native heritage remains unavailable.
+
+[`compiler-inherited-alias-reference-representation.patch`](../../source-patches/compiler-inherited-alias-reference-representation.patch)
+resolves the existing unique declaration owner and plans that alias binding, retaining its type
+arguments. It preserves the emitted alias identity and all existing heritage/storage/refinement checks.
+There is no type-name exception, changed source annotation, shadow field, copied owner, or new cast.
+
+The frozen compiler pin plus 95 preceding patches applies and builds. The candidate builds, and its
+four focused tests pass without skips. The native test compiles complete emitted fixture headers for
+both direct and contract-barrel imports. It exercises GL/WGPU-shaped owners, same allocation and
+control block, retained lifetime, identical inherited field addresses, writes through both base and
+derived references, shared referenced owners, callable replacement and invocation effects, subtype
+fields and generic inheritance. Source controls distinguish a same-spelled local object alias and
+preserve refusal to share a payload-changing inherited reference cell.
+
+The compiler-only actual-source check lowers the types program and emits only `RenderState`,
+`GlRenderState`, and `WgpuRenderState`. Both raw GL/WGPU declarations now retain `RenderState` as their
+native base. With the current 201 Flight patches, WGPU retains that base, while GL still fails the
+existing storage check: `render-state-runtime-owner-and-initialization.patch` explicitly refines its
+`EntityRuntimeKey` from `RenderStateRuntime | undefined` to `GlRenderStateRuntime | undefined`.
+The GL runtime also specializes its registries. These are genuine live-cell representation boundaries,
+not another alias spelling, and this patch preserves them for coordinated follow-up.
+
+No normal SDK generation, original registry public-consumer run, affected-header measurement or
+whole-cause/package completion is claimed. Builder retains the membership helper/prototype/written
+presence work. Canvas/DOM backend implementation remains outside this native GL/WGPU unit.
+
+The new four-test suite fails three cases on the preceding 95-patch backend, including native
+compilation of its complete emitted fixtures. The candidate passes those cases. An additional eight
+absence-refinement/export-owner tests pass. A 42-test existing alias/heritage selection has 39 passes
+and the same three failures on both backends: glTF texture widening expectations, host-image union
+carrier collapse, and imported collection-alias spelling. This is baseline parity, not a clean suite.
+The repository source-patch automation passes both tests. Broader static gates were not rerun for this
+unit; the preceding preparation recorded existing static failures.

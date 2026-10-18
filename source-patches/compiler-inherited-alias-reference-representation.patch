@@ -1,0 +1,233 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -34133,6 +34133,24 @@
+   if (getCppCallableObjectIrTypeCpp(type, context, new Set())) return true;
+   const identityPreserving = getCppIdentityPreservingUtilityArgument(type);
+   if (identityPreserving) return hasFlightReferenceRepresentationCpp(identityPreserving, context);
++  // Inheritance lowering synthesizes imports after the reference planner indexes the source modules.
++  // Resolve an alias to its declaration before planning it: the synthesized importer is not an
++  // indexed module, and planning that unresolved binding would turn a value alias into a Ref.
++  if (type.kind === 'named' && type.reference.kind === 'binding') {
++    const aliasOwner = getCppNamedTypeDeclarationOwnerCpp(
++      type,
++      getCppNamedTypeBindingModuleCpp(type, context),
++      context,
++    );
++    if (aliasOwner?.declaration.kind === 'typeAlias') {
++      const declaredType: IrType = {
++        ...type,
++        reference: { ...type.reference, binding: aliasOwner.declaration.binding },
++      };
++      const aliasPlan = context.referenceRepresentationPlanner.plan(declaredType, aliasOwner.module);
++      return aliasPlan.kind === 'represented' && aliasPlan.valueRepresentation === 'flightReference';
++    }
++  }
+   // An imported subject resolves through its own owner: the direct index is import-blind, and
+   // falling back to this module would plan the type against the wrong one and report no
+   // representation for a type that plainly has one.
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppInheritedAliasHeritage.test.ts
+@@ -0,0 +1,203 @@
++import { execFileSync } from 'node:child_process';
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++const provider = '@flighthq/alias-owner';
++const consumer = '@flighthq/alias-child';
++const baseSource = `export type Policy = 'refresh' | 'invalidate';
++export type Numeric = 0 | 1;
++export type Visit = (value: number) => number;
++export type Box = { value: number };
++export interface Base { policy: Policy; code: Numeric; count: number; visit: Visit; box: Box }
++export function writeBase(state: Base, policy: Policy, count: number): void {
++  state.policy = policy;
++  state.count = count;
++}
++`;
++const operations = `
++export interface GlState extends Base { gl: number }
++export interface WgpuState extends Base { device: number }
++export interface GenericBase<T> { item: T }
++export interface GenericState extends GenericBase<number> { extra: number }
++export function widenGl(state: GlState): Base { return state; }
++export function widenWgpu(state: WgpuState): Base { return state; }
++export function readGl(state: GlState): number { return state.visit(state.count) + state.box.value; }
++export function readWgpu(state: WgpuState): number { return state.visit(state.count) + state.box.value; }
++export function writeGl(state: GlState, count: number): void { state.count = count; }
++export function makeGl(visit: Visit, box: Box): GlState {
++  return { policy: 'refresh', code: 1, count: 3, visit, box, gl: 7 };
++}
++export function makeWgpu(visit: Visit, box: Box): WgpuState {
++  return { policy: 'invalidate', code: 0, count: 5, visit, box, device: 11 };
++}
++`;
++
++function emit(barrel: boolean, body = operations) {
++  const source = (packageName: string, file: string, text: string) => ({
++    packageName,
++    sourceFile: ts.createSourceFile(
++      `/flight/packages/${packageName.slice('@flighthq/'.length)}/src/${file}.ts`,
++      text,
++      ts.ScriptTarget.Latest,
++      true,
++    ),
++    upstreamDirectory: '/flight',
++  });
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    schema: 'flight-compiler-module-resolution/1',
++    edges: [
++      { specifier: './Base.ts', target: { packageName: provider, source: 'packages/alias-owner/src/Base.ts' } },
++      {
++        specifier: '@flighthq/alias-owner/contract',
++        target: { packageName: provider, source: 'packages/alias-owner/src/contract.ts' },
++      },
++    ],
++  };
++  const results = lowerTypeScriptSources(
++    [
++      source(provider, 'Base', baseSource),
++      ...(barrel ? [source(provider, 'contract', "export * from './Base.ts';")] : []),
++      source(
++        consumer,
++        'Derived',
++        `import type { Base, Visit, Box } from '${barrel ? '@flighthq/alias-owner/contract' : './Base.ts'}';\n` + body,
++      ),
++    ],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = results.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: {
++        [provider]: { namespace: 'alias_owner', includePrefix: 'fixture/owner' },
++        [consumer]: { namespace: 'alias_child', includePrefix: 'fixture/child' },
++      },
++    },
++  });
++  return modules.flatMap((module) => session.emitModule(module));
++}
++
++const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const runtime = resolveDependency(repositoryRoot, 'flight-cpp');
++const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
++const toolchain = findCppCompilerToolchain();
++
++describe('inherited aliases keep their declaration owner storage', () => {
++  it('shares the base cells through direct and contract-barrel inheritance', () => {
++    for (const barrel of [false, true]) {
++      const files = emit(barrel);
++      const base = files.find((file) => file.path.endsWith('/base.hpp'))!.contents;
++      const derived = files.find((file) => file.path.endsWith('/derived.hpp'))!.contents;
++      expect(base).toContain('Policy policy;');
++      expect(derived).toContain('struct GlState : public alias_owner::Base {\n  double gl;\n};');
++      expect(derived).toContain('struct WgpuState : public alias_owner::Base {\n  double device;\n};');
++      expect(derived).toContain('struct GenericState : public GenericBase<double> {');
++      expect(derived).not.toContain('Ref<alias_owner::Policy>');
++      expect(derived).not.toContain('Ref<alias_owner::Numeric>');
++      expect(derived).not.toContain('static_pointer_cast');
++      expect(derived).not.toContain('NOT GENERATED');
++    }
++  });
++
++  it('resolves the declaration rather than a same-spelled local alias', () => {
++    const body = `export type Policy = { wrong: number };
++export interface GlState extends Base { gl: number; local: Policy }
++export function widenGl(state: GlState): Base { return state; }`;
++    const derived = emit(true, body).find((file) => file.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct GlState : public alias_owner::Base {');
++    expect(derived).toContain('flight::Ref<Policy> local;');
++    expect(derived).not.toContain('policy;');
++  });
++
++  it('retains the storage-changing refinement boundary', () => {
++    const body =
++      'export interface RefinedBox extends Box { other: number } export interface Refined extends Base { box: RefinedBox; extra: number }';
++    const derived = emit(false, body).find((file) => file.path.endsWith('/derived.hpp'))!.contents;
++    expect(derived).toContain('struct Refined : public flight::ReferenceEnabled {');
++    expect(derived).toContain('flight::Ref<RefinedBox> box;');
++  });
++
++  it.skipIf(!toolchain || includes.length === 0)(
++    'retains one allocation and live inherited scalar, callable and reference cells',
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-inherited-alias-'));
++      try {
++        for (const barrel of [false, true]) {
++          for (const file of emit(barrel)) {
++            const output = path.join(directory, file.path);
++            mkdirSync(path.dirname(output), { recursive: true });
++            writeFileSync(output, file.contents);
++          }
++          const native = path.join(directory, 'native.cpp');
++          writeFileSync(
++            native,
++            `#include "fixture/child/derived.hpp"
++#include <cassert>
++#include <memory>
++#include <type_traits>
++namespace b = alias_owner;
++namespace d = alias_child;
++int main() {
++  static_assert(std::is_base_of_v<b::Base, d::GlState>);
++  static_assert(std::is_base_of_v<b::Base, d::WgpuState>);
++  static_assert(std::is_same_v<decltype(d::GlState::policy), b::Policy>);
++  static_assert(std::is_same_v<decltype(d::WgpuState::box), flight::Ref<b::Box>>);
++  auto box = flight::make_ref<b::Box>(); box->value = 13;
++  int calls = 0;
++  auto gl = d::make_gl([&](double v) { ++calls; return v * 2; }, box);
++  auto wgpu = d::make_wgpu([&](double v) { ++calls; return v * 3; }, box);
++  auto glBase = d::widen_gl(gl); auto wgpuBase = d::widen_wgpu(wgpu);
++  assert(glBase.get() == gl.get() && wgpuBase.get() == wgpu.get());
++  assert(!gl.owner_before(glBase) && !glBase.owner_before(gl));
++  assert(!wgpu.owner_before(wgpuBase) && !wgpuBase.owner_before(wgpu));
++  assert(&glBase->policy == &gl->policy && &wgpuBase->count == &wgpu->count);
++  assert(gl->policy == flight::String("refresh") && wgpu->policy == flight::String("invalidate"));
++  assert(gl->gl == 7 && wgpu->device == 11 && gl->code == 1 && wgpu->code == 0);
++  b::write_base(glBase, flight::String("invalidate"), 9);
++  assert(gl->policy == flight::String("invalidate") && d::read_gl(gl) == 31 && calls == 1);
++  d::write_gl(gl, 17); assert(glBase->count == 17);
++  glBase->box->value = 23; assert(box->value == 23 && wgpu->box == box && gl->box == box);
++  glBase->visit = [&](double v) { ++calls; return v + 100; };
++  assert(d::read_gl(gl) == 140 && calls == 2);
++  b::write_base(wgpuBase, flight::String("refresh"), 7);
++  assert(wgpu->policy == flight::String("refresh") && d::read_wgpu(wgpu) == 44 && calls == 3);
++  std::weak_ptr<d::GlState> weak = gl;
++  gl.reset(); assert(!weak.expired());
++  glBase.reset(); assert(weak.expired());
++}`,
++          );
++          const executable = path.join(directory, getCppExecutableName(toolchain!, barrel ? 'barrel' : 'direct'));
++          execFileSync(
++            toolchain!.command,
++            createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
++            { encoding: 'utf8', stdio: 'pipe' },
++          );
++          execFileSync(executable, [], { encoding: 'utf8' });
++        }
++      } finally {
++        rmSync(directory, { recursive: true, force: true });
++      }
++    },
++    120_000,
++  );
++});
