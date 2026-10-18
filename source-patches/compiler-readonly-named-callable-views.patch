@@ -1,0 +1,363 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -327,6 +327,7 @@
+   bindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>;
+   immutableInitializerBindingIds: ReadonlySet<string>;
+   indexedNullableReadExpressions?: ReadonlyMap<Readonly<IrExpression>, string>;
++  readonlyCallableParameterTypes?: ReadonlyMap<string, Readonly<IrType>>;
+   readonlyRecordReadViewBindingIds: Set<string>;
+   jsonReadRecordBindingIds: Set<string>;
+   jsonReadValueBindingIds: Set<string>;
+@@ -2501,7 +2502,20 @@
+   ];
+ }
+ 
+-function emitFunction(declaration: Readonly<IrFunctionDeclaration>, outer: EmitContext): string[] {
++function emitFunction(declaration: Readonly<IrFunctionDeclaration>, outer: EmitContext, readonlyVariant = false): string[] {
++  const readonlyPlan = readonlyVariant ? undefined : getCppReadonlyCallableOptionsPlanCpp(declaration, outer);
++  if (readonlyPlan) {
++    const parameters = declaration.parameters.map(p => p.binding.id === readonlyPlan.parameter.binding.id ? { ...p, type: readonlyPlan.type } : p);
++    const bindingTypes = new Map(outer.bindingTypes);
++    bindingTypes.set(readonlyPlan.parameter.binding.id, readonlyPlan.type);
++    const readonlyCallableParameterTypes = new Map(outer.readonlyCallableParameterTypes);
++    readonlyCallableParameterTypes.set(readonlyPlan.parameter.binding.id, { kind: 'union', types: [readonlyPlan.type, { kind: 'undefined' }] });
++    const view = emitFunction({ ...declaration, parameters }, { ...outer, bindingTypes, readonlyCallableParameterTypes }, true);
++    const original = emitFunction(declaration, outer, true);
++    const nativeName = getBindingTargetName(declaration.binding, outer);
++    view[0] = view[0]!.replace(`${nativeName}(`, `${readonlyPlan.helper}(`);
++    return [...original, '', ...view];
++  }
+   const context: EmitContext = {
+     ...outer,
+     activeDependentCallablePackIds: mergeCppDependentCallablePackIds(
+@@ -4628,6 +4642,8 @@
+     if (voidValueConversion) return voidValueConversion;
+     const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
+     if (erasedDynamicConversion) return erasedDynamicConversion;
++    const readonlyNamedCallable = emitCppReadonlyNamedCallableCpp(expression, expectedType, context);
++    if (readonlyNamedCallable !== undefined) return readonlyNamedCallable;
+     const callableArityAdaptation = emitCppContextualCallableArityAdaptationCpp(expression, expectedType, context);
+     if (callableArityAdaptation) return callableArityAdaptation;
+     refuseCppContextualStructuralArrayNominalRecoveryCpp(expression, expectedType, context);
+@@ -26350,6 +26366,125 @@
+ // The callable a position declares, when it declares one directly: an alias resolved to a function type. A
+ // union or optional carrier is deliberately NOT resolved here -- the emission for those wraps the callable,
+ // and that wrapping is the union path's job.
++// A second entrypoint over the same original body, never a replacement of the public native ABI.
++// Deliberately bounded to the parser shape: string plus optional one-field numeric options, whose
++// every parameter reference is an optional data read outside nested closures and mutation targets.
++function getCppReadonlyCallableOptionsPlanCpp(
++  declaration: Readonly<IrFunctionDeclaration>, context: EmitContext,
++): Readonly<{ parameter: Readonly<IrParameter>; type: Readonly<IrType>; helper: string }> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || declaration.async || declaration.namespaceMember ||
++      declaration.typeParameters.length || declaration.overloads.length || declaration.parameters.length !== 2) return undefined;
++  const [text, parameter] = declaration.parameters;
++  if (!text || text.optional || text.rest || text.type.kind !== 'primitive' || text.type.name !== 'string' ||
++      !parameter || !parameter.optional || parameter.rest || parameter.initializer ||
++      parameter.type.kind !== 'named' || parameter.type.reference.kind !== 'binding') return undefined;
++  const owner = context.sourceModules.find(module => module.declarations.some(d => d.kind === 'function' && d.binding.id === declaration.binding.id)) ?? context.module;
++  if (context.referenceRepresentationPlanner.resolveStructuralRow(parameter.type, owner)) return undefined;
++  const shape = context.referenceRepresentationPlanner.resolveObjectShape(parameter.type, owner);
++  if (!shape || shape.length !== 1 || shape.some(p => p.computedKey || !p.optional ||
++      p.type.kind !== 'primitive' || p.type.name !== 'number')) return undefined;
++  const references: Readonly<IrExpression>[] = [], receivers = new Set<Readonly<IrExpression>>();
++  let invalid = false;
++  const isParameter = (e: Readonly<IrExpression>): boolean => e.kind === 'identifier' &&
++    e.reference.kind === 'binding' && e.reference.binding.id === parameter.binding.id;
++  for (const statement of declaration.body) analyzeIrStatementSubtreeTraversal(statement, {
++    expression(expression) {
++      if (isParameter(expression)) references.push(expression);
++      if (expression.kind === 'property' && expression.optional && isParameter(expression.object) &&
++          shape.some(p => p.name === expression.name)) receivers.add(expression.object);
++      if ((expression.kind === 'assignment' && (isParameter(expression.left) ||
++           ((expression.left.kind === 'property' || expression.left.kind === 'element') && isParameter(expression.left.object)))) ||
++          (expression.kind === 'unary' && ['++', '--', 'delete'].includes(expression.operator) &&
++           ((expression.operand.kind === 'property' || expression.operand.kind === 'element') && isParameter(expression.operand.object)))) invalid = true;
++      if (expression.kind === 'function') analyzeIrExpressionSubtreeTraversal(expression, {
++        expression(nested) { if (isParameter(nested)) invalid = true; },
++      });
++    },
++  });
++  if (invalid || references.length === 0 || references.some(reference => !receivers.has(reference))) return undefined;
++  const type: IrType = { kind: 'named', reference: { kind: 'ambient', name: 'Readonly' }, typeArguments: [parameter.type] };
++  const names = context.targetNameMaps.get(getCppModuleIdentityKey(owner)) ?? context.targetNames;
++  const base = `${names.get(declaration.binding.id) ?? safeCppName(declaration.binding.name)}_flight_readonly_options_${getCppStableIdentifierHash(declaration.binding.id)}`;
++  const reserved = new Set(names.values()); let helper = base; while (reserved.has(helper)) helper += '_';
++  return { parameter, type, helper };
++}
++
++// Only the selected callback result projection uses this proof. Named members must resolve to
++// the SAME original declaration through their own import bindings, never merely equal shapes.
++// The source cells must be writable and use exactly the target storage; the returned row then
++// retains the native owner, including fields absent from the contextual base result.
++function hasCppReadonlyCallableResultViewCpp(
++  source: Readonly<IrType>, target: Readonly<IrType>, context: EmitContext,
++): boolean {
++  const row = context.referenceRepresentationPlanner.resolveStructuralRow(target, context.module);
++  if (source.kind !== 'named' || row?.kind !== 'required') return false;
++  const sourceProperties = resolveCppObjectShapeInTypeOwnerCpp(source, context)?.filter(p => !p.phantom);
++  const targetProperties = resolveCppObjectShapeInTypeOwnerCpp(target, context)?.filter(p => !p.phantom);
++  if (!sourceProperties || !targetProperties?.length) return false;
++  const identity = (type: Readonly<IrType>): string | undefined => {
++    if (type.kind === 'primitive') return normalizeCompilerStructuralValueCanonical(type);
++    if (type.kind === 'array') {
++      const element = identity(type.element);
++      return element === undefined ? undefined : `array:${String(type.readonly)}:${element}`;
++    }
++    if (type.kind !== 'named') return undefined;
++    const declaration = getCppMemberDeclarationKeyCpp(type, getCppNamedTypeBindingModuleCpp(type, context), context);
++    if (!declaration) return undefined;
++    const arguments_ = type.typeArguments.map(identity);
++    if (arguments_.some(argument => argument === undefined)) return undefined;
++    return JSON.stringify([declaration, arguments_]);
++  };
++  return targetProperties.every(property => {
++    const original = sourceProperties.find(candidate =>
++      getCppStructuralRowPropertyIdentityCpp(candidate, context) === getCppStructuralRowPropertyIdentityCpp(property, context));
++    if (!original || original.readonly || original.optional !== property.optional) return false;
++    const originalIdentity = identity(original.type), targetIdentity = identity(property.type);
++    return originalIdentity !== undefined && originalIdentity === targetIdentity &&
++      emitType(original.type, context) === emitType(property.type, context);
++  });
++}
++
++function emitCppReadonlyNamedCallableCpp(
++  expression: Readonly<IrExpression>, expectedType: Readonly<IrType> | undefined, context: EmitContext,
++): string | undefined {
++  if (!expectedType || expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return undefined;
++  const declaration = getCppFunctionDeclarationForBindingCpp(expression.reference.binding.id, context);
++  const plan = declaration ? getCppReadonlyCallableOptionsPlanCpp(declaration, context) : undefined;
++  const target = getCppPlainCallableTypeCpp(expectedType, context);
++  if (!declaration || !plan || !target || target.typeParameters.length || target.parameters.length !== 2 ||
++      target.parameters.some(p => p.rest) || !target.parameters[1]?.optional) return undefined;
++  const source = getIrFunctionDeclarationTypeCpp(declaration);
++  const targetCpp = emitType(target, context);
++  if (!targetCpp.startsWith('std::function<')) return undefined;
++  const signature = targetCpp.slice('std::function<'.length, -1);
++  const name = emitIdentifierReference(expression.reference, context);
++  const probe = { ...context, includes: new Set<string>(), anonymousStructs: new Map() };
++  const same = hasCppExactCallableParameterRepresentationCpp(source, target, probe) &&
++    emitType(source.returns, probe) === emitType(target.returns, probe);
++  context.includes.add('flight/callable.hpp');
++  if (same) return `flight::NamedFunction<${signature}>::from<&${name}>(${name})`;
++  if (target.parameters[0]!.optional ||
++      emitCppParameterTypeCpp(source.parameters[0]!.type, false, probe) !== emitCppParameterTypeCpp(target.parameters[0]!.type, false, probe)) return undefined;
++  const targetParameter = target.parameters[1]!;
++  const targetRow = context.referenceRepresentationPlanner.resolveStructuralRow(targetParameter.type, context.module);
++  if (!targetRow || !isCppStructuralRowReadonlyCpp(targetRow) ||
++      getCppStructuralRowObjectWideningProofCpp(targetParameter.type, plan.type, context) !== 'proven') return undefined;
++  const sourceReturn = emitType(source.returns, context), targetReturn = emitType(target.returns, context);
++  const returnRow = context.referenceRepresentationPlanner.resolveStructuralRow(target.returns, context.module);
++  if (sourceReturn !== targetReturn && (!returnRow ||
++      !hasCppReadonlyCallableResultViewCpp(source.returns, target.returns, context))) return undefined;
++  const first = getGeneratedTargetName('readonlyCallableText', context), options = getGeneratedTargetName('readonlyCallableOptions', context);
++  const firstType = emitCppParameterTypeCpp(target.parameters[0]!.type, false, context);
++  const targetOptions = emitType(targetParameter.type, context), sourceOptions = emitType(plan.type, context);
++  const qualifier = name.lastIndexOf('::');
++  const helper = (qualifier < 0 ? '' : name.slice(0, qualifier + 2)) + plan.helper;
++  const convertedOptions = `([&]() -> std::optional<${sourceOptions}> { if (!${options}.has_value()) return std::nullopt; return ${sourceOptions}(${options}.value()); }())`;
++  const invocation = `${helper}(${first}, ${convertedOptions})`;
++  const result = sourceReturn === targetReturn ? invocation :
++    `${targetReturn}(flight::StructuralRef<flight::RowWritable<flight::RowOf<${sourceReturn}>>>(${invocation}))`;
++  return `flight::NamedFunction<${signature}>::from<&${name}>([](${firstType} ${first}, std::optional<${targetOptions}> ${options}) -> ${targetReturn} { return ${result}; })`;
++}
++
+ function getCppPlainCallableTypeCpp(
+   type: Readonly<IrType>,
+   context: EmitContext,
+@@ -35080,9 +35215,12 @@
+   }
+   const commonVariantProperty = emitCppOptionalVariantCommonPropertyExpressionCpp(expression, context);
+   if (commonVariantProperty) return commonVariantProperty;
++  const specializedReceiver = expression.object.kind === 'identifier' && expression.object.reference.kind === 'binding'
++    ? context.readonlyCallableParameterTypes?.get(expression.object.reference.binding.id) : undefined;
++  const receiverSemantics = specializedReceiver ?? semantics.receiverType;
+   const receiverEvidence = getIrExpressionTypeEvidenceCpp(expression.object, context);
+   const receiverType = emitOptionalChainPayloadIrTypeCpp(
+-    semantics.receiverType.kind === 'unknown' ? (receiverEvidence ?? semantics.receiverType) : semantics.receiverType,
++    receiverSemantics.kind === 'unknown' ? (receiverEvidence ?? receiverSemantics) : receiverSemantics,
+     context,
+   );
+   const resolvedPropertyType = getIrObjectPropertyTypeCpp(receiverType, expression.name, context);
+@@ -35093,7 +35231,7 @@
+       : semantics.valueType;
+   const payload = emitOptionalChainPayloadTypeCpp(valueType, context);
+   const object = captureStorage ?? emitOptionalChainReceiverCpp(expression.object, context);
+-  const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
++  const receiverProjection = getCppOptionalChainReceiverProjectionCpp(receiverSemantics, context);
+   const memberOperator = hasFlightReferenceRepresentationCpp(receiverType, context) ? '->' : '.';
+   let projected: string;
+   const structuralReceiver = context.referenceRepresentationPlanner.resolveStructuralRow(receiverType, context.module);
+@@ -36935,12 +37073,51 @@
+ // The source compares function objects, including exact null and undefined states. Normalize both
+ // carriers before visiting, evaluate each operand once in source order, and compare only retained
+ // callable identities; a null sentinel never becomes undefined or a fabricated callback.
++function emitCppReadonlyNamedIdentityCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
++  leftType: Readonly<IrType> | undefined, rightType: Readonly<IrType> | undefined, context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++      (expression.operator !== '===' && expression.operator !== '!==')) return undefined;
++  const declaration = (e: Readonly<IrExpression>): Readonly<IrFunctionDeclaration> | undefined =>
++    e.kind === 'identifier' && e.reference.kind === 'binding' ? getCppFunctionDeclarationForBindingCpp(e.reference.binding.id, context) : undefined;
++  const leftDeclaration = declaration(expression.left), rightDeclaration = declaration(expression.right);
++  const left = leftType ?? (leftDeclaration ? getIrFunctionDeclarationTypeCpp(leftDeclaration) : undefined);
++  const right = rightType ?? (rightDeclaration ? getIrFunctionDeclarationTypeCpp(rightDeclaration) : undefined);
++  const leftCallable = left ? getCppPlainCallableTypeCpp(left, context) : undefined;
++  const rightCallable = right ? getCppPlainCallableTypeCpp(right, context) : undefined;
++  if (!leftCallable || !rightCallable || leftCallable.typeParameters.length || rightCallable.typeParameters.length) return undefined;
++  const leftSelected = leftDeclaration && getCppReadonlyCallableOptionsPlanCpp(leftDeclaration, context);
++  const rightSelected = rightDeclaration && getCppReadonlyCallableOptionsPlanCpp(rightDeclaration, context);
++  const invert = expression.operator === '!==' ? '!' : '';
++  if (leftSelected || rightSelected) {
++    context.includes.add('flight/callable.hpp');
++    if (leftDeclaration && rightDeclaration && expression.left.kind === 'identifier' && expression.right.kind === 'identifier') {
++      const a = emitIdentifierReference(expression.left.reference, context), b = emitIdentifierReference(expression.right.reference, context);
++      return `(${invert}(flight::NamedFunctionOrigin::of<&${a}>() == flight::NamedFunctionOrigin::of<&${b}>()))`;
++    }
++    const source = leftSelected ? expression.left : expression.right;
++    const other = leftSelected ? expression.right : expression.left;
++    const otherType = leftSelected ? right : left;
++    if (source.kind !== 'identifier' || !otherType || !emitType(otherType, context).startsWith('std::function<')) return undefined;
++    const name = emitIdentifierReference(source.reference, context), value = getGeneratedTargetName('namedIdentityOperand', context);
++    return `([&]() { auto ${value} = ${emitExpression(other, context, otherType)}; return ${invert}flight::callable_identity_equal_named<&${name}>(${value}); }())`;
++  }
++  const leftCpp = emitType(leftCallable, context), rightCpp = emitType(rightCallable, context);
++  if (leftCpp === rightCpp || !leftCpp.startsWith('std::function<') || !rightCpp.startsWith('std::function<')) return undefined;
++  context.includes.add('flight/callable.hpp');
++  const a = getGeneratedTargetName('namedIdentityLeft', context), b = getGeneratedTargetName('namedIdentityRight', context);
++  return `([&]() { auto ${a} = ${emitExpression(expression.left, context, leftCallable)}; auto ${b} = ${emitExpression(expression.right, context, rightCallable)}; return ${invert}flight::callable_identity_equal(${a}, ${b}); }())`;
++}
++
+ function emitCppCallableIdentityComparisonCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   leftType: Readonly<IrType> | undefined,
+   rightType: Readonly<IrType> | undefined,
+   context: EmitContext,
+ ): string | undefined {
++  const namedIdentity = emitCppReadonlyNamedIdentityCpp(expression, leftType, rightType, context);
++  if (namedIdentity !== undefined) return namedIdentity;
+   if (
+     getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
+     !leftType ||
+diff --git a/packages/compiler-backend-cpp/src/cppReadonlyCallableOptions.test.ts b/packages/compiler-backend-cpp/src/cppReadonlyCallableOptions.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppReadonlyCallableOptions.test.ts
+@@ -0,0 +1,115 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource, lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend, emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const file = ts.createSourceFile('/flight/packages/example/src/options.ts', source, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(file, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++function attempt(source: string): string | undefined {
++  try { return emit(source); }
++  catch (error) {
++    if (typeof error !== 'object' || error === null || !('kind' in error) || error.kind !== 'backend-emission') throw error;
++    return undefined;
++  }
++}
++const prefix = `interface Config{size:number} interface Doc{size:number} interface Result{config:Config;diagnostics:number[];document:Doc} interface Options{size?:number} interface ParseOptions extends Options{width?:number} `;
++const config = prefix + `interface Codec{parse(text:string,options?:Readonly<ParseOptions>):Config}export function parse(text:string,options?:Options):Config{return {size:options?.size??1}}export const codec:Codec={parse};`;
++const document = prefix + `interface Codec{parse(text:string,options?:Readonly<ParseOptions>):Required<{config:Config;diagnostics:number[]}>}export function parse(text:string,options?:Options):Result{return {config:{size:options?.size??1},diagnostics:[],document:{size:2}}}export const codec:Codec={parse};`;
++it('keeps the exact native public signature beside a row-reading original-body entrypoint', () => {
++  const output = emit(config);
++  expect(output).toContain('parse(flight::String text, std::optional<flight::Ref<Options>> options = std::nullopt)');
++  expect(output).toMatch(/parse_flight_readonly_options_[a-f0-9]+\(flight::String text, std::optional<flight::StructuralRef/);
++  expect(output).toContain('flight::row_get<flight::RowKey<"size">>(optional_chain_receiver.value())');
++  expect(output).toContain('flight::NamedFunction<');
++  expect(output).toContain('::from<&parse>');
++});
++it('views the exact original result owner without constructing an anonymous result copy', () => {
++  const output = emit(document);
++  expect(output).toContain('flight::RowRequired<flight::RowOf<flight::Ref<config_diagnostics_');
++  expect(output).toContain('flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Result>>>>(parse_flight_readonly_options_');
++  expect(output).not.toMatch(/make_ref<config_diagnostics_/);
++  expect(output).not.toContain('structural_ref_cast');
++});
++it('carries named origin through exact-signature aliases and bare-declaration comparisons', () => {
++  const output = emit(config + `export const alias=parse;export function same():boolean{return codec.parse===parse}export function aliased():boolean{return codec.parse===alias}`);
++  expect(output).toContain('::from<&parse>(parse)');
++  expect(output).toContain('callable_identity_equal_named<&parse>');
++  expect(output).toContain('flight::callable_identity_equal(named_identity_left, named_identity_right)');
++});
++const excluded: readonly (readonly [string, string])[] = [
++ ['mutation',`if(options)options.size=2;return {size:options?.size??1}`],
++ ['opaque call',`sink(options);return {size:options?.size??1}`],
++ ['owner alias',`const alias=options;return {size:alias?.size??1}`],
++ ['owner comparison',`if(options===saved)return {size:0};return {size:options?.size??1}`],
++ ['owner typeof',`if(typeof options==='object')return {size:0};return {size:options?.size??1}`],
++ ['owner truthiness',`if(options)return {size:2};return {size:options?.size??1}`],
++ ['nested capture',`const read=()=>options?.size??1;return {size:read()}`],
++ ['indexed read',`return {size:options?.['size']??1}`],
++ ['nonoptional assertion read',`return {size:options!.size??1}`],
++];
++it.each(excluded)('retains the native ABI or existing refusal for unsafe parameter use: %s', (_name, body) => {
++  const output = attempt(prefix + `const saved:Options|undefined=undefined;export function sink(value:Options|undefined):void{}export function parse(text:string,options?:Options):Config{${body}}`);
++  if (output !== undefined) expect(output).not.toContain('_flight_readonly_options_');
++});
++it('does not project a writable nominal contextual options owner', () => {
++  const output = emit(config.replace('options?:Readonly<ParseOptions>', 'options?:ParseOptions'));
++  expect(output).not.toContain('::from<&parse>');
++});
++it('does not broaden a multi-field, defaulted, generic or already-readonly signature', () => {
++  for (const source of [config.replace('interface Options{size?:number}', 'interface Options{size?:number;other?:number}'),
++    config.replace('interface Options{size?:number}', 'interface Options{size?:string}').replace('return {size:options?.size??1}', 'const observed=options?.size;return {size:1}'),
++    config.replace('interface Options{size?:number}', 'interface Options{size?:boolean}').replace('return {size:options?.size??1}', 'const observed=options?.size;return {size:1}'),
++    config.replace('export function parse(text:string,options?:Options)', 'export function parse(text:string,options:Options={})'),
++    config.replace('export function parse(text:string,options?:Options)', 'export function parse<T>(text:string,options?:Options)'),
++    config.replace('export function parse(text:string,options?:Options)', 'export function parse(text:string,options?:Readonly<Options>)')]) {
++    expect(emit(source)).not.toContain('_flight_readonly_options_');
++  }
++});
++
++it('uses the canonical original declaration and additional helper through an import', () => {
++  const sources = {
++    domain: `export interface Config{size:number}export interface Doc{size:number}export interface Result{config:Config;diagnostics:number[];document:Doc}export interface Options{size?:number}export interface ParseOptions extends Options{width?:number}export interface Codec{parse(text:string,options?:Readonly<ParseOptions>):Required<{config:Config;diagnostics:number[]}>}`,
++    parser: `import type{Config,Result,Options}from './domain.ts';export function parse(text:string,options?:Options):Result{return {config:{size:options?.size??1},diagnostics:[],document:{size:2}}}`,
++    consumer: `import type{Codec}from './domain.ts';import{parse as original}from './parser.ts';export const codec:Codec={parse:original};export function same():boolean{return codec.parse===original}`,
++  };
++  const moduleResolution = {schema:'flight-compiler-module-resolution/1' as const,edges:Object.keys(sources).map(name=>({specifier:'./'+name+'.ts',target:{packageName:'@flighthq/example',source:'packages/example/src/'+name+'.ts'}}))};
++  const lowered=lowerTypeScriptSources(Object.entries(sources).map(([name,text])=>({packageName:'@flighthq/example',upstreamDirectory:'/flight',sourceFile:ts.createSourceFile('/flight/packages/example/src/'+name+'.ts',text,ts.ScriptTarget.Latest,true)})),moduleResolution);
++  expect(lowered.flatMap(r=>r.diagnostics)).toEqual([]);
++  const modules=lowered.map(r=>r.module);
++  const session=createCppCompilerBackend().createEmissionSession!({modules,moduleResolution,options:{runtimeProfile:'flight-cpp'}});
++  const parser=session.emitModule(modules[1]!)[0]!.contents;
++  const consumer=session.emitModule(modules[2]!)[0]!.contents;
++  expect(parser).toContain('flight::row_get<flight::RowKey<"size">>');
++  expect(consumer).toMatch(/::from<&[^>]*parse>/);
++  expect(consumer).toContain('_flight_readonly_options_');
++  expect(consumer).toContain('callable_identity_equal_named<');
++});
++
++it('resolves result cells through distinct imports and barrels without merging distinct declarations', () => {
++  for (const distinct of [false, true]) {
++    const sources = {
++      config: `export interface Config{size:number}export interface Diagnostic{code:string}`,
++      barrel: `export type{Config,Diagnostic}from './config.ts';`,
++      schema: `import type{Config,Diagnostic}from './config.ts';export interface Doc{size:number}export interface Result{config:Config;diagnostics:Diagnostic[];document:Doc}export interface Options{size?:number}`,
++      codec: `import type{Config,Diagnostic}from '${distinct ? './other.ts' : './barrel.ts'}';export interface ParseOptions{size?:number;width?:number}export interface Codec{parse(text:string,options?:Readonly<ParseOptions>):Required<{config:Config;diagnostics:Diagnostic[]}>}`,
++      other: `export interface Config{size:number}export interface Diagnostic{code:string}`,
++      parser: `import type{Result,Options}from './schema.ts';export function parse(text:string,options?:Options):Result{return {config:{size:options?.size??1},diagnostics:[],document:{size:2}}}`,
++      consumer: `import type{Codec}from './codec.ts';import{parse as original}from './parser.ts';export const codec:Codec={parse:original}`,
++    };
++    const moduleResolution={schema:'flight-compiler-module-resolution/1' as const,edges:Object.keys(sources).map(name=>({specifier:'./'+name+'.ts',target:{packageName:'@flighthq/example',source:'packages/example/src/'+name+'.ts'}}))};
++    const lowered=lowerTypeScriptSources(Object.entries(sources).map(([name,text])=>({packageName:'@flighthq/example',upstreamDirectory:'/flight',sourceFile:ts.createSourceFile('/flight/packages/example/src/'+name+'.ts',text,ts.ScriptTarget.Latest,true)})),moduleResolution);
++    expect(lowered.flatMap(r=>r.diagnostics)).toEqual([]);
++    const modules=lowered.map(r=>r.module),session=createCppCompilerBackend().createEmissionSession!({modules,moduleResolution,options:{runtimeProfile:'flight-cpp'}});
++    const consumer=session.emitModule(modules[6]!)[0]!.contents;
++    if(distinct) expect(consumer).not.toContain('::from<&');
++    else {
++      expect(consumer).toContain('::from<&');
++      expect(consumer).toContain('flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<');
++      expect(consumer).not.toContain('structural_ref_cast');
++    }
++  }
++});

@@ -5284,6 +5284,23 @@
       "unblocks": "Same-owner ParticleFormatCodec.parseToDocument result carrier; full callback adaptation and normal coordinated generation remain separate.",
       "expires": "When the compiler preserves original structural callback result owners through the unmodified plain object result type.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-readonly-named-callable-views",
+      "dependency": "flight-compiler",
+      "patch": "compiler-readonly-named-callable-views.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/particles-formats",
+      "answers": "diagnostic",
+      "refusal": "The native string plus optional nominal options function pointer cannot initialize the readonly structural-options codec callback; a plain document-result Ref would additionally replace the original wider result owner.",
+      "rewrite": "Adds an original-IR readonly-options entrypoint beside the unchanged native ABI only for synchronous nongeneric two-parameter functions whose optional nominal options contain one optional numeric field and whose every options reference is a direct optional read outside mutation or nested capture. Contextual storage uses NamedFunction origins and owner-preserving row projection. Required result projection proves the same original imported member declarations and exact writable storage; no structural shape substitution.",
+      "equivalence": "The source body executes with the same string and options owner, reading the field at its original point with the same absence/default/getter/error behavior. The additional entrypoint changes no public native signature. NamedFunction retains the original declaration token across signatures, including aliases and translation units, while distinct same-body functions remain unequal. The result row shares the original native result owner and writable cells, preserving extra document fields. No options or result copy, native recovery assumption, function-pointer cast, or new Function layout is introduced.",
+      "verification": "Preparation only: clean current110-patch composition plus candidate strict production build; focused16/16 source assertions and9/9 excluded cases unchanged against that exact preceding stack; existing callable ABI/arity/identity and private JSON graph40 source assertions PASS with1 native case explicitly unselected by the node:assert adapter (not Vitest). Registered runtime/named-origin/actual public parser boundary CTest3/3 PASS; separate compiler-emitted synthetic native oracle and48 untouched Starling/Unity/ParticleDesigner source checks provide owner/read-time/error/function/result controls. No normal SDK regeneration or installed callback/header promotion yet; shared Types normal generation is coordinated through builder2.",
+      "whyNotUpstreamFirst": "The pinned compiler preserves the native ABI correctly but lacks an additional owner-preserving invocation path for this bounded source-valid callback assignment. This declared backend patch and existing request carry the focused proof without changing the compiler pin or parser algorithms.",
+      "unblocks": "The approved Starling config/document and exact-shape Unity/ParticleDesigner callback assignments; later registration, Libgdx and nullable JSON boundaries remain separate.",
+      "expires": "when the compiler supplies an original-body readonly options invocation preserving the native ABI, original named function identity and original writable result owner for these contextual assignments.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

@@ -29,7 +29,7 @@ static_assert(!std::is_constructible_v<Codec, NativeParse>);
 // The same control follows the public slot when its equivalent Required row is generated.
 // Before that normal generation the slot owns a Ref; afterwards it already is a writable row.
 template<typename Carrier> struct ResultView { using type = Carrier; };
-template<typename Object> struct ResultView<flight::Ref<Object>> {
+template<typename Object> struct ResultView<std::shared_ptr<Object>> {
   using type = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Object>>>>;
 };
 

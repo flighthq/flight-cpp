@@ -23,7 +23,10 @@ assert.deepEqual(ts.getPreEmitDiagnostics(program).map(d => ts.flattenDiagnostic
 const pin = path.join(root, '.dependencies/flight/packages');
 const sources = {
   starling: 'particles-formats/src/starlingPexParse.ts',
-  particles: 'particles/src/particleEmitterConfig.ts',
+  particleFactory: 'particles/src/particleEmitterConfig.ts',
+  curves: 'particles/src/curve.ts',
+  unity: 'particles-formats/src/unityParse.ts',
+  designer: 'particles-formats/src/particleDesignerParse.ts',
   importdiagnostics: 'importdiagnostics/src/importDiagnosticCollector.ts',
   math: 'math/src/constants.ts',
   types: 'types/src/ImportDiagnostic.ts',
@@ -44,6 +47,7 @@ try {
     }
     fs.writeFileSync(path.join(scratch, name + '.mjs'), code);
   }
+  fs.writeFileSync(path.join(scratch, 'particles.mjs'), "export * from './particleFactory.mjs';export * from './curves.mjs';\n");
   const api = await import(pathToFileURL(path.join(scratch, 'starling.mjs')));
   const codec = { parseToConfig: api.parseStarlingPex, parseToDocument: api.parseStarlingPexDocument };
   check(codec.parseToConfig === api.parseStarlingPex, 'config callback retains original function identity');
@@ -74,6 +78,51 @@ try {
   check(narrowedCopy !== result && !('document' in narrowedCopy), 'copying only declared result fields changes owner and observable surface');
   const wrapped = (...values) => api.parseStarlingPex(...values);
   check(wrapped !== codec.parseToConfig, 'a forwarding lambda is a different source function');
+  // Approved sibling assignments use the same one-number readonly-owner rule. Preserve each
+  // original body's ordering: Unity document reads options before parsing; config reads after.
+  for (const family of [
+    { name: 'unity', config: 'parseUnityParticle', document: 'parseUnityParticleDocument',
+      key: 'pixelsPerUnit', input: '{}', fallback: 100, measure: config => config.speedMin,
+      expected: value => 5 * value },
+    { name: 'designer', config: 'parseParticleDesignerPlist', document: 'parseParticleDesignerPlistDocument',
+      key: 'textureSize', input: '<plist><dict/></plist>', fallback: 1,
+      measure: config => config.scaleMin, expected: value => 32 / value },
+  ]) {
+    const sibling = await import(pathToFileURL(path.join(scratch, family.name + '.mjs')));
+    for (const [method, document] of [[family.config, false], [family.document, true]]) {
+      const callback = sibling[method], slot = { parse: callback };
+      const configOf = result => document ? result.config : result;
+      check(slot.parse === sibling[method], method + ': original named callback identity');
+      let reads = 0, produced = 0, value = 2;
+      const options = { extra: 9, get [family.key]() { ++reads; return value; } };
+      const produce = () => { ++produced; return options; };
+      check(family.measure(configOf(slot.parse(family.input, produce()))) === family.expected(2) && reads === 1 && produced === 1,
+        method + ': literal getter and argument each evaluated once');
+      value = 4;
+      check(family.measure(configOf(slot.parse(family.input, options))) === family.expected(4) && reads === 2,
+        method + ': live owner read');
+      for (const absent of [undefined, {}, { [family.key]: undefined }]) {
+        check(family.measure(configOf(slot.parse(family.input, absent))) === family.expected(family.fallback),
+          method + ': absent options/field and present undefined retain defaults');
+      }
+      const sentinel = {}; let thrown;
+      try { slot.parse(family.input, { get [family.key]() { throw sentinel; } }); } catch (error) { thrown = error; }
+      check(thrown === sentinel, method + ': exact thrown accessor owner');
+      const original = slot.parse(family.input, options);
+      if (document) {
+        const owner = original.document, alias = original;
+        const replacement = sibling[family.config](family.input);
+        alias.config = replacement;
+        check(original.config === replacement && original.document === owner, method + ': writable same result retains extra document owner');
+      }
+      if (family.name === 'unity') {
+        const before = reads;
+        assert.throws(() => slot.parse('bad', options));
+        check(reads === before + (document ? 1 : 0), method + ': authored validation/options ordering');
+      }
+      check(((...values) => callback(...values)) !== slot.parse, method + ': wrapper is a distinct source function');
+    }
+  }
   const report = { strictTypeFixture: 'pass', checks, originalBodies: true, sourceHashes: hashes,
     scope: 'Original-source counterexamples and protocol controls only; no compiler adapter or built-in registry qualification.' };
   const output = path.resolve(args['--output'] ?? 'out/particle-codec-options-source.json');

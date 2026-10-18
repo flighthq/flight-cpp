@@ -84,9 +84,8 @@ view plus the unchanged native public wrapper, with contextual calls entering th
 That would still require preserving the original named function identity through an adapted
 `std::function`, and preserving the original document result owner through the declared result
 surface. Current `Function` shares identity only within its signature; an arbitrary forwarding
-lambda in `std::function` correctly reports that identity is unavailable. There is no qualified
-cross-signature named-origin protocol here. Choosing that protocol and any public result-carrier
-change is an architecture decision, not permission to copy fields or cast a function pointer.
+lambda in `std::function` correctly reports that identity is unavailable. That was the architecture boundary presented to Manager. Manager subsequently approved the
+bounded implementation below; no function-pointer cast or field copy is used.
 
 The registered native boundary fixture keeps the real public parser function-pointer type and
 checks that a structural row is not implicitly convertible to nominal options. Its independent
@@ -94,4 +93,65 @@ one-member row protocol uses the installed `size` key: the normal SDK has no `te
 entry until a real lowered row read asks for one. No generated member metadata is fabricated, and
 these protocol checks do not claim an installed particle-options view or codec adapter. Mutating,
 escaping, identity-observing and opaque parameter uses remain required exclusions for any future
-private specialization proof. No extra SDK or header promotion is authorized by these fixtures.
+private specialization proof. These controls alone establish no installed adapter or header promotion.
+
+
+## Approved implementation and preparation evidence
+
+Manager approved the two Starling assignments and Foreman approved the four exact-shape Unity and
+ParticleDesigner config/document assignments. The declared
+`compiler-readonly-named-callable-views.patch` adds a second entrypoint emitted from the original
+function IR, beside the unchanged public native function. Its options parameter uses the existing
+readonly structural row. Only synchronous nongeneric two-parameter functions with a required string
+and optional nominal options containing one optional numeric property qualify. Every use of the
+options binding must be a direct optional property read outside mutation or nested capture.
+Aliases, opaque calls, owner comparisons, truthiness, typeof, indexed/asserted access, wider options,
+defaulted options and already-structural signatures retain their previous path. No parser algorithm
+or generated body is authored by this patch.
+
+The contextual store uses `flight::NamedFunction<Signature>`, an opt-in `std::function` target holding
+the existing `Function` invocation state and an original-declaration token. The token is the address
+of an inline object specialization keyed by the native function, without a function-pointer cast.
+Original aliases and translation units share it; distinct functions with identical bodies do not.
+The ordinary `Function` layout and `std::function` ABI remain unchanged. Compatible raw native
+function-pointer targets compare against the retained original pointer; unknown erased closures
+still report unavailable identity explicitly.
+
+The companion `particle-codec-document-result-owned-view.patch` wraps the existing two-field result
+in `Required<{config: ParticleEmitterConfig; diagnostics: ImportDiagnostic[]}>`. Both fields were
+already required and remain writable: the strict TypeScript fixture checks assignment both ways and
+writes through both spellings. The existing Required row carrier can retain the full native result
+owner. The callback projection requires each target field to have the same optionality, writable
+source cell, exact emitted storage, and identical original member-type declaration resolved through
+its own imports/barrels. Distinct declarations with the same fields fail this proof. Extra `document`
+storage stays on the original owner and base-view writes reach that owner.
+
+Preparation on the current 110-patch preceding compiler stack, including the latest nullable JSON
+root guard and symbol own-presence changes, has these results:
+
+- All declared preceding patches and this candidate apply cleanly to raw compiler
+  `806d257d2f4100de745cc97340e61c2f301b0f24`; the strict production build passes.
+- Sixteen new source assertions pass, including imports/barrels and distinct-declaration exclusions.
+  Nine unsafe parameter-use cases are unchanged against that exact preceding stack: seven headers
+  byte-identical and two identical structured refusals.
+- Existing callable ABI, arity, identity and private JSON graph source controls pass 40 assertions.
+  One existing native case is explicitly unselected by the local `node:assert` adapter; this is not
+  a Vitest run. The separate emitted native control supplies the semantic checks for this change.
+- Registered runtime, named-origin and public native particle-boundary CTest targets pass 3/3.
+  The origin target checks signatures, compatible raw pointers, effects/errors and translation units.
+- `scripts/particleCodecOptionsNativeOracle.mjs` compiles and runs a synthetic fixture emitted by
+  the production compiler. It checks the unchanged native ABI, schema-only and native shared options,
+  live getter/default/error behavior, original function identity and writable original result/document.
+- `scripts/particleCodecOptionsOracle.mjs` passes 48 checks over untouched pinned Starling, Unity
+  and ParticleDesigner bodies, including each original callback, defaults, getter effects and errors.
+  Unity config validates before reading options; Unity document reads options before validation.
+  Those different source timings are preserved, not normalized.
+
+An isolated emission from the retained normal original graph now selects all six approved stores;
+registration remains partial because of other retained refusals. This is source preparation, not a
+normal SDK run or an installed registration claim. No generated headers, refusal ledger rows,
+capability declaration or package/header completion count changes in this preparation. The prior
+installed result remains one passing Unity header, three failing barrels and 17/18 particle modules.
+The coordinated builder2 Types generation must supply the normal equivalent result declaration;
+only then can the one bounded particles run qualify actual installed callbacks and report the next
+concrete boundary. A-prime was not applied or needed for these current-owner controls.
