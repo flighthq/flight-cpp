@@ -1,0 +1,544 @@
+{
+  "schema": "flight-cpp-whole-original-lottie32-qualification/1",
+  "status": "QUALIFIED whole-original-public-Lottie32 COMPILE/LINK/RUN/source-oracle-equivalence PASS",
+  "implementationCommits": [
+    "baa6a268",
+    "5d00b1da"
+  ],
+  "baseCommit": "807bc2f1",
+  "authority": [
+    "foreman-fe7cf6c6",
+    "manager-a4639758",
+    "foreman-944df1fd",
+    "foreman-16f05cf4"
+  ],
+  "wholeOriginalSource": {
+    "file": "packages/scene2d-formats/src/lottieDocument.ts",
+    "sha256": "fb768b9622f2ade7301341f674db8cd64e00d3e39f09cd9aaf7aac1f1780a55b",
+    "sourceBodiesChanged": false,
+    "allOriginalCalleesRetained": true,
+    "omittedBodies": 0,
+    "fullGraphModuleCount": 1467,
+    "wholeOriginalEmittedModuleCount": 5,
+    "headerHashes": {
+      "/tmp/builder5-lottie-body/node-candidate-include/flight/scene2d_formats/lottie_document.hpp": "d3cc309e9c1c2ba1fb576c5becc19b735b67c9a26a65f59f236f1bf4d36e471a",
+      "/tmp/builder5-lottie-body/node-candidate-include/flight/types/import_diagnostic.hpp": "ea11276045bb58331d10ca8ac22de0748670a5c2145f76347924973a12a9be9c",
+      "/tmp/builder5-lottie-body/node-candidate-include/flight/importdiagnostics/import_diagnostic_collector.hpp": "9d7a8965fe002cb8000a6b3f3230005942e4254282726119023251200289c630",
+      "/tmp/builder5-lottie-body/node-candidate-include/flight/node/node.hpp": "1f0a8b4d159c4d6e9c792f272124352dfd286dd633117cf7576eeb6a9cdbfe67",
+      "/tmp/builder5-lottie-body/node-candidate-include/flight/node/revision.hpp": "4564b8d16c7b609da52b98f9c3befba549e6bbbb94f116e0f13d781a06ae6a57"
+    },
+    "sameHeadersAsSuccessfulPrototypeRun": true,
+    "normalEmissionRepairsOnly": true,
+    "sourceOracleCasesExactlyEqual": true,
+    "oracleCaseCount": 32,
+    "sourceAccepted": 2,
+    "sourceRejected": 30,
+    "sourceExceptions": 0,
+    "sourceOracleModules": {
+      "earlier": 1225,
+      "fresh": 1219,
+      "caseDenominatorUnchanged": true
+    },
+    "sourceOracleSha256": "a5c68c8aad002f30c58f63cab211a4ec26877637100716802664f9d85b124086",
+    "refreshedNativeDriverByteIdentical": true,
+    "nativeDriverSha256": "ec69b5f595ba0c93c47037c4eb3b51c6365936bb4ac90ab2e5941fe6a45f3ee7",
+    "cases": [
+      {
+        "source": "null",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "0",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "30",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "false",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "true",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "\"\"",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "\"ab\"",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "[]",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "[",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 2,
+        "frameRate": 30,
+        "diagnostics": [],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":null,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":\"30\",\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":\"0\",\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":\"\",\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":false,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":true,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":0,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":-3,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":0.5,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 120,
+        "frameRate": 0.5,
+        "diagnostics": [],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":[],\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":[30],\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":[1,2],\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":{},\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":\"0\",\"op\":60,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":\"60\",\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":60,\"w\":\"100\",\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":60,\"w\":100,\"h\":null,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":null}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":60,\"w\":100,\"h\":50,\"layers\":{}}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      },
+      {
+        "source": "{\"fr\":30,\"ip\":0,\"op\":-1,\"w\":100,\"h\":50,\"layers\":[]}",
+        "duration": 0,
+        "frameRate": 0,
+        "diagnostics": [
+          {
+            "kind": "lottie.invalid-document",
+            "severity": "Reject"
+          }
+        ],
+        "channels": 0,
+        "events": 0
+      }
+    ]
+  },
+  "prototypePublic": {
+    "compile": "PASS",
+    "link": "PASS",
+    "cases": 32,
+    "checks": 220,
+    "failures": 0,
+    "noTraceOverlay": true
+  },
+  "finalPublic": {
+    "status": "PASS",
+    "casesRun": 32,
+    "checks": 220,
+    "failures": 0,
+    "buildLog": "/tmp/builder5-lottie-body/layers127-final-original-public-build.log",
+    "runLog": "/tmp/builder5-lottie-body/layers127-final-original-public-run.log",
+    "compile": "PASS",
+    "link": "PASS",
+    "caseMatches": 32,
+    "exceptions": 0,
+    "binarySha256": "9c5d58db087b262cfcf218461f0f926c43786bd9c9a84ad829615de8470a93c4",
+    "noTraceOverlay": true,
+    "compilerBackendFromOrderedDeclaredPatches": true,
+    "sourceBodiesAndCalleesUnchanged": true,
+    "compileCommand": "/tmp/builder5-generic/bin/c++-lean -std=c++20 -O0 -ferror-limit=1 -I /tmp/builder5-lottie-body/node-candidate-include -I ../.tooling/SDL3-3.4.10/include -I overrides/include -I include -I generated/include /tmp/builder5-json-row/public-lottie-native.cpp -o /tmp/builder5-lottie-body/layers127-final-original-public-native"
+  },
+  "componentChecks": {
+    "nativeRuntimeChecks": 30,
+    "nativeRuntimeFailures": 0,
+    "cmakeCTest": "PASS",
+    "compilerRegressionFiles": 3,
+    "compilerRegressionTests": 13,
+    "compilerRegressionSkips": 0,
+    "newEmittedNativeChecks": 17,
+    "existingScalarNativeChecks": 586,
+    "existingUnionNativeChecks": 72,
+    "productionStrict": "PASS",
+    "ownedFixtureStrict": "PASS",
+    "sourcePatchAutomationTests": 2,
+    "orderedPatchApplyReverseRawClean": "PASS",
+    "managedInputs": {
+      "flight-compiler": 127,
+      "flight": 203
+    },
+    "compilerBackendSha256": "8959b7bba02433954f8eb95c84687f891721186b21ca281dae3c1341ce54d2ba",
+    "sourcePatchAutomationLogPassed": true,
+    "productionStrictEmptyLog": true,
+    "ownedStrictEmptyLog": true
+  },
+  "nativeControls": [
+    "original array identity and live size",
+    "original element replacement and escaped previous referent",
+    "release original handles and retain owner until view release",
+    "readonly write/owning-array construction refused",
+    "nativeLayer recovery denied",
+    "null/primitive/wrong-scalar elements preserved until use",
+    "ignored parameter does not iterate or inspect elements",
+    "original callback exception deferred to requested index"
+  ],
+  "excludedAttempts": [
+    "Early full compile used pre-update view-mode path and was intentionally terminated; no result counted.",
+    "Owned partial formatter damaged generic call initializer; strict check caught it and exact insertion was corrected before formal successful checks.",
+    "Initial CMake build requested target before configure finished; setup NOT RUN, genuine configure/build/CTest retries follow.",
+    "Native identity fixture compared canonical row owner identity with JSON object pointer; corrected to retained native object identity and reran all controls."
+  ],
+  "sdkGenerated": false,
+  "publicInstalledHeaderPromotions": 0,
+  "exact21Promotions": 0,
+  "sharedBStillProvisional": true,
+  "sourcePatchSha256": "4d3ef0fba1f2c04b1feb81fc79a3d2755384472dbb4481f6c9540ac90eb9cb4b",
+  "runtimeInputSha256": {
+    "include/flight/sequence_view.hpp": "1789491560deccdef7d1274704926bf6b7a3fb114f9cb20da3b5f7d2794100e9",
+    "include/flight/json_scalar.hpp": "9be83c2fc02ad5e3b6c3c26973717e86e9481a5907ba15fd717ca196b3c7b342",
+    "include/flight/structural_ref.hpp": "6698befa2c710c713c4414c90064a522f25d2d3a5f59187aea95866ae5a2af6f",
+    "include/flight/any.hpp": "acfb00704fa2501e446c22dbd7aa287d2efd350c5cc25a311113a628604d6979"
+  },
+  "dependencyPins": {
+    "flight-compiler": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "flight": "a62784923f3be814463286c9fb28edfe6ab15789"
+  },
+  "checkLogs": {
+    "compilerRegression": "/tmp/builder5-lottie-body/layers127-final-json-regressions.log",
+    "runtimeNative": "/tmp/builder5-lottie-body/layers127-owner-native-final-run.log",
+    "productionStrict": "/tmp/builder5-lottie-body/layers127-postcommit-final-strict.log",
+    "ownedStrict": "/tmp/builder5-lottie-body/layers127-owned-strict.log",
+    "orderedPatchRecompose": "/tmp/builder5-lottie-body/layers127-final-ordered-recompose2.log",
+    "sourcePatchAutomation": "/tmp/builder5-lottie-body/layers127-sourcepatch-automation.log",
+    "sourceOracle": "/tmp/builder5-lottie-body/layers127-original-source32-oracle.log"
+  },
+  "qualificationScope": "Whole original public 32-case source oracle equivalence; installed SDK and inputs beyond these cases have no new success claim.",
+  "evidenceBundle": "builder5-whole-original-lottie32-qualified.tgz (attached to handoff; frozen five emitted headers, unchanged generated driver/oracle and logs)"
+}
