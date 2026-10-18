@@ -1340,6 +1340,13 @@ cc_test(
 )
 
 cc_test(
+    name = "json_scalar_slice_test",
+    srcs = ["json_scalar_slice_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "generated_scene3d_formats_requirements_test",
     srcs = ["generated_scene3d_formats_requirements_test.cpp"],
     size = "small",
