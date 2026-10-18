@@ -5,7 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function parseDragonBonesBones -- source line 40
 #include <flight/any.hpp>
-#include <flight/record.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <tuple>
 #include <variant>
@@ -54,8 +54,8 @@ inline bool bool_or(flight::Any value, bool fallback) {
   return ([&]() -> bool { const auto& erased_typeof_carrier = value; if (erased_typeof_carrier.type_of() == flight::String("boolean")) return erased_typeof_carrier.as_boolean(); return fallback; }());
 }
 
-inline flight::Ref<flight::types::TransformInherit2D> dragon_bones_transform_mode(flight::Record<flight::String, flight::Any> bone) {
-  return flight::make_ref<flight::types::TransformInherit2D>(flight::types::TransformInherit2D{.reflection = bool_or(bone.get(flight::String("inheritReflection")).value_or(flight::Any(flight::undefined)), true), .rotation = bool_or(bone.get(flight::String("inheritRotation")).value_or(flight::Any(flight::undefined)), true), .scale = bool_or(bone.get(flight::String("inheritScale")).value_or(flight::Any(flight::undefined)), true), .translation = bool_or(bone.get(flight::String("inheritTranslation")).value_or(flight::Any(flight::undefined)), true)});
+inline flight::Ref<flight::types::TransformInherit2D> dragon_bones_transform_mode(flight::NamedProperties bone) {
+  return flight::make_ref<flight::types::TransformInherit2D>(flight::types::TransformInherit2D{.reflection = bool_or(bone.get(flight::String("inheritReflection")), true), .rotation = bool_or(bone.get(flight::String("inheritRotation")), true), .scale = bool_or(bone.get(flight::String("inheritScale")), true), .translation = bool_or(bone.get(flight::String("inheritTranslation")), true)});
 }
 
 
