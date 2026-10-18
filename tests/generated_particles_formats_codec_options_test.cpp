@@ -9,16 +9,20 @@
 #include <type_traits>
 
 namespace {
-using Options = flight::types::ParseParticleConfigOptions;
+// The installed key table has no textureSize entry until a real lowered read requests it.
+// Use its existing size key for this independent row protocol; do not fabricate SDK metadata.
+struct Options : flight::ReferenceEnabled { std::optional<double> size; };
 using Read = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Options>>>>;
 using Write = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Options>>>>;
-using Size = flight::RowKey<"textureSize">;
+using Size = flight::RowKey<"size">;
 using NativeOptions = flight::types::StarlingPexParseOptions;
 using Config = flight::Ref<flight::types::ParticleEmitterConfig>;
 using NativeParse = Config (*)(flight::String, std::optional<flight::Ref<NativeOptions>>);
 using Codec = decltype(flight::types::ParticleFormatCodec::parse_to_config);
 static_assert(std::is_same_v<decltype(&flight::particles_formats::parse_starling_pex), NativeParse>);
 // A read view must never implicitly manufacture a nominal allocation, including at this callback.
+using ActualRead = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParseParticleConfigOptions>>>>;
+static_assert(!std::is_convertible_v<ActualRead, flight::Ref<NativeOptions>>);
 static_assert(!std::is_convertible_v<Read, flight::Ref<NativeOptions>>);
 static_assert(!std::is_constructible_v<Codec, NativeParse>);
 
@@ -49,15 +53,15 @@ double plain(double value) { return value; }
 
 int main() {
   auto native = flight::make_ref<Options>();
-  native->texture_size = 2;
+  native->size = 2;
   const Write writable(native);
   const Read readonly(writable);
   check(writable.identity() == readonly.identity(), "readonly projection keeps owner");
   check(read_size(readonly) == 2, "native field reads through readonly row");
-  native->texture_size = 4;
+  native->size = 4;
   check(read_size(readonly) == 4, "native writes remain live");
   flight::row_set<Size>(writable, std::optional<double>{8});
-  check(native->texture_size == 8 && read_size(readonly) == 8, "alias writes use physical cell");
+  check(native->size == 8 && read_size(readonly) == 8, "alias writes use physical cell");
 
   const auto literal = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<Options>>>>(
       flight::row_field<Size>(std::optional<double>{3}));
@@ -69,7 +73,7 @@ int main() {
 
   auto cell = std::make_shared<ObservableCell>();
   auto owner = std::make_shared<flight::RowOwner>();
-  owner->set_named_cell("textureSize", cell);
+  owner->set_named_cell("size", cell);
   const Read observable = Read::from_owner(owner);
   check(observable.identity() == owner.get(), "custom accessor retains original owner");
   check(read_size(observable) == 2 && cell->reads == 1, "one property read at use");
