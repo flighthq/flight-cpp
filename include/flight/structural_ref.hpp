@@ -2015,6 +2015,32 @@ template <typename Schema>
   return {};
 }
 
+// A data-property read along a proven JSON path. The compiler must exclude names supplied by a
+// built-in prototype: this operation answers own data only, including boxed String's exotic own
+// indices and length. It does not manufacture a typed object or silently accept an opaque owner.
+// Unlike optional chaining, a direct read from either nullish sentinel throws TypeError.
+[[nodiscard]] inline Any read_json_data_property(const Any& value, const String& key) {
+  if (value.is_nullish()) throw TypeError("Cannot read properties of null or undefined");
+  if (value.kind() == AnyKind::string) {
+    const auto& text = value.as_string().native();
+    if (key == String("length")) return static_cast<double>(text.size());
+    const auto& units = key.native();
+    if (units.empty() || (units.size() > 1 && units.front() == u'0')) return undefined;
+    std::size_t index = 0;
+    for (const auto unit : units) {
+      if (unit < u'0' || unit > u'9') return undefined;
+      const auto digit = static_cast<std::size_t>(unit - u'0');
+      if (digit >= text.size() || index > (text.size() - 1 - digit) / 10) return undefined;
+      index = index * 10 + digit;
+    }
+    return String(std::u16string(1, text[index]));
+  }
+  if (value.kind() == AnyKind::number || value.kind() == AnyKind::boolean) return undefined;
+  const auto properties = named_properties(value);
+  if (!properties.shared_owner()) throw BadAnyAccess();
+  return properties.get(key);
+}
+
 namespace detail {
 class RecordReadRowOwner final : public RowOwner {
  public:

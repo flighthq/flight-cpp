@@ -48,8 +48,36 @@ int main() {
   alias.as_object().get("obj")->as_object().set("n", 8).set("added", 9);
   check(object_view.get("n").as_number() == 8 && object_view.has("added"), "nested view reads live owner changes");
   check(!object_view.set("n", Any(3)) && object_view.get("n").as_number() == 8, "JSON read view never materializes mutable cells");
+  check(flight::read_json_data_property(object, "n").as_number() == 8 &&
+        flight::read_json_data_property(object, "added").as_number() == 9 &&
+        flight::read_json_data_property(object, "absent").is_undefined(),
+        "JSON data reads retain the live owner and missing-key value");
+  for (const auto nullish : {Any(flight::null), Any(flight::undefined)}) {
+    bool type_error = false;
+    try { static_cast<void>(flight::read_json_data_property(nullish, "x")); }
+    catch (const flight::TypeError&) { type_error = true; }
+    check(type_error, "direct nullish JSON data reads throw TypeError");
+  }
+  for (const auto primitive : {Any(0), Any(false), Any(String("s")), Any(String())}) {
+    check(flight::read_json_data_property(primitive, "value").is_undefined(),
+          "primitive JSON data fields read undefined without fictitious object recovery");
+  }
+  const Any string_units(String::from_char_code(0xD800, u'x', 0xDC00));
+  check(flight::read_json_data_property(string_units, "length").as_number() == 3 &&
+        flight::read_json_data_property(string_units, "0").as_string() == String::from_char_code(0xD800) &&
+        flight::read_json_data_property(string_units, "2").as_string() == String::from_char_code(0xDC00),
+        "boxed JSON strings expose exact UTF16 own indices and length");
+  for (const auto* key : {"", "3", "01", "-0", "-1", "1.0", "999999999999999999999999999"}) {
+    check(flight::read_json_data_property(string_units, key).is_undefined(),
+          "noncanonical and out-of-range boxed string indices are absent");
+  }
+  check(flight::read_json_data_property(Any(String()), "0").is_undefined(),
+        "empty string has no own index zero");
 
   const auto array = view.get("bones");
+  check(flight::read_json_data_property(array, "0").is_null() &&
+        flight::read_json_data_property(array, "length").as_number() == 3,
+        "JSON data array reads use the original array storage");
   check(array.is_array() && array.type_of() == String("object") && array.array_size() == 3,
         "JSON array keeps array and typeof identity");
   check(array.identity() == doc.as_object().get("bones")->array_owner().get() && array.strict_equals(view.get("bones")),
