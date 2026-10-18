@@ -52,8 +52,8 @@ new file mode 100644
 +    }
 +    function keepOwner(detail?: Readonly<Record<string, Owner>>): Readonly<Record<string, Owner>> | undefined { return detail; }
 +    export function ownerDetail(owner: Owner): Readonly<Record<string, Owner>> | undefined { return keepOwner({ kept: owner }); }
-+    function keepUnknown(detail?: Record<string, unknown>): Record<string, unknown> | undefined { return detail; }
-+    export function absentValues(): Record<string, unknown> | undefined {
++    function keepUnknown(detail?: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> | undefined { return detail; }
++    export function absentValues(): Readonly<Record<string, unknown>> | undefined {
 +      return keepUnknown({ present: 1, explicitUndefined: undefined, explicitNull: null });
 +    }
 +    let reads = 0;
