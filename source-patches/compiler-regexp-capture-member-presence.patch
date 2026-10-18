@@ -60,7 +60,28 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
            return `static_cast<double>(${receiver}${memberOp(expression.object, context)}${binding.targetName}())`;
          }
          if (binding && binding.kind === 'sizeProperty') {
-@@ -14936,11 +14943,117 @@
+@@ -6996,6 +7003,11 @@
+         emissionError(context, 'typeof on a C++ variant requires proven union member test evidence');
+       }
+       if (expression.operator === 'typeof') {
++        const capture = getCppRegExpCaptureStorageCpp(expression.operand, context);
++        if (capture) {
++          const value = getGeneratedTargetName('captureTypeofValue', context);
++          return `([&]() { const auto ${value} = ${capture}; return flight::String(${value}.has_value() ? "string" : "undefined"); }())`;
++        }
+         const closedKeyTypeof = emitCppClosedKeyElementTypeofCpp(expression.operand, context);
+         if (closedKeyTypeof) return closedKeyTypeof;
+         const value = getCppStaticTypeofValueCpp(expression.operand, context);
+@@ -7058,7 +7070,7 @@
+         !isCppBooleanExpressionTypeCpp(expression.operand, context)
+       ) {
+         context.includes.add('flight/boolean.hpp');
+-        return `!flight::to_boolean(${operand})`;
++        return `!flight::to_boolean(${getCppRegExpCaptureStorageCpp(expression.operand, context) ?? operand})`;
+       }
+       if (!expression.postfix && (operator === '-' || operator === '+') && operand.startsWith(operator)) {
+         return `${operator}(${operand})`;
+@@ -14936,11 +14948,117 @@
  // storage even when their TypeScript annotation names only the payload. Require control-flow evidence
  // before crossing that boundary, and require one present runtime domain so a resolved member cannot be
  // applied to a heterogeneous carrier merely because one alternative happens to provide it.
@@ -178,7 +199,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (!hasCppAbsenceStorageCpp(receiver, context)) return;
    if (!hasCppPresentExpressionStorageProofCpp(receiver, context)) {
      emissionError(
-@@ -15041,6 +15154,13 @@
+@@ -15041,6 +15159,13 @@
    // stores a sentinel as optional absence, the inner layer is that sentinel. A binding initialized by such
    // a read keeps the same carrier. Testing only the outer layer would report a null element as present and
    // a miss as null, so both layers are inspected here, in the order the source comparison asks.
@@ -192,7 +213,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const indexedElement = getCppIndexedNullableElementPresencePlanCpp(operand, context);
    if (indexedElement) {
      context.includes.add('optional');
-@@ -23667,7 +23787,8 @@
+@@ -23667,7 +23792,8 @@
      // bare unknown; lookalike methods never produce `recovered` and retain their recorded callable result.
      const returns = recovered ?? callableReturns;
      if (returns && returns.kind !== 'unknown') {
@@ -202,7 +223,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
          ? { kind: 'union', types: [returns, { kind: 'undefined' }] }
          : returns;
      }
-@@ -28386,7 +28507,8 @@
+@@ -28386,7 +28512,8 @@
    const runtimeMemberType = getCppRuntimeMemberPropertyTypeEvidenceCpp(expression, context);
    const valueType =
      recordedNarrowedType ?? reconstructedType ?? recordedLiteralType ?? recordedAliasedMemberType ?? runtimeMemberType;
@@ -212,7 +233,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    return createIrTypeEvidenceUnionCpp([valueType, { kind: 'undefined' }]);
  }
  
-@@ -28981,20 +29103,33 @@
+@@ -28981,20 +29108,33 @@
        // the source is, not how it is stored.
        const carriesAbsence =
          initializer.semantics.receivers.includes('array') ||
@@ -248,7 +269,35 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
  // `Array::get` adds index absence outside the element carrier. A loop that starts its numeric index at
  // zero, preserves that nonnegative integer by increments, checks `i < sameArray.length`, and immediately
  // reads `sameArray[i]` proves that outer layer cannot be observed. For `(T | null)[]`, retain exactly the
-@@ -31683,6 +31818,10 @@
+@@ -30793,7 +30933,7 @@
+         : emitCppTruthinessExpression(expression.right, context);
+     return `(${left} ${expression.operator} ${right})`;
+   }
+-  const emitted = emitExpression(expression, context);
++  const emitted = getCppRegExpCaptureStorageCpp(expression, context) ?? emitExpression(expression, context);
+   if (
+     getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
+     isCppBooleanExpressionTypeCpp(expression, context) ||
+@@ -31163,15 +31302,16 @@
+     const type = getIrExpressionTypeEvidenceCpp(operand, context);
+     const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
+     const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
+-    const value = emitExpression(operand, context, type);
+-    const returned = plan?.kind === 'optionalSingle' ? `${name}.value()` : name;
++    const capture = getCppRegExpCaptureStorageCpp(operand, context);
++    const value = capture ?? emitExpression(operand, context, type);
++    const returned = capture || plan?.kind === 'optionalSingle' ? `${name}.value()` : name;
+     lines.push(`auto ${name} = ${value};`, `if (flight::to_boolean(${name})) return ${returned};`);
+   }
+   const last = emitExpression(operands.at(-1)!, context, resultType);
+   context.includes.add('flight/boolean.hpp');
+   return `([&]() -> ${emitType(resultType, context)} { ${lines.join(' ')} return ${last}; }())`;
+ }
+ 
+ function emitCppForeignAnonymousPropertyObjectCpp(
+   target: Readonly<IrExpression>,
+   value: Readonly<IrExpression>,
+@@ -31683,6 +31822,10 @@
    context: EmitContext,
    expectedType: Readonly<IrType> | undefined,
  ): string {
@@ -259,7 +308,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    if (expression.kind === 'property' && getCppPrimitiveRecordReadStorageTypeCpp(expression, context)) {
      const record = getCppRecordTypeArgumentsCpp(
        getIrExpressionTypeEvidenceCpp(expression.object, context),
-@@ -31876,7 +32015,20 @@
+@@ -31876,7 +32019,20 @@
    // domain supports the call.
    const contextualArray = getCppFreshMappedArrayContextualResultTypeCpp(expression, expectedType, context);
    const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
@@ -281,7 +330,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      return emitExpression({ ...expression, callee: { ...callee, optional: false } }, context, contextualArray);
    }
    const primitiveMemberCall = emitCppOptionalPrimitiveMemberCallCpp(
-@@ -31899,7 +32051,7 @@
+@@ -31899,7 +32055,7 @@
          : `optional property call ${callee.name} requires callable result evidence`,
        'cpp-optional-property-call-missing-callable-result',
      );
@@ -290,7 +339,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const memberOperator = hasFlightReferenceRepresentationCpp(receiverType, context) ? '->' : '.';
    // Optional invocation changes whether the callee runs, not the callee's parameter ABI. Its present
    // branch therefore uses the same omitted-argument completion as a direct call; otherwise a source
-@@ -32386,11 +32538,18 @@
+@@ -32386,11 +32542,18 @@
  ): string {
    const semantics = expression.optionalChain;
    if (!semantics) emissionError(context, 'optional property access lacks neutral optional-chain evidence');
@@ -310,7 +359,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      const guarded = emitCppDeclaredPresentReferenceChainCpp(expression, context);
      if (guarded) return guarded;
      return emitExpression({ ...expression, optional: false }, context);
-@@ -32409,7 +32568,7 @@
+@@ -32409,7 +32572,7 @@
        ? (resolvedPropertyType ?? contextualValueType ?? semantics.valueType)
        : semantics.valueType;
    const payload = emitOptionalChainPayloadTypeCpp(valueType, context);
@@ -319,7 +368,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
    const receiverProjection = getCppOptionalChainReceiverProjectionCpp(semantics.receiverType, context);
    const memberOperator = hasFlightReferenceRepresentationCpp(receiverType, context) ? '->' : '.';
    let projected: string;
-@@ -32420,7 +32579,7 @@
+@@ -32420,7 +32583,7 @@
    } else if (expression.member) {
      const binding = getCompilerCppAmbientMemberBinding(expression.member, getCppRuntimeProfile(context.options));
      if (binding?.kind === 'sizeMethod') {
@@ -357,7 +406,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.te
 new file mode 100644
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppRegExpCaptureMemberPresence.test.ts
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,313 @@
 +import { execFileSync } from 'node:child_process';
 +import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 +import { tmpdir } from 'node:os';
@@ -496,6 +545,53 @@ new file mode 100644
 +  const capture: string | undefined = match?.[2];
 +  return capture ?? 'missing';
 +}
++
++export function localTruth(value: string): boolean {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return false;
++  const capture: string | undefined = match[1];
++  return !!capture;
++}
++let orCalls = 0;
++let orThrows = false;
++function orFallback(): string {
++  orCalls++;
++  if (orThrows) throw new Error('fallback');
++  return 'missing';
++}
++export function resetOrCalls(): void { orCalls = 0; }
++export function orCount(): number { return orCalls; }
++export function throwOrFallback(value: boolean): void { orThrows = value; }
++export function localOrUnmatched(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const capture: string | undefined = match[1];
++  return capture || orFallback();
++}
++export function localOr(value: string): string {
++  const match = /(a*)b/.exec(value);
++  if (match === null) return 'none';
++  const capture: string | undefined = match[1];
++  return capture || orFallback();
++}
++export function localConditional(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const capture: string | undefined = match[1];
++  return capture ? capture : 'missing';
++}
++export function localTypeof(value: string): string {
++  const match = /(a)?b/.exec(value);
++  if (match === null) return 'none';
++  const capture: string | undefined = match[1];
++  return typeof capture;
++}
++export function localInferredTruth(value: string): boolean {
++  const match = /(a*)b/.exec(value);
++  if (match === null) return false;
++  const capture = match[1];
++  return !!capture;
++}
 +`;
 +
 +function emit(text = source): string {
@@ -577,6 +673,23 @@ new file mode 100644
 +  try { static_cast<void>(fixture::local_typed_member("b")); }
 +  catch (const flight::TypeError&) { typedMissing = true; }
 +  if (!typedMissing || fixture::local_typed_member("ab") != 1) return fail(20);
++  if (fixture::local_truth("b") || !fixture::local_truth("ab") ||
++      fixture::local_inferred_truth("b") || !fixture::local_inferred_truth("ab")) return fail(21);
++  fixture::reset_or_calls();
++  if (fixture::local_or("b") != String("missing") || fixture::local_or("ab") != String("a") ||
++      fixture::local_conditional("b") != String("missing") || fixture::local_conditional("ab") != String("a")) return fail(22);
++  if (fixture::local_typeof("b") != String("undefined") || fixture::local_typeof("ab") != String("string")) return fail(23);
++  if (fixture::or_count() != 1 || fixture::local_or_unmatched("b") != String("missing") ||
++      fixture::or_count() != 2 || fixture::local_or_unmatched("ab") != String("a") ||
++      fixture::local_or("aaab") != String("aaa") || fixture::or_count() != 2) return fail(24);
++  fixture::throw_or_fallback(true);
++  if (fixture::local_or_unmatched("ab") != String("a") || fixture::or_count() != 2) return fail(25);
++  bool rhsThrew = false;
++  try { static_cast<void>(fixture::local_or_unmatched("b")); }
++  catch (const flight::Error&) { rhsThrew = true; }
++  if (!rhsThrew || fixture::or_count() != 3 || fixture::local_or_unmatched("z") != String("none") ||
++      fixture::or_count() != 3) return fail(25);
++  fixture::throw_or_fallback(false);
 +  bool continuationMissing = false;
 +  try { static_cast<void>(fixture::continuation("b")); }
 +  catch (const flight::TypeError&) { continuationMissing = true; }
