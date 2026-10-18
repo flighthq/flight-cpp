@@ -291,3 +291,24 @@ owner assertion is supplied. Historical applicability remains 25/25; the two
 current related follow-on rows are tracked separately. Header and consumer gains
 must be measured after normal scoped generation rather than inferred from this
 runtime capability or a compiler fixture.
+
+Valid JSON inputs also include overflowing/underflowing decimal numbers and lone
+UTF-16 surrogates. The parser now preserves UTF-16 code units directly instead
+of rejecting isolated escapes or replacing literal surrogates through UTF-8.
+Dynamic JSON and native Record readers enumerate and look up exact String keys,
+so distinct surrogates and U+FFFD remain distinct live properties. Decimal grammar
+validation remains strict; valid range loss produces signed infinity or signed
+zero, while finite/subnormal values retain the standard correctly rounded parse.
+Malformed numbers and escapes still raise `JsonSyntaxError`.
+
+Preparation verification: the complete ordered 73-patch compiler builds normally;
+nine same-stack controls preserve the existing public, alias, escape, callback,
+comparison, capture, export-alias and optional Record contracts. Runtime JSON,
+core and structural-row tests pass, as do the four touched standalone public
+headers. The archived diagnostic generated original counter matches the untouched
+pinned TypeScript body and actual registry constants in 188 fixed/seeded cases,
+including the new numeric range and surrogate-key cases, with exact Map order and
+one source parse per invocation. That artifact is not the final public gain:
+the final normal generation must include the atomically landed corrected typed
+Record patch and preserve the JSON counter, DragonBones missing-key counter and
+Spine clamp consumers together. No broad readonly ABI prototype output is carried.
