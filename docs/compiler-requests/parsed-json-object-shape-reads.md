@@ -21,6 +21,9 @@ reflection").
 Measured at flight-compiler `2b687ea` with all 44 compiler source patches applied: 1 module emitted, 0
 refused, and 1 compile error (step 1). Steps 2 and 3 are visible in the emitted text below.
 
+The initial measurements below are historical. The final Pixi qualification later in this request
+records the bounded private-graph implementation; other parser contracts remain open.
+
 ## Minimal TypeScript (measured)
 
 ```ts
@@ -89,33 +92,67 @@ and `scene3d-formats` `static_cast<T>(Json::parse(...))` sites.
 
 ## Carrying workaround
 
-None. A conversion or an override would compile code that throws on real documents, or would fork the parser.
-The three parsers stay non-compiling and are reported as the residual.
+The compiler-private-json-read-flow patch now carries the proven private Pixi producer/read graph
+through the original JSON owner, with runtime data-property reads. It supplies no general JsonValue-to-Record
+conversion or parser override. Spine and Unity particle parsers remain non-compiling as recorded below.
 
 ## G2 current-pin Pixi inventory qualification
 
-At compiler `806d257` / Flight `a627849`, group `other-d6be4352` still first fails at
-`particles_formats/pixi_parse.hpp:55`, converting JsonValue to PixiRaw (`Record<String, Any>`).
-The source root guard is retained. The emitted nested lifetime, color, angle, spawn and acceleration
-reads still ask Any for exact anonymous struct owners; those owners are not in the parsed JSON tree.
-The emitted fixed-key reads also still use `get(key).value()`, although Record::get returns an empty
-optional for a missing key. Those are related emitted barriers, not additional measured first errors.
+### Final original Pixi qualification (2026-10-18)
 
-The source has no mandatory configuration fields and explicitly supports an empty object through
-defaults. Syntax errors retain their JSON-prefixed error, while null, arrays and primitive roots
-receive the separate expected-object error. Config mapping and document diagnostics consume the same
-parsed raw object; an assertion adds no fresh JavaScript object or native anonymous-struct identity.
-The existing native particles-formats test intentionally excludes this parser and its built-in
-registration table, so its passing coverage is not Pixi parser evidence.
+One normal `npm run pkg:generate -- particles-formats -j2 --progress` ran on frozen `f91a5bc8`
+with 82 compiler / 283 total patches and exited zero. It emitted 1134/1141 closure modules across 10 packages;
+the requested particle-format slice is 15/18 emitted,3 refused. Thirteen generated headers plus README
+and manifest changed. Both pinned sibling checkouts were restored clean. Later peer compiler/runtime
+work was reconciled without a second generation claim; the mixed schema 2 manifest retains each slice's
+actual provenance. There is no new inventory/hash framework or override/hash change in this unit.
 
-Only the four Pixi-dependent inventory rows are linked in this arc, with
-[the JSON assertion request](json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record)
-as the primary first-error cause and this file as related required work. They retain **0 pass / 4 fail**
-from G1, with unchanged diagnostics and no C++ recompile. No conversion, parser replacement, new
-request, global sweep or upstream test port is carried; other parser rows are not changed.
+The installed `flight/particles_formats/pixi_parse.hpp` now compiles, links and runs both original
+public entry points. The CMake/Bazel consumer covers defaults/fresh config ownership, nested numeric
+and wrapped endpoints, color parsing, clockwise angles, spawn precedence, blend modes, ordered
+diagnostics, syntax/root errors, null acceleration, signed zero/nonfinite values, Unicode whitespace,
+non-ASCII casing and literal UTF16 surrogates. The existing registry fixture initializes inherited
+texture_size on its actual options owner before the unchanged public call. The new consumer, three
+existing particle-format consumers and the Spine parse helper affected by shared parseInt pass 5/5.
+No unchanged Spine SDK or counter check was repeated for this unit's final qualification.
 
+A separate driver uses that actual installed public parser and real factory/diagnostics/constants,
+with no copied parser body. It matches the untouched pinned TypeScript modules on 568 inputs / 1136 calls
+and all 52 config fields, checking ordered diagnostics and exactly one source parse per invocation.
+Signed zero/NaN/Infinity kinds and application root messages are exact. Finite fields are exact except
+directionX/Y's relative/absolute 1e-12 libm tolerance. Built-in syntax/TypeError wording is implementation
+dependent. Seven explicit test-host UnicodeService mappings cover this corpus, including contextual
+Greek casing and lone UTF16 units; this is bounded coverage, not a universal Unicode host claim.
+Nine complete public/alias/escape/callback/compare/capture/export/optional ABI byte/refusal controls
+also pass on the actual production-built 82 patch backend. Focused Vitest execution remains unavailable.
+
+The complete Clang22.1.8 -j2 checks cover all 13 changed headers and 2 unchanged Pixi-dependent barrels:
+**10 pass / 5 fail,0 unattempted**. The four original `other-d6be4352` rows are **1 pass / 3 follow-ons**:
+Pixi passes, while `_internal_index`, `contract` and `register_built_in_particle_formats` now reach
+the existing Spine particle `require_spine_record` Any→Record error at line 103. That cluster
+`no-viable-conversion-31b754c5` therefore has four measured failed rows including `spine_parse.hpp`.
+Unity's existing cause `call-has-no-matching-c287f892` now first fails at NamedProperties→Record
+return at 77 rather than a missing JSON named-view overload; its full private read graph remains unproven.
+The nine other passes were already passing. Initial scoped wrappers also reported13 unrelated Scene3D
+GL override drifts, subsequently delivered as peer 4 work; these were not repaired or restamped here.
+
+This unit promotes **exactly 1 of the original 25 historical rows**. The earlier Spine JSON counter
+was outside 25 and promoted 0 of them. All 25 remain applicable and the current 27 related rows are a
+distinct inventory. Nominal Lottie/Aseprite/TexturePacker/glTF document contracts and the other particle
+parsers remain unresolved; no whole-package/all 25 completion or refreshed global sweep is claimed.
+One parsed graph and descendant owners remain live, missing fields read undefined, direct nullish
+reads retain TypeError and syntax-only catches leave later failures outside the parse catch. There is
+no parser/body replacement, parsed-tree/Record copy, schema gate, fabricated nominal owner, public
+Record ABI change, input narrowing, refusal suppression or Canvas work.
+
+The earlier Pixi inventory first failed at native 55's JsonValue→PixiRaw cast. The bounded compiler
+proof, runtime prerequisites and diagnostic qualification are described in the preparation section
+below. This final measurement supersedes its earlier 0/4 retained disposition.
 
 ## G2 Unity particle JSON returns a named view of the wrong carrier
+
+The following is the earlier source audit. Final normal 82 patch generation still fails this row,
+now at NamedProperties→Record return at 77; the missing JSON named-view overload itself is resolved.
 
 At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
 `806d257d2f4100de745cc97340e61c2f301b0f24`, cluster `call-has-no-matching-c287f892` contains
@@ -241,6 +278,9 @@ attachment was applied, and no fake parser/counts, copied owner or narrowed inpu
 
 
 ## G2 Spine particle object guard cannot return an unprojected Any as Record
+
+The following is the earlier source audit. Final normal 82 patch generation freshly measures the same
+Any→Record error at native 103, with three former Pixi-dependent barrels joining this failed source row.
 
 At Flight `a62784923f3be814463286c9fb28edfe6ab15789` / compiler
 `806d257d2f4100de745cc97340e61c2f301b0f24`, cluster `no-viable-conversion-31b754c5` contains
@@ -381,5 +421,5 @@ The comparison exposed parseInt's UTF8/ASCII whitespace trimming. The shared run
 existing UTF16 leading-whitespace operation, with all 25 whitespace units and six non-whitespace
 controls checked. No parser source or accepted input domain changed.
 
-Normal scoped generation and final installed-header consumer qualification remain pending.
-These preparations alone promote no historical inventory row.
+The preparation alone promoted no historical inventory row. Final normal generation and installed-header
+qualification are recorded in the Pixi section above.

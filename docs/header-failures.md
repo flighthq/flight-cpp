@@ -76,7 +76,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 47 | `other-43523429` | 4 | ANIM | [compiler request](compiler-requests/heritage-argument-generic-deduction.md) | heritage-based Node2D type arguments are not substituted at addNodeChild, leaving a free Traits identifier |
 | 48 | `other-4e22e4de` | 4 | 2D | compiler | JSON.parse assertion casts JsonValue to the Aseprite document-owner variant *(existing request extended)* |
 | 49 | `other-5611a858` | 4 | ANIM | declaration repair (applied) | ColorScaleBiasAdjustment heritage restored; G2: 1 pass, 3 compiler failures |
-| 50 | `other-d6be4352` | 4 | ANIM | [compiler request](compiler-requests/json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record) | parsed JSON is asserted to PixiRaw with an unrelated C++ record cast; nested shape/absence lowering also remains open |
+| 50 | `other-d6be4352` | 4 original | ANIM | [qualification](compiler-requests/parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification) | retired: Pixi1 pass; three barrels follow existing Spine Record-owner cause31b754c5 |
 | 51 | `static-assertion-00a0e75d` | 4 | 3D, WGPU | [compiler request](compiler-requests/type-predicate-narrowing-not-applied.md) | an `isMesh` type predicate narrows the guarded value in source, but the emitter reads `geometry` from the un-narrowed `Node3D` row |
 | 52 | `undeclared-identifier-0fc9e20f` | 4 | 2D | declaration repair (applied) | omitted artboard-import-context declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
 | 53 | `undeclared-identifier-69b85faa` | 4 | PLAT | declaration repair (applied) | omitted untrack callee declaration supplied; G2: 0 pass, 4 fail at the next omitted callee; function remains unlinkable |
@@ -131,7 +131,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
-| 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Unity JsonValue cannot become named view/dynamic Record; existing JSON-read request, no rerun |
+| 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | measured Unity return now NamedProperties→Record at 77; same JSON read-graph cause remains failed |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | binding (fixed) | numeric-array optional uniform ranges supplied; G2: 0/1, now existing readonly-view compiler family |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
@@ -154,7 +154,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | repair (applied) | `data?.element ?? null` partial-row absence projected by declared repair; G2: 0 pass, 1 moved to `undeclared-identifier-993e82f1` |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | source annotation (applied) | generic key enumeration retains typed renderer map; G2: 1/1 pass; [request](compiler-requests/readonly-map-key-enumeration-value-carrier.md) |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | patch (fixed) | four `merged.X ?? []` Map-spread fallbacks respelled `new Map<Kind, V>()`; G2 recheck: 1 pass |
-| 128 | `no-viable-conversion-31b754c5` | 1 | ANIM | compiler | G2: recorded 0/1 retained; Spine particle object guard leaves Any unprojected at Record return; existing JSON-read request/no rerun |
+| 128 | `no-viable-conversion-31b754c5` | 4 | ANIM | compiler | measured Spine Any→Record at 103 plus three former Pixi-dependent barrels;0/4 pass |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | repair (applied) | texture-cache local re-declared with the nominal key instead of the effective carrier *(G2: fixed; 0 pass, 1 to `undeclared-identifier-74ca0a55`)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it; attachment member typed `Any` from a call result *(request linked; two source forms rejected)* |
@@ -1459,26 +1459,24 @@ all unowned rows remain unchanged. This does not make legacy placement or filter
 and it does not resolve general reverse-direction interface owner recovery. No global sweep or
 upstream test port was performed.
 
-### 50. `other-d6be4352` — 4 header(s)
+### 50. `other-d6be4352` — 4 original headers, 1 pass / 3 follow-ons
 
-- cause: a JSON.parse assertion to PixiRaw is emitted as a static_cast from JsonValue to Record<String, Any>
-- lanes: ANIM
-- fix route: compiler — [existing JSON assertion request](compiler-requests/json-parse-assertion-static-cast.md#g2-pixi-particle-parser-the-destination-is-a-dynamic-record)
-- first failure at: `flight/particles_formats/pixi_parse.hpp:55`
-- example: `no matching conversion for static_cast from 'JsonValue' to 'PixiRaw'`
+The original Pixi cast/anonymous-shape/missing-key cause is retired by normal particle generation
+on frozen `f91a5bc8` with 82 compiler / 283 total patches. The complete four-header Clang22.1.8 -j2
+check measures `pixi_parse.hpp` PASS; `_internal_index.hpp`, `contract.hpp` and
+`register_built_in_particle_formats.hpp` now reach `spine_parse.hpp:103`, where
+`require_spine_record` returns Any to Record. Those three failed rows join existing cause
+`no-viable-conversion-31b754c5`; this is exactly one historical-25 promotion.
 
-`parsePixiJson` already validates a non-null, non-array object. PixiRaw has no mandatory config fields;
-`{}` must reach the finite defaults, while supplied nested bounds/pairs/colors/spawn shapes affect
-the actual config and ordered import diagnostics. The same parsed object feeds both consumers.
-The [existing parsed-object shape request](compiler-requests/parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification)
-already records the nested anonymous-struct recovery and missing-key `get().value()` barriers. Making
-the outer cast compile alone would leave those behaviors broken; no permissive conversion, defaults-only
-parser or full parser fork is supplied.
-
-Delivered qualification remains **0/4 pass, 4 fail**, retained from G1 with the exact diagnostics
-unchanged and both existing requests linked in the product. Only the four owned rows and this cause
-were updated; all other rows and historical totals remain unchanged. No C++ input changed, so no
-native recompile or global sweep was run and no Pixi parity or upstream test port is claimed.
+The installed original public Pixi config/document entry points match the untouched pinned parser,
+factory, diagnostics and constants on 568 inputs / 1136 calls across all 52 config fields. One source parse,
+signed zero/nonfinite kinds, application root messages and diagnostic order are checked; finite fields
+are exact except directionX/Y libm tolerance 1e-12, and built-in error wording is implementation dependent.
+The registered consumer and existing affected consumers pass 5/5. See the
+[final qualification](compiler-requests/parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification).
+All 13 changed headers plus 2 unchanged Pixi barrels were attempted:10 pass / 5 fail. The other9 passes
+were already passing. The target remains15/18 emitted,3 refused; no whole-package/all 25 claim or
+global sweep reset. The original JSON owner remains live; no parser/tree/Record copy or public ABI change.
 
 ### 51. `static-assertion-00a0e75d` — 4 header(s)
 
@@ -2916,28 +2914,19 @@ it. No member copy, field drop or cast is made.
 **G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/render_gl/enable_gl_render_texture_guards.hpp`
 moves to `no-matching-constructor-34a8ea9f`.
 
-### 105. `call-has-no-matching-c287f892` — 1 header(s), compiler route
+### 105. `call-has-no-matching-c287f892` — 1 header, measured 0 pass / 1 fail
 
-**Recorded 0/1 pass, 1 fail retained; docs-only, unchanged C++ not rerun.**
-`flight/particles_formats/unity_parse.hpp:77` still has no matching named_properties(raw) overload
-for JsonValue. Source parseUnityJson35-47 asserts the original parsed object as Record<string,unknown>,
-while native storage is JsonValue and the function returns Record<String,Any>.
+After normal 82 compiler / 283 patch generation, the complete changed-header check still fails
+`flight/particles_formats/unity_parse.hpp:77`, now at `NamedProperties`→`Record<String,Any>` return.
+The shared JSON named-view overload exists; it preserves the original owner but cannot satisfy this
+owning return contract. The existing cause identifier is retained for this composite JSON read graph.
 
-[Existing parsed-JSON/member-read coverage](compiler-requests/parsed-json-object-shape-reads.md#g2-unity-particle-json-returns-a-named-view-of-the-wrong-carrier)
-already lists Unity; it now records this exact named-view mismatch, separate Record return requirement,
-missing-key/nested-array reads and inspected exception carrier. A new overload alone cannot bridge those
-owners, and a copied/schema-asserted/default-empty result would change the source input/identity contract.
-
-The full audit preserves direct versus document parse/evaluation order and differing shape defaults,
-PPU/min-max/shape/burst/loop/gravity mappings, actual multi-stop curve baking, typed result/particle owners,
-all eleven unsupported modules and ordered Skip/Recover diagnostics. rawToConfig/readEmission remain
-omitted at [erased-array recovery](compiler-requests/erased-array-element-reading.md); collectUnityDiagnostics
-remains omitted at [optional present-flow proof](compiler-requests/optional-index-member-present-flow.md).
-[Retained missing-callee calls](compiler-requests/retained-declaration-calls-omitted-callee.md) supply no
-algorithms or unused-header availability. These are inspected only, not fresh next diagnostics/link tests.
-No parser/particle/curve/serialization gain, fake counts, copied owner or narrowed JSON/schema is claimed.
-Only the request appendix, this slice and two compact root/row lines change; C++/owners/runtime/patches/
-repairs/manifest/pins and foreign/historical products remain unchanged. Coordinator attachments were not applied.
+The [Unity source/carrier audit](compiler-requests/parsed-json-object-shape-reads.md#g2-unity-particle-json-returns-a-named-view-of-the-wrong-carrier)
+continues to require direct/document evaluation order, actual PPU/range/shape/burst/default mappings,
+curve baking, typed config/document owners and ordered diagnostics. Its complete graph is not selected
+by the bounded private Pixi producer proof. The erased-array and retained-callee gaps remain inspected
+barriers, with no new Unity parser/link/serialization success claimed. A Record copy, nominal schema
+cast or empty result would lose the original contract.
 
 ### 106. `call-has-no-matching-c8046ec6` — 1 original header, 0 pass / 1 follow-on
 
@@ -3395,29 +3384,20 @@ unchanged; no global or unchanged native rerun is claimed.
   - TypeScript equivalence: the original and patched `mergeDomRenderOptions`, transpiled with the pinned compiler checkout's TypeScript 5.9.3, give identical results on 8 fragment sequences. That covers entries and order, value identity, fresh result maps, unchanged inputs, result key order, and the exact sequence of fragment property reads.
 - compiler request: `docs/compiler-requests/contextual-empty-array-fallback-element-evidence.md`
 
-### 128. `no-viable-conversion-31b754c5` — 1 header(s), compiler route
+### 128. `no-viable-conversion-31b754c5` — 4 headers, measured 0 pass / 4 fail
 
-**Recorded 0/1 pass, 1 fail retained; docs-only, unchanged C++ not rerun.**
-`flight/particles_formats/spine_parse.hpp:102` still returns Any from require_spine_record where
-Record<String,Any> is required. Source93-99's type predicate proves a non-null, non-array object,
-not an exact boxed native Record or declared keyframe/document owner.
+Normal82 compiler / 283 patch particle generation retains the source Spine failure at
+`flight/particles_formats/spine_parse.hpp:103`: `require_spine_record` returns Any where
+Record<String,Any> is required. Three former Pixi-dependent barrels now reach this same first error:
+`_internal_index.hpp`, `contract.hpp` and `register_built_in_particle_formats.hpp`.
+All four were attempted in the complete scoped checks; none passes.
 
-[Existing JSON/dynamic-member coverage](compiler-requests/parsed-json-object-shape-reads.md#g2-spine-particle-object-guard-cannot-return-an-unprojected-any-as-record)
-already lists this module and now records this predicate-return form. Exact external_if<Record>()
-only handles one storage type; an implicit conversion, copied schema or default-empty result would
-narrow the accepted object/input domain or lose identity. No bounded local annotation/declaration fix
-supplies the same-object dynamic view and missing-key semantics.
-
-The full audit preserves tint/alpha/images validation order and path errors, permissive valid defaults,
-actual range/units/shape/blend mappings, real multi-stop curve baking, endpoint hex behavior, typed result
-owners and config/diagnostics/document evaluation order. The two omitted functions remain under existing
-[JSON exception](compiler-requests/parsed-json-object-shape-reads.md#parsespinejson-emitted-before-refused-at-a627849),
-[erased-array](compiler-requests/erased-array-element-reading.md) and
-[retained-callee](compiler-requests/retained-declaration-calls-omitted-callee.md) coverage. Additional barriers
-are inspected only, not fresh next diagnostics/link gates. No fake parser, empty-result substitute,
-copied owner, stricter schema or native particle/curve/serialization success is claimed. Only the existing
-request appendix, this slice and two compact root/row lines change; C++/owners/runtime/patches/repairs/
-manifest/pins and foreign/historical products remain unchanged.
+The [existing source/carrier audit](compiler-requests/parsed-json-object-shape-reads.md#g2-spine-particle-object-guard-cannot-return-an-unprojected-any-as-record)
+requires one live dynamic owner, tint/alpha/images validation order and path errors, valid defaults,
+actual range/unit/shape/blend mappings, real curves and config/diagnostics/document owners. An object
+predicate does not establish exact boxed Record storage. The private Pixi proof does not authorize an
+escaping/public Record replacement, an owner copy or a schema gate. Omitted parse/image algorithms
+remain separate inspected barriers. No Spine particle execution/curve/serialization gain is claimed.
 
 ### 129. `no-viable-conversion-331a999f` — 1 header(s)
 

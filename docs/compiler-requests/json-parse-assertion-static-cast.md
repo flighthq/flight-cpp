@@ -91,6 +91,9 @@ headers retain their existing counts and attribution.
 
 ## G2 Pixi particle parser: the destination is a dynamic record
 
+The original 0/4 disposition below is historical. Final normal 82 patch qualification now promotes Pixi
+and moves its three barrels to the existing Spine owner cause; see the final Pixi section below.
+
 At compiler `806d257` / Flight `a627849`, `other-d6be4352` covers four particles-formats headers:
 `pixi_parse.hpp`, `register_built_in_particle_formats.hpp`, `contract.hpp` and `_internal_index.hpp`.
 Their retained first failure is `pixi_parse.hpp:55`:
@@ -366,3 +369,25 @@ the current 27 related rows remain distinct; nominal document owners still need
 their faithful represented contract. No parser body replacement, parsed tree/
 Record copy, schema gate, nominal cast, global readonly ABI change, source-domain
 narrowing, refusal suppression or Canvas work is carried.
+
+### Final original Pixi qualification (2026-10-18)
+
+Normal particle-format generation on frozen `f91a5bc8` with 82 compiler / 283 total patches exited zero:
+1134/1141 closure modules emitted; target 15/18 emitted with 3 honest refusals. The installed original
+Pixi config/document entry points compile/link/run and match the untouched pinned parser, factory,
+diagnostics and constants on 568 inputs / 1136 calls across all 52 config fields. The oracle checks one
+parse/call, exact signed-zero/nonfinite kinds, application root messages and diagnostic order; finite
+fields are exact except directionX/Y libm tolerance 1e-12, and built-in error wording is implementation
+dependent. The CMake/Bazel consumer covers source defaults, authored nested values, error boundaries,
+Unicode whitespace/casing and literal UTF16 units. Existing affected consumers pass 5/5; nine complete
+ABI controls pass on the actual normal backend.
+
+All 13 changed headers plus 2 unchanged Pixi barrels were attempted:10 pass / 5 fail. The original four-row
+Pixi cause retires through 1 pass and 3follow-ons to `require_spine_record` Any→Record at 103. Unity still
+fails its NamedProperties→Record return at 77. The9 other passes were already passing. Thus this unit
+promotes exactly 1 historical-25 row; the prior Spine counter promoted 0 because it was outside 25.
+All 25 are applicable; current 27 related rows, other nominal-document causes and package completeness
+remain separate. Global sweep totals are unchanged. The
+[full Pixi qualification](parsed-json-object-shape-reads.md#g2-current-pin-pixi-inventory-qualification)
+records carrier proofs, source coverage and limits. No parser/tree/Record copy, schema gate, nominal
+owner fabrication, public ABI change, domain narrowing, override/hash bump or Canvas work is carried.
