@@ -15,6 +15,7 @@
 #include <type_traits>
 #include <typeindex>
 #include <unordered_map>
+#include <unordered_set>
 #include <variant>
 #include <utility>
 #include <vector>
@@ -342,6 +343,19 @@ class RowOwner {
     return found->second.present();
   }
 
+  // WRITTEN PRESENCE for computed keys. A computed cell holding a disengaged optional is one C++ state
+  // for two source states: the property was never written (missing), or it was written with
+  // `undefined` (present-undefined), as `allocateEntity` writes `[EntityRuntimeKey] = undefined`.
+  // Engagement cannot tell them apart, and neither can the cell's existence, because the owner binds a
+  // cell for every declared member whether or not the source wrote it. So the owner records the writes
+  // the source performed, beside the cell rather than in it, and leaves the optional representation
+  // alone: own presence is a recorded write, an engaged cell, or an attached dynamic value.
+  virtual void mark_symbol_written(const Symbol& key) { symbol_written_.insert(key.identity()); }
+
+  [[nodiscard]] virtual bool symbol_written(const Symbol& key) const {
+    return symbol_written_.contains(key.identity());
+  }
+
   template <typename Value>
   [[nodiscard]] Value* symbol_value_if(const Symbol& key) const {
     const auto cell = symbol_cell(key);
@@ -393,6 +407,7 @@ class RowOwner {
   std::vector<std::string> named_order_;
   // Keyed on symbol identity, not on the description: two `Symbol(String("X"))` are two symbols.
   std::unordered_map<const void*, SymbolCell> symbol_cells_;
+  std::unordered_set<const void*> symbol_written_;
 };
 
 template <typename Schema>
@@ -802,6 +817,10 @@ class ProxyRowOwner final : public RowOwner {
   [[nodiscard]] std::optional<bool> symbol_present(const Symbol& key) const override {
     return target_->symbol_present(key);
   }
+
+  void mark_symbol_written(const Symbol& key) override { target_->mark_symbol_written(key); }
+
+  [[nodiscard]] bool symbol_written(const Symbol& key) const override { return target_->symbol_written(key); }
 
   [[nodiscard]] const std::any* dynamic_value(const Symbol& key) const override {
     return target_->dynamic_value(key);
@@ -1733,6 +1752,9 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
   static_assert(!detail::schema_readonly<Schema>, "a readonly structural row cannot be written");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_write(key);
+  // Every path below performs the source's write, including a write of `undefined` that leaves the
+  // optional disengaged, so the write is recorded first: `key in row` after it is true.
+  target.shared_owner()->mark_symbol_written(key);
   using Stored = std::remove_cvref_t<Value>;
   if constexpr (std::same_as<Stored, std::nullopt_t>) {
     const auto cell = target.shared_owner()->symbol_cell(key);
@@ -1777,6 +1799,19 @@ template <typename Schema>
     if (const auto present = source.shared_owner()->symbol_present(key)) return *present;
   }
   return source.shared_owner() && source.shared_owner()->has_dynamic_value(key);
+}
+
+// `key in row` for a computed (symbol) key, as OWN presence: missing, present-undefined and
+// present-value are told apart by the recorded write, the cell's engagement, and the attachment, never
+// by the value alone. `row_has(row, Symbol)` above answers engagement, which reports a present-undefined
+// key as absent; this does not.
+template <typename Schema>
+[[nodiscard]] bool row_has_own_property(const StructuralRef<Schema>& source, const Symbol& key) {
+  const auto& owner = source.shared_owner();
+  if (!owner) return false;
+  if (owner->symbol_written(key)) return true;
+  if (const auto present = owner->symbol_present(key); present && *present) return true;
+  return owner->has_dynamic_value(key);
 }
 
 template <typename Key, typename Schema>
@@ -2094,6 +2129,27 @@ template <typename Object>
 template <typename Schema>
 [[nodiscard]] NamedProperties named_properties(const StructuralRef<Schema>& source) {
   return NamedProperties(source.shared_owner());
+}
+
+// A native literal that names a computed key writes it, even with `undefined`, so the construction is
+// recorded on the object's one row owner: the same record `row_set` keeps, so `key in object` answers
+// the source's own presence whichever way the object was built. Returns the object for chaining.
+template <typename Object>
+const std::shared_ptr<Object>& mark_constructed_own_property(const std::shared_ptr<Object>& object,
+                                                             const Symbol& key) {
+  if (object) detail::owner_for(object)->mark_symbol_written(key);
+  return object;
+}
+
+// `key in object` for a computed key on a nominal reference, as own presence through the object's row
+// owner; see row_has_own_property.
+template <typename Object>
+[[nodiscard]] bool has_own_property(const std::shared_ptr<Object>& object, const Symbol& key) {
+  if (!object) return false;
+  const auto owner = detail::owner_for(object);
+  if (owner->symbol_written(key)) return true;
+  if (const auto present = owner->symbol_present(key); present && *present) return true;
+  return owner->has_dynamic_value(key);
 }
 
 // The erased named view: own enumerable string keys of whatever object an `Any` is holding, read

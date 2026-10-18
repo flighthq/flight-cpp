@@ -1015,6 +1015,44 @@ int main() {
   check(cell_subject->entity_runtime_key.value() == replacement,
         "a computed-symbol write lands on the subject's member, not beside it");
 
+  // WRITTEN PRESENCE. `key in object` for a computed key separates the three source states the
+  // disengaged optional collapses: never written (missing), written with undefined (present-undefined,
+  // as allocateEntity writes it), and written with a value (present).
+  {
+    auto missing_subject = flight::make_ref<TestCellBearing>();
+    const flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestCellBearing>>>>
+        missing_row(missing_subject);
+    check(!flight::row_has_own_property(missing_row, entity_runtime) &&
+              !flight::has_own_property(missing_subject, entity_runtime),
+          "a computed cell nobody wrote is missing, though the owner binds the cell");
+
+    auto undefined_subject = flight::make_ref<TestCellBearing>();
+    const flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<TestCellBearing>>>>
+        undefined_row(undefined_subject);
+    flight::row_set(undefined_row, entity_runtime, std::nullopt);
+    check(!undefined_subject->entity_runtime_key.has_value(), "writing undefined leaves the optional disengaged");
+    check(flight::row_has_own_property(undefined_row, entity_runtime) &&
+              flight::has_own_property(undefined_subject, entity_runtime),
+          "but the key is present: it was written with undefined");
+    check(!flight::row_has(undefined_row, entity_runtime),
+          "row_has keeps answering engagement, so it is not the presence question");
+    const CellRow<TestCellBearingPeer> widened_undefined = CellRow<TestCellBearing>(undefined_subject);
+    check(flight::row_has_own_property(widened_undefined, entity_runtime),
+          "a widened row shares the one owner and sees the same write");
+
+    auto value_subject = flight::make_ref<TestCellBearing>();
+    value_subject->entity_runtime_key = flight::make_ref<TestRuntimeSlotA>();
+    check(flight::has_own_property(value_subject, entity_runtime),
+          "an engaged computed cell is present even with no recorded write");
+
+    auto literal_subject = flight::make_ref<TestCellBearing>();
+    check(flight::mark_constructed_own_property(literal_subject, entity_runtime) == literal_subject,
+          "the construction mark hands back the same object");
+    check(flight::has_own_property(literal_subject, entity_runtime) &&
+              !flight::has_own_property(missing_subject, entity_runtime),
+          "a literal that named the key marks only its own object");
+  }
+
   // THE ERASED NAMED VIEW. An erased-member probe -- `'width' in value` followed by a read of
   // `value.width`, with nothing static saying what `value` is -- is answered through the object's
   // one row owner, so it reports the object's own members rather than a copy of them.
