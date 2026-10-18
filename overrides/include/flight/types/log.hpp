@@ -50,14 +50,12 @@ enum class LogLevel {
   Verbose = 5,
 };
 
-struct LogContext : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct LogContext : public flight::types::Entity {
   std::optional<flight::String> channel;
   flight::Record<flight::String, flight::Any> fields;
 };
 
-struct LogSpan : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct LogSpan : public flight::types::Entity {
   flight::String name;
   flight::Record<flight::String, flight::Any> fields;
   std::optional<flight::String> channel;
@@ -106,8 +104,7 @@ using LogTransportFlushOutcome = std::variant<flight::Ref<reason_delivery_372441
 
 using LogTransportDestroyOutcome = std::variant<flight::Ref<reason_message_d46086b32265b61f>, flight::Ref<reason_43a745d20647bfb6>>;
 
-struct LogTransport : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct LogTransport : public flight::types::Entity {
   std::function<LogTransportWriteOutcome(flight::String)> write;
   std::function<flight::Task<LogTransportFlushOutcome>()> flush;
   std::function<flight::Task<LogTransportDestroyOutcome>()> destroy;

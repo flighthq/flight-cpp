@@ -96,12 +96,10 @@ int main() {
   const auto any_runtime = flight::node::create_node_runtime<flight::Any>();
   any_runtime->traits = flight::types::node_2d_traits_key;
   const flight::types::NodeAny any_node =
-      flight::make_ref<flight::types::Node<flight::Any>>(
-          flight::types::Node<flight::Any>{
-              .enabled = true,
-              .kind = flight::types::display_object_kind,
-              .entity_runtime_key = any_runtime,
-          });
+      flight::make_ref<flight::types::Node<flight::Any>>();
+  any_node->enabled = true;
+  any_node->kind = flight::types::display_object_kind;
+  any_node->entity_runtime_key = any_runtime;
   if (!check(flight::scene2d::is_node_2d(any_node),
              "NodeAny kind test rejected the Node2D trait key") ||
       !check(flight::scene2d::is_node_2d(first),

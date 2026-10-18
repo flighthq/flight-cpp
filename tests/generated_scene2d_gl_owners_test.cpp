@@ -46,6 +46,21 @@ int main() {
                 flight::node::native_node_2d_runtime(sprite_view) == sprite->entity_runtime_key.value() &&
                 flight::scene2d::native_sprite(sprite_view) == sprite,
             "absent Sprite options shared defaults or replaced the concrete owner/runtime");
+    auto sprite_runtime = sprite->entity_runtime_key.value();
+    flight::Ref<flight::types::EntityRuntime> entity_runtime = sprite_runtime;
+    flight::Ref<flight::types::Entity> sprite_data = sprite->data;
+    require(entity_runtime.get() == sprite_runtime.get() &&
+                !entity_runtime.owner_before(sprite_runtime) &&
+                !sprite_runtime.owner_before(entity_runtime) &&
+                &entity_runtime->binding == &sprite_runtime->binding &&
+                &entity_runtime->uid == &sprite_runtime->uid &&
+                sprite_data.get() == sprite->data.get() &&
+                &sprite_data->entity_runtime_key == &sprite->data->entity_runtime_key,
+            "native runtime/data heritage replaced owners or duplicated inherited cells");
+    entity_runtime->uid = flight::String("native-runtime-alias");
+    require(sprite_runtime->uid == entity_runtime->uid,
+            "native transform runtime lost its live inherited uid cell");
+    entity_runtime->uid.reset();
     flight::row_set<RowKey<"x">>(sprite_view, 9.0);
     require(sprite->x == 9 && second_sprite->x == 0,
             "Sprite graph view failed to retain its own live owner cells");

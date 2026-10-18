@@ -2,7 +2,6 @@
 #pragma once
 #include <limits>
 #include <flight/any.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/symbol.hpp>
 #include <functional>
@@ -54,8 +53,7 @@ using NodeAny = std::shared_ptr<Node<flight::Any>>;
 
 namespace flight::types {
 
-struct NodeData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct NodeData : public flight::types::Entity {
 };
 
 template <typename Data>
@@ -77,11 +75,7 @@ inline const flight::String node_kind = flight::String("Node");
 inline const flight::Symbol null_scene_3d = flight::Symbol(flight::String("NullScene3D"));
 
 template <typename Traits>
-struct Node : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<NodeData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
+struct Node : public NodeTraits {
   std::optional<std::shared_ptr<NodeRuntime<Traits>>> entity_runtime_key;
 };
 
@@ -100,9 +94,7 @@ struct NativeNodeTransform2DStorage<flight::Ref<Node2DTraits>> {
 };
 
 template <typename Traits>
-struct NodeRuntime : public flight::ReferenceEnabled, public NativeNodeTransform2DStorage<Traits> {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
+struct NodeRuntime : public flight::types::EntityRuntime, public NativeNodeTransform2DStorage<Traits> {
   std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> color_adjustments;
   bool color_adjustments_unsupported;
   std::optional<flight::Array<double>> resolved_color_matrix;

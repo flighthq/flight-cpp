@@ -60,11 +60,19 @@ int main() {
   using flight::types::NodeRuntime;
 
   const auto runtime = flight::make_ref<NodeRuntime<flight::Any>>(NodeRuntime<flight::Any>{});
-  const NodeAny node = flight::make_ref<Node<flight::Any>>(Node<flight::Any>{
-      .enabled = true,
-      .kind = String("Node"),
-      .entity_runtime_key = runtime,
-  });
+  const NodeAny node = flight::make_ref<Node<flight::Any>>();
+  node->enabled = true;
+  node->kind = String("Node");
+  node->entity_runtime_key = runtime;
+
+  flight::Ref<flight::types::NodeTraits> traits = node;
+  if (!check(traits.get() == node.get() && !traits.owner_before(node) &&
+                 !node.owner_before(traits) && &traits->enabled == &node->enabled &&
+                 &traits->kind == &node->kind,
+             "declared NodeTraits widening replaced owner or inherited cells")) return 1;
+  traits->enabled = false;
+  if (!check(!node->enabled, "base trait write did not reach the original node")) return 1;
+  traits->enabled = true;
 
   if (!check(!flight::interaction::get_node_interaction_state(node).has_value(),
              "fresh node unexpectedly has interaction state") ||
@@ -171,10 +179,9 @@ int main() {
     return 1;
   }
 
-  const NodeAny no_runtime = flight::make_ref<Node<flight::Any>>(Node<flight::Any>{
-      .enabled = true,
-      .kind = String("Node"),
-  });
+  const NodeAny no_runtime = flight::make_ref<Node<flight::Any>>();
+  no_runtime->enabled = true;
+  no_runtime->kind = String("Node");
   bool missing_read_runtime_failed = false;
   bool missing_enable_runtime_failed = false;
   try {

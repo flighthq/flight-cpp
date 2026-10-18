@@ -59,8 +59,7 @@ struct Sprite;
 
 namespace flight::types {
 
-struct SpriteData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct SpriteData : public flight::types::Node2DData {
   std::optional<flight::types::Texture> texture;
 };
 

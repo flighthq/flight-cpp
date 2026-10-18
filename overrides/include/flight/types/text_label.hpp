@@ -61,8 +61,7 @@ struct TextLabel;
 
 namespace flight::types {
 
-struct TextLabelData : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+struct TextLabelData : public flight::types::Node2DData {
   flight::types::TextAutoSize auto_size;
   double height;
   flight::String text;

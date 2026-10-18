@@ -35,6 +35,16 @@ void run() {
   const auto gl = app.context();
   const auto state = render_gl::create_gl_render_state(gl);
   const auto runtime = render_gl::get_gl_render_state_runtime(state);
+  const auto context = runtime->context;
+  flight::Ref<types::EntityRuntime> context_base = context;
+  check(context.get() == context_base.get() && !context.owner_before(context_base) &&
+            !context_base.owner_before(context) && &context->binding == &context_base->binding &&
+            &context->uid == &context_base->uid,
+        "GL context heritage keeps the initialized owner and inherited runtime cells");
+  const auto previous_uid = context->uid;
+  context_base->uid = flight::String("gl-context-runtime-alias");
+  check(context->uid == context_base->uid, "GL context reads the live inherited uid cell");
+  context_base->uid = previous_uid;
   const auto descriptor = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<types::RenderTargetDescriptor>>>>(
       flight::row_field<flight::RowKey<"width">>(1.0), flight::row_field<flight::RowKey<"height">>(1.0),
       flight::row_field<flight::RowKey<"format">>(flight::String("rgba8")),
