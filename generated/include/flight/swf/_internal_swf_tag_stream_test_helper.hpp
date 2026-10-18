@@ -6,6 +6,7 @@
 //   missing: function createSwfFileBytes -- source line 19
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -16,12 +17,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/swf_tag_parse_state.hpp>
-
 namespace flight::types { struct AudioResource; }
+namespace flight::types { struct GlyphOutlineSource; }
+namespace flight::types { struct MorphShape; }
 namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct Shape; }
 namespace flight::types { struct SwfTagHandler; }
 namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct SwfTimeline; }
+namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TimelineAudioCue; }
 namespace flight::types { template <typename Traits> struct Node; }
 
@@ -42,7 +48,7 @@ inline double count_swf_signed_bits(flight::Array<double> values) {
       {
         const double minimum = -flight::number_power(2.0, (bits - 1.0));
         const double maximum = (flight::number_power(2.0, (bits - 1.0)) - 1.0);
-        if (values.every([=](double value) { return ((value >= minimum) && (value <= maximum)); })) {
+        if (values.every(flight::Function<bool(double)>{[=](double value) { return ((value >= minimum) && (value <= maximum)); }})) {
           return bits;
         }
       }
@@ -54,57 +60,102 @@ inline double count_swf_signed_bits(flight::Array<double> values) {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
-using bytes_named_a0691cdc21805510 = flight::types::bytes_named_a0691cdc21805510;
+struct bytes_named_a0691cdc21805510 : public flight::ReferenceEnabled {
+  flight::Uint8Array bytes;
+  bool named;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
-using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
+struct bytes_mime_type_0f132ce875cdb3fc : public flight::ReferenceEnabled {
+  flight::Uint8Array bytes;
+  flight::String mime_type;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
-using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
+struct character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 : public flight::ReferenceEnabled {
+  double character_id;
+  flight::Uint8Array compressed_alpha_bytes;
+  std::optional<double> deblocking_parameter_raw;
+  double height;
+  double width;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
-using end_start_b3d703e568b779f1 = flight::types::end_start_b3d703e568b779f1;
+struct end_start_b3d703e568b779f1 : public flight::ReferenceEnabled {
+  flight::Ref<flight::types::SwfTagRectangle> end;
+  flight::Ref<flight::types::SwfTagRectangle> start;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
-using character_id_script_7fe7df2e7341fc1a = flight::types::character_id_script_7fe7df2e7341fc1a;
+struct character_id_script_7fe7df2e7341fc1a : public flight::ReferenceEnabled {
+  double character_id;
+  flight::types::FrameScript script;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
-using character_id_end_source_start_version_3182d1468e182b72 = flight::types::character_id_end_source_start_version_3182d1468e182b72;
+struct character_id_end_source_start_version_3182d1468e182b72 : public flight::ReferenceEnabled {
+  double character_id;
+  double end;
+  flight::Uint8Array source;
+  double start;
+  double version;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
-using class_name_cue_ca53ee8b35497d37 = flight::types::class_name_cue_ca53ee8b35497d37;
+struct class_name_cue_ca53ee8b35497d37 : public flight::ReferenceEnabled {
+  flight::String class_name;
+  flight::Ref<flight::types::TimelineAudioCue> cue;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
-using character_id_cue_1789e18ad131005e = flight::types::character_id_cue_1789e18ad131005e;
+struct character_id_cue_1789e18ad131005e : public flight::ReferenceEnabled {
+  double character_id;
+  flight::Ref<flight::types::TimelineAudioCue> cue;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
-using bytes_mime_type_sample_rate_5485cac285dc53ee = flight::types::bytes_mime_type_sample_rate_5485cac285dc53ee;
+struct bytes_mime_type_sample_rate_5485cac285dc53ee : public flight::ReferenceEnabled {
+  flight::Uint8Array bytes;
+  std::optional<flight::String> mime_type;
+  double sample_rate;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
-using bytes_mime_type_resource_0c07297b9c0324ff = flight::types::bytes_mime_type_resource_0c07297b9c0324ff;
+struct bytes_mime_type_resource_0c07297b9c0324ff : public flight::ReferenceEnabled {
+  flight::Uint8Array bytes;
+  flight::String mime_type;
+  flight::Ref<flight::types::AudioResource> resource;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
-using codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f = flight::types::codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f;
+struct codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f : public flight::ReferenceEnabled {
+  double codec_id;
+  double deblocking;
+  double frame_count;
+  double height;
+  bool smoothing;
+  double width;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
 
 inline flight::Ref<flight::types::SwfTagParseState> create_swf_test_parse_state(std::optional<flight::types::SwfTagHandlerDispatch> dispatch = std::nullopt) {

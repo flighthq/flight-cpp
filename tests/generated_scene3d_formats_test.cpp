@@ -13,6 +13,7 @@
 #include <flight/scene3d_formats/obj_features.hpp>
 #include <flight/scene3d_formats/scene3d_format_requirements.hpp>
 #include <flight/scene3d_formats/three_ds_chunk_census.hpp>
+#include <flight/scene3d_formats/three_ds_parse.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -240,6 +241,93 @@ flight::Uint8Array complete_three_ds_fixture() {
                             types::three_ds_keyframe_object_node))));
   return typed_bytes(three_ds_chunk(
       static_cast<std::uint16_t>(types::three_ds_main), main_payload));
+}
+
+// Actual parseThreeDsDocumentWithDispatch cases also run against the original pinned TypeScript.
+// The parser supplies its own diagnostic records; this consumer supplies only binary input and sinks.
+void three_ds_public_diagnostic_records() {
+  using Detail = flight::Record<flight::String,
+                               std::variant<bool, double, flight::String>>;
+  const types::ThreeDsChunkDispatch dispatch;
+  flight::Array<flight::Ref<types::ImportDiagnostic>> small_diagnostics;
+  const auto small = formats::parse_three_ds_document_with_dispatch(
+      flight::Uint8Array(5.0), small_diagnostics, dispatch);
+  check(small->scenes.size() == 1 && small->scenes[0]->root_nodes.empty() &&
+            !small->metadata && small_diagnostics.size() == 1 &&
+            small_diagnostics[0]->kind == flight::String("3ds.input-too-small") &&
+            !small_diagnostics[0]->detail,
+        "3DS too-small input keeps the original empty document and absent diagnostic detail");
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> wrong_diagnostics;
+  const auto wrong_bytes = typed_bytes(three_ds_chunk(0x1234));
+  const auto wrong_owner = wrong_bytes.buffer;
+  const auto wrong = formats::parse_three_ds_document_with_dispatch(
+      wrong_bytes, wrong_diagnostics, dispatch);
+  check(wrong->scenes.size() == 1 && wrong_diagnostics.size() == 1 &&
+            wrong_bytes.buffer == wrong_owner &&
+            wrong_diagnostics[0]->severity == types::import_diagnostic_severity->reject &&
+            wrong_diagnostics[0]->kind == flight::String("3ds.wrong-main-chunk") &&
+            wrong_diagnostics[0]->origin == flight::String("parse3ds") &&
+            wrong_diagnostics[0]->detail &&
+            wrong_diagnostics[0]->detail->size() == 1 &&
+            std::get<double>(wrong_diagnostics[0]->detail->get(flight::String("foundId")).value()) == 0x1234,
+        "3DS public parser constructs its exact optional Record detail without replacing the input owner");
+  const auto silent = formats::parse_three_ds_document_with_dispatch(
+      wrong_bytes, std::nullopt, dispatch);
+  check(silent != wrong && silent->scenes.identity() != wrong->scenes.identity() &&
+            silent->scenes.size() == 1 && wrong_diagnostics.size() == 1,
+        "3DS omitted sink stays absent and a new parse returns fresh document storage");
+
+  std::vector<std::uint8_t> invalid_child;
+  append_le(invalid_child, 0x1234, 2);
+  append_le(invalid_child, 0, 4);
+  flight::Array<flight::Ref<types::ImportDiagnostic>> malformed_diagnostics;
+  formats::parse_three_ds_document_with_dispatch(
+      typed_bytes(three_ds_chunk(static_cast<std::uint16_t>(types::three_ds_main), invalid_child)),
+      malformed_diagnostics, dispatch);
+  check(malformed_diagnostics.size() == 1 &&
+            malformed_diagnostics[0]->severity == types::import_diagnostic_severity->recover &&
+            malformed_diagnostics[0]->kind == flight::String("3ds.chunk-exceeds-parent") &&
+            malformed_diagnostics[0]->origin == flight::String("parse3ds") &&
+            malformed_diagnostics[0]->detail &&
+            malformed_diagnostics[0]->detail->size() == 4 &&
+            std::get<double>(malformed_diagnostics[0]->detail->get(flight::String("firstChunkId")).value()) == 0x1234 &&
+            std::get<double>(malformed_diagnostics[0]->detail->get(flight::String("firstLength")).value()) == 0 &&
+            std::get<double>(malformed_diagnostics[0]->detail->get(flight::String("firstOffset")).value()) == 6 &&
+            std::get<double>(malformed_diagnostics[0]->detail->get(flight::String("count")).value()) == 1,
+        "3DS malformed child stops once and flushes all original ordered numeric detail fields");
+
+  auto objects = three_ds_chunk(static_cast<std::uint16_t>(types::three_ds_object), {'a', 0});
+  append(objects, three_ds_chunk(static_cast<std::uint16_t>(types::three_ds_object), {'b', 0}));
+  flight::Array<flight::Ref<types::ImportDiagnostic>> object_diagnostics;
+  formats::parse_three_ds_document_with_dispatch(
+      typed_bytes(three_ds_chunk(static_cast<std::uint16_t>(types::three_ds_main), objects)),
+      object_diagnostics, dispatch);
+  check(object_diagnostics.size() == 1 &&
+            object_diagnostics[0]->severity == types::import_diagnostic_severity->skip &&
+            object_diagnostics[0]->kind == flight::String("3ds.non-entity-object") &&
+            object_diagnostics[0]->detail && object_diagnostics[0]->detail->size() == 2 &&
+            std::get<flight::String>(object_diagnostics[0]->detail->get(flight::String("firstName")).value()) == flight::String("a") &&
+            std::get<double>(object_diagnostics[0]->detail->get(flight::String("count")).value()) == 2,
+        "3DS aggregation retains the first offender and counts later objects without replacing its detail");
+
+  flight::Map<flight::String, flight::Ref<types::ThreeDsDropTally>> tallies;
+  const Detail first{{flight::String("name"), flight::String("first")},
+                     {flight::String("ready"), false},
+                     {flight::String("value"), 3.0}};
+  const Detail later{{flight::String("name"), flight::String("later")}};
+  formats::tally_three_ds_drop(tallies, types::import_diagnostic_severity->drop,
+      flight::String("test.kind"), flight::String("bucket"), first);
+  formats::tally_three_ds_drop(tallies, types::import_diagnostic_severity->reject,
+      flight::String("test.kind"), flight::String("bucket"), later);
+  const auto tally = tallies.get(flight::String("test.kind|bucket")).value();
+  first.set(flight::String("value"), 9.0);
+  check(tally->count == 2 && tally->detail.identity() == first.identity() &&
+            tally->detail.identity() != later.identity() &&
+            tally->severity == types::import_diagnostic_severity->drop &&
+            std::get<double>(tally->detail.get(flight::String("value")).value()) == 9 &&
+            !std::get<bool>(tally->detail.get(flight::String("ready")).value()),
+        "3DS original public tally retains its first Record owner and live mutations");
 }
 
 void three_ds_nested_census_and_recovery() {
@@ -517,6 +605,7 @@ int main(int argc, char** argv) {
   md2_feature_detection_and_failures();
   obj_material_reference_order();
   three_ds_nested_census_and_recovery();
+  three_ds_public_diagnostic_records();
   gltf_registry_order_replacement_and_decoder_lifecycle();
   material_defaults_colors_and_diagnostics();
   md5_line_parsing_component_order_and_diagnostics();

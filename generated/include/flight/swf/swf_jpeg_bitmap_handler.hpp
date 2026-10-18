@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 30
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <tuple>
@@ -12,8 +13,6 @@
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/swf_tag_parse_state.hpp>
 
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
@@ -56,7 +55,10 @@ inline const double tag_jpeg_tables = 8.0;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
-using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
+struct bytes_mime_type_0f132ce875cdb3fc : public flight::ReferenceEnabled {
+  flight::Uint8Array bytes;
+  flight::String mime_type;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 
 inline flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>> create_swf_jpeg_alpha_payloads(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Map<double, flight::Ref<flight::types::EmbeddedImageResourceReference>> references) {
@@ -213,7 +215,7 @@ inline void read_swf_legacy_image_definition(flight::Ref<flight::types::SwfTagRe
   }
   std::optional<flight::Uint8Array> tables = state->jpeg_tables;
   if (!tables.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-missing"), flight::String("readSwfLegacyImageDefinition"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-missing"), flight::String("readSwfLegacyImageDefinition"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
     return;
   }
   const double tables_end = ((((static_cast<double>(tables.value().size()) >= 2.0) && (tables.value().get_index((static_cast<double>(tables.value().size()) - 2.0)) == 255.0)) && (tables.value().get_index((static_cast<double>(tables.value().size()) - 1.0)) == jpeg_end_of_image)) ? (static_cast<double>(tables.value().size()) - 2.0) : static_cast<double>(tables.value().size()));
@@ -223,7 +225,7 @@ inline void read_swf_legacy_image_definition(flight::Ref<flight::types::SwfTagRe
   spliced.set(body->source.subarray(image_start, body->end), tables_end);
   auto image = read_swf_embedded_image(spliced, 0.0, static_cast<double>(spliced.size()));
   if (!image.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-unsplittable"), flight::String("readSwfLegacyImageDefinition"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-unsplittable"), flight::String("readSwfLegacyImageDefinition"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
     return;
   }
   state->defined_characters.add(character_id);
@@ -233,7 +235,13 @@ inline void read_swf_legacy_image_definition(flight::Ref<flight::types::SwfTagRe
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
-using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
+struct character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 : public flight::ReferenceEnabled {
+  double character_id;
+  flight::Uint8Array compressed_alpha_bytes;
+  std::optional<double> deblocking_parameter_raw;
+  double height;
+  double width;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 
 inline void read_swf_embedded_image_definition(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state, double code) {
@@ -266,7 +274,7 @@ inline void read_swf_embedded_image_definition(flight::Ref<flight::types::SwfTag
     flight::Uint8Array compressed_alpha_bytes = body->source.subarray(image_end, body->end);
     state->jpeg_alpha_payloads.set(character_id, flight::make_ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7>(character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7{.character_id = character_id, .compressed_alpha_bytes = compressed_alpha_bytes, .deblocking_parameter_raw = deblocking_parameter_raw, .height = image.value()->bounds->height, .width = image.value()->bounds->width}));
     if ((static_cast<double>(compressed_alpha_bytes.size()) > 0.0)) {
-      flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.jpeg-alpha-stream"), flight::String("readSwfEmbeddedImageDefinition"), {{flight::String("capability"), ((code == tag_define_bits_jpeg_3) ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-3")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-4")})}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}, {flight::String("discardedBytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(compressed_alpha_bytes.size())}}});
+      flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.jpeg-alpha-stream"), flight::String("readSwfEmbeddedImageDefinition"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("capability"), ((code == tag_define_bits_jpeg_3) ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-3")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-4")})}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}, {flight::String("discardedBytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(compressed_alpha_bytes.size())}}});
     }
   }
   return;

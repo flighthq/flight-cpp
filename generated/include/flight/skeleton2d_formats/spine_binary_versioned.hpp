@@ -39,13 +39,13 @@ inline std::optional<flight::Ref<flight::types::Skeleton2DImport>> parse_spine_s
   const std::optional<flight::String> version = flight::skeleton2d_formats::get_spine_binary_version(bytes);
   if (!version.has_value()) {
     const double byte_count = static_cast<double>(bytes.byte_length);
-    flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, byte_count}}};
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("bytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, byte_count}}};
     flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("spine.binary-header-unreadable"), flight::String("parseSpineSkeletonBinaryVersioned"), detail);
     return std::nullopt;
   }
   std::optional<std::function<std::optional<flight::Ref<flight::types::Skeleton2DImport>>(flight::Uint8Array, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>> parser = parsers.get(to_spine_binary_layout_key(version.value()));
   if (!parser.has_value()) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("spine.binary-version-unsupported"), flight::String("parseSpineSkeletonBinaryVersioned"), {{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, version.value()}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("spine.binary-version-unsupported"), flight::String("parseSpineSkeletonBinaryVersioned"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, version.value()}}});
     return std::nullopt;
   }
   return parser.value()(bytes, diagnostics);

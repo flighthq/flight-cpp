@@ -139,7 +139,7 @@ inline void walk_three_ds_object(flight::DataView view, double offset, double en
     const double chunk_id = view.get_uint16(cursor, true);
     const double chunk_end = read_chunk_end(view, cursor, end);
     if ((chunk_end < 0.0)) {
-      tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-object"), flight::String(""), {{flight::String("firstOffset"), std::variant<bool, double, flight::String>{std::in_place_type<double>, cursor}}});
+      tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-object"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstOffset"), std::variant<bool, double, flight::String>{std::in_place_type<double>, cursor}}});
       return;
     }
     std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>> handler = dispatch.get(chunk_id);
@@ -149,7 +149,7 @@ inline void walk_three_ds_object(flight::DataView view, double offset, double en
     }
     (cursor = chunk_end);
   }
-  tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->skip, flight::String("3ds.non-entity-object"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+  tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->skip, flight::String("3ds.non-entity-object"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
 }
 
 inline void walk_three_ds_chunks(flight::DataView view, double offset, flight::Ref<flight::types::ThreeDsParseState> state, flight::types::ThreeDsChunkDispatch dispatch) {
@@ -160,7 +160,7 @@ inline void walk_three_ds_chunks(flight::DataView view, double offset, flight::R
     const double chunk_length = read_chunk_length(view, cursor);
     const double chunk_end = read_chunk_end(view, cursor, end);
     if ((chunk_end < 0.0)) {
-      tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.chunk-exceeds-parent"), flight::String(""), {{flight::String("firstChunkId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_id}}, {flight::String("firstLength"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_length}}, {flight::String("firstOffset"), std::variant<bool, double, flight::String>{std::in_place_type<double>, cursor}}});
+      tally_three_ds_drop(state->drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.chunk-exceeds-parent"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstChunkId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_id}}, {flight::String("firstLength"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_length}}, {flight::String("firstOffset"), std::variant<bool, double, flight::String>{std::in_place_type<double>, cursor}}});
       break;
     }
     std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>> handler = dispatch.get(chunk_id);
@@ -205,7 +205,7 @@ inline flight::Ref<flight::types::Scene3DDocument> parse_three_ds_document_with_
   flight::DataView view = flight::DataView(source.buffer, static_cast<double>(source.byte_offset), static_cast<double>(source.byte_length));
   const double main_id = view.get_uint16(0.0, true);
   if ((main_id != flight::types::three_ds_main)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("3ds.wrong-main-chunk"), flight::String("parse3ds"), {{flight::String("foundId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, main_id}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("3ds.wrong-main-chunk"), flight::String("parse3ds"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("foundId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, main_id}}});
     return document;
   }
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops = (flight::to_boolean(diagnostics) ? std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>>{flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>()} : std::nullopt);

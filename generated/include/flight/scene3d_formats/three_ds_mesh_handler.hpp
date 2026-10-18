@@ -6,6 +6,7 @@
 //   missing: function threeDsMaterialToBlinnPhong -- source line 691
 //   missing: function appendMeshDocument -- source line 357
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -79,7 +80,7 @@ using flight::types::Vector3;
 
 inline std::optional<flight::Float32Array> parse_local_matrix(flight::DataView view, double offset, double end, flight::String name, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   if (((offset + 48.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.local-matrix-truncated"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.local-matrix-truncated"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     return std::nullopt;
   }
   flight::Float32Array values = flight::Float32Array(12.0);
@@ -95,14 +96,14 @@ inline std::optional<flight::Float32Array> parse_local_matrix(flight::DataView v
 
 inline std::optional<flight::Float32Array> parse_vertices(flight::DataView view, double data_start, double end, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   if (((data_start + 2.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.vertices-truncated"), flight::String("no-count"), {{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.vertices-truncated"), flight::String("no-count"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
     return std::nullopt;
   }
   const double count = view.get_uint16(data_start, true);
   const double floats_needed = (count * 3.0);
   const double bytes_needed = ((data_start + 2.0) + (floats_needed * 4.0));
   if ((bytes_needed > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.vertices-truncated"), flight::String("truncated"), {{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.vertices-truncated"), flight::String("truncated"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
     return std::nullopt;
   }
   flight::Float32Array vertices = flight::Float32Array(floats_needed);
@@ -127,13 +128,13 @@ inline std::optional<flight::Ref<flight::types::ThreeDsMaterialGroup>> parse_fac
   }
   double offset = ((data_start + static_cast<double>(name.length())) + 1.0);
   if (((offset + 2.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-group-truncated"), flight::String("no-count"), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-group-truncated"), flight::String("no-count"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
     return std::nullopt;
   }
   const double group_face_count = view.get_uint16(offset, true);
   (offset += 2.0);
   if (((offset + (group_face_count * 2.0)) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-group-truncated"), flight::String("truncated"), {{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, group_face_count}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-group-truncated"), flight::String("truncated"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, group_face_count}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
     return std::nullopt;
   }
   flight::Uint16Array faces = flight::Uint16Array(group_face_count);
@@ -151,14 +152,14 @@ inline std::optional<flight::Ref<flight::types::ThreeDsMaterialGroup>> parse_fac
     }
   }
   if ((kept < group_face_count)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.material-group-face-out-of-range"), flight::String(""), {{flight::String("firstFaceCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, face_count}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.material-group-face-out-of-range"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstFaceCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, face_count}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
   }
   return std::optional<flight::Ref<flight::types::ThreeDsMaterialGroup>>{flight::make_ref<flight::types::ThreeDsMaterialGroup>(flight::types::ThreeDsMaterialGroup{.faces = faces.subarray(0.0, kept), .name = name})};
 }
 
 inline std::optional<flight::Uint32Array> parse_smoothing_groups(flight::DataView view, double data_start, double end, double face_count, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   if (((data_start + (face_count * 4.0)) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.smoothing-truncated"), flight::String(""), {{flight::String("firstFaceCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, face_count}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.smoothing-truncated"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstFaceCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, face_count}}});
     return std::nullopt;
   }
   flight::Uint32Array groups = flight::Uint32Array(face_count);
@@ -183,13 +184,13 @@ struct faces_material_groups_smoothing_groups_e354db5f88363a73 : public flight::
 
 inline std::optional<flight::Ref<faces_material_groups_smoothing_groups_e354db5f88363a73>> parse_faces(flight::DataView view, double data_start, double end, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   if (((data_start + 2.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.faces-truncated"), flight::String("no-count"), {{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.faces-truncated"), flight::String("no-count"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
     return std::nullopt;
   }
   const double count = view.get_uint16(data_start, true);
   const double faces_end = ((data_start + 2.0) + ((count * 4.0) * 2.0));
   if ((faces_end > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.faces-truncated"), flight::String("truncated"), {{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.faces-truncated"), flight::String("truncated"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
     return std::nullopt;
   }
   flight::Uint16Array faces = flight::Uint16Array((count * 3.0));
@@ -236,14 +237,14 @@ inline std::optional<flight::Ref<faces_material_groups_smoothing_groups_e354db5f
 
 inline std::optional<flight::Float32Array> parse_uv_coords(flight::DataView view, double data_start, double end, std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> three_ds_drops) {
   if (((data_start + 2.0) > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.uv-truncated"), flight::String("no-count"), {{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.uv-truncated"), flight::String("no-count"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("no-count")}}});
     return std::nullopt;
   }
   const double count = view.get_uint16(data_start, true);
   const double floats_needed = (count * 2.0);
   const double bytes_needed = ((data_start + 2.0) + (floats_needed * 4.0));
   if ((bytes_needed > end)) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.uv-truncated"), flight::String("truncated"), {{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.uv-truncated"), flight::String("truncated"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}, {flight::String("reason"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("truncated")}}});
     return std::nullopt;
   }
   flight::Float32Array uv_coords = flight::Float32Array(floats_needed);
@@ -273,7 +274,7 @@ inline std::optional<flight::Ref<flight::types::ThreeDsMesh>> parse_three_ds_tri
     const double chunk_id = view.get_uint16(cursor, true);
     const double chunk_end = flight::scene3d_formats::read_chunk_end(view, cursor, end);
     if ((chunk_end < 0.0)) {
-      flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-trimesh"), flight::String(""), {{flight::String("firstChunkId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_id}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+      flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.subchunk-exceeds-trimesh"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstChunkId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, chunk_id}}, {flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
       break;
     }
     const double data_start = (cursor + flight::types::three_ds_chunk_header_bytes);
@@ -303,7 +304,7 @@ inline std::optional<flight::Ref<flight::types::ThreeDsMesh>> parse_three_ds_tri
     (cursor = chunk_end);
   }
   if ((!vertices.has_value() || !faces.has_value())) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.mesh-missing-geometry"), (!vertices.has_value() ? flight::String("vertices") : flight::String("faces")), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("missing"), (!vertices.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("vertices")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("faces")})}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.mesh-missing-geometry"), (!vertices.has_value() ? flight::String("vertices") : flight::String("faces")), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}, {flight::String("missing"), (!vertices.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("vertices")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("faces")})}});
     return std::nullopt;
   }
   return std::optional<flight::Ref<flight::types::ThreeDsMesh>>{flight::make_ref<flight::types::ThreeDsMesh>(flight::types::ThreeDsMesh{.faces = faces.value(), .local_matrix = local_matrix, .material_groups = material_groups, .name = name, .smoothing_groups = smoothing_groups, .uvs = uvs, .vertices = vertices.value()})};
@@ -379,7 +380,7 @@ inline double resolve_three_ds_material(flight::String name, flight::Map<flight:
   }
   auto parsed = materials.get(name);
   if (!parsed.has_value()) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-missing"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->drop, flight::String("3ds.material-missing"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     return -1.0;
   }
   const std::optional<double> cached = material_index_by_name.get(name);
@@ -400,7 +401,7 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
   auto placement = flight::geometry::create_matrix4(local_matrix.get_index(0.0), local_matrix.get_index(1.0), local_matrix.get_index(2.0), 0.0, local_matrix.get_index(3.0), local_matrix.get_index(4.0), local_matrix.get_index(5.0), 0.0, local_matrix.get_index(6.0), local_matrix.get_index(7.0), local_matrix.get_index(8.0), 0.0, local_matrix.get_index(9.0), local_matrix.get_index(10.0), local_matrix.get_index(11.0), 1.0);
   auto inverse = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
   if (!flight::geometry::inverse_matrix4(inverse, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(placement)))) {
-    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.local-matrix-singular"), flight::String(""), {{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+    flight::scene3d_formats::tally_three_ds_drop(three_ds_drops, flight::types::import_diagnostic_severity->recover, flight::String("3ds.local-matrix-singular"), flight::String(""), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("firstName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     return false;
   }
   auto point = flight::geometry::create_vector3(0.0, 0.0, 0.0);
@@ -656,7 +657,7 @@ inline bool localize_three_ds_positions(flight::Array<double> positions, flight:
 // Array.from is represented for exactly 1 argument(s), and this call passes 2; the mapper and thisArg forms have
 // no declared target, so pass only the source sequence
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_mesh_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_trimesh}), flight::row_field<flight::RowKey<"build">>(std::optional<std::function<void(flight::Ref<flight::types::ThreeDsParseState>)>>{[](flight::Ref<flight::types::ThreeDsParseState> state) {
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_mesh_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_trimesh}), flight::row_field<flight::RowKey<"build">>(std::optional<std::function<void(flight::Ref<flight::types::ThreeDsParseState>)>>{flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>)>{[](flight::Ref<flight::types::ThreeDsParseState> state) {
   auto object_pattern_value = state;
   auto document = object_pattern_value->document;
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::ThreeDsDropTally>>> drops = object_pattern_value->drops;
@@ -673,12 +674,12 @@ inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<fligh
       (i += 1.0);
     }
   }
-}}), flight::row_field<flight::RowKey<"collect">>([](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String name) {
+}}}), flight::row_field<flight::RowKey<"collect">>(flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>, flight::DataView, double, double, flight::String)>{[](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String name) {
   auto mesh = parse_three_ds_trimesh(view, offset, end, name, state->drops);
   if (mesh.has_value()) {
     state->meshes.push(mesh.value());
   }
-}));
+}}));
 
 inline flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>> three_ds_mesh_family = flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>>{flight::structural_ref_cast<flight::Ref<flight::types::ThreeDsChunkHandler>>(three_ds_mesh_handler)};
 

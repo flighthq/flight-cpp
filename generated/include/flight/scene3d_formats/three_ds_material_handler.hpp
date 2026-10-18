@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -146,13 +147,13 @@ inline flight::Ref<flight::types::ThreeDsMaterial> parse_three_ds_material(fligh
   return flight::make_ref<flight::types::ThreeDsMaterial>(flight::types::ThreeDsMaterial{.ambient = ambient, .bump_filename = bump_filename, .diffuse = diffuse, .name = name, .opacity = opacity, .opacity_filename = opacity_filename, .shininess = shininess, .specular = specular, .texture_filename = texture_filename});
 }
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_material_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_material}), flight::row_field<flight::RowKey<"collect">>([](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String ignored_callback_argument) {
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_material_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_material}), flight::row_field<flight::RowKey<"collect">>(flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>, flight::DataView, double, double, flight::String)>{[](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double end, flight::String ignored_callback_argument) {
   (void)ignored_callback_argument;
   auto material = parse_three_ds_material(view, offset, end);
   if ((static_cast<double>(material->name.length()) > 0.0)) {
     state->materials.set(material->name, material);
   }
-}));
+}}));
 
 inline flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>> three_ds_material_family = flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>>{flight::structural_ref_cast<flight::Ref<flight::types::ThreeDsChunkHandler>>(three_ds_material_handler)};
 

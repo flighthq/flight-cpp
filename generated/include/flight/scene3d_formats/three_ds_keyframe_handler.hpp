@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/callable.hpp>
 #include <flight/data_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -115,7 +116,7 @@ inline flight::Map<flight::String, flight::Array<double>> collect_three_ds_pivot
   return pivots;
 }
 
-inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_keyframe_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_keyframe_object_node}), flight::row_field<flight::RowKey<"collect">>([](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double ignored_callback_argument, flight::String ignored_callback_argument_2) {
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>> three_ds_keyframe_handler = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ThreeDsChunkHandler>>>>(flight::row_field<flight::RowKey<"chunkIds">>(flight::Array<double>{flight::types::three_ds_keyframe_object_node}), flight::row_field<flight::RowKey<"collect">>(flight::Function<void(flight::Ref<flight::types::ThreeDsParseState>, flight::DataView, double, double, flight::String)>{[](flight::Ref<flight::types::ThreeDsParseState> state, flight::DataView view, double offset, double ignored_callback_argument, flight::String ignored_callback_argument_2) {
   (void)ignored_callback_argument;
   (void)ignored_callback_argument_2;
   for (auto array_pattern_value : collect_three_ds_pivots(view, offset)) {
@@ -123,7 +124,7 @@ inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<fligh
     flight::Array<double> pivot = std::get<1>(array_pattern_value);
     state->pivots.set(name, pivot);
   }
-}));
+}}));
 
 inline flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>> three_ds_keyframe_family = flight::Array<flight::Ref<flight::types::ThreeDsChunkHandler>>{flight::structural_ref_cast<flight::Ref<flight::types::ThreeDsChunkHandler>>(three_ds_keyframe_handler)};
 

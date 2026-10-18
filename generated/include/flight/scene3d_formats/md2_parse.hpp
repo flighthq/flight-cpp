@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readMd2Frames -- source line 323
 //   missing: function parseMd2WithSectionHandlers -- source line 41
+#include <flight/record.hpp>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -221,7 +222,7 @@ inline void report_md2_section_overlap(std::optional<flight::Array<flight::Ref<f
                 continue;
               }
               if (((first->start < second->end) && (second->start < first->end))) {
-                flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("md2.section-overlap"), flight::String("parseMd2"), {{flight::String("first"), std::variant<bool, double, flight::String>{std::in_place_type<double>, first->name}}, {flight::String("second"), std::variant<bool, double, flight::String>{std::in_place_type<double>, second->name}}});
+                flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("md2.section-overlap"), flight::String("parseMd2"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("first"), std::variant<bool, double, flight::String>{std::in_place_type<double>, first->name}}, {flight::String("second"), std::variant<bool, double, flight::String>{std::in_place_type<double>, second->name}}});
                 return;
               }
             }

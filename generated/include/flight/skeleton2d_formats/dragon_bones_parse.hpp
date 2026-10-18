@@ -100,7 +100,7 @@ inline bool check_dragon_bones_version(flight::Record<flight::String, flight::An
     return false;
   }
   if ((resolved.value() != dragonbones_compatible_version)) {
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("dragonbones.version-unsupported"), flight::String("parseDragonBonesSkeleton"), {{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, resolved.value()}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("dragonbones.version-unsupported"), flight::String("parseDragonBonesSkeleton"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, resolved.value()}}});
     return false;
   }
   return true;

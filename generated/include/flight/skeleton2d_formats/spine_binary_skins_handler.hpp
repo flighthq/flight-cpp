@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSpineBinaryAttachment -- source line 116
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -128,7 +129,7 @@ inline void initialize_mesh_attachment_2d_flight_value_function_initialize_u0000
 }
 
 inline flight::Ref<flight::types::MeshAttachment2D> reject_spine_binary_mesh(flight::Ref<flight::types::ByteReader> reader, std::optional<flight::String> name, flight::String field, double declared, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
-  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spine.binary-count-unsatisfiable"), flight::String("readSpineBinaryMeshAttachment"), {{flight::String("attachment"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, (name.has_value() ? name.value() : flight::String(""))}}, {flight::String("declared"), std::variant<bool, double, flight::String>{std::in_place_type<double>, declared}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, field}}, {flight::String("remaining"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(reader->view.byte_length) - reader->offset)}}});
+  flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spine.binary-count-unsatisfiable"), flight::String("readSpineBinaryMeshAttachment"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("attachment"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, (name.has_value() ? name.value() : flight::String(""))}}, {flight::String("declared"), std::variant<bool, double, flight::String>{std::in_place_type<double>, declared}}, {flight::String("field"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, field}}, {flight::String("remaining"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(reader->view.byte_length) - reader->offset)}}});
   flight::skeleton2d_formats::skip_spine_binary_bytes(reader, (static_cast<double>(reader->view.byte_length) + 1.0));
   flight::types::EntityConstruction<flight::Ref<flight::types::MeshAttachment2D>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MeshAttachment2D>>();
   initialize_mesh_attachment_2d_flight_value_function_initialize_u00004d_esh_u000041_ttachment2_u000044__flight_private_0e8203fe1cfeaf12(out, flight::types::mesh_attachment_2d_kind, ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = name; if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }()), std::variant<flight::Ref<flight::types::Skin2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}, flight::Uint16Array(), flight::Float32Array(), 0.0, std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null});
@@ -323,7 +324,7 @@ inline flight::Array<flight::Ref<flight::types::AttachmentSkin2D>> parse_spine_b
   for (auto array_pattern_value : unmodeled) {
     const flight::String type = std::get<0>(array_pattern_value);
     const double count = std::get<1>(array_pattern_value);
-    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineSkeletonBinary"), {{flight::String("attachments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("spine.") + flight::to_string(type) + flight::String("-attachment-unsupported"), flight::String("parseSpineSkeletonBinary"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("attachments"), std::variant<bool, double, flight::String>{std::in_place_type<double>, count}}});
   }
   return skins;
 }

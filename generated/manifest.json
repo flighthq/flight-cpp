@@ -5453,6 +5453,13 @@
       "id": "compiler-callable-value-identity",
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/shape"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35",
+      "id": "compiler-optional-record-literal-materialization",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
+      "package": "@flighthq/compiler-backend-cpp"
     }
   ],
   "duplicateStructuralStructAliases": {

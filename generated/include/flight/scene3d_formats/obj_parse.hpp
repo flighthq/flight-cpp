@@ -10,6 +10,7 @@
 //   missing: function parseObjWithMaterialHandlers -- source line 323
 #include <cmath>
 #include <flight/any.hpp>
+#include <flight/callable.hpp>
 #include <flight/map.hpp>
 #include <flight/number.hpp>
 #include <flight/record.hpp>
@@ -195,12 +196,12 @@ inline double resolve_obj_material(flight::String name, std::optional<flight::St
   auto parsed = ([&]() -> std::optional<flight::Ref<flight::types::ObjMaterial>> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Map<flight::String, flight::Ref<flight::types::ObjMaterial>>> { auto optional_chain_receiver = library; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"materials">>(optional_chain_receiver.value()); }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(name); }());
   if (!parsed.has_value()) {
     if (library.has_value()) {
-      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("obj.material-missing"), flight::String("resolveObjMaterial"), {{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
+      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("obj.material-missing"), flight::String("resolveObjMaterial"), flight::Record<flight::String, std::variant<bool, double, flight::String>>{{flight::String("name"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, name}}});
     }
     cache.set(name, -1.0);
     return -1.0;
   }
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>> handler = material_handlers.find([=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>> candidate) { return flight::row_get<flight::RowKey<"matches">>(candidate)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value()))); });
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>> handler = material_handlers.find(flight::Function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>>)>{[=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterialHandler>>>> candidate) { return flight::row_get<flight::RowKey<"matches">>(candidate)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ObjMaterial>>>>(parsed.value()))); }});
   if (!handler.has_value()) {
     cache.set(name, -1.0);
     return -1.0;
