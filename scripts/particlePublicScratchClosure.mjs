@@ -24,52 +24,33 @@ fs.mkdirSync(scratch, { recursive: true });
 const hash = input => createHash('sha256').update(input).digest('hex');
 const backendUrl = pathToFileURL(path.resolve(args['--compiler']));
 const { createCppCompilerBackend } = await import(backendUrl);
-const { lowerTypeScriptSources } = await import(new URL('../../compiler-semantic/src/index.js', backendUrl));
+const { lowerTypeScriptSource } = await import(new URL('../../compiler-semantic/src/index.js', backendUrl));
 const { default: ts } = await import(pathToFileURL(path.resolve(args['--typescript'])));
 const input = fs.readFileSync(path.resolve(args['--context']));
 const context = JSON.parse(input);
 
-// Refresh whole original modules from the pinned source plus the declared Flight patches.
-// An old saved graph can predate a package's approved local type aliases or own-key reads.
+// Preserve the qualified original project graph, including its semantic evidence and helper
+// identities. Re-lowering a different project is a separate generation input, not this closure.
+const qualified = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/particle-named-result-view.json')));
+assert.equal(hash(input), qualified.originalSavedGraph.sha256, 'use the qualified original graph');
 const patch = 'source-patches/particle-codec-document-result-owned-view.patch';
 const diagnosticSources = ['packages/types/src/ImportDiagnostic.ts', 'packages/importdiagnostics/src/importDiagnosticCollector.ts'];
-const refresh = context.modules;
-const refreshPaths = new Set(refresh.map(module => module.source));
-for (const module of refresh) {
-  const destination = path.join(scratch, 'source', module.source);
-  fs.mkdirSync(path.dirname(destination), { recursive: true });
-  fs.copyFileSync(path.join(root, '.dependencies/flight', module.source), destination);
-}
-const sourcePatches = [];
-for (const entry of JSON.parse(fs.readFileSync(path.join(root, 'source-patches/manifest.json'))).patches) {
-  if (entry.dependency !== 'flight') continue;
-  const patchPath = path.join(root, 'source-patches', entry.patch);
-  const bytes = fs.readFileSync(patchPath);
-  const paths = [...bytes.toString().matchAll(/^\+\+\+ b\/(.+)$/gm)].map(match => match[1]).filter(file => refreshPaths.has(file));
-  if (paths.length === 0) continue;
-  const applied = spawnSync('git', ['apply', ...paths.map(file => '--include=' + file), patchPath], { cwd: path.join(scratch, 'source'), encoding: 'utf8' });
-  assert.equal(applied.status, 0, entry.patch + ': ' + applied.stderr);
-  sourcePatches.push({ file: entry.patch, sha256: hash(bytes), paths });
-}
-const sources = refresh.map(module => ({ file: module.source,
-  rawSha256: hash(fs.readFileSync(path.join(root, '.dependencies/flight', module.source))),
-  patchedSha256: hash(fs.readFileSync(path.join(scratch, 'source', module.source))),
-}));
-const lowered = lowerTypeScriptSources(refresh.map(module => ({
-  packageName: module.packageName, upstreamDirectory: '/flight',
-  sourceFile: ts.createSourceFile('/flight/' + module.source, fs.readFileSync(path.join(scratch, 'source', module.source), 'utf8'), ts.ScriptTarget.Latest, true),
-})), context.moduleResolution, {
-  profileTypeNames: context.options.externalBindings.bindings.filter(binding => binding.space === 'type').map(binding => binding.sourceName),
-});
-for (const result of lowered) {
-  if (result.module.packageName === '@flighthq/particles-formats' || diagnosticSources.includes(result.module.source)) assert.deepEqual(result.diagnostics, []);
-}
-context.modules = lowered.map(result => result.module);
+const codec = 'packages/types/src/ParticleFormatCodec.ts';
+const destination = path.join(scratch, 'source', codec);
+fs.mkdirSync(path.dirname(destination), { recursive: true });
+fs.copyFileSync(path.join(root, '.dependencies/flight', codec), destination);
+const applied = spawnSync('git', ['apply', path.join(root, patch)], { cwd: path.join(scratch, 'source'), encoding: 'utf8' });
+assert.equal(applied.status, 0, applied.stderr);
+const lowered = lowerTypeScriptSource(ts.createSourceFile('/flight/' + codec, fs.readFileSync(destination, 'utf8'), ts.ScriptTarget.Latest, true), { packageName: '@flighthq/types', upstreamDirectory: '/flight' });
+assert.deepEqual(lowered.diagnostics, []);
+context.modules = context.modules.map(module => module.source === codec ? lowered.module : module);
 const freshContext = JSON.stringify(context);
 const freshContextPath = path.join(scratch, 'context.json');
 fs.writeFileSync(freshContextPath, freshContext);
 const selected = context.modules.filter(module => module.source === 'packages/particles-formats/src/registerBuiltInParticleFormats.ts' || diagnosticSources.includes(module.source));
 assert.equal(selected.length, 3, 'complete original registration module plus the original diagnostic pair');
+assert.equal(hash(JSON.stringify(selected.find(module => module.packageName === '@flighthq/particles-formats'))), qualified.originalSavedGraph.registration.sourceModuleIrSha256);
+const sources = selected.map(module => ({ file: module.source, rawSha256: hash(fs.readFileSync(path.join(root, '.dependencies/flight', module.source))) }));
 const session = createCppCompilerBackend().createEmissionSession(context);
 const emitted = selected.flatMap(module => session.emitModule(module).map(file => ({ ...file, source: module.source, moduleIrSha256: hash(JSON.stringify(module)) })));
 assert.equal(emitted.length, 3);
@@ -127,7 +108,7 @@ const report = {
   scope: 'Complete original registration module and diagnostic type/collector emitted in one current compiler session, over unchanged original headers from the completed normal run; existing declared repairs only. Full public consumer scratch closure, with no installed header or package promotion.',
   runtimeCommit: spawnSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout.trim(),
   compilerBackendSha256: hash(fs.readFileSync(path.resolve(args['--compiler']))),
-  inputContextSha256: hash(input), freshContextSha256: hash(freshContext), sourcePatches, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
+  inputContextSha256: hash(input), freshContextSha256: hash(freshContext), originalRegistrationIrUnchanged: true, sources, declaredTypeOnlyPatch: { file: patch, sha256: hash(fs.readFileSync(path.join(root, patch))) },
   suppliedProvenance, diagnosticParity, repairs, aliases, canonicalIncludes: includes,
   files: emitted.map((file, index) => ({ ...raw[index], sha256: hash(file.contents) })),
   frozenProviders: providers.map((file, index) => ({ file: file.path, sha256: providerHashes[index] })),
