@@ -187,7 +187,7 @@ int main() {
   api::install(decltype(api::particle_all_formats){api::unity_particle_format, api::spine_particle_format});
   check(api::detect_particle_format(overlap) == flight::String("Unity"), "original overlapping detectors retain forward registration order");
   api::register_particle_format("Unity", spine);
-  check(api::get_particle_format_codec("Unity").value() == spine && api::get_registered_particle_formats().join(",") == "Unity,Spine", "replacing original registry codec retains key position and owner");
+  check(api::get_particle_format_codec("Unity").value() == spine && api::get_registered_particle_formats().join(flight::String(",")) == "Unity,Spine", "replacing original registry codec retains key position and owner");
   clear();
   api::install(decltype(api::particle_all_formats){api::spine_particle_format, api::unity_particle_format});
   check(api::detect_particle_format(overlap) == flight::String("Spine"), "original overlapping detectors retain reversed registration order");
@@ -196,7 +196,7 @@ int main() {
   api::register_built_in_particle_formats();
   api::register_built_in_particle_formats();
   check(api::get_registered_particle_formats().size() == 6, "public installation is idempotent");
-  check(api::get_registered_particle_formats().join(",") == "Libgdx,StarlingPex,ParticleDesigner,Unity,Pixi,Spine", "all original registry keys retain built-in order");
+  check(api::get_registered_particle_formats().join(flight::String(",")) == "Libgdx,StarlingPex,ParticleDesigner,Unity,Pixi,Spine", "all original registry keys retain built-in order");
   for (const auto& descriptor : api::particle_all_formats) check(api::get_particle_format_codec(flight::row_get<flight::RowKey<"kind">>(descriptor)).value() == flight::row_get<flight::RowKey<"codec">>(descriptor), "every original descriptor codec retains its owner");
   check(!flight::row_get<flight::RowKey<"codec">>(api::pixi_particle_format)->serialize.has_value(), "original Pixi descriptor remains parse-only");
   check(api::named_callbacks_retained(), "actual compiler-emitted public consumer recognizes all eight original named callbacks");
