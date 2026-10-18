@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index fea33d2..3919cfc 100644
+index a8cf1e3..f927b82 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -374,6 +374,11 @@ interface EmitContext {
@@ -22,7 +22,7 @@ index fea33d2..3919cfc 100644
      erasedObjectParameterBindingIds,
      exceptionPointerBindingIds: exceptionPointerBindings.exceptionPointers,
      reboundExceptionPointers: exceptionPointerBindings.rebound,
-@@ -5620,6 +5626,22 @@ function emitExpression(
+@@ -5620,6 +5626,23 @@ function emitExpression(
            'cpp-union-element-access-without-carrier',
          );
        }
@@ -39,13 +39,14 @@ index fea33d2..3919cfc 100644
 +      ) {
 +        const erasedArray = getGeneratedTargetName('erasedArrayReceiver', context);
 +        const erasedIndex = getGeneratedTargetName('erasedArrayIndex', context);
++        const erased = hasCppAbsenceStorageCpp(expression.object, context) ? `${object}.value()` : object;
 +        context.includes.add('flight/any.hpp');
-+        return `([&]() -> flight::Any { const auto& ${erasedArray} = ${object}; const double ${erasedIndex} = ${index}; return ${erasedArray}.array_get(${erasedIndex}).value_or(flight::Any(flight::undefined)); }())`;
++        return `([&]() -> flight::Any { const auto& ${erasedArray} = ${erased}; const double ${erasedIndex} = ${index}; return ${erasedArray}.array_get(${erasedIndex}).value_or(flight::Any(flight::undefined)); }())`;
 +      }
        return record || expression.semantics.receivers.every((receiver) => receiver === 'object')
          ? `${object}[${index}]`
          : `${object}[static_cast<size_t>(${index})]`;
-@@ -9857,6 +9879,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+@@ -9857,6 +9880,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
          narrowedBindingTypes: new Map(statementContext.narrowedBindingTypes).set(narrowing.bindingId, narrowing.type),
        };
      }
@@ -62,7 +63,7 @@ index fea33d2..3919cfc 100644
      statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
      statementContext = withdrawCppAssignedGuardedPathsCpp(statement, statementContext, true);
      // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
-@@ -9940,14 +9972,92 @@ function getCppImmediateDenseArrayElementPresenceCpp(
+@@ -9940,14 +9973,92 @@ function getCppImmediateDenseArrayElementPresenceCpp(
  // longer true, and the read after the write has to resolve without one -- which either finds its own
  // proof or refuses.
  function withdrawCppAssignedNarrowingsCpp(statement: Readonly<IrStatement>, context: EmitContext): EmitContext {
@@ -163,7 +164,7 @@ index fea33d2..3919cfc 100644
  }
  
  function collectCppAssignedBindingIdsCpp(statement: Readonly<IrStatement>): readonly string[] {
-@@ -14412,6 +14522,19 @@ function emitCppErasedDynamicPropertyReadCpp(
+@@ -14412,6 +14523,23 @@ function emitCppErasedDynamicPropertyReadCpp(
    if (!isCppErasedDynamicPropertyReadCpp(expression, context)) return undefined;
    context.includes.add('flight/any.hpp');
    context.includes.add('flight/structural_ref.hpp');
@@ -178,12 +179,16 @@ index fea33d2..3919cfc 100644
 +    expression.object.reference.kind === 'binding' &&
 +    context.erasedArrayProvenBindingIds.has(expression.object.reference.binding.id)
 +  ) {
-+    return `static_cast<double>(${emitExpression(expression.object, context)}.array_size())`;
++    // A record index read binds `std::optional<flight::Any>`; the array guard also proves the read
++    // was present, so the value is the erased array the proof names.
++    const receiver = emitExpression(expression.object, context);
++    const erased = hasCppAbsenceStorageCpp(expression.object, context) ? `${receiver}.value()` : receiver;
++    return `static_cast<double>(${erased}.array_size())`;
 +  }
    return `flight::named_properties(${emitExpression(expression.object, context)}).get(${emitLiteral(expression.name, context)})`;
  }
  
-@@ -16937,33 +17060,38 @@ function getCppConditionBranchContextCpp(
+@@ -16937,33 +17065,38 @@ function getCppConditionBranchContextCpp(
    condition: Readonly<IrExpression>,
    result: boolean,
    context: EmitContext,
@@ -239,10 +244,10 @@ index fea33d2..3919cfc 100644
      ),
 diff --git a/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
 new file mode 100644
-index 0000000..8e6bd03
+index 0000000..91e5ec5
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppErasedArrayLengthIndex.test.ts
-@@ -0,0 +1,87 @@
+@@ -0,0 +1,105 @@
 +import ts from 'typescript';
 +import { expect, it } from 'vitest';
 +
@@ -293,6 +298,24 @@ index 0000000..8e6bd03
 +  // is under the proof too; the post-guard read is the second one.
 +  expect(output.match(/static_cast<double>\(raw\.array_size\(\)\)/g)).toHaveLength(2);
 +  expect(output).not.toContain('get(flight::String("length"))');
++});
++
++it('unwraps a present erased record read before the array accessors', () => {
++  const output = emit(`
++    export function countArrayOrObject(record: Record<string, unknown>, key: string): number {
++      const value = record[key];
++      if (value === undefined || value === null) return 0;
++      if (Array.isArray(value)) {
++        if (value.length > 0) return value.length;
++      }
++      return 0;
++    }
++  `);
++
++  // The record index read binds std::optional<flight::Any>; the array guard also proves presence, so
++  // the length read names the engaged erased array rather than the wrapper.
++  expect(output).toContain('.value().array_size()');
++  expect(output).not.toContain('value.array_size()');
 +});
 +
 +it('proves the array across a continue guard, and withdraws the proof on assignment', () => {

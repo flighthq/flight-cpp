@@ -749,7 +749,9 @@ it lowers `length` to `static_cast<double>(x.array_size())` and `x[i]` to
 surviving disjunction is false on every operand and a surviving conjunction true on every operand, so
 the DragonBones shape `if (!Array.isArray(x) || x.length === 0) return` proves the array, and the
 short-circuited right operand of `||` is emitted under the same proof -- its own `length` test is the
-runtime size, so an empty array takes the source's early return rather than setting a zero. Reads without the proof keep the dynamic named lookup,
+runtime size, so an empty array takes the source's early return rather than setting a zero. A record
+index read binds `std::optional<flight::Any>`; since the guard is also false for an empty optional,
+the receiver is unwrapped before the accessor and the read names the engaged erased array. Reads without the proof keep the dynamic named lookup,
 which is the source's own operation on a possibly non-array object.
 
 Measured: new `cppErasedArrayLengthIndex.test.ts` 3 pass; package typecheck exit 0; focused
