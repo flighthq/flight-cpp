@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   aliasDuplicateStructuralStructs,
@@ -392,6 +393,29 @@ test('a qualified use alone does not fire insert-using-declaration', () => {
     const files = [{ contents: provenanceHeader('inline void f(flight::Ref<flight::types::Renderer> r) { (void)r; }\n'), path: 'flight/x/renderer.hpp' }];
     assert.deepEqual(applyEmissionRepairs([repair], files)[0].files, [], repair.id);
   }
+});
+
+test('declared repairs preserve an owned Canvas callable and its emitted dependency import', () => {
+  // The compiler emits the local definition directly and qualifies imported calls. A same-namespace
+  // using is redundant, but placing it before the definition makes the original header fail lookup.
+  const ownerPath = 'flight/scene2d_canvas/canvas_render_state.hpp';
+  const owner = header('scene2d_canvas',
+    'inline double get_canvas_render_state_runtime(double value) { return value + 1.0; }\n');
+  const dependent = header('scene2d_canvas',
+    'inline double get_canvas_host(double value) {\n' +
+    '  return flight::scene2d_canvas::get_canvas_render_state_runtime(value);\n}\n')
+    .replace('\n\nnamespace', `\n\n#include <${ownerPath}>\n\nnamespace`);
+  const files = [
+    { contents: owner, path: ownerPath },
+    { contents: dependent, path: 'flight/scene2d_canvas/canvas_render_surface.hpp' },
+  ];
+  const original = structuredClone(files);
+  const repairs = loadEmissionRepairs(fileURLToPath(new URL('..', import.meta.url)));
+  const applied = applyEmissionRepairs(repairs, files);
+  assert.deepEqual(files, original, 'keep the definition, dependency include and original qualified call');
+  assert.ok(applied.every((repair) => repair.files.length === 0));
+  applyEmissionRepairs(repairs, files);
+  assert.deepEqual(files, original, 'a repeated repair pass must also preserve both modules');
 });
 
 // --- respell-membership-test ---------------------------------------------------------------------------------

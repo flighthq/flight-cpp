@@ -7475,22 +7475,6 @@
       "expires": "when writeJoint emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-unqualified-scene2d-canvas-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_canvas/",
-      "namespace": "flight::scene2d_canvas",
-      "symbols": [
-        {
-          "include": "flight/scene2d_canvas/canvas_render_state.hpp",
-          "name": "get_canvas_render_state_runtime"
-        }
-      ],
-      "diagnostic": "'get_canvas_render_state_runtime' was not declared in this scope",
-      "defect": "The emitter writes get_canvas_render_state_runtime unqualified inside namespace flight::scene2d_canvas without the angle-bracket include that defines it. The using-declaration is redundant within the same namespace but the include hoisting is the operative fix.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "effects-canvas-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/effects_canvas/",
