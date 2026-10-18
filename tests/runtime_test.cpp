@@ -22,6 +22,18 @@
 #include <variant>
 #include <vector>
 
+// Public/derived pair for the same-owner member view: the derived object enters structural storage
+// (metadata), the public reference is what a consumer holds, and a member the object does not
+// declare must read as absence.
+struct MemberViewBase : public flight::ReferenceEnabled {
+  int started{0};
+};
+
+struct MemberViewDerived : public MemberViewBase {
+  flight::Array<int> reports;
+  double total{0};
+};
+
 namespace {
 
 int failures = 0;
@@ -4374,6 +4386,41 @@ static void test_any_object_reference_boxing() {
     check(!observer.expired(), "the boxed object lives as long as the Any that owns it");
   }
   check(observer.expired(), "the boxed object is released when the last Any is gone");
+}
+
+// The same-owner member view: metadata survives the construction row local and never extends the
+// object lifetime; a member the object does not declare is ABSENCE (falsy), so a source
+// `!internal.started` returns 0 instead of an early typed-read throw.
+static void test_structural_member_view_absence() {
+  const auto derived = flight::make_ref<MemberViewDerived>(MemberViewDerived{});
+  derived->started = 5;
+  derived->total = 2.0;
+  {
+    auto owner = flight::detail::owner_for(derived);
+    owner->bind_named("started", [derived]() -> decltype(auto) { return (derived->started); });
+    owner->bind_named("reports", [derived]() -> decltype(auto) { return (derived->reports); });
+    owner->bind_named("total", [derived]() -> decltype(auto) { return (derived->total); });
+    flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<MemberViewDerived>>>> row(derived);
+    (void)row;
+  } // construction row local is gone; the object is alive through the public reference
+
+  flight::Ref<MemberViewBase> public_ref = derived;
+  const flight::StructuralMemberView<MemberViewBase> view(public_ref);
+  check(view.has_binding_metadata() && view.object() == public_ref,
+        "the view recovers the binding metadata for the SAME object after the row local dies");
+  check(view.read<int>("started").has_value() && view.read<int>("started").value() == 5,
+        "a genuine object reads its real member value through the same owner");
+  check(view.read<double>("total").value() == 2.0 && view.read<flight::Array<int>>("reports").has_value(),
+        "number and array members use the same same-owner read order");
+  check(!view.read<bool>("teardowns").has_value(),
+        "a member the object does not declare is ABSENCE, not a throw");
+
+  const auto public_only = flight::make_ref<MemberViewBase>(MemberViewBase{.started = 9});
+  const flight::StructuralMemberView<MemberViewBase> empty_view(public_only);
+  check(!empty_view.has_binding_metadata() && !empty_view.read<int>("started").has_value(),
+        "an object that never entered structural storage has no metadata; started is undefined");
+  check(!empty_view.read<bool>("started").has_value(),
+        "absence is falsy: !internal.started would return the source 0 path");
 }
 
 int main() {

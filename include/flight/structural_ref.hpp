@@ -685,6 +685,22 @@ class JsonRowOwner final : public RowOwner {
   mutable std::vector<std::string> keys_;
 };
 
+// The binding metadata for an object already in the owner registry, WITHOUT creating an owner and
+// without guessing a static base type. The RowOwner is held strongly (it does not retain the object
+// itself), so member metadata survives the construction row local; an object that never entered
+// structural storage has none, and its members read as absent.
+[[nodiscard]] inline std::shared_ptr<RowOwner> find_row_owner(const void* address) {
+  auto& registry = owner_registry();
+  const std::lock_guard lock(registry.mutex);
+  const auto found = registry.entries.find(address);
+  if (found == registry.entries.end()) return {};
+  if (found->second.object.expired()) {
+    registry.entries.erase(found);
+    return {};
+  }
+  return found->second.owner;
+}
+
 template <typename Object>
 [[nodiscard]] std::shared_ptr<RowOwner> owner_for(const std::shared_ptr<Object>& object) {
   auto& registry = owner_registry();
@@ -948,6 +964,34 @@ concept variant_alternative_rows_as =
 
 
 } // namespace detail
+
+// A same-owner member view over a native object. It never creates a row owner and never casts the
+// object to a derived type: it reads the named cells the object's RowOwner recorded, and reports a
+// member the object does not declare as ABSENCE. Truthiness of that absence is the source's falsy
+// `undefined`, so `!view.read<bool>("started")` is true for a public-only loader and the source
+// returns 0 instead of failing at an early assertion.
+template <typename Base>
+class StructuralMemberView final {
+ public:
+  StructuralMemberView() = default;
+  explicit StructuralMemberView(Ref<Base> object)
+      : object_(std::move(object)),
+        owner_(object_ ? detail::find_row_owner(static_cast<const void*>(object_.get())) : nullptr) {}
+
+  [[nodiscard]] Ref<Base> object() const { return object_; }
+  [[nodiscard]] bool has_binding_metadata() const noexcept { return owner_ != nullptr; }
+
+  template <typename Member>
+  [[nodiscard]] std::optional<Member> read(std::string_view name) const {
+    if (!owner_) return std::nullopt;
+    if (auto* value = owner_->template named_value_if<Member>(name)) return *value;
+    return std::nullopt;
+  }
+
+ private:
+  Ref<Base> object_{};
+  std::shared_ptr<RowOwner> owner_{};
+};
 
 } // namespace flight
 
