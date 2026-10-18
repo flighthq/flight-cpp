@@ -86,14 +86,42 @@ line. The `DefineButton` path has the same shape (`version === 2 ? readSwfColorT
 This is a compiler defect, not a SWF one: any `const x = cond ? importedCall() : null` followed by
 `x !== null` in emitted code is affected. The SWF correction that avoids it uses an explicit identity
 carrier instead of a null test, which is semantics-preserving for those two transients but does not
-close this cause for other call sites. No runtime change, source workaround or narrowing makes the
-general form sound; the emitter must represent the imported call's union as its declared optional and
-lower the test as presence. This request claims no header gain.
+close this cause for other call sites.
+
+## Carried fix
+
+`source-patches/compiler-imported-nullable-guard-carrier.patch` (id
+`compiler-imported-nullable-guard-carrier`) is the ordinary source-faithful emitter correction, not a
+source workaround. In `emitNullishComparisonCpp`, when the source evidence admits null and excludes
+undefined, the operand has no union representation plan, and the elected representation is a runtime
+reference, it emits the carrier test (`operand != nullptr`, or `== nullptr` for the equality
+direction) instead of folding. The exported and same-module optional paths, every dual-sentinel plan,
+and every undefined-admitting comparison keep their existing lowering; the operand is still evaluated
+once, in place, so call, getter and error order are unchanged.
+
+Evidence over the full current flight-compiler patch stack (138 patches with this one last), all six
+regression tests in `packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts` pass:
+
+| case | emitted guard |
+| --- | --- |
+| imported non-exported nullable return | `widget != nullptr` |
+| equality direction | `widget == nullptr` |
+| exported return type | `std::optional<Ref<Widget>>` + `has_value()` |
+| same-module return type | `std::optional<Ref<Widget>>` + `has_value()` |
+| undefined-admitting arm | unchanged; no null-pointer test |
+| callee evaluation | `make_present()` emitted once |
+
+The native fixture emits the provider and consumer, writes them to a temporary directory, compiles
+and runs with the pinned runtime, and prints `1.0 -1.0` (present, absent) with exit 0. Without the
+patch the same fixture emits `(true ? widget->value : -1.0)` and the absent arm dereferences
+`nullptr`.
 
 ## Reproduction
 
-`packages/compiler-backend-cpp/src/swfNullGuardProbe.test.ts` in the pinned compiler checkout emits six
-shapes: five same-module forms and the imported form. The five same-module forms emit
-`std::optional`/`has_value()`; the imported form emits `nullptr`/`true`. The cross-module shape is
-lowered with `lowerTypeScriptSources` and the `flight-compiler-module-resolution/1` plan, then emitted
-through `createEmissionSession`.
+The original scratch probe (`swfNullGuardProbe.test.ts`) lowered six shapes through
+`lowerTypeScriptSources` and the `flight-compiler-module-resolution/1` plan: five same-module forms
+emitted `std::optional`/`has_value()`; the imported non-exported form emitted `nullptr`/`true`. The
+probe was scratch and is not carried; the retained regression is the six tests above, which pin the
+positive, both exported/same-module negatives, the undefined-arm control, exactly-once evaluation,
+and the native absent/present run.
+

@@ -1,0 +1,207 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16938,6 +16938,22 @@
+     context,
+   );
+   if (memberViewPresence) return memberViewPresence;
++  // A nullable local whose value type is a declaration this module cannot export keeps the reference
++  // carrier but loses the union arm the type was written with, so the presence machinery sees a type
++  // that admits no absence and folds the source's guard away. The source evidence still says the
++  // operand admits null and not undefined, and the elected representation is a runtime reference,
++  // whose null is a null pointer; ask the carrier instead of the degraded spelling. An optional or
++  // dual-sentinel plan keeps its own narrower presence test, and the exported and same-module paths
++  // carry the union, so they are untouched.
++  if (evidence.admitsNull && !evidence.admitsUndefined) {
++    const operandType = getCppNullishComparisonOperandTypeCpp(operand, context);
++    const union = operandType ? getIrUnionTypeCpp(operandType, context, new Set()) : undefined;
++    const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++    if (!plan && operandType !== undefined && hasFlightReferenceRepresentationCpp(operandType, context)) {
++      const present = expression.operator === '!=' || expression.operator === '!==';
++      return `${emitExpression(operand, context)} ${present ? '!=' : '=='} nullptr`;
++    }
++  }
+   if (evidence.admitsNull && evidence.admitsUndefined) {
+     const operandType = getCppNullishComparisonOperandTypeCpp(operand, context);
+     const union = operandType ? getIrUnionTypeCpp(operandType, context, new Set()) : undefined;
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -309,6 +309,61 @@
+   });
+ }
+ 
++const importedNullableGuardResolution: CompilerModuleResolutionPlan = {
++  edges: [
++    {
++      specifier: './widget.ts',
++      target: { packageName: '@flighthq/probe', source: 'packages/probe/src/widget.ts' },
++    },
++  ],
++  schema: 'flight-compiler-module-resolution/1',
++};
++
++function freshImportedNullableGuardResolution(): CompilerModuleResolutionPlan {
++  return {
++    edges: [
++      {
++        specifier: './widget.ts',
++        target: { packageName: '@flighthq/probe', source: 'packages/probe/src/widget.ts' },
++      },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++}
++
++// The consumer calls an imported function whose declared return type is an interface the provider
++// does not export. `exported` controls only that visibility; the source shape is otherwise the same.
++function emitImportedNullableGuard(
++  file: string,
++  exported: boolean,
++  body = 'return widget !== null ? widget.value : -1;',
++  initializer = 'makePresent() : null',
++): string {
++  const providerSource = `${exported ? 'export ' : ''}interface Widget { value: number }
++     export function makePresent(): Widget { return { value: 1 }; }`;
++  const consumerSource = `import { makePresent } from './${file}.ts';
++     export function pick(cond: boolean): number {
++       const widget = cond ? ${initializer};
++       ${body}
++     }`;
++  const moduleResolution = freshImportedNullableGuardResolution();
++  const source = (name: string, text: string) => ({
++    packageName: '@flighthq/probe',
++    sourceFile: ts.createSourceFile(`/flight/packages/probe/src/${name}`, text, ts.ScriptTarget.Latest, true),
++    upstreamDirectory: '/flight',
++  });
++  const [provider, consumer] = lowerTypeScriptSources(
++    [source(`${file}.ts`, providerSource), source('consumer.ts', consumerSource)],
++    moduleResolution,
++  ).map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules: [provider, consumer],
++    options: { runtimeProfile: 'flight-cpp' },
++  });
++  return session.emitModule(consumer!)[0]!.contents;
++}
++
+ function lowerImportedClosedKeyStorageModules() {
+   // Both consumers reach their types through the export-all contract barrel used by the SDK. The GUI
+   // consumer mirrors guiTestHelper's non-null imported call result, computed runtime-key exclusion,
+@@ -3518,6 +3573,115 @@
+     expect(emitted).not.toContain('flight::undefined');
+   });
+ 
++  // A call imported from another module can return a declaration that module does not export. The
++  // consumer cannot name that type, so its evidence keeps the reference carrier but drops the `null`
++  // arm the source wrote; the presence machinery then judged the guard by a type that admits no
++  // absence and folded it to `true`, dereferencing the absent value. The elected representation is a
++  // runtime reference, whose null is a null pointer, so the source's own null/undefined evidence and
++  // that representation are enough to ask the carrier without widening the exported path.
++  it('tests an imported non-exported nullable return against its reference carrier', () => {
++    const output = emitImportedNullableGuard('widget', false);
++    expect(output).toContain('return (widget != nullptr ? widget->value : -1.0);');
++    expect(output).not.toContain('(true ?');
++  });
++
++  it('keeps the optional carrier for an exported nullable return', () => {
++    const output = emitImportedNullableGuard('widget', true);
++    expect(output).toContain('std::optional<flight::Ref<flighthq_probe::Widget>> widget =');
++    expect(output).toContain('return (widget.has_value() ? widget.value()->value : -1.0);');
++    expect(output).not.toContain('widget != nullptr');
++  });
++
++  it('tests the equality direction against the same reference carrier', () => {
++    const output = emitImportedNullableGuard('widget', false, 'return widget === null ? -1 : widget.value;');
++    expect(output).toContain('return (widget == nullptr ? -1.0 : widget->value);');
++  });
++
++  it('does not turn an undefined-admitting guard into a null-pointer test', () => {
++    const output = emitImportedNullableGuard(
++      'widget',
++      false,
++      'return widget !== null ? widget.value : -1;',
++      'makePresent() : undefined',
++    );
++    expect(output).not.toContain('widget != nullptr');
++  });
++
++  it('evaluates the imported callee once in the guarded form', () => {
++    const output = emitImportedNullableGuard('widget', false);
++    expect(output.match(/flighthq_probe::make_present\(\)/gu)).toHaveLength(1);
++  });
++
++  it.skipIf(!canCompileCpp)(
++    'runs the imported nullable guard on absent and present values',
++    { timeout: 300_000 },
++    () => {
++      if (cppToolchain === undefined) throw new Error('the C++ toolchain was not found');
++      const moduleResolution: CompilerModuleResolutionPlan = freshImportedNullableGuardResolution();
++      const source = (name: string, text: string) => ({
++        packageName: '@flighthq/probe',
++        sourceFile: ts.createSourceFile(`/flight/packages/probe/src/${name}`, text, ts.ScriptTarget.Latest, true),
++        upstreamDirectory: '/flight',
++      });
++      const [provider, consumer] = lowerTypeScriptSources(
++        [
++          source(
++            'widget.ts',
++            `interface Widget { value: number }
++             export function makePresent(): Widget { return { value: 1 }; }`,
++          ),
++          source(
++            'consumer.ts',
++            `import { makePresent } from './widget.ts';
++             export function pick(cond: boolean): number {
++               const widget = cond ? makePresent() : null;
++               return widget !== null ? widget.value : -1;
++             }`,
++          ),
++        ],
++        moduleResolution,
++      ).map((result) => result.module);
++      const session = createCppCompilerBackend().createEmissionSession!({
++        moduleResolution,
++        modules: [provider, consumer],
++        options: { runtimeProfile: 'flight-cpp' },
++      });
++      const emittedProvider = session.emitModule(provider!)[0]!;
++      const emittedConsumer = session.emitModule(consumer!)[0]!;
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-imported-nullable-guard-'));
++      try {
++        for (const output of [emittedProvider, emittedConsumer]) {
++          const outputPath = path.join(directory, output.path);
++          mkdirSync(path.dirname(outputPath), { recursive: true });
++          writeFileSync(outputPath, output.contents, 'utf8');
++        }
++        const sourcePath = path.join(directory, 'imported_nullable_guard.cpp');
++        writeFileSync(
++          sourcePath,
++          `#include <${emittedConsumer.path}>
++#include <cstdio>
++
++int main() {
++  std::printf("%.1f %.1f\\n", flighthq_probe::pick(true), flighthq_probe::pick(false));
++  return 0;
++}
++`,
++          'utf8',
++        );
++        const executable = path.join(directory, getCppExecutableName(cppToolchain, 'imported_nullable_guard'));
++        const arguments_ = createCppExecutableArguments(cppToolchain, sourcePath, executable, [
++          directory,
++          ...cppRuntimeIncludeDirectories,
++        ]);
++        execFileSync(cppToolchain.command, arguments_, { cwd: directory, encoding: 'utf8', stdio: 'pipe' });
++        const stdout = execFileSync(executable, [], { cwd: directory, encoding: 'utf8', stdio: 'pipe' });
++        expect(stdout.trim()).toBe('1.0 -1.0');
++      } finally {
++        rmSync(directory, { force: true, recursive: true });
++      }
++    },
++  );
++
+   it('projects both absence channels from an optional property with a nullable alias', () => {
+     const types = lowerPackage(
+       '@flighthq/types',
