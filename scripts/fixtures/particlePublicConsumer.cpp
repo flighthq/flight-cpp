@@ -94,7 +94,9 @@ void family(const Descriptor& descriptor, flight::String input, Measure measure,
   const auto document = codec->parse_to_document(input, observable);
   const auto exact = document.template shared_exact_object<Result>();
   check(exact && measure(exact->config) == expected(4) && cell->reads == 2, "actual document slot observes live options and retains original full result");
-  check(exact && document.identity() == exact.get(), "callback view shares original native result identity");
+  using FullView = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Result>>>>;
+  const FullView full_again(exact);
+  check(exact && document.shared_owner() == full_again.shared_owner() && document.shared_native_object() == exact, "callback view shares original native result owner");
   const int before = cell->reads;
   const auto registered = api::parse_registered_particle_format(input, kind, observable);
   check(measure(registered->config) == expected(4) && cell->reads == before + 1 && registered->format == kind, "public registered route forwards the same readonly options owner");
