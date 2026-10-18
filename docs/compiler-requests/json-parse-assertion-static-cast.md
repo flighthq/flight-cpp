@@ -470,3 +470,29 @@ Options:
 Decision requested from Foreman/Manager before implementation: 1 with an explicit
 null/absence/wrong-type policy (recommended), or 3. No coercion or runtime-wide scalar change will be
 chosen unilaterally, and no wrong-typed fixture will be claimed to pass.
+
+## Implementation shape for the approved presence-aware cell (G2)
+
+Approved: a bounded presence-aware JSON cell in the shared view family (option 1); the only escape to a
+native `double` accepts an actual number and otherwise raises a dedicated out-of-profile error.
+
+One hard constraint decides the shape, and it is worth recording before any edit. `row_get<Key>(row)` returns
+`decltype(auto)`: for a native owner it yields a reference into the real cell, and generated code relies on
+that (writes through it, live reads after other writes). A projection that computes a `double` from an erased
+`Any` cannot be one more `return` in that function -- `decltype(auto)` cannot deduce both `const Value&` and a
+materialized `Value` for one instantiation. The naive "fall back to a projection when there is no
+`TypedRowCell`" is therefore ill-formed, not merely inelegant.
+
+Two shapes fit, and only these:
+1. A cell: the JSON owner answers a typed read with a lazily created `TypedRowCell<Value>` whose read closes
+   over the JSON object. `named_value_if<Value>` keeps its pointer contract, `row_get` is untouched, and the
+   projection error happens when the cell is created. The cost is owner-side mutable cache state on first
+   read, which must be tested for: the object stays read-only and identity-stable, a second read sees the
+   same cell, and a write through the view is still refused.
+2. A by-value read: a second entry point (for schemas whose members may be JSON-backed) that returns `Value`
+   and never a reference, used by generated code only where the destination is not written through. This
+   avoids the cache but splits the read API and needs the emitter to choose the entry point per schema.
+
+Use 1 unless writing through a JSON-backed member must be refused at compile time; the approved read/write
+tests can be written against either, but not against a projection spliced into the reference-returning
+`row_get`.
