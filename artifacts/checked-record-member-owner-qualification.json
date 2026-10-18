@@ -1,0 +1,172 @@
+{
+  "schema": "flight-cpp-checked-record-member-owner-qualification/1",
+  "flightRevision": "a62784923f3be814463286c9fb28edfe6ab15789",
+  "compilerRevision": "806d257d2f4100de745cc97340e61c2f301b0f24",
+  "baselineCompilerPatches": 105,
+  "candidateCompilerPatches": 106,
+  "patchSha256": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d",
+  "fix": "One exact checked scalar interface carrier is elected before original allocations and retained storage; construction follows the same named layout with source-order evaluations.",
+  "runtimeOrFlightImplementationChanges": false,
+  "publicBoneModeAbi": "flight::Ref<flight::types::TransformInherit2D>, all16 independent boolean combinations; no closed preset enum",
+  "initialOldFocused": {
+    "pass": 3,
+    "fail": 2,
+    "scope": "first5controls; native anonymous-to-nominal mismatch reproduced"
+  },
+  "fieldOrderCounterexample": {
+    "earlierCandidatePass": 33,
+    "earlierCandidateFail": 1,
+    "failure": "Native field effects reordered when storage chose named owner but construction retained anonymous layout.",
+    "correctedFinalFocused": {
+      "pass": 34,
+      "fail": 0,
+      "skipped": 0,
+      "newOwnerTests": 6,
+      "priorNullableQueryAliasLoopPrivateForward": 28
+    }
+  },
+  "strictCandidateBuild": "pass",
+  "same105BaselineBackend": {
+    "selected": 467,
+    "pass": 439,
+    "fail": 28,
+    "unselected": 1109,
+    "expandedAssertions": 1576,
+    "failedTitles": [
+      "createCppCompilerBackend passes glTF resolved and carried texture unions through their exact imported alias",
+      "createCppCompilerBackend resolves shaded material indexed map options into their exact texture union",
+      "createCppCompilerBackend preserves the imported texture union representation through a readonly assertion",
+      "createCppCompilerBackend runs a guarded optional shared owner through its asserted readonly row",
+      "createCppCompilerBackend unwraps a proven-present optional property before receiver and structural assertion use",
+      "createCppCompilerBackend keeps an imported host-image alias intact for a contextual callable result",
+      "createCppCompilerBackend classifies attachment names as one required nullable live cell",
+      "createCppCompilerBackend classifies material names as one required nullable live cell",
+      "createCppCompilerBackend classifies bounding-box point storage as two required nullable owner cells",
+      "createCppCompilerBackend classifies clipping point storage as two required nullable owner cells",
+      "createCppCompilerBackend classifies mesh point storage as two required nullable owner cells",
+      "createCppCompilerBackend refuses a for-of source alias that names multiple runtime alternatives",
+      "createCppCompilerBackend reads one shared payload from optional variants produced by local and imported factories",
+      "createCppCompilerBackend recovers indexed utility and RegExp call result evidence",
+      "emitIrModuleCpp plans non-null and nullable imported GL and WGPU ErasedRef cache views",
+      "emitIrModuleCpp clones and strips a constrained entity through its PropertyKey record view",
+      "emitIrModuleCpp emits a finite imported-key mapped construction as complete optional storage",
+      "emitIrModuleCpp stores the surviving SWF morph bitmap resolver in its nullable callable carrier",
+      "emitIrModuleCpp evaluates closed-row defaults before applying an optional trailing spread",
+      "emitIrModuleCpp uses a present Partial property as optional return construction evidence",
+      "emitIrModuleCpp keeps an optional imported registry lookup in its exact entry union",
+      "emitIrModuleCpp constructs an imported nullable base row in a callback-bearing render call",
+      "emitIrModuleCpp conditional capability facets narrows a nullable generic node row to its explicit transform extension",
+      "emitIrModuleCpp conditional capability facets compiles structural alias narrowing and a discriminated optional registry read",
+      "emitIrModuleCpp conditional capability facets adapts a callable with optional trailing source parameters",
+      "emitIrModuleCpp conditional capability facets keeps a direct imported collection element on its declared union alias",
+      "emitIrModuleCpp conditional capability facets widens a present nominal variant into a nullable readonly-view variant",
+      "emitIrModuleCpp conditional capability facets selects structural union views without breaking exact nominal owner recovery"
+    ]
+  },
+  "same105CandidateBackend": {
+    "selected": 467,
+    "pass": 441,
+    "fail": 26,
+    "unselected": 1109,
+    "expandedAssertions": 1576
+  },
+  "orderedDeclaredComposition": {
+    "compilerPatches": 106,
+    "rawCleanBetweenVersions": true,
+    "allApply": true,
+    "backendAndFixtureByteIdenticalToQualifiedCandidate": true,
+    "strictAndFocused": "Qualified final candidate source identical to ordered106; strict build PASS and34/34 focused PASS. Latest delivered base reconciliation follows this preparation commit."
+  },
+  "actualRawThreeTypeProbe": {
+    "modules": [
+      "TransformInherit2D.ts",
+      "TransformMode2D.ts",
+      "Bone2D.ts"
+    ],
+    "emission": "pass",
+    "normalOutput": false,
+    "namedOriginalPresetAllocations": 5,
+    "publicBoneFieldUnchanged": true
+  },
+  "wholeOriginalTypeScriptOracle": {
+    "modules": [
+      "packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts",
+      "packages/importdiagnostics/src/importDiagnosticCollector.ts",
+      "packages/types/src/ImportDiagnostic.ts",
+      "packages/types/src/TransformMode2D.ts",
+      "packages/skeleton2d-formats/src/spineBinaryParseHelpers.ts",
+      "packages/skeleton2d-formats/src/spineBinaryReader.ts"
+    ],
+    "cases": 60,
+    "ownerWindowUnchangedInputGroups": 60,
+    "diagnostics": 2,
+    "readerAlias": true,
+    "resultSha256": "c23a7fca82b4cdd9b71058056f8e3487573a6fe518ee4478f808785da2a091e8"
+  },
+  "originalPublicConsumer": {
+    "source": "tests/generated_skeleton2d_formats_spine_bones_test.cpp",
+    "sourceSha256": "a5183bee19072bc8b99c3fcbac527172e3185cf21b85d0a1e75d133ae42590e6",
+    "configuration": "pass",
+    "baselineBuild": "fail",
+    "baselineFirstFailure": "spine_binary_bones_handler.hpp:81: anonymous preset Ref cannot enter Ref<TransformInherit2D>",
+    "installedBuildLinkRun": "pending",
+    "noExtractionOrStub": true
+  },
+  "normalGroupedReconciliation": {
+    "packages": [
+      "@flighthq/types",
+      "@flighthq/skeleton2d-formats"
+    ],
+    "state": "Pending shared Types output from sole writer builder2. Requested grouped skeleton output; otherwise builder5 owns one skeleton-only reconciliation after shared Types. No builder5 Types SDK."
+  },
+  "scopedHeaderSelection": [
+    "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
+    "flight/skeleton2d_formats/spine_binary_full.hpp",
+    "flight/skeleton2d_formats/spine_binary_handlers.hpp",
+    "flight/skeleton2d_formats/spine_binary_parse.hpp",
+    "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
+    "flight/skeleton2d_formats/spine_json_bones_handler.hpp"
+  ],
+  "headerRowsChanged": 0,
+  "headerPromotions": 0,
+  "globalOrPackagePassClaim": false,
+  "same105Parity": {
+    "newFunctionalFailures": 0,
+    "sharedRemainingFailures": 26,
+    "timingAudit": {
+      "timeoutMs": 120000,
+      "baselinePass": 2,
+      "candidatePass": 2,
+      "rawBaselineTimeoutMs": 15000,
+      "reason": "Both raw baseline-only failures are explicitly test timeouts in the default reporter; JSON failureMessages alone reports STACK_TRACE_ERROR. Longer matching runs on each source pass.",
+      "newFunctionalFailures": 0,
+      "sharedRemainingFailures": 26,
+      "allOtherAssertionOccurrenceNamesAndStatusesIdentical": true
+    },
+    "rawStatusDifferences": [
+      {
+        "index": 145,
+        "before": {
+          "fullName": "createCppCompilerBackend runs a guarded optional shared owner through its asserted readonly row",
+          "status": "failed"
+        },
+        "after": {
+          "fullName": "createCppCompilerBackend runs a guarded optional shared owner through its asserted readonly row",
+          "status": "passed"
+        }
+      },
+      {
+        "index": 941,
+        "before": {
+          "fullName": "emitIrModuleCpp evaluates closed-row defaults before applying an optional trailing spread",
+          "status": "failed"
+        },
+        "after": {
+          "fullName": "emitIrModuleCpp evaluates closed-row defaults before applying an optional trailing spread",
+          "status": "passed"
+        }
+      }
+    ],
+    "interpretation": "Zero new failures. Two baseline-only 15s timeouts pass on both sources with the same120s limit; no capability improvement is attributed to those timing differences."
+  }
+}

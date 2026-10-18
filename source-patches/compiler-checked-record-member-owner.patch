@@ -1,0 +1,412 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2062,6 +2062,127 @@
+     case 'variable':
+       return emitVariableDeclaration(declaration, context);
+   }
++}
++
++const cppCheckedRecordMemberOwners = new WeakMap<
++  CompilerCppReferenceRepresentationPlanner,
++  ReadonlyMap<string, Readonly<IrType> | null>
++>();
++
++// A checked Record table may choose a named owner at each fresh member allocation. Its
++// inferred anonymous scalar shape has one representation everywhere in the emission graph,
++// including imported table reads and indexed type queries. Never convert an existing owner:
++// all allocations and retained storage use this same elected owner from the start.
++function getCppCheckedRecordMemberOwnerCpp(
++  type: Readonly<Extract<IrType, { kind: 'object' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  let checkedOwners = cppCheckedRecordMemberOwners.get(context.referenceRepresentationPlanner);
++  if (!checkedOwners) {
++    const owners = new Map<string, Readonly<IrType> | null>();
++    cppCheckedRecordMemberOwners.set(context.referenceRepresentationPlanner, owners);
++    checkedOwners = owners;
++    for (const module of context.sourceModules) {
++      for (const declaration of module.declarations) {
++        if (declaration.kind !== 'variable' || declaration.mutable || declaration.initializer?.kind !== 'object')
++          continue;
++        const table = declaration.initializer;
++        const target = table.type;
++        if (
++          target?.kind !== 'named' ||
++          target.reference.kind !== 'ambient' ||
++          target.reference.name !== 'Record' ||
++          target.typeArguments.length !== 2
++        )
++          continue;
++        const key = target.typeArguments[0];
++        const value = target.typeArguments[1];
++        if (
++          key?.kind !== 'primitive' ||
++          key.name !== 'string' ||
++          value?.kind !== 'named' ||
++          value.reference.kind !== 'binding' ||
++          value.typeArguments.length !== 0
++        )
++          continue;
++        const owner = getCppNamedTypeDeclarationOwnerCpp(value, module, context);
++        if (
++          owner?.declaration.kind !== 'interface' ||
++          owner.declaration.typeParameters.length !== 0 ||
++          owner.declaration.extends.length !== 0
++        )
++          continue;
++        const valuePlan = context.referenceRepresentationPlanner.plan(value, module);
++        if (
++          valuePlan.kind !== 'represented' ||
++          valuePlan.category !== 'interface' ||
++          valuePlan.valueRepresentation !== 'flightReference'
++        )
++          continue;
++        const targetProperties = context.referenceRepresentationPlanner.resolveObjectShape(value, module);
++        if (
++          !targetProperties?.length ||
++          targetProperties.some(
++            (property) =>
++              property.optional ||
++              property.computedKey ||
++              property.phantom ||
++              property.type.kind !== 'primitive' ||
++              !['boolean', 'number', 'string'].includes(property.type.name),
++          )
++        )
++          continue;
++        const properties = new Map(targetProperties.map((property) => [property.name, property]));
++        const canonical: Readonly<IrType> = {
++          kind: 'named',
++          reference: { kind: 'binding', binding: owner.declaration.binding, path: [] },
++          typeArguments: [],
++        };
++        for (const member of table.members) {
++          if (member.kind !== 'property' || member.value.kind !== 'object' || member.value.type?.kind !== 'object')
++            continue;
++          const literal = member.value;
++          const shape = member.value.type;
++          if (
++            literal.members.some((field) => field.kind !== 'property') ||
++            literal.members.length !== shape.properties.length ||
++            new Set(literal.members.map((field) => (field.kind === 'property' ? field.name : ''))).size !==
++              literal.members.length ||
++            shape.properties.length !== properties.size
++          )
++            continue;
++          if (
++            !shape.properties.every((property) => {
++              const expected = properties.get(property.name);
++              return (
++                expected &&
++                !property.optional &&
++                !property.computedKey &&
++                !property.phantom &&
++                property.readonly === expected.readonly &&
++                normalizeCompilerStructuralValueCanonical(property.type) ===
++                  normalizeCompilerStructuralValueCanonical(expected.type)
++              );
++            })
++          )
++            continue;
++          const identity = normalizeCompilerStructuralValueCanonical(shape);
++          const previous = owners.get(identity);
++          owners.set(
++            identity,
++            previous === undefined ||
++              (previous !== null &&
++                normalizeCompilerStructuralValueCanonical(previous) ===
++                  normalizeCompilerStructuralValueCanonical(canonical))
++              ? canonical
++              : null,
++          );
++        }
++      }
++    }
++  }
++  return checkedOwners.get(normalizeCompilerStructuralValueCanonical(type)) ?? undefined;
+ }
+ 
+ function emitAnonymousStructCpp(struct: Readonly<AnonymousStruct>, context: EmitContext): string[] {
+@@ -6361,7 +6482,7 @@
+       const expectedExternalPayload = getCppExternalValueObjectSourceNameCpp(expectedPayload, context);
+       const expectedRecord = getCppRecordTypeArgumentsCpp(expectedType, context, new Set());
+       const expectedPayloadRecord = getCppRecordTypeArgumentsCpp(expectedPayload, context, new Set());
+-      const constructionType =
++      const plannedConstructionType =
+         expectedType && expectedExternalObject
+           ? expectedType
+           : expectedPayload && expectedExternalPayload
+@@ -6377,6 +6498,13 @@
+                     hasFlightStructuralRowRepresentationCpp(expectedPayload, context))
+                 ? expectedPayload
+                 : expression.type;
++      // Storage and construction must use the same elected layout. The ordinary named-object
++      // construction then caches field evaluations in source order before ordering its initializers.
++      const checkedOwner = plannedConstructionType.kind === 'object'
++        ? getCppCheckedRecordMemberOwnerCpp(plannedConstructionType, context)
++        : undefined;
++      const constructionType = checkedOwner ?? plannedConstructionType;
++      if (checkedOwner) collectCppDefaultArgumentModuleIncludeCpp(checkedOwner, context);
+       const externalObjectSourceName = getCppExternalValueObjectSourceNameCpp(constructionType, context);
+       if (externalObjectSourceName) {
+         return emitCppExternalObjectConstructionCpp(expression, externalObjectSourceName, context);
+@@ -12450,6 +12578,17 @@
+       context.includes.add('variant');
+       return 'std::monostate';
+     case 'object': {
++      const checkedOwner = getCppCheckedRecordMemberOwnerCpp(type, context);
++      if (checkedOwner) {
++        collectCppDefaultArgumentModuleIncludeCpp(checkedOwner, context);
++        const ownerModule = getCppTypeReferenceOwnerModuleCpp(checkedOwner, context);
++        const ownerContext = {
++          ...context,
++          module: ownerModule,
++          targetNames: new Map(context.targetNameMaps.get(getCppModuleIdentityKey(ownerModule)) ?? context.targetNames),
++        };
++        return qualifyCppDeclaringModuleTypeCpp(emitType(checkedOwner, ownerContext, representation), ownerContext);
++      }
+       const typeParameters = context.anonymousStructTypeParameters.map(
+         (parameter) => context.targetNames.get(parameter.binding.id) ?? pascalCase(parameter.binding.name),
+       );
+diff --git a/packages/compiler-backend-cpp/src/cppCheckedRecordMemberOwner.test.ts b/packages/compiler-backend-cpp/src/cppCheckedRecordMemberOwner.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCheckedRecordMemberOwner.test.ts
+@@ -0,0 +1,235 @@
++import { execFileSync } from 'node:child_process';
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend, emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const flagsSource = `export interface Flags { reflection: boolean; rotation: boolean; scale: boolean; translation: boolean }
++export interface Bone { mode: Flags }`;
++const presetsSource = `import type { Flags } from './flags.ts';
++export const Modes = {
++ Normal: {reflection:true,rotation:true,scale:true,translation:true},
++ OnlyTranslation: {reflection:false,rotation:false,scale:false,translation:true},
++ NoRotationOrReflection: {reflection:false,rotation:false,scale:true,translation:true},
++ NoScale: {reflection:true,rotation:true,scale:false,translation:true},
++ NoScaleOrReflection: {reflection:false,rotation:true,scale:false,translation:true},
++} satisfies Record<string, Flags>;`;
++const consumerSource = `import type { Bone, Flags } from './flags.ts';
++import { Modes as DirectModes } from './presets.ts';
++import { Modes as ViaBarrel } from './barrel.ts';
++import { fresh } from './plain.ts';
++export function fromPlain(): Bone { return {mode:fresh()}; }
++export function make(): Bone { return { mode: DirectModes.Normal }; }
++export function direct(): Flags { return DirectModes.Normal; }
++export function barrel(): Flags { return ViaBarrel.NoScale; }
++export function explicitLocal(): Flags { const held: Flags = DirectModes.OnlyTranslation; return held; }
++export function query(value: (typeof DirectModes)[keyof typeof DirectModes]): Flags { return value; }
++export function delayed(): () => Flags { const held = DirectModes.Normal; return () => held; }
++export function withEffect(action: (value: Flags) => void): Flags {
++ const held = DirectModes.Normal; action(held); return held;
++}
++export function read(value: Flags): boolean { return value.reflection; }
++export function write(value: Flags, next: boolean): void { value.reflection = next; }
++export function custom(value: Flags): Bone { return { mode: value }; }`;
++function emitGraph() {
++  const sources = {
++    flags: flagsSource,
++    presets: presetsSource,
++    barrel: `export { Modes } from './presets.ts';`,
++    plain: 'export function fresh() { return {reflection:false,rotation:false,scale:false,translation:false}; }',
++    consumer: consumerSource,
++  };
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    schema: 'flight-compiler-module-resolution/1',
++    edges: Object.keys(sources).map((name) => ({
++      specifier: `./${name}.ts`,
++      target: { packageName: '@flighthq/preset', source: `packages/preset/src/${name}.ts` },
++    })),
++  };
++  const lowered = lowerTypeScriptSources(
++    Object.entries(sources).map(([name, text]) => ({
++      packageName: '@flighthq/preset',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(`/flight/packages/preset/src/${name}.ts`, text, ts.ScriptTarget.Latest, true),
++    })),
++    moduleResolution,
++  );
++  expect(lowered.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = lowered.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules,
++    moduleResolution,
++    options: {
++      runtimeProfile: 'flight-cpp',
++      packageTargets: { '@flighthq/preset': { namespace: 'preset', includePrefix: 'fixture' } },
++    },
++  });
++  return modules.flatMap((module) => session.emitModule(module));
++}
++function emitSingle(source: string): string {
++  const [result] = lowerTypeScriptSources([
++    {
++      packageName: '@flighthq/preset',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile('/flight/packages/preset/src/single.ts', source, ts.ScriptTarget.Latest, true),
++    },
++  ]);
++  expect(result!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++const native = String.raw`
++#include "fixture/consumer.hpp"
++#include <cassert>
++#include <memory>
++#include <type_traits>
++namespace p = preset;
++int main() {
++ static_assert(std::is_same_v<decltype(p::modes->normal), flight::Ref<p::Flags>>);
++ static_assert(std::is_same_v<decltype(p::Bone::mode), flight::Ref<p::Flags>>);
++ auto separate=p::from_plain(); assert(!separate->mode->reflection && !separate->mode->rotation && !separate->mode->scale && !separate->mode->translation);
++ auto normal=p::modes->normal;
++ assert(p::direct()==normal && p::make()->mode==normal);
++ assert(p::barrel()==p::modes->no_scale && p::explicit_local()==p::modes->only_translation);
++ assert(p::query(p::modes->no_rotation_or_reflection)==p::modes->no_rotation_or_reflection);
++ assert(!p::direct().owner_before(normal) && !normal.owner_before(p::direct()));
++ flight::Ref<p::Flags> all[]={p::modes->normal,p::modes->only_translation,p::modes->no_rotation_or_reflection,p::modes->no_scale,p::modes->no_scale_or_reflection};
++ const bool expected[][4]={{true,true,true,true},{false,false,false,true},{false,false,true,true},{true,true,false,true},{false,true,false,true}};
++ for(int i=0;i<5;++i){
++  assert(all[i]->reflection==expected[i][0] && all[i]->rotation==expected[i][1] && all[i]->scale==expected[i][2] && all[i]->translation==expected[i][3]);
++  for(int j=i+1;j<5;++j) assert(all[i]!=all[j]);
++ }
++ p::write(normal,false); assert(!p::read(p::direct()) && !p::modes->normal->reflection);
++ p::modes->normal->reflection=true; assert(p::read(p::make()->mode));
++ int calls=0;
++ auto result=p::with_effect([&](auto original){++calls;assert(original==normal); original->rotation=false;});
++ assert(calls==1 && result==normal && !p::modes->normal->rotation);
++ auto thrown=flight::make_ref<p::Flags>();
++ try {p::with_effect([&](auto original){++calls;assert(original==normal);original->scale=false;throw thrown;});assert(false);} catch(const flight::Ref<p::Flags>& error){assert(error==thrown);}
++ assert(calls==2 && !normal->scale);
++ for(int mask=0;mask<16;++mask){
++  auto flags=flight::make_ref<p::Flags>(); flags->reflection=mask&1; flags->rotation=mask&2; flags->scale=mask&4; flags->translation=mask&8;
++  auto bone=p::custom(flags);assert(bone->mode==flags);
++  assert(bone->mode->reflection==bool(mask&1) && bone->mode->rotation==bool(mask&2) && bone->mode->scale==bool(mask&4) && bone->mode->translation==bool(mask&8));
++ }
++ for(auto& value:all) value.reset(); result.reset();
++ auto held=p::delayed();std::weak_ptr<p::Flags> weak=normal;
++ auto replacement=flight::make_ref<p::Flags>();p::modes->normal=replacement;
++ assert(p::direct()==replacement && held()==normal);
++ normal.reset();assert(!weak.expired());assert(held()==weak.lock());held={};assert(weak.expired());
++}
++`;
++
++describe('checked Record members retain one named allocation owner', () => {
++  it('uses the original interface carrier in the defining table and all imported consumers', () => {
++    const files = emitGraph();
++    const table = files.find((file) => file.path.endsWith('/presets.hpp'))!.contents;
++    expect(table).toContain('flight::Ref<preset::Flags> normal;');
++    expect(table).not.toMatch(/struct reflection_rotation_scale_translation_/u);
++    const consumer = files.find((file) => file.path.endsWith('/consumer.hpp'))!.contents;
++    expect(consumer).not.toMatch(/static_pointer_cast|dynamic_pointer_cast|reinterpret_cast/u);
++  });
++  it.skipIf(!toolchain || includes.length === 0)(
++    'runs the complete imported graph with original owners, all flags, live writes, capture and exact errors',
++    () => {
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-record-member-owner-'));
++      try {
++        for (const file of emitGraph()) {
++          const output = path.join(directory, file.path);
++          mkdirSync(path.dirname(output), { recursive: true });
++          writeFileSync(output, file.contents);
++        }
++        const input = path.join(directory, 'native.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++        writeFileSync(input, native);
++        execFileSync(
++          toolchain!.command,
++          createCppExecutableArguments(toolchain!, input, binary, [directory, ...includes]),
++          { encoding: 'utf8', stdio: 'pipe' },
++        );
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { force: true, recursive: true });
++      }
++    },
++    120000,
++  );
++  it.skipIf(!toolchain || includes.length === 0)(
++    'keeps observable field initializer order when the named declaration orders its cells differently',
++    () => {
++      const source = `interface Flags { a: boolean; b: boolean }
++export const events: number[] = [];
++function mark(value: number): boolean { events.push(value); return value === 1; }
++export const Modes = { Normal: {b: mark(1), a: mark(2)} } satisfies Record<string, Flags>;`;
++      const directory = mkdtempSync(path.join(tmpdir(), 'flight-record-owner-order-'));
++      try {
++        const input = path.join(directory, 'order.cpp');
++        const binary = path.join(directory, getCppExecutableName(toolchain!, 'order'));
++        writeFileSync(
++          input,
++          emitSingle(source) +
++            String.raw`
++#include <cassert>
++int main() {
++  namespace p = flighthq_preset;
++  static_assert(std::is_same_v<decltype(p::modes->normal), flight::Ref<p::Flags>>);
++  assert(p::events.size() == 2 && p::events[0] == 1 && p::events[1] == 2);
++  assert(p::modes->normal->b && !p::modes->normal->a);
++}`,
++        );
++        execFileSync(toolchain!.command, createCppExecutableArguments(toolchain!, input, binary, includes), {
++          encoding: 'utf8',
++          stdio: 'pipe',
++        });
++        execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++      } finally {
++        rmSync(directory, { force: true, recursive: true });
++      }
++    },
++    120000,
++  );
++  it('preserves source-only fields instead of narrowing a wider preset owner', () => {
++    const output = emitSingle(
++      'interface Flags { a:boolean; b:boolean } export const Modes={ Normal:{a:true,b:false,extra:7} } satisfies Record<string,Flags>; export function read():number{return Modes.Normal.extra;}',
++    );
++    expect(output).toContain('double extra;');
++    expect(output).not.toContain('flight::make_ref<Flags>');
++  });
++  it('does not elect one of two independent nominal owners by declaration order', () => {
++    for (const declarations of [
++      'interface A { a:boolean;b:boolean } interface B { a:boolean;b:boolean }',
++      'interface B { a:boolean;b:boolean } interface A { a:boolean;b:boolean }',
++    ]) {
++      const output = emitSingle(
++        declarations +
++          ' export const One={p:{a:true,b:false}} satisfies Record<string,A>; export const Two={p:{a:false,b:true}} satisfies Record<string,B>;',
++      );
++      expect(output).not.toMatch(/flight::make_ref<[AB]>/u);
++      expect(output).toMatch(/struct a_b_[0-9a-f]+/u);
++    }
++  });
++  it('keeps optional storage and existing object sources on their original representation', () => {
++    const optional = emitSingle(
++      'interface Flags { a:boolean;b?:boolean } export const Modes={p:{a:true,b:false}} satisfies Record<string,Flags>;',
++    );
++    expect(optional).not.toContain('flight::make_ref<Flags>');
++    const held = emitSingle(
++      'interface Flags { a:boolean;b:boolean } const held={a:true,b:false}; export const Modes={p:held} satisfies Record<string,Flags>;',
++    );
++    expect(held).not.toContain('flight::make_ref<Flags>');
++  });
++});

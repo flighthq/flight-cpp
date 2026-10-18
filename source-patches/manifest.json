@@ -5199,6 +5199,23 @@
       "unblocks": "The inherited callable and enum prerequisite for exactly the two approved GL shared reference cells. This is not another payload view, normal profile activation, GL target-copy work, allocation provenance, public registry consumer or package qualification.",
       "expires": "When callable identity follows original declaration/generic substitution, inherited enum representation uses that declaration owner, and explicit shared-cell owner wrapping supports source-order forward runtime declarations.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-checked-record-member-owner",
+      "dependency": "flight-compiler",
+      "patch": "compiler-checked-record-member-owner.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "Fresh members of a satisfies Record<string,NamedInterface> table retain anonymous owner storage despite the checked scalar interface contract; storing shared TransformMode2D presets in Bone2D.transformMode or returning them as TransformInherit2D fails between unrelated Ref carriers.",
+      "rewrite": "Elect one original declared interface as the common anonymous scalar shape carrier before emitting any allocation or storage in the graph. Evidence comes from complete fresh named-property members of immutable module Record tables. Require one represented Flight interface with no generic/heritage/optional/computed/phantom or source-only fields and exact primitive member domains. Distinct nominal candidates keep the old independent representation. Emit the elected owner in its original declaration namespace and include its defining header, including inferred/imported/type-query uses.",
+      "equivalence": "Each original fresh object is allocated once directly in the checked named carrier. All retained storage and reads of that complete anonymous shape use the same carrier from the start; existing objects are never converted, rebuilt or copied. The original preset singleton/controlblock, live field cells, field evaluation order, callbacks/errors and captured lifetime remain observable. Bone2D.transformMode stays Ref<TransformInherit2D> and accepts all sixteen independent boolean combinations. No unchecked cast, runtime descriptor, new null coercion, enum replacement or closed preset domain is added.",
+      "whyNotUpstreamFirst": "The pin-bound compiler correction follows the repository source-patch mechanism and changes no original Flight implementation or runtime ABI.",
+      "unblocks": "Existing six-row no-viable-conversion-f7267dc5 and the original public Spine binary bones consumer, after normal reconciliation of the defining types and dependent skeleton2d-formats packages. No header or public parser success before measured normal output.",
+      "expires": "when flight-compiler preserves one checked fresh Record member owner consistently through inferred table storage and all imported/type-query uses.",
+      "appliedOn": "2026-10-18",
+      "verification": "Declared106 compiler patches apply sequentially from rawclean pin806d257 and reproduce the strictly built qualified source/fixture byte-for-byte. Final34/34 focused tests PASS (6 new plus28 prior); native controls preserve graph-wide owner/controlblock, live writes, callbacks/errors, captured lifetime, all16 flag combinations and source field-effect order. Old105 first5 controls reproduce2FAIL3PASS. Same105 relevant467 backend comparison: baseline439PASS28FAIL, candidate441PASS26FAIL,1109unselected; two baseline-only15s timeouts both PASS on matching120s baseline/candidate reruns, leaving26 identical failures and zero new functional failures. Raw pinned3type compiler-only probe selects5 original named preset allocations/public Bone field unchanged. Whole6original TS modules provide60case original binarybone oracle. Actual complete original consumer is registered; installed build/link/run and exact6headers await coordinated normal types+skeleton output from sole Types writer builder2. No installed header promotion or full parser/package/global pass claimed."
     }
   ]
 }

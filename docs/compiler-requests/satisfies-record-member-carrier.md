@@ -206,3 +206,72 @@ request: preserve each original shared preset reference, every four-axis combina
 TransformInherit2D and the parser's positional recovery behavior. No per-header workaround, copied
 preset or narrower bone field is supplied. This is an actual locked-source/generated-carrier audit;
 no generation or native test was run, and builder7's recorded **0/13** follow-on failures are unchanged.
+
+## Checked fresh table member owner qualification
+
+The newly approved six-row `no-viable-conversion-f7267dc5` task covers the binary
+bone handler, JSON bone handler and four binary aggregate callers. The original
+`satisfies` target survives in neutral IR on the outer literal as
+`Record<string, TransformInherit2D>`, while each fresh member keeps its anonymous
+four-boolean shape. Type emission currently chooses that anonymous owner even at
+the original allocation. This differs from the unrelated inherited anonymous
+callable declaration identity issue; its owner confirmed no allocation-helper overlap.
+
+The bounded compiler candidate elects the original named interface as the one
+storage carrier for that complete anonymous scalar shape throughout an emission
+graph. Evidence must come from fresh named-property members of an immutable
+module table checked against `Record<string, T>`. The target must resolve to one
+represented Flight interface; every required primitive field and domain must
+match exactly. Generic, inherited, optional, computed, phantom, extra-field and
+ambiguous independent-owner layouts keep their existing representation. An
+existing table member alone cannot elect a new owner. Imports and type queries
+use the original declaring interface and its defining header.
+
+Every original preset allocation is constructed directly as that elected owner;
+no existing object is converted or copied. `Bone2D.transform_mode` remains
+`Ref<TransformInherit2D>`, with the independent four-axis domain rather than a
+five-preset enum. A three-module compiler-only probe of the complete raw pinned
+`TransformInherit2D.ts`, `TransformMode2D.ts` and `Bone2D.ts` emits exactly those
+named preset allocations and preserves the nominal public bone field. This is
+scratch evidence, not normal installed output or parser execution.
+
+Storage and construction must use the same elected layout. A new native control
+with side-effecting field initializers caught a candidate that changed storage
+but retained anonymous construction order: C++ reordered the effects. Selecting
+the elected construction layout uses the existing source-order temporary path
+before ordering the named initializer. The corrected candidate builds strictly
+and passes **34/34 focused tests**, including the six new controls and 28 earlier
+nullable, query, alias, loop and private-forward controls. They cover the full
+imported graph, direct/barrel/type-query/local uses, original shared owner and
+control block, live writes, captured lifetime, exact callback error owner,
+all 16 independent flag combinations, field effects and negative owner/layout
+controls. The old105 stack fails the first two positive controls and passes their
+three negative controls; the earlier candidate's field-order failure is retained
+as a separate qualification counterexample.
+
+The same105 existing backend baseline records 439 PASS / 28 FAIL / 1109
+unselected (467 selected, 1576 expanded assertion occurrences); the candidate
+records 441 PASS / 26 FAIL. The only two differing occurrences were explicit
+15-second baseline timeouts. Matching 120-second reruns pass both tests on both
+sources, leaving the same 26 failures and **zero new functional failures**. Those
+timing differences do not establish new compiler capabilities. All 106 declared
+compiler patches apply sequentially from a clean raw pin and reproduce the
+strictly built, 34-test qualified candidate and fixture byte for byte. Latest-base
+composition is verified separately before the shared generation handoff. The
+registered original complete-header public binary-bone consumer is prepared from
+**60 cases executed against six whole original TypeScript modules**, including
+the actual reader, preset and diagnostic callees. It checks shared input/array
+owners, exact subarray boundaries, cursor/truncation behavior, names, parents,
+numeric fields, diagnostics, skip/no-sink behavior and original preset identity.
+Its baseline native build fails at the known anonymous-to-nominal boundary;
+there is no installed consumer pass yet.
+
+Normal reconciliation must move the defining `types` preset owner together with
+the `skeleton2d-formats` consumers. Regenerating only callers would leave the old
+canonical preset allocation in place. Builder2 remains the sole coordinated Types writer; the qualified patch must
+join its canonical-owner and GL-profile floor. Prefer one grouped output including
+skeleton2d-formats; otherwise builder5 reconciles that caller package once after
+consuming shared Types. No separate builder5 Types run is authorized. The exact six
+headers must then be measured; all six rows remain unchanged during preparation.
+No generated header edit, runtime descriptor change, pointer cast, replacement
+preset, full parser/package success or global sweep is claimed.
