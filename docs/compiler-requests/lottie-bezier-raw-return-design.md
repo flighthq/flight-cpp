@@ -52,3 +52,11 @@ No public ABI activation or new physical storage family is included. The inherit
 ## Implementation sequence after the ABI decision
 
 Keep the existing refusal until a whole original module and its real consumer can use the chosen raw representation. First qualify the presence/owner/read and array/string iterator operations, then original flatten/unflatten and named return/callback forwarding, then the original Path/track physical storage and sampler consumers. Compare the reused 20 source cases plus the added eight return/iteration cases, retain the eight owner controls, and exercise numeric native ABI controls separately. A component probe or emitted helper alone does not establish whole Bezier support. No normal generation or inventory change belongs to this design task.
+
+## User decision: retain numeric native storage
+
+Manager parcel `manager-88c65f63` records the user decision to decline the additive raw entry and raw physical storage alternative described above. `Path.data` remains `Array<double>` and `AnimationTrack` values remain `SequenceView<double>`; no raw storage family is authorized.
+
+Before the native escape, the JSON projection must preserve source iteration, evaluation order, errors and owner identity. At the escape, numeric coordinates convert; nonnumeric coordinates fail with the shared documented `JsonScalarCell` out-of-profile error, without coercion, defaults or stronger input guards. Lottie rows whose fixtures carry nonnumeric Bezier coordinates remain partial for this native numeric storage boundary. Numeric fixtures proceed with normal qualification.
+
+The measured counterexamples and declined alternative remain recorded in this document and in [the carrier boundary evidence](../../artifacts/lottie-bezier-carrier-boundary.json). This decision does not turn component evidence into native original Bezier qualification or change the historical Exact21 results.
