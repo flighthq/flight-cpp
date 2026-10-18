@@ -79,12 +79,32 @@ int main() {
   interface_view.set_pos(2.0);
   check(reader->pos == 2.0, "an interface cursor write is visible on the class instance");
 
-  // PROVISIONAL HISTORICAL NOTE: these provenance controls PASSED on the A-prime commit that was
-  // withdrawn and reverted as 55ccab63 (43 new generated startup aborts traced to a constant-init
-  // root). The API (require_owner / control-block recording) is NOT in the restored base, so the
-  // assertions stand staged here and re-enable only on the ACTUAL corrected reland, verified by a
-  // full-ctest zero-new-fail gate. The data/identity/lifetime/method-thunk assertions below are the
-  // shipped-API half and remain valid on the restored base.
+  // Provenance, on the re-landed A-prime (constant-initialized descriptor; gate passed 153af7cf):
+  // the record lives in the control block, so the recovered owner is the SAME allocation -- a checked
+  // query, never a cast -- and an object built outside make_ref has none.
+  auto recovered = flight::recover_owner<flight::swf::SwfReader>(reader);
+  check(recovered.get() == reader.get(), "recover_owner yields the same allocation");
+  check(flight::detail::recoverable_owner_identity(reader).has_value(), "a make_ref allocation carries provenance");
+  auto required = flight::require_owner<flight::swf::SwfReader>(reader);
+  check(required.get() == reader.get(), "require_owner yields the same allocation");
+  check(!recovered.owner_before(reader) && !reader.owner_before(recovered), "the recovered owner is equivalent");
+  auto foreign = std::make_shared<flight::swf::SwfReader>(bytes, 0.0, bytes.size());
+  check(!flight::recover_owner<flight::swf::SwfReader>(foreign), "an object not made by make_ref has no provenance");
+  bool escaped = false;
+  try {
+    (void)flight::require_owner<flight::swf::SwfReader>(foreign);
+  } catch (const flight::NativeScalarEscapeError&) {
+    escaped = true;
+  }
+  check(escaped, "require_owner throws the native escape for a foreign allocation");
+
+  // Refcount: a recovered reference shares the control block and dropping it restores the count.
+  const long before_recovery = reader.use_count();
+  {
+    auto temporary = flight::recover_owner<flight::swf::SwfReader>(reader);
+    check(temporary.get() == reader.get(), "the recovered reference is the same object");
+  }
+  check(reader.use_count() == before_recovery, "dropping a recovered reference restores the refcount");
 
   // Lifetime: the interface view keeps the owner alive after the original reference is dropped.
   std::weak_ptr<flight::swf::SwfReader> observed = reader;
