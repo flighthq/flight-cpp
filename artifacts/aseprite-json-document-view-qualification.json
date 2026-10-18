@@ -4,11 +4,11 @@
   "checkedRuntimeCommit": "cf3ed6a1a5b77d0fbb71eb34f48f1679f6724b68",
   "compiler": {
     "rawPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
-    "precedingCompilerPatches": 119,
-    "candidateCompilerPatches": 120,
+    "precedingCompilerPatches": 120,
+    "candidateCompilerPatches": 121,
     "patch": "source-patches/compiler-lazy-json-union-document-view.patch",
     "patchSha256": "65ca74c364ca1be7ad20c35c41cc1018d13d957b00ce1d3ce605c552e6dcef87",
-    "backendSha256": "59c55b7b451d0b44d82d563622b44dfd5e7d51b694fc7f83f04acb121f48edf8",
+    "backendSha256": "6937855bed4fce3ef18d025f77e0183dd92e5dc665baca90bde9f8ef7c51221d",
     "fixtureSha256": "511a058dfbef8dbb1471ba6d17499297fdf8dd90c57846be4073e8503bce417d",
     "orderedForeignPatches": [
       {
@@ -605,6 +605,11 @@
         "id": "compiler-typed-empty-fallback-iteration",
         "patch": "compiler-typed-empty-fallback-iteration.patch",
         "sha256": "6039c5df40c9568ecd3ee62bc3be4b93b4d104e774455c056b646d3a617c3656"
+      },
+      {
+        "id": "compiler-narrowed-filter-and-optional-subset",
+        "patch": "compiler-narrowed-filter-and-optional-subset.patch",
+        "sha256": "a4396017b29ea09288e5426bf8438d36689edac093b06b44837474b54afccad7"
       }
     ],
     "additionalIncomingPatch": {
@@ -612,7 +617,14 @@
       "commit": "1f5a18f8",
       "status": "Preserved and qualified in current120 composition; strict build64focused tests and original header/metadata byte identity PASS"
     },
-    "previousQualifiedBackendSha256": "a4490b437e9f5edc96a49c6e61082dbb6937cf016c161c1606f9c7763f7ba08f"
+    "previousQualifiedBackendSha256": "a4490b437e9f5edc96a49c6e61082dbb6937cf016c161c1606f9c7763f7ba08f",
+    "previous120BackendSha256": "59c55b7b451d0b44d82d563622b44dfd5e7d51b694fc7f83f04acb121f48edf8",
+    "rebaseReconciliation": {
+      "base": "ea444681",
+      "laterInactiveProposalBase": "ca9b95d9",
+      "ownPayloadAndFixtureUnchanged": true,
+      "note": "Preserved incoming guarded filter/optional subset and array.flat work. Shared append conflicts resolved retaining both complete entries/sections. No inactive proposal activated."
+    }
   },
   "verification": {
     "productionStrict": {
@@ -620,18 +632,13 @@
       "exit": 0
     },
     "focused": {
-      "command": "node node_modules/vitest/vitest.mjs run packages/compiler-backend-cpp/src/cppJsonUnionDocumentView.test.ts packages/compiler-backend-cpp/src/cppReadonlyCallableOptions.test.ts packages/compiler-backend-cpp/src/cppReadonlyJsonRecordView.test.ts packages/compiler-backend-cpp/src/cppErasedArraySelection.test.ts packages/compiler-backend-cpp/src/cppGenericArrayPropertyPredicate.test.ts packages/compiler-backend-cpp/src/cppTypedEmptyFallbackIteration.test.ts --maxWorkers=1 --reporter=json",
-      "tests": 64,
-      "pass": 64,
+      "command": "node node_modules/vitest/vitest.mjs run packages/compiler-backend-cpp/src/cppJsonUnionDocumentView.test.ts packages/compiler-backend-cpp/src/cppNarrowedFilterResult.test.ts packages/compiler-backend-cpp/src/cppGenericArrayPropertyPredicate.test.ts --maxWorkers=1 --reporter=json",
+      "tests": 17,
+      "pass": 17,
       "fail": 0,
       "skipped": 0,
-      "reportSha256": "327a3054894aaf9ca02e9d02bdb88c6a0d17fe8dd629805a55e9b614420d26f0",
+      "reportSha256": "ee5536bd4747a016f9e962ddbf305b61edc0cbd2edb574c042d3270e357de748",
       "files": [
-        {
-          "file": "cppErasedArraySelection.test.ts",
-          "tests": 6,
-          "status": "passed"
-        },
         {
           "file": "cppGenericArrayPropertyPredicate.test.ts",
           "tests": 7,
@@ -643,18 +650,8 @@
           "status": "passed"
         },
         {
-          "file": "cppReadonlyCallableOptions.test.ts",
-          "tests": 16,
-          "status": "passed"
-        },
-        {
-          "file": "cppReadonlyJsonRecordView.test.ts",
-          "tests": 6,
-          "status": "passed"
-        },
-        {
-          "file": "cppTypedEmptyFallbackIteration.test.ts",
-          "tests": 23,
+          "file": "cppNarrowedFilterResult.test.ts",
+          "tests": 4,
           "status": "passed"
         }
       ]
@@ -694,7 +691,7 @@
       "nominalJsonUnionCasts": 0
     },
     "orderedPatchRoundTrip": {
-      "compilerPatches": 120,
+      "compilerPatches": 121,
       "apply": true,
       "reverse": true,
       "reapply": true,
@@ -745,14 +742,54 @@
       "postCodeCommit": true
     },
     "originalEmissionReconciliation": {
-      "candidateCompilerPatches": 120,
+      "candidateCompilerPatches": 121,
       "threeParserHeadersByteIdentical": true,
       "sharedMetadataByteIdentical": true,
-      "comparison": "Executed117+owned and current119+owned output SHA256 values are identical. Native runtime/source dependency files unchanged between the original1577 run and this reconciliation."
+      "comparison": "Executed117+owned and current120foreign+owned output SHA256 values are identical; original native source/runtime dependency bytes in its frozen proof unchanged."
+    },
+    "preceding120Focused": {
+      "command": "node node_modules/vitest/vitest.mjs run packages/compiler-backend-cpp/src/cppJsonUnionDocumentView.test.ts packages/compiler-backend-cpp/src/cppReadonlyCallableOptions.test.ts packages/compiler-backend-cpp/src/cppReadonlyJsonRecordView.test.ts packages/compiler-backend-cpp/src/cppErasedArraySelection.test.ts packages/compiler-backend-cpp/src/cppGenericArrayPropertyPredicate.test.ts packages/compiler-backend-cpp/src/cppTypedEmptyFallbackIteration.test.ts --maxWorkers=1 --reporter=json",
+      "tests": 64,
+      "pass": 64,
+      "fail": 0,
+      "skipped": 0,
+      "reportSha256": "327a3054894aaf9ca02e9d02bdb88c6a0d17fe8dd629805a55e9b614420d26f0",
+      "files": [
+        {
+          "file": "cppErasedArraySelection.test.ts",
+          "tests": 6,
+          "status": "passed"
+        },
+        {
+          "file": "cppGenericArrayPropertyPredicate.test.ts",
+          "tests": 7,
+          "status": "passed"
+        },
+        {
+          "file": "cppJsonUnionDocumentView.test.ts",
+          "tests": 6,
+          "status": "passed"
+        },
+        {
+          "file": "cppReadonlyCallableOptions.test.ts",
+          "tests": 16,
+          "status": "passed"
+        },
+        {
+          "file": "cppReadonlyJsonRecordView.test.ts",
+          "tests": 6,
+          "status": "passed"
+        },
+        {
+          "file": "cppTypedEmptyFallbackIteration.test.ts",
+          "tests": 23,
+          "status": "passed"
+        }
+      ]
     }
   },
   "emission": {
-    "scope": "Isolated complete1175-source semantic graph, current119 foreign patches plus this patch, three whole original parser bodies with normal alias repair and production structural metadata; real installed dependency/override bodies. No normal SDK generation.",
+    "scope": "Isolated complete1175-source semantic graph, current120 foreign patches plus this patch, three whole original parser bodies with normal alias repair and production structural metadata; real installed dependency/override bodies. No normal SDK generation.",
     "aliases": {
       "files": [
         "flight/spritesheet_formats/aseprite_parse.hpp",
@@ -825,7 +862,7 @@
   ],
   "limitations": [
     "Isolated consumer preparation is not four normal installed-header qualification. No SDK output, header ledger, ABI or capability version changes.",
-    "No full backend-suite pass is claimed. Six focused suites pass64/64; prior documented unrelated baseline failures are not promoted.",
+    "No full backend-suite pass is claimed. Current121 relevant suites pass17/17; preceding120 six suites pass64/64; prior documented unrelated baseline failures are not promoted.",
     "Undefined/hole storage and unrepresented native scalar writes remain explicit error/refusal/PARTIAL. This patch does not claim their runtime extension.",
     "Shared B commit6e1aa571 final coherence is held by a separate WEBcanvas alias dependency. Any requested native qualification using its direct frozen output is PROVISIONAL.",
     "Original source checks154 and native returned-field checks1577 are distinct measurements; all154 source semantic controls are not claimed native."
