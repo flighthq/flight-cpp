@@ -281,3 +281,41 @@ when that consumer qualifies.
   re-measured. `interaction_manager`, `explain_scene_3d_pipeline_coverage` and `gl_particle_emitter_3d` are
   expected to lower. `render_registry_guards` is expected to become a named refusal. `wgpu_render_state` (symbol
   key on a variant) is unchanged. No header result is claimed until measured.
+
+## Open after activation: asserted receivers and symbol presence (G2 design, no code carried)
+
+**Asserted receiver: `render_cache` `isRenderCacheAdapter`.** The source is `typeof value === 'object' && value !== null &&
+typeof (value as RenderCacheAdapter).adapt === 'function' && 'cache' in (value as RenderCacheAdapter)`, with
+`value: unknown`. Today it is refused (`cpp-membership-test-unrepresented`) and is NOT GENERATED. That refusal is the
+interim boundary, not a resolution. A faithful lowering has to meet four source facts:
+- **Error behavior.** `in` throws a TypeError on a non-object. The guards make that unreachable here (object, not null),
+  so a `false` answer for non-objects would only be valid where such guards are proven. A helper that never throws is not
+  acceptable in general.
+- **Prototype chain.** `'cache' in obj` is true for an inherited `cache`. The runtime has no prototype chain
+  (`any.hpp`: "this runtime has no prototype chain to ask"), and an erased object exposes only its own row cells.
+  Required declared fields cannot prove absence on an arbitrary erased object, and the `Object.prototype` names do not
+  cover class prototypes. The SDK declares 3 classes.
+- **No validation by the assertion.** `as` validates nothing at run time, so a checked recovery (`object_if<T>`, which
+  throws) is wrong.
+- **The neighbouring conjunct.** `typeof (value as RenderCacheAdapter).adapt === 'function'` is already folded to a
+  constant through the trusted assertion. Fixing only the `in` would not make the function faithful.
+
+Requested capability: a runtime prototype model for erased objects. Each erased owner would report its
+prototype-chain member names: `Object.prototype` for plain and struct-emitted objects, or the generated class-prototype
+table for class instances. With it, the compiler can lower an erased `key in value`, behind its proven object guard, to
+own-cell presence OR prototype-chain presence, and lower the asserted member `typeof` through the erased value
+rather than the assertion. Until then the refusal stands.
+
+**Symbol key on a nominal receiver: `scene_document` `isMaterialEntity`.** The source is `EntityRuntimeKey in source` with
+`source: MaterialLike = Omit<Material, typeof EntityRuntimeKey>`. The emitter maps `MaterialLike` to `flight::Ref<Material>`,
+so a plain document material and a Material3D entity share one struct. `allocateEntity` writes
+`[EntityRuntimeKey] = undefined`, so the entity has the key **present but undefined** (JS `in` is true), while a plain
+document material lacks it (false). In C++ both hold a disengaged optional in the same cell:
+- `row_has`/`symbol_present` report engagement (false for both);
+- a bound-cell test reports true for both.
+
+Neither is faithful. Requested capability: the owner records that a computed cell was **written**, even with
+`undefined`. Presence is then written-or-engaged-or-attached. With that, `EntityRuntimeKey in source` lowers to that
+query, under the same rule that every assignable declarer is required. The variant-receiver form
+(`wgpu_render_state`) needs none of this: `compiler-symbol-membership-variant-arm` (committed, inactive) gives it the
+single declaring arm's test.
