@@ -21,8 +21,8 @@ reflection").
 Measured at flight-compiler `2b687ea` with all 44 compiler source patches applied: 1 module emitted, 0
 refused, and 1 compile error (step 1). Steps 2 and 3 are visible in the emitted text below.
 
-The initial measurements below are historical. The final Pixi qualification later in this request
-records the bounded private-graph implementation; other parser contracts remain open.
+The initial measurements below are historical. The final Pixi and Spine qualifications later in this request
+record bounded private graphs over the original JSON owner; other parser contracts remain open.
 
 ## Minimal TypeScript (measured)
 
@@ -94,7 +94,8 @@ and `scene3d-formats` `static_cast<T>(Json::parse(...))` sites.
 
 The compiler-private-json-read-flow patch now carries the proven private Pixi producer/read graph
 through the original JSON owner, with runtime data-property reads. It supplies no general JsonValue-to-Record
-conversion or parser override. Spine and Unity particle parsers remain non-compiling as recorded below.
+conversion or parser override. The original public Spine parser is now qualified below; Unity remains
+non-compiling at its owning Record return.
 
 ## G2 current-pin Pixi inventory qualification
 
@@ -473,3 +474,50 @@ are admitted. Two getter controls and an indexed-reader control retain refusal. 
 run was stopped before inventory writes to add this exclusion; both declared patch sets recovered
 cleanly. Its partial emission is not qualification evidence. The original Spine module stays
 byte-identical; corrected final normal generation remains pending.
+
+## Final original Spine particle qualification (2026-10-18)
+
+The original installed `spine_parse.hpp` compiles, links and runs both public entrypoints. The
+registered CMake/Bazel consumer checks defaults and fresh owners, independent numeric range fallbacks,
+authored document units and keyframe order, exact validation paths/order, UTF16 image strings and
+duplicates, diagnostics, bitwise conversion, nonfinite values and real sorted multi-stop curves.
+A fresh installed-header driver matches the untouched pinned parser, factory, curve and diagnostic
+bodies on **704 inputs / 1408 calls**, all **52 config and 24 document fields**, 99,505 numeric reads,
+6,408 exact UTF16 strings and 268 curve arrays. Each source invocation parses once. Signed zero,
+NaN/Infinity kinds and application messages/order are exact; finite values are exact except
+directionX/Y's relative/absolute 1e-12 libm tolerance. Built-in syntax wording is implementation dependent.
+
+Normal generation with 89 compiler patches first supplied the complete parser and retained all 65 existing definitions
+across its four changed headers, adding the real parse/image algorithms and removing exactly their
+two omission markers. That normal product exposed shared RegExp capture regressions in formerly
+passing ParticleDesigner/Starling code. Its initial four-header result was 1 pass / 3 failures at
+ParticleDesigner's line 104 `Array.includes(optional capture)`; Starling's optional `trimEnd` was also
+inspected. This intermediate result was held as partial. Builder5 qualified the shared exact-value
+optional search and checked String trim projection; no parser rewrite or generated repair was used.
+
+The required final normal scoped reconciliation ran on frozen `12c2c3f3` with **92 compiler /
+293 total patches**, exited zero and restored both pinned checkouts clean. It emitted 1135/1141
+closure modules across ten packages and retained the particle slice at **16/18 emitted, 2 refused**.
+Only one Starling header and three total paths changed relative to that 89-patch product; the complete Spine header
+is unchanged. Frozen input hashes match. The original installed **Spine, ParticleDesigner and Starling
+consumers pass 3/3 CTest**, so both capture regressions are cleared. Source-patch automation passes 2/2
+and package labels pass 1/1. The manifest preserves the measured mixed binding-profile provenance;
+no unchanged Pixi/counter SDK or global sweep was repeated.
+
+The complete Clang 22.1.8 `-j2` check of exactly the four assigned headers is **1 pass / 3 failures,
+0 unattempted**, in 203.1 seconds. Spine passes. `_internal_index`, `contract` and
+`register_built_in_particle_formats` now first fail at the pre-existing Unity
+`NamedProperties` to `Record<String,Any>` return at line 77. The old Spine cause `31b754c5` is retired;
+the existing Unity cause `c287f892` holds its own row and these three callers. No Unity consumer,
+serialization, whole-package or all 25 completion is claimed. The Spine source row is outside the
+original historical 25, so this unit adds **zero** promotions to that set; the prior Pixi promotion
+remains distinct. Other nominal Lottie/Aseprite/TexturePacker/glTF document boundaries remain open.
+
+The original parsed graph remains live through private views, with no Record/tree copy, nominal
+reconstruction, schema gate, unchecked cast, public Record ABI change or input narrowing. The document
+and keyframes allocate only at their original authored fresh literals. Private proof controls retain
+nine prior ABI comparisons and exclude guarded escapes/mixed callers, unsafe captures/catches and
+opaque getter/index observations. The seven mapper exclusions and emitted native order/count/exact
+thrown-owner/live-alias checks pass. The first attempted run was stopped before inventory writes
+to add that getter exclusion, and its patches recovered cleanly; its partial emission is not evidence
+of a successful generation. The carried own Vitest fixture was not run because Vitest is unavailable.

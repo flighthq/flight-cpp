@@ -131,7 +131,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 102 | `call-has-no-matching-8a1f3a33` | 1 | GL | compiler | a narrowed `Texture2D` reference read through structural `row_get` *(existing request extended)* |
 | 103 | `call-has-no-matching-8d9de718` | 1 | PLAT | compiler | default node runtime supplies a merged child row to nominal NodeAny recursion; [existing request](compiler-requests/node-any-generic-traits-leak.md#g2-interaction-spatial-collection-selects-the-default-runtime-owner) |
 | 104 | `call-has-no-matching-b3c6bcee` | 1 | GL | repair key + compiler | `log_once` designated initializer *(G2: key map extended; 0 pass, 1 to `no-matching-constructor-34a8ea9f`)* |
-| 105 | `call-has-no-matching-c287f892` | 1 | ANIM | compiler | measured Unity return now NamedProperties→Record at 77; same JSON read-graph cause remains failed |
+| 105 | `call-has-no-matching-c287f892` | 4 | ANIM | compiler | existing Unity return NamedProperties→Record at line 77 plus three Spine-dependent barrels; all remain failed |
 | 106 | `call-has-no-matching-c8046ec6` | 1 | 3D | binding (fixed) | numeric-array optional uniform ranges supplied; G2: 0/1, now existing readonly-view compiler family |
 | 107 | `call-has-no-matching-e7b28969` | 1 | WGPU | runtime (fixed) | the emitted call to `write_texture` matches no declared overload; G2: 0 pass, 1 to `missing-member-47a93368` |
 | 108 | `call-has-no-matching-fbd6de0d` | 1 | 3D | [compiler request](compiler-requests/interface-heritage-widening.md) | `Mesh.materials` carries `Material3DValue` arms that cannot widen to the callback's declared `Material3D` base |
@@ -154,7 +154,7 @@ are reserved for its G2 follow-up to E0a's TextLabel / text-layout / Scene2D GL 
 | 125 | `no-viable-conversion-03bf8175` | 1 | 2D | repair (applied) | `data?.element ?? null` partial-row absence projected by declared repair; G2: 0 pass, 1 moved to `undeclared-identifier-993e82f1` |
 | 126 | `no-viable-conversion-0faa55ca` | 1 | GL | source annotation (applied) | generic key enumeration retains typed renderer map; G2: 1/1 pass; [request](compiler-requests/readonly-map-key-enumeration-value-carrier.md) |
 | 127 | `no-viable-conversion-2909a65f` | 1 | 2D | patch (fixed) | four `merged.X ?? []` Map-spread fallbacks respelled `new Map<Kind, V>()`; G2 recheck: 1 pass |
-| 128 | `no-viable-conversion-31b754c5` | 4 | ANIM | compiler | measured Spine Any→Record at 103 plus three former Pixi-dependent barrels;0/4 pass |
+| 128 | `no-viable-conversion-31b754c5` | 4 original | ANIM | compiler | retired: Spine passes; three barrels follow the existing Unity owning-Record return at line 77 |
 | 129 | `no-viable-conversion-331a999f` | 1 | GL | runtime (applied) | a `Float32Array \| Uint8Array` output passed to `readPixels`'s `ArrayBufferView` *(G2: 1/1 pass)* |
 | 130 | `no-viable-conversion-4bbb9be5` | 1 | 2D | repair (applied) | texture-cache local re-declared with the nominal key instead of the effective carrier *(G2: fixed; 0 pass, 1 to `undeclared-identifier-74ca0a55`)* |
 | 131 | `no-viable-conversion-562151da` | 1 | WGPU | compiler | a value is passed where its declared type cannot receive it; attachment member typed `Any` from a call result *(request linked; two source forms rejected)* |
@@ -2935,19 +2935,18 @@ it. No member copy, field drop or cast is made.
 **G2: 0/1 compile, 1 fail** (`-j1`, Clang 22.1.8). `flight/render_gl/enable_gl_render_texture_guards.hpp`
 moves to `no-matching-constructor-34a8ea9f`.
 
-### 105. `call-has-no-matching-c287f892` — 1 header, measured 0 pass / 1 fail
+### 105. `call-has-no-matching-c287f892` — 4 failed headers
 
-After normal 82 compiler / 283 patch generation, the complete changed-header check still fails
-`flight/particles_formats/unity_parse.hpp:77`, now at `NamedProperties`→`Record<String,Any>` return.
-The shared JSON named-view overload exists; it preserves the original owner but cannot satisfy this
-owning return contract. The existing cause identifier is retained for this composite JSON read graph.
+After the final normal 92 compiler / 293 patch particle reconciliation, the three original Spine-dependent
+barrels first reach the existing `unity_parse.hpp:77` NamedProperties→Record return. Together with
+the previously measured Unity row this cause holds four failures. The assigned four-header check is
+1 pass / 3 failures / 0 unattempted; the Spine source passes. The required original Spine,
+ParticleDesigner and Starling consumers pass 3/3, clearing the intermediate shared capture regressions.
 
 The [Unity source/carrier audit](compiler-requests/parsed-json-object-shape-reads.md#g2-unity-particle-json-returns-a-named-view-of-the-wrong-carrier)
-continues to require direct/document evaluation order, actual PPU/range/shape/burst/default mappings,
-curve baking, typed config/document owners and ordered diagnostics. Its complete graph is not selected
-by the bounded private Pixi producer proof. The erased-array and retained-callee gaps remain inspected
-barriers, with no new Unity parser/link/serialization success claimed. A Record copy, nominal schema
-cast or empty result would lose the original contract.
+still requires its full original graph, PPU/ranges/curves/config/document/diagnostic owners and order.
+A live named view does not satisfy this owning return contract. No Unity consumer, serializer, owner
+copy, nominal cast or public ABI replacement is supplied or claimed.
 
 ### 106. `call-has-no-matching-c8046ec6` — 1 original header, 0 pass / 1 follow-on
 
@@ -3405,20 +3404,23 @@ unchanged; no global or unchanged native rerun is claimed.
   - TypeScript equivalence: the original and patched `mergeDomRenderOptions`, transpiled with the pinned compiler checkout's TypeScript 5.9.3, give identical results on 8 fragment sequences. That covers entries and order, value identity, fresh result maps, unchanged inputs, result key order, and the exact sequence of fragment property reads.
 - compiler request: `docs/compiler-requests/contextual-empty-array-fallback-element-evidence.md`
 
-### 128. `no-viable-conversion-31b754c5` — 4 headers, measured 0 pass / 4 fail
+### 128. `no-viable-conversion-31b754c5` — retired: 1 pass / 3 follow-ons
 
-Normal82 compiler / 283 patch particle generation retains the source Spine failure at
-`flight/particles_formats/spine_parse.hpp:103`: `require_spine_record` returns Any where
-Record<String,Any> is required. Three former Pixi-dependent barrels now reach this same first error:
-`_internal_index.hpp`, `contract.hpp` and `register_built_in_particle_formats.hpp`.
-All four were attempted in the complete scoped checks; none passes.
+The original public Spine particle parser is complete and native-qualified after normal 92 compiler /
+293 patch scoped reconciliation. Its registered consumer passes the CMake build, link and CTest check,
+and both original public entrypoints match untouched pinned source on 704 inputs / 1408 calls,
+all 52 config and 24 document fields,
+including exact validation order, defaults, fresh authored owners, real curves and UTF16 strings.
+No parsed graph/Record copy, schema fabrication or public ABI change is used.
 
-The [existing source/carrier audit](compiler-requests/parsed-json-object-shape-reads.md#g2-spine-particle-object-guard-cannot-return-an-unprojected-any-as-record)
-requires one live dynamic owner, tint/alpha/images validation order and path errors, valid defaults,
-actual range/unit/shape/blend mappings, real curves and config/diagnostics/document owners. An object
-predicate does not establish exact boxed Record storage. The private Pixi proof does not authorize an
-escaping/public Record replacement, an owner copy or a schema gate. Omitted parse/image algorithms
-remain separate inspected barriers. No Spine particle execution/curve/serialization gain is claimed.
+The complete four assigned standalone headers with Clang 22.1.8 at `-j2` yield 1 pass / 3 failures /
+0 unattempted in 203.1 seconds. Spine passes; the three barrels now follow existing Unity cause
+`c287f892` at its line 77 return. The intermediate ParticleDesigner/Starling capture regressions
+are cleared: all three original consumers pass 3/3.
+Only these four inventory rows change; global sweep totals remain their historical snapshot.
+This source Spine row is outside the original historical 25, giving zero additional promotions.
+See [final qualification](compiler-requests/parsed-json-object-shape-reads.md#final-original-spine-particle-qualification-2026-10-18).
+No Unity, serialization, whole-package, all 25 or Canvas completion is claimed.
 
 ### 129. `no-viable-conversion-331a999f` — 1 header(s)
 

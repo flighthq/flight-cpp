@@ -2,7 +2,7 @@
 // a627849, exercised natively. Ported from formatRegistry.test.ts, starlingPexParse.test.ts and
 // starlingPexSerialize.test.ts. detect.ts and parseParticleConfig.ts are exercised through test-local codecs: the
 // built-in codec table lives in registerBuiltInParticleFormats.ts, which does not compile at this pin because it
-// reaches the Spine particle Record-owner error (docs/compiler-requests/parsed-json-object-shape-reads.md). Upstream's
+// reaches the Unity particle owning-Record return (docs/compiler-requests/parsed-json-object-shape-reads.md). Upstream's
 // built-in-detection cases are that residual.
 //
 // Additions are marked "Addition:". They cover:
