@@ -4649,6 +4649,31 @@ static void test_json_scalar_member_projection() {
         "a boolean keeps its type with JS truthiness/ToNumber");
 }
 
+// Any-receiver projection on the existing private parsed-JSON read path.
+static void test_json_scalar_any_receiver_projection() {
+  using flight::Any;
+  const auto object = flight::Json::parse(flight::String("{\"fr\":30,\"nil\":null,\"text\":\"30\"}"));
+  const Any receiver(object);
+  const auto fr = flight::read_json_scalar_property(receiver, flight::String("fr"));
+  const auto nil = flight::read_json_scalar_property(receiver, flight::String("nil"));
+  const auto missing = flight::read_json_scalar_property(receiver, flight::String("absent"));
+  const auto text = flight::read_json_scalar_property(receiver, flight::String("text"));
+  check(fr.is_present() && fr.as_native_number() == 30.0, "Any receiver: present number projects");
+  check(nil.is_present() && nil.is_nullish() && nil.to_number() == 0.0,
+        "Any receiver: present null is nullish, not absence");
+  check(missing.is_absent() && missing.type_of() == "undefined",
+        "Any receiver: missing own key is absent");
+  check(text.type_of() == "string" && text.to_number() == 30.0,
+        "Any receiver: wrong-typed string preserves type and ToNumbers at use");
+  bool threw = false;
+  try {
+    (void)flight::read_json_scalar_property(Any(flight::null), flight::String("fr"));
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  check(threw, "Any receiver: a direct read on a nullish receiver throws TypeError as the read path does");
+}
+
 int main() {
   test_array();
   test_array_get_optional_index();
@@ -4673,6 +4698,7 @@ int main() {
   test_json_owner_shared_view();
   test_json_scalar_cell();
   test_json_scalar_member_projection();
+  test_json_scalar_any_receiver_projection();
   test_any_to_string();
   test_erased_ref();
   test_any_object_reference_boxing();

@@ -227,4 +227,14 @@ class JsonScalarCell final {
   return JsonScalarCell{properties.get(key)};
 }
 
+// The Any-receiver form the private parsed-JSON read path actually has. It mirrors
+// read_json_data_property's direct-read rule (a nullish receiver throws TypeError) and keeps presence:
+// a missing own key is absent, while a present value is preserved raw.
+[[nodiscard]] inline JsonScalarCell read_json_scalar_property(const Any& value, const String& key) {
+  if (value.is_nullish()) throw TypeError("Cannot read properties of null or undefined");
+  const auto properties = named_properties(value);
+  if (!properties.has(key)) return JsonScalarCell{};
+  return JsonScalarCell{properties.get(key)};
+}
+
 } // namespace flight
