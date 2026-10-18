@@ -2221,14 +2221,14 @@ template <typename Object>
 // provenance: the exact allocated type's own cells (through its exact-type owner), then that type's
 // registered class prototype chain, then Object.prototype. A reference typed as a base therefore sees the
 // derived object's own members. Without a make_ref record the exact type is unknown and the static type's
-// cells could miss derived members, so the query raises OutOfProfileMemberQuery -- an explicit partial
+// cells could miss derived members, so the query raises OutOfProfileError -- an explicit partial
 // boundary -- rather than answering false. A null reference throws TypeError, as `in` on null does.
 template <typename Object>
 [[nodiscard]] bool has_own_named_property(const std::shared_ptr<Object>& object, const String& key) {
   if (!object) throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in null"));
   const auto identity = detail::recoverable_owner_identity(object);
   if (!identity || identity->own_row_owner == nullptr) {
-    throw OutOfProfileMemberQuery("`in` on a nominal reference with no allocation provenance: its exact type is unknown");
+    throw OutOfProfileError("`in` on a nominal reference with no allocation provenance: its exact type is unknown");
   }
   const auto owner = std::static_pointer_cast<RowOwner>(identity->own_row_owner(identity->object));
   if (owner && owner->has_named_cell(key.to_utf8())) return true;
@@ -2240,20 +2240,20 @@ template <typename Object>
 // has the key when it is an own cell, a member of its registered class prototype chain, or an own name of
 // Object.prototype. No value is read and no getter runs. What this runtime cannot see -- an array, a
 // function or external value, an object whose type never reached the row machinery, a class whose
-// subclasses its stored type does not rule out -- raises OutOfProfileMemberQuery instead of answering.
+// subclasses its stored type does not rule out -- raises OutOfProfileError instead of answering.
 [[nodiscard]] inline bool has_property(const Any& value, const String& key) {
   switch (value.kind()) {
     case AnyKind::object:
       break;
     case AnyKind::function:
     case AnyKind::external:
-      throw OutOfProfileMemberQuery("`in` on a function or external value: this runtime has no member table for it");
+      throw OutOfProfileError("`in` on a function or external value: this runtime has no member table for it");
     default:
       throw TypeError(String("Cannot use 'in' operator to search for '") + key + String("' in a non-object"));
   }
-  if (value.is_array()) throw OutOfProfileMemberQuery("`in` on an erased array: its index and length keys are not modelled here");
+  if (value.is_array()) throw OutOfProfileError("`in` on an erased array: its index and length keys are not modelled here");
   const auto view = named_properties(value);
-  if (!view) throw OutOfProfileMemberQuery("`in` on an object whose type never reached the row machinery");
+  if (!view) throw OutOfProfileError("`in` on an object whose type never reached the row machinery");
   if (view.has(key)) return true;
   if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
   return is_object_prototype_property(key);
@@ -2272,21 +2272,21 @@ template <typename Object>
       throw TypeError(String("Cannot read properties of ") + String(value.kind() == AnyKind::null ? "null" : "undefined") +
                       String(" (reading '") + key + String("')"));
     default:
-      throw OutOfProfileMemberQuery("typeof of a member of a primitive, function or external value");
+      throw OutOfProfileError("typeof of a member of a primitive, function or external value");
   }
-  if (value.is_array()) throw OutOfProfileMemberQuery("typeof of a member of an erased array");
+  if (value.is_array()) throw OutOfProfileError("typeof of a member of an erased array");
   const auto view = named_properties(value);
-  if (!view) throw OutOfProfileMemberQuery("typeof of a member of an object whose type never reached the row machinery");
+  if (!view) throw OutOfProfileError("typeof of a member of an object whose type never reached the row machinery");
   if (view.has(key)) return view.get(key).type_of();
   switch (find_inherited_member(value.held_type(), key.to_utf8())) {
     case InheritedMemberKind::method:
       return String("function");
     case InheritedMemberKind::accessor:
-      throw OutOfProfileMemberQuery("typeof of an inherited accessor would run its getter");
+      throw OutOfProfileError("typeof of an inherited accessor would run its getter");
     case InheritedMemberKind::none:
       break;
   }
-  if (key.to_utf8() == "__proto__") throw OutOfProfileMemberQuery("typeof of __proto__ reads the prototype accessor");
+  if (key.to_utf8() == "__proto__") throw OutOfProfileError("typeof of __proto__ reads the prototype accessor");
   if (is_object_prototype_property(key)) return String("function");
   return String("undefined");
 }

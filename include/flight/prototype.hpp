@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <flight/out_of_profile.hpp>
 #include <map>
 #include <mutex>
 #include <optional>
@@ -32,14 +33,11 @@ struct ClassPrototype final {
   bool has_subclasses = false;
 };
 
-// Raised where the runtime cannot answer a presence or typeof question the way the source would: an
-// array, function or external receiver, an inherited accessor whose value would require running its
-// getter, or a class whose subclasses the stored type cannot rule out. It is an explicit boundary of what
-// this runtime represents, never a stand-in for the source's own answer.
-class OutOfProfileMemberQuery final : public std::logic_error {
- public:
-  explicit OutOfProfileMemberQuery(const std::string& what) : std::logic_error(what) {}
-};
+// A presence or typeof question this runtime cannot answer the way the source would -- an array, function
+// or external receiver, an inherited accessor whose value would require running its getter, a class whose
+// subclasses the stored type cannot rule out, a reference with no allocation provenance -- raises the one
+// out-of-profile family, OutOfProfileError, with that reason. It is an explicit boundary, never a stand-in
+// for the source's own answer.
 
 enum class InheritedMemberKind : std::uint8_t { none, method, accessor };
 
@@ -84,7 +82,7 @@ bool register_class_prototype(ClassPrototype prototype) {
     const auto found = registry.classes.find(*current);
     if (found == registry.classes.end()) return InheritedMemberKind::none;
     if (found->second.has_subclasses) {
-      throw OutOfProfileMemberQuery("a class with emitted subclasses is reached without the object's exact type");
+      throw OutOfProfileError("a class with emitted subclasses is reached without the object's exact type");
     }
     for (const auto& name : found->second.methods) {
       if (name == key) return InheritedMemberKind::method;

@@ -1102,7 +1102,7 @@ int main() {
     try {
       const flight::Ref<TestProvenanceBase> unrecorded = std::make_shared<TestProvenanceDerived>();
       static_cast<void>(flight::has_own_named_property(unrecorded, flight::String("intensity")));
-    } catch (const flight::OutOfProfileMemberQuery&) {
+    } catch (const flight::OutOfProfileError&) {
       unrecorded_refused = true;
     }
     check(unrecorded_refused, "an allocation make_ref did not record is refused, never answered false");
@@ -1151,7 +1151,7 @@ int main() {
     bool accessor_refused = false;
     try {
       static_cast<void>(flight::member_typeof(instance, flight::String("size")));
-    } catch (const flight::OutOfProfileMemberQuery&) {
+    } catch (const flight::OutOfProfileError&) {
       accessor_refused = true;
     }
     check(accessor_refused, "typeof of an inherited accessor would run its getter, so it is refused");
@@ -1159,7 +1159,7 @@ int main() {
     try {
       static_cast<void>(flight::has_property(flight::Any::object(flight::make_ref<TestPrototypeBase>()),
                                              flight::String("shared")));
-    } catch (const flight::OutOfProfileMemberQuery&) {
+    } catch (const flight::OutOfProfileError&) {
       subclassed_refused = true;
     }
     check(test_prototype_base_registered && subclassed_refused,
