@@ -6,9 +6,10 @@
     "foreman-02615c01",
     "foreman-59356c7a",
     "foreman-1d695b70",
-    "foreman-3069f25d"
+    "foreman-3069f25d",
+    "foreman-aee4a0c4"
   ],
-  "status": "COMPLETE: source-derived vocabulary plus whole-original cap/join preparation handed off for integration. Compiler137/current dependency native consumer22PASS; coherent136 compiler/texture prep already landed. Text owner,image options factory and Bezier raw storage remain explicit; no normal output or SDK promotion.",
+  "status": "Vocabulary/cap-join preparation landed b5851cce. Accepted Bezier profile keeps numeric native storage; affected nonnumeric native escapes remain PARTIAL/out-of-profile with faithful preescape JSON projection. Builder3 owns bounded implementation; no public ABI proposal wait. Text/image/normal-output boundaries remain explicit.",
   "authority": {
     "scope": "existing selected original Lottie/resource public header closure only, with ordinary same-cause compiler fixes",
     "excluded": [
@@ -1363,15 +1364,32 @@
         "original flatten can return string/object coordinates through unknown despite number[] annotation",
         "getter reads and errors occur in original source order, not during the presence guard"
       ],
-      "requiredCapability": "retain erased assertion owner and lazy raw nested member/array projection, preserving source absence and exception timing",
+      "requiredCapability": "Existing-family faithful JSON projection before numeric native escape; numeric storage/callable/consumer qualification. Nonnumeric native escape uses shared documented out-of-profile and remains PARTIAL.",
       "unapprovedShortcuts": [
         "stronger schema/array guard",
         "native LottieShapePath fabrication",
         "eager nested-array copy",
         "stub or copied replacement body"
       ],
-      "owner": "Builder3 raw-value/return/storage design and proof perForeman3069f25d; Builder5 reduction handed off.",
-      "evidence": "artifacts/lottie-bezier-carrier-boundary.json;20 whole-original JS cases and8 existing-runtime owner controls. Peer design in docs/compiler-requests/lottie-bezier-raw-return-design.md."
+      "owner": "Builder3 bounded existing-family implementation and numeric qualification after richtext; Builder5 evidence annotations only.",
+      "evidence": "artifacts/lottie-bezier-carrier-boundary.json;20 whole-original JS cases and8 existing-runtime owner controls. Peer design in docs/compiler-requests/lottie-bezier-raw-return-design.md.",
+      "acceptedNativeProfile": {
+        "authority": "Foreman-aee4a0c4 (host-stamped), relaying Manager923d2d8e user decision",
+        "decision": "Retain numeric native Path/Track/sample storage; no raw core storage or additive raw entry.",
+        "nativeStorage": [
+          "Array<double>",
+          "SequenceView<double>"
+        ],
+        "beforeNativeEscape": "Faithful JSON projection preserves original owner, presence, lazy reads, evaluation/iteration order and source exceptions for represented operations.",
+        "numericNativeEscape": "Qualify numeric fixtures through the existing native storage and real original consumers.",
+        "nonnumericNativeEscape": "Shared documented JsonScalarCell out-of-profile error at the native escape; no coercion, substituted default or stronger selection guard.",
+        "sourceEquivalence": "Nonnumeric source cases retain their measured original JavaScript results. The native numeric escape is PARTIAL for that domain, not full source equivalence.",
+        "affectedExact21": "Keep affected selected21 fixtures carrying nonnumeric Bezier coordinates PARTIAL; no header/result promotion. Historical Exact21 remains0PASS21FAIL.",
+        "design": "docs/compiler-requests/lottie-bezier-raw-return-design.md#user-decision-retain-numeric-native-storage",
+        "implementationOwner": "Builder3 bounded existing-family follow-through after richtext; Builder5 does not duplicate it.",
+        "publicAbiDecisionPending": false,
+        "nativeOriginalBezierQualified": false
+      }
     },
     {
       "module": "packages/scene2d-formats/src/lottieImageLayer.ts",
@@ -1689,7 +1707,8 @@
   "limits": [
     "This artifact is a selected closure plan, not a new SDK inventory or package shippability claim.",
     "Historical Exact21 and prior whole original Lottie32 evidence keep their original input labels.",
-    "Fresh module emission and optional header passes do not claim arbitrary nonempty source-domain execution."
+    "Fresh module emission and optional header passes do not claim arbitrary nonempty source-domain execution.",
+    "User-declined raw core/entry proposal is historical context only. Numeric native storage is retained; affected nonnumeric Bezier fixtures remain PARTIAL and are not fully source-equivalent."
   ],
   "freshWholeModules133": {
     "orderedComposition": "Frozen133compiler205Flight338; saved declaration graph203; historical native helper evidence only",

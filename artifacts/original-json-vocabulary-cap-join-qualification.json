@@ -568,12 +568,29 @@
       "fullOriginalConsumer": "NOT RUN"
     },
     "bezier": {
-      "owner": "Builder3 raw-value/return/storage design and proof",
+      "owner": "Builder3 bounded existing-family projection and numeric qualification after richtext",
       "builder5SourceCases": 20,
       "builder5NativeOwnerControls": 8,
       "originalModuleNative": "Refused at cpp-erased-value-assertion-unrepresented; no native original Bezier PASS.",
-      "counterexample": "Original flatten returns string or object coordinate values through unknown; getter order, original referent and later storage/callable results must survive.",
-      "latestPeerDesign": "docs/compiler-requests/lottie-bezier-raw-return-design.md; added return/iterator/storage observations, no product implementation."
+      "counterexample": "Original flatten retains string/object coordinate results through unknown; faithful preescape projection preserves them, but their native numeric escape is documented out-of-profile/PARTIAL under the user decision.",
+      "latestPeerDesign": "docs/compiler-requests/lottie-bezier-raw-return-design.md; added return/iterator/storage observations, no product implementation.",
+      "acceptedNativeProfile": {
+        "authority": "Foreman-aee4a0c4 (host-stamped), relaying Manager923d2d8e user decision",
+        "decision": "Retain numeric native Path/Track/sample storage; no raw core storage or additive raw entry.",
+        "nativeStorage": [
+          "Array<double>",
+          "SequenceView<double>"
+        ],
+        "beforeNativeEscape": "Faithful JSON projection preserves original owner, presence, lazy reads, evaluation/iteration order and source exceptions for represented operations.",
+        "numericNativeEscape": "Qualify numeric fixtures through the existing native storage and real original consumers.",
+        "nonnumericNativeEscape": "Shared documented JsonScalarCell out-of-profile error at the native escape; no coercion, substituted default or stronger selection guard.",
+        "sourceEquivalence": "Nonnumeric source cases retain their measured original JavaScript results. The native numeric escape is PARTIAL for that domain, not full source equivalence.",
+        "affectedExact21": "Keep affected selected21 fixtures carrying nonnumeric Bezier coordinates PARTIAL; no header/result promotion. Historical Exact21 remains0PASS21FAIL.",
+        "design": "docs/compiler-requests/lottie-bezier-raw-return-design.md#user-decision-retain-numeric-native-storage",
+        "implementationOwner": "Builder3 bounded existing-family follow-through after richtext; Builder5 does not duplicate it.",
+        "publicAbiDecisionPending": false,
+        "nativeOriginalBezierQualified": false
+      }
     }
   },
   "normalOutputSequence": [
@@ -609,7 +626,8 @@
   "historicalEvidence": {
     "exact21": "0PASS21FAIL unchanged",
     "originalLottie32": "Prior220checks keep their original frozen composition, not recertified137.",
-    "compilerTexture136": "Prior40 compiler native checks,33 texture native checks and50 whole-original texture JS cases retain136 freeze."
+    "compilerTexture136": "Prior40 compiler native checks,33 texture native checks and50 whole-original texture JS cases retain136 freeze.",
+    "acceptedBezierProfile": "No change to frozen measurements or Exact21 denominator. Numeric storage retained; affected nonnumeric escapes remain PARTIAL, linked to the accepted design."
   },
   "repoScope": "Proof scripts, consumers, artifacts and compiler-request documentation only; no product compiler/runtime patch, generated header, override or normal output change in this arc.",
   "qualificationArchive": {

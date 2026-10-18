@@ -669,7 +669,7 @@
     "same original object/array-element owner, live cell writes and escaped lifetime",
     "raw nested member/sequence/scalar domain and original error/getter timing",
     "original flatten result can contain a string despite its erased number[] annotation",
-    "native and raw callable boundaries must retain their actual original owners and value domains"
+    "Before a represented native escape, preserve original raw owners and source value/evaluation domains. Numeric escape qualifies separately; nonnumeric escape uses the accepted shared out-of-profile boundary and remains PARTIAL."
   ],
   "forbiddenShortcuts": [
     "stronger schema/array guard",
@@ -678,5 +678,22 @@
     "global scalar ABI widening",
     "replacement original function body"
   ],
-  "status": "Ordinary cast/carrier repair insufficient: retain refusal pending bounded raw-value emission and call-boundary strategy with complete original consumer qualification. No compiler/runtime product change or native Bezier pass claimed."
+  "status": "Frozen136 reduction:20whole-original JS cases and8existing-runtime owner controls. Accepted native profile retains numeric storage; nonnumeric escape is explicitly PARTIAL/out-of-profile. Builder3 owns bounded projection/numeric qualification; no public ABI proposal wait or native original Bezier PASS.",
+  "acceptedNativeProfile": {
+    "authority": "Foreman-aee4a0c4 (host-stamped), relaying Manager923d2d8e user decision",
+    "decision": "Retain numeric native Path/Track/sample storage; no raw core storage or additive raw entry.",
+    "nativeStorage": [
+      "Array<double>",
+      "SequenceView<double>"
+    ],
+    "beforeNativeEscape": "Faithful JSON projection preserves original owner, presence, lazy reads, evaluation/iteration order and source exceptions for represented operations.",
+    "numericNativeEscape": "Qualify numeric fixtures through the existing native storage and real original consumers.",
+    "nonnumericNativeEscape": "Shared documented JsonScalarCell out-of-profile error at the native escape; no coercion, substituted default or stronger selection guard.",
+    "sourceEquivalence": "Nonnumeric source cases retain their measured original JavaScript results. The native numeric escape is PARTIAL for that domain, not full source equivalence.",
+    "affectedExact21": "Keep affected selected21 fixtures carrying nonnumeric Bezier coordinates PARTIAL; no header/result promotion. Historical Exact21 remains0PASS21FAIL.",
+    "design": "docs/compiler-requests/lottie-bezier-raw-return-design.md#user-decision-retain-numeric-native-storage",
+    "implementationOwner": "Builder3 bounded existing-family follow-through after richtext; Builder5 does not duplicate it.",
+    "publicAbiDecisionPending": false,
+    "nativeOriginalBezierQualified": false
+  }
 }
