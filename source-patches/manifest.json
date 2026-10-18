@@ -5420,6 +5420,23 @@
       "unblocks": "Preparation for original generic Lottie helpers, applyLottieTransform and createLottiePositionSampler native union field reads. Original public32 closure and exact21 qualification remain pending.",
       "expires": "When upstream preserves checked generic field owners and declared native slot identity through optional and source member narrowing with equivalent tests.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-typed-empty-fallback-iteration",
+      "dependency": "flight-compiler",
+      "patch": "compiler-typed-empty-fallback-iteration.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/particles-formats",
+      "answers": "diagnostic",
+      "refusal": "Original applyParticleImportOptions options.formats ?? [] loses the declared array element context at its empty fallback and is refused with cpp-empty-array-element-type-unproven.",
+      "rewrite": "At direct synchronous for-of of a nullable, closed declared array ?? empty array, recover the single present array domain and supply it to the existing lazy coalesce emitter. Retain that same array handle, re-read its length and read its indexed element each iteration. No loop-variable guess or erased Any fallback.",
+      "equivalence": "Evaluate the source once; construct the empty fallback only for null/undefined. Keep the original array and element owners, live length/order, getter and callback exceptions, and break/continue. The existing optional-owner checks still govern the receiver.",
+      "verification": "Current118 compiler/320total raw ordered baseline and candidate strict PASS. Focused23/23 source tests PASS;13 exclusion/parity controls unchanged including captured mutable loop without binding evidence. Emitted native24checks0fail. Exact original complete registration module emits from saved normal graph without body changes or refused declarations. No SDK/public-native success claimed; see artifacts/typed-empty-fallback-iteration.json.",
+      "whyNotUpstreamFirst": "The pinned backend already implements the exact nullable array and indexed owner operations but fails to carry this expression context into empty construction.",
+      "unblocks": "Original applyParticleImportOptions registration loop; public native registry proof remains gated on coordinated shared Types and a normal particles run.",
+      "expires": "When upstream supplies declared nullable array context at direct empty-fallback iteration and preserves the same source array iterator semantics.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

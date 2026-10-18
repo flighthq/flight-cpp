@@ -1,0 +1,2230 @@
+{
+  "fixtureStrict": true,
+  "emittedNative": {
+    "checks": 24,
+    "failures": 0
+  },
+  "originalSavedGraph": {
+    "sha256": "d9c9d27183c2aec6d473b5f6a5243a607d2d8688b496f14739e2d12ae96a1d3e",
+    "source": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
+    "originalFunctionIrSha256": "c631ea07f284a2b2d7ab269ae70291362871bcb74783c34f639ba0d419a849bb",
+    "unchanged": true,
+    "emittedWithoutRefusedDeclarations": true,
+    "files": [
+      {
+        "path": "flight/particles_formats/register_built_in_particle_formats.hpp",
+        "sha256": "2f3d2d3d8fad338e2da67a9084f32a0842f6febc2fae39ca5d4ef8e9493ba642"
+      }
+    ]
+  },
+  "sourceHashes": [
+    {
+      "file": "scripts/fixtures/typedEmptyFallbackIteration.ts",
+      "sha256": "8a573abc47d94999edfe531528f06f61f8c4f7166c97fcc7a2fceddf518fa087"
+    },
+    {
+      "file": "scripts/fixtures/typedEmptyFallbackIteration.cpp",
+      "sha256": "8cf25a3f6ea4537751317858a393d3dbd119b5f1e7b07f4e2b6d156237ec5ce5"
+    },
+    {
+      "file": "source-patches/compiler-typed-empty-fallback-iteration.patch",
+      "sha256": "6039c5df40c9568ecd3ee62bc3be4b93b4d104e774455c056b646d3a617c3656"
+    }
+  ],
+  "normalSdk": false,
+  "scope": "Compiler source typing and emitted native family controls. Original complete module emitted from the saved normal graph without IR/body changes. This does not qualify installed particle headers, built-in native callback slots or the public registry consumer.",
+  "precedingComposition": {
+    "records": [
+      {
+        "dependency": "flight-compiler",
+        "digest": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164",
+        "id": "compiler-dependent-indexed-access-reference-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f",
+        "id": "compiler-dependent-erased-object-recovery-template",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e",
+        "id": "compiler-error-name-and-erased-error-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7",
+        "id": "compiler-unrepresented-error-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b02689718a4b47624f10ae30b3f8745b84e72659d7f517fbad834ad5467026ff",
+        "id": "compiler-structural-row-weak-keys",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "17f47ccc904d65fb495d38f45d2c59a5bff9989a59db17a6cc01c6d047698510",
+        "id": "compiler-concrete-owner-union-row-assertions",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5aed3efd29ec4939052bceb5504930b7cb8a7e62fcdd06ba38a50b8e6912f255",
+        "id": "compiler-union-import-runtime-identity",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3436926b4125a60232033d4dbc4526c165781fc90223e2ff29a0255b19326f46",
+        "id": "compiler-erased-ref-weak-map-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8e2fdcadd6b9cf7bfb1b6b7fc65d1461e7cbacec2edf4747fc391d815f238644",
+        "id": "compiler-generic-erased-map-reference-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "83614af822c7e842e6d75d94c3d8d95d5ef85edd18b655fea6728f3e8a7162fa",
+        "id": "compiler-nullable-structural-row-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0072f315ef85d72f36a1edbbc886f83d414ba8ac8375f9e530e3dbc83eec577e",
+        "id": "compiler-external-optional-result-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "288b524ea0a3389f7bc2bd2decbf18954ad8eb33de04c180e4fa568e8d8775bc",
+        "id": "compiler-readonly-union-view-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "052bf7fe5b4753a4dc343fe642bc78d3cfb175bb2cc295c9c0b1a27c75983bdf",
+        "id": "compiler-contextual-imported-union-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "06f969236c93eb9a12726deaabf20794e7e8d7d24df6949907b2a24b13d22a8b",
+        "id": "compiler-present-dual-sentinel-multivariant",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "14655ce90d5c9a22f5e1c435e8b9a024fcfa591e168d1e867e9946db5ef3451d",
+        "id": "compiler-exact-variant-owner-priority",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a5370242528a7b45b42d12555e84de83702e6a213a184ee60d6a529bec88babb",
+        "id": "compiler-imported-alias-outer-union-abi",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "351729a88df1ad6eba3fe0924ff5893edd155828caa42894fb0d949fe31b1325",
+        "id": "compiler-canvas-context-overload-result",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "53371cbd4743e855da063a9f475e6b13f8d642aae895a6f8dfeb57df0f0b3e53",
+        "id": "compiler-owner-preserving-named-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5176cacf29fcc11f8007b1097930b8856507cb018b044e7a4e04920173a282e4",
+        "id": "compiler-flattened-optional-chain-union-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "652a856aaecd27035ecf47db110486bb249d5d16b8de8041c810e0b956752d95",
+        "id": "compiler-imported-readonly-view-owner-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e6b567cd7244cac90f437fcd978f1c14fc610e0cd489532aaac13c0c08ecc78d",
+        "id": "compiler-imported-variant-owner-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "36a2a678fcee9bbd854e056ce8ef03270790c996d494e5450fdab8cd492aae06",
+        "id": "compiler-concrete-structural-union-view-selection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "622b0503864d02b2134889cd21b4a5368d091577587abba4df92052042276a4a",
+        "id": "compiler-structural-union-exact-native-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "18d87f3574366f6592917d4d54c778d21150e62b203bb7964b621e5cf79071e7",
+        "id": "compiler-imported-alias-parameter-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "809adc849b8c486b932c99ee8b1af2f3a45f52b2c82ebb2fd7283f76bb35926f",
+        "id": "compiler-imported-alias-local-flow-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3010ebb868a6dbdf12ca200a2a87bae7fd38a2e55d227231c3af2c6aa33f2462",
+        "id": "compiler-imported-alias-call-declaration-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b6609b8eea331d2067a24aa4799ca507295e4261cf8b5f13dc202b7432a91766",
+        "id": "compiler-error-stack-cause-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a6faab48365c93a0daf4bd57691fd600f1899d7b2378ab5aa195c7039971ceb8",
+        "id": "compiler-host-timer-return-type-handle",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "1638ff18e9efecf738b72c7df1afec3189c1c0d43b828d47a6db1dd10758e0a0",
+        "id": "compiler-nullable-optional-parameter-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7f7ae843354297c55eba1d93337162c687494a6a564277bfe56d55d20b613f07",
+        "id": "compiler-closed-key-external-member-call",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c1d3393d6f91cbb89404155d2cfd774f71847aa50501571dfddbb673de0e58f5",
+        "id": "compiler-host-object-dynamic-index-refusal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad4b95bf90a84830a1c3c2d91796009b68cd4c7a9ff73b4ab83ef86d3dd4cb18",
+        "id": "compiler-nullish-assignment-statement-in-catch",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "46d8947034986c7143c66cd63b91f4bd7e31ce779b357fdf39fb77af61bb35b0",
+        "id": "compiler-catch-recorded-slot-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7d7b38db348726bae56840f5bb5a1a88792218b9d3f42ef3861420eac1102042",
+        "id": "compiler-catch-handler-breadth",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10",
+        "id": "compiler-readonly-view-argument-substitution",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4193c5b5211770c8b3ee97f2e15a17a8e694662335e1979185795bb1f04a3e64",
+        "id": "compiler-host-timer-local-storage-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "523f94df836e5f7562357768b1fdbade55890276d67ad4c5a9a387038578bc9e",
+        "id": "compiler-nested-nullable-property-narrowed-null-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ec9d24d1e269c2ed8d9fe6589ca57d933b0f208811a161fe338d597620997d6",
+        "id": "compiler-placeholder-graph-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts, packages/compiler-types/src/compilerBackendContract.ts, packages/compiler-orchestration/src/compilerPackageCompilation.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f2a6f053e15631b4b08e8bc18235cd2d04cdbdf80ec4c4af9466de0e4a08473d",
+        "id": "compiler-constructor-parameter-property-assignment",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8eba5041a0db63560cde1d6b2fec88d15db7886d4851fed5739e8058126fa67d",
+        "id": "compiler-indexed-element-presence-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f281424105f66dd2a847b79e4051e82854d03d10e2f6e51174f4219f89e111ee",
+        "id": "compiler-constrained-type-parameter-union-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ed37cd746bee997f5f3e615a16c4dd4f2ec06d4c5888d28c4135cf32d6d25ebc",
+        "id": "compiler-dependent-callable-pack-reuse",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5105e7a3a57c86cbf2b4beb8ef2b26fce2d7066234ee08ab9f687da2ce140b14",
+        "id": "compiler-runtime-instanceof-lowering",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b82d88ab8157b69233e22292e58922e5e7fab9c1120f8282ebb83b7e0dd41849",
+        "id": "compiler-profile-type-name-evidence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2d10c022c42dc8006ad924ef3c040bb4845ed8d02e2f46b902c4d62de7f772e0",
+        "id": "compiler-guarded-path-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e48d51c610294a6eb138036d3db11734914dc5462f47abe51901d5e62ec3433e",
+        "id": "compiler-catch-await-owned-carrier",
+        "module": "packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts",
+        "package": "@flighthq/compiler-lowering"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e575a351676fde146b22003c49379629c6aa5d459c8fea41529930486c0caa4e",
+        "id": "compiler-promise-resolve-domain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6493ede41b94d493501690ef7094be544feaa14d36e8c498e32c5c07c982582a",
+        "id": "compiler-callable-arity-adaptation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8faa111a17b55f48adb6c83173c5e22e145a19accf1e1a4aa125a439fce63c89",
+        "id": "compiler-nul-string-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d609d18915598b6a5b363d54a7d1886985ffbc66a02742442a0cea75890706a8",
+        "id": "compiler-generic-receiver-null-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e2b35fd34c7ae5cb0fb2c65ea762d49573cb8948be5720479878d81668f4ac95",
+        "id": "compiler-new-map-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "597593e1b256d84f62e056df3d120da9c8dfac2b130a84db2a8510989cb2b61b",
+        "id": "compiler-new-set-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "334ca08252477612fb3a869c28ba4d4a43ac534f321c1a5b7fbf0e4ac1600509",
+        "id": "compiler-new-set-from-iterator",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "faed6e00141e3e976e5ab08a7067b44f15bd8b98b212676cd59ab91fcba10652",
+        "id": "compiler-nullish-conditional-absent-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d74c93685375817aefca246260b6972a9ec383b528f291d094fbedc1c19bce34",
+        "id": "compiler-declared-present-reference-chain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5ae844a099b0bbbac6be9552e9c7b89d73e811e93ea453eac4275ee31786d52d",
+        "id": "compiler-asserted-empty-object-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9c008abdd99d3dcb22652f4ee15a3680e4a2b89d3bc7fd41036a50322b06bf7c",
+        "id": "compiler-coalesced-union-member-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5072d8f9f0b8493929f273b31c113daa0ccbdb3f5c08e5f40b5c0c9b58146c35",
+        "id": "compiler-narrowed-coalesced-arm-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4d618509cc70d0ebc6e82a221cb50edc21531426c4944f2fec254ee5f63bfc9",
+        "id": "compiler-dependent-indexed-access-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "05c0f2a60d83a99fc4dc39e41c5178846388a67113db0f59538eb78fad53cd89",
+        "id": "compiler-async-closure-coroutine",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c89b56761105c07c388b1676c1ef38122b8737c560aba5e289cc25f14ec066d2",
+        "id": "compiler-exported-type-owner-cache",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fc1b04a682a8ce4c4b2595617d8cc60d8c04bbb6bc015249f9a6b6b36c209a8",
+        "id": "compiler-derived-render-state-owner-fixture",
+        "module": "packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b8f09f5a35986a3afbf96e694f0d0f792849b9c1d81eb5c14d280fa6f8877f7c",
+        "id": "compiler-shadow-checked-capability-flow",
+        "module": "packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78",
+        "id": "compiler-named-reexport-provenance",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts emitReexportsCpp",
+        "package": "@flighthq/scene3d"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0044f4f924c67ad11c04d3d8cd1f685e1205e5af0eebd4cc468ca4db0bbff352",
+        "id": "compiler-erased-array-iteration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
+        "id": "compiler-nullable-map-get-nullish-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346",
+        "id": "compiler-interface-native-heritage-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c",
+        "id": "compiler-inferred-invocation-type-arguments",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "953aeb3686a0f53b0ad009e039e3b2589704d27186b11519bd120d95da9e188f",
+        "id": "compiler-erased-array-length-index",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8a1e679fa8ce48194555fff6b889a2b8e7b8a7523e3f5c45395d047f4406f25a",
+        "id": "compiler-present-readonly-row-context",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPresentReadonlyRowReturn.test.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab",
+        "id": "compiler-callable-value-identity",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35",
+        "id": "compiler-optional-record-literal-materialization",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f78224dedf15bea1a840b6b140ad743fe41635c270fdb2ddb9caab76e71d05e6",
+        "id": "compiler-readonly-json-record-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad62c0d079d119e37e03ad454a63cdb459e2def8bb9f225a380ef4bcdc43b618",
+        "id": "compiler-typed-record-missing-key",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4c95512067d677d96e64cc51bbbf82308fd59b8b1b4833ae0d47b0bd9a0c0bf4",
+        "id": "compiler-nullable-element-dual-sentinel",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f",
+        "id": "compiler-readonly-contextual-source-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppReadonlyHelperProjection.test.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1",
+        "id": "compiler-contextual-optional-map-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppContextualFreshMapOwner.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709",
+        "id": "compiler-contextual-new-value-object-any",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/loader"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63",
+        "id": "compiler-external-object-field-literal-type",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635",
+        "id": "compiler-private-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce",
+        "id": "compiler-record-computed-delete",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordDeleteProperty.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42",
+        "id": "compiler-primitive-record-nullish-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrimitiveRecordNullishStorage.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "41f0bc10a57c1ab32d932a13c81b93d2f735c9edaaac53c561ebc51e4d5a53bc",
+        "id": "compiler-erased-external-member-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "66424d0fafd05a309bb73a2f4385128e265527a5e539c78af02f8cb599d661eb",
+        "id": "compiler-interface-absence-refinement-heritage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fd765af8a838ff382afe73debf4e2e1d39549ca7b54a40fdb226d1e67257b787",
+        "id": "compiler-membership-test-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c",
+        "id": "compiler-regexp-capture-member-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c",
+        "id": "compiler-defaulted-nullable-present-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppDefaultedNullableBinding.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e3f3e239ad2c4889e564df21456fa5ec0d300991e9c5196c0a1b391d95e86c2c",
+        "id": "compiler-structural-member-view-assertion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899",
+        "id": "compiler-private-guarded-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateGuardedJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022",
+        "id": "compiler-contextual-tuple-element-array-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2276aca307eed2259bdb1ea3137f621aeb565ec170c03c4806be92ff8f613490",
+        "id": "compiler-finish-entity-construction-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "591ac0c8444ec8973095cbd1b12564604036a9226d3ccc4786b76ddcf6fd1543",
+        "id": "compiler-record-missing-key-falsiness-guard",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordMissingKeyGuard.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4e0557549d81e925ab43e163cd061564224c5ea57d87a2464291d2f886e5af91",
+        "id": "compiler-inferred-member-written-union",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "03ab2079a4035fef44a6bbafdb662db109f7b1f47886c22f609d6922cfd2f046",
+        "id": "compiler-symbol-membership-variant-arm",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts and packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ae8ba1319364e05b5f229d3dda15a15a8110c632ad3657c5de5a1b59f224ec4f",
+        "id": "compiler-numeric-enum-string-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppNumericEnumStringConversion.test.ts",
+        "package": "@flighthq/render"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4a6d558dff6861711348dd6c8a0553d0fdd15ec40031f8a56362f3db10a90cd",
+        "id": "compiler-inherited-alias-reference-representation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410",
+        "id": "compiler-private-record-forwarded-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateRecordForwardedReads.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509",
+        "id": "compiler-guarded-indexed-nullable-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda",
+        "id": "compiler-loop-bound-indexed-element-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e931613ede280463c98560c37b3f3819871e949f491dc83eeecb1e21e5b71830",
+        "id": "compiler-checked-derived-member-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25a6e4beb1df63018a1dd7d1a2446fbf834e3e736ea0acad6e6459b13167b281",
+        "id": "compiler-structural-value-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5",
+        "id": "compiler-single-carrier-union-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c2eea4d061e189620cfb71335e15ef85fce24fe71d1c8b6725a9fb245c1f7eb7",
+        "id": "compiler-inherited-callable-initializer-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b4ca431185b332354a76a73a34582e02240dcc9286d3828583d7615c645f5f0a",
+        "id": "compiler-self-returning-array-iterable-lifetime",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "09962470833600196748e2955962ec8a19673d1fb9005b6f47c82bed9bb5cb32",
+        "id": "compiler-shared-reference-cells",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fc98f4858d4cc1f7329bbd906bab057847cb3f7c283df2e2f3ccad2606db2bc8",
+        "id": "compiler-inherited-callable-declaration-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d",
+        "id": "compiler-checked-record-member-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7",
+        "id": "compiler-private-json-record-graph-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100",
+        "id": "compiler-json-assertion-scalar-row",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "695dd5568912c3d87080e836dc2738f17aedc9def76b42ef5857a4a5707b920d",
+        "id": "compiler-symbol-own-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fb75e2fc9b47274854cfda989f9fd6996edb158ace6a30f52bcc350aee482b4",
+        "id": "compiler-readonly-named-callable-views",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db",
+        "id": "compiler-nullish-map-construction-and-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "19dfb5e6a5c4ef6201cc23fe0dbdee53a2fbe2a9bb134fe0065bec4be20d2a12",
+        "id": "compiler-nullable-json-and-indexed-string-trim",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507",
+        "id": "compiler-erased-array-selection-and-fill",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2190c726952f0094779da59a6fddc76bcbf50873a3ef6ffd1d59c417da1f968b",
+        "id": "compiler-erased-host-result-evidence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "58871773838c4eb4fed581bc7ab90466eb75045a90459f83622d57985e8de758",
+        "id": "compiler-lazy-nullish-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2064d76712c6322c4142ee492c3bf7e34482927138b110a3a9699982e9c79d81",
+        "id": "compiler-structural-value-carrier-host-handle-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a2b481665a7b79c982bd0f0eba5bea6b75491f416f47d7c28b586f8c13b0b8c9",
+        "id": "compiler-generic-array-owner-and-narrowed-field",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      }
+    ],
+    "totalActive": 320,
+    "base": "3a6bb900380566ac3886dd87ce696ef56c50c68e"
+  },
+  "focused": {
+    "adapter": "node:assert, not Vitest",
+    "outcomes": [
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: optional readonly member",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: nullable readonly member",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: closed array parameter",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: closed alias",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: effectful array source",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: optional owner chain",
+        "pass": true
+      },
+      {
+        "name": "uses one declared array owner for typed empty fallback iteration: guarded optional owner",
+        "pass": true
+      },
+      {
+        "name": "keeps the empty construction behind the original presence branch and reads a getter once",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for nonnullable array",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for multiple array domains",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for array or scalar",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for erased left",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for generic element",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for nonempty fallback",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for aliased fallback",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for spread fallback",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for logical OR",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for string domain",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for tuple domain",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for captured mutable loop without binding evidence",
+        "pass": true
+      },
+      {
+        "name": "retains the preceding lane for outside iteration",
+        "pass": true
+      },
+      {
+        "name": "never invents owner presence: unguarded optional owner",
+        "pass": true
+      },
+      {
+        "name": "never invents owner presence: wrong owner branch",
+        "pass": true
+      }
+    ],
+    "parity": [
+      {
+        "name": "nonnullable array",
+        "unchanged": true,
+        "outcome": "byte-identical"
+      },
+      {
+        "name": "multiple array domains",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "array or scalar",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "erased left",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "generic element",
+        "unchanged": true,
+        "outcome": "byte-identical"
+      },
+      {
+        "name": "nonempty fallback",
+        "unchanged": true,
+        "outcome": "byte-identical"
+      },
+      {
+        "name": "aliased fallback",
+        "unchanged": true,
+        "outcome": "byte-identical"
+      },
+      {
+        "name": "spread fallback",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "logical OR",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "string domain",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "tuple domain",
+        "unchanged": true,
+        "outcome": "same semantic refusal",
+        "diagnostics": [
+          {
+            "code": "unsupported-typescript",
+            "column": 125,
+            "line": 1,
+            "message": "contextual tuple expression requires a value at index 0",
+            "packageName": "@flighthq/example",
+            "severity": "error",
+            "source": "packages/example/src/emptyFallback.ts"
+          }
+        ]
+      },
+      {
+        "name": "captured mutable loop without binding evidence",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      },
+      {
+        "name": "outside iteration",
+        "unchanged": true,
+        "outcome": "same structured refusal"
+      }
+    ]
+  },
+  "retainedSource": [
+    {
+      "name": "adapts one parameter into the two the target promises",
+      "pass": true
+    },
+    {
+      "name": "adapts a callable that accepts nothing at all",
+      "pass": true
+    },
+    {
+      "name": "leaves an equal signature alone",
+      "pass": true
+    },
+    {
+      "name": "adapts the field the loader stores, not only a returned value",
+      "pass": true
+    },
+    {
+      "name": "keeps a captured callable, by value, with its identity",
+      "pass": true
+    },
+    {
+      "name": "keeps a bound callable reached through its receiver",
+      "pass": true
+    },
+    {
+      "name": "returns the source result through the adapter, whatever its domain",
+      "pass": true
+    },
+    {
+      "name": "supplies a source that declares MORE parameters, when the extras are optional",
+      "pass": true
+    },
+    {
+      "name": "collects the arguments a rest-parameter source accepts",
+      "pass": true
+    },
+    {
+      "name": "refuses a source that requires more parameters than the target promises",
+      "pass": true
+    },
+    {
+      "name": "retains function literal identity and compares exact null/undefined/function states once",
+      "pass": true
+    },
+    {
+      "name": "native case deliberately handled separately",
+      "skipped": true
+    },
+    {
+      "name": "publishes the frozen callable trait and binding spellings under one ABI revision",
+      "pass": true
+    },
+    {
+      "name": "keeps parsed descendants in their original raw carrier: array",
+      "pass": true
+    },
+    {
+      "name": "keeps parsed descendants in their original raw carrier: aliases",
+      "pass": true
+    },
+    {
+      "name": "keeps parsed descendants in their original raw carrier: keys",
+      "pass": true
+    },
+    {
+      "name": "keeps parsed descendants in their original raw carrier: map",
+      "pass": true
+    },
+    {
+      "name": "keeps parsed descendants in their original raw carrier: string",
+      "pass": true
+    },
+    {
+      "name": "preserves the nullish color fallback as a lazy tag test on one original value",
+      "pass": true
+    },
+    {
+      "name": "does not rebox a selected structural assertion already carried by Any",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: public owner",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: mixed native root",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: escaped root",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: mutated root",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: captured helper",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: opaque actual source",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: alias escape",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: alias compare",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: alias mutation",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: keys typeof before guard",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: keys truthiness before guard",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: keys returned owner",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: keys additional owner call",
+      "pass": true
+    },
+    {
+      "name": "does not elect the private JSON carrier for an unsafe flow: keys mixed native source",
+      "pass": true
+    },
+    {
+      "name": "keeps string extraction behind its exact positive typeof proof: unproved string",
+      "pass": true
+    },
+    {
+      "name": "keeps string extraction behind its exact positive typeof proof: wrong branch",
+      "pass": true
+    },
+    {
+      "name": "refuses a selected mapper without the closed fresh-output proof: effectful default",
+      "pass": true
+    },
+    {
+      "name": "refuses a selected mapper without the closed fresh-output proof: captured getter",
+      "pass": true
+    },
+    {
+      "name": "refuses a selected mapper without the closed fresh-output proof: mapper mutation",
+      "pass": true
+    },
+    {
+      "name": "refuses a selected mapper without the closed fresh-output proof: third callback parameter",
+      "pass": true
+    },
+    {
+      "name": "refuses a selected mapper without the closed fresh-output proof: external callback",
+      "pass": true
+    },
+    {
+      "name": "keeps the exact native public signature beside a row-reading original-body entrypoint",
+      "pass": true
+    },
+    {
+      "name": "views the exact original result owner without constructing an anonymous result copy",
+      "pass": true
+    },
+    {
+      "name": "carries named origin through exact-signature aliases and bare-declaration comparisons",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: mutation",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: opaque call",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: owner alias",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: owner comparison",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: owner typeof",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: owner truthiness",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: nested capture",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: indexed read",
+      "pass": true
+    },
+    {
+      "name": "retains the native ABI or existing refusal for unsafe parameter use: nonoptional assertion read",
+      "pass": true
+    },
+    {
+      "name": "does not project a writable nominal contextual options owner",
+      "pass": true
+    },
+    {
+      "name": "does not broaden a multi-field, defaulted, generic or already-readonly signature",
+      "pass": true
+    },
+    {
+      "name": "uses the canonical original declaration and additional helper through an import",
+      "pass": true
+    },
+    {
+      "name": "resolves result cells through distinct imports and barrels without merging distinct declarations",
+      "pass": true
+    }
+  ],
+  "optionalPrimitiveParity": [
+    {
+      "label": "preceding118",
+      "outcomes": [
+        {
+          "name": "separates a helper-backed primitive member from one the runtime has no representation for",
+          "pass": false,
+          "message": "The input did not match the regular expression /return \\(\\[&\\]\\(\\) -> std::optional<flight::String> \\{ auto optional_chain_receiver = source->frame_rate; if \\(!std::holds_alternative<double>\\(optional_chain_receiver\\)\\) return std::nullopt; return flight::number_to_fixed\\(std::get<double>\\(optional_chain_receiver\\), 2\\.0\\); \\}\\(\\)\\)\\.value_or\\(flight::String\\(\"\"\\)\\);/u. Input:\n\n'// Generated by @flighthq/tool-compiler from @flighthq/math/packages/math/src/primitive-members.ts#Primitive-members. Do not edit.\\n' +\n  '#pragma once\\n' +\n  '#include <flight/any.hpp>\\n' +\n  '#include <flight/number.hpp>\\n' +\n  '#include <optional>\\n' +\n  '#include <variant>\\n' +\n  '#include <flight/runtime.hpp>\\n' +\n  '\\n' +\n  'static_assert(flight::runtime_contract.compiler_contract == \"flight-runtime-contract/2\", \"Flight compiler/runtime contract mismatch\");\\n' +\n  'static_assert(flight::runtime_contract.cpp_abi == 1, \"Flight C++ runtime ABI mismatch\");\\n' +\n  '\\n' +\n  'namespace flighthq_math {\\n' +\n  '\\n' +\n  'struct Source;\\n' +\n  '\\n' +\n  'struct Source : public flight::ReferenceEnabled {\\n' +\n  '  std::variant<double, flight::Null, flight::Undefined> frame_rate = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};\\n' +\n  '};\\n' +\n  '\\n' +\n  'inline flight::String rate(flight::Ref<Source> source) {\\n' +\n  '  return ([&]() -> flight::Any { const auto named_coalesce_value = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = source->frame_rate; if (!std::holds_alternative<double>(optional_chain_receiver)) return std::nullopt; return flight::number_to_fixed(std::get<double>(optional_chain_receiver), 2.0); }()); if (!named_coalesce_value.is_nullish()) return named_coalesce_value; return flight::String(\"\"); }());\\n' +\n  '}\\n' +\n  '\\n' +\n  '} // namespace flighthq_math'\n"
+        },
+        {
+          "name": "lowers chained primitive members the runtime binds and preserves their fallbacks",
+          "pass": false,
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(actual.includes(expected))\n"
+        },
+        {
+          "name": "refuses a primitive member the compiler binds no representation for",
+          "pass": true
+        },
+        {
+          "name": "defaults an optional call result instead of dropping the fallback as a tautology",
+          "pass": true
+        },
+        {
+          "name": "emits optional call expression as guarded invocation",
+          "pass": true
+        },
+        {
+          "name": "emits optional void calls without forming optional<void>",
+          "pass": true
+        },
+        {
+          "name": "recovers an instantiated optional property-call result only for one callable surface",
+          "pass": true
+        },
+        {
+          "name": "emits optional call with receiverNullish excluded",
+          "pass": true
+        },
+        {
+          "name": "emits optional property chain on class getter with method call form",
+          "pass": true
+        },
+        {
+          "name": "emits optional property chain with receiver indexing runtime collection",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "label": "candidate119",
+      "outcomes": [
+        {
+          "name": "separates a helper-backed primitive member from one the runtime has no representation for",
+          "pass": false,
+          "message": "The input did not match the regular expression /return \\(\\[&\\]\\(\\) -> std::optional<flight::String> \\{ auto optional_chain_receiver = source->frame_rate; if \\(!std::holds_alternative<double>\\(optional_chain_receiver\\)\\) return std::nullopt; return flight::number_to_fixed\\(std::get<double>\\(optional_chain_receiver\\), 2\\.0\\); \\}\\(\\)\\)\\.value_or\\(flight::String\\(\"\"\\)\\);/u. Input:\n\n'// Generated by @flighthq/tool-compiler from @flighthq/math/packages/math/src/primitive-members.ts#Primitive-members. Do not edit.\\n' +\n  '#pragma once\\n' +\n  '#include <flight/any.hpp>\\n' +\n  '#include <flight/number.hpp>\\n' +\n  '#include <optional>\\n' +\n  '#include <variant>\\n' +\n  '#include <flight/runtime.hpp>\\n' +\n  '\\n' +\n  'static_assert(flight::runtime_contract.compiler_contract == \"flight-runtime-contract/2\", \"Flight compiler/runtime contract mismatch\");\\n' +\n  'static_assert(flight::runtime_contract.cpp_abi == 1, \"Flight C++ runtime ABI mismatch\");\\n' +\n  '\\n' +\n  'namespace flighthq_math {\\n' +\n  '\\n' +\n  'struct Source;\\n' +\n  '\\n' +\n  'struct Source : public flight::ReferenceEnabled {\\n' +\n  '  std::variant<double, flight::Null, flight::Undefined> frame_rate = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};\\n' +\n  '};\\n' +\n  '\\n' +\n  'inline flight::String rate(flight::Ref<Source> source) {\\n' +\n  '  return ([&]() -> flight::Any { const auto named_coalesce_value = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = source->frame_rate; if (!std::holds_alternative<double>(optional_chain_receiver)) return std::nullopt; return flight::number_to_fixed(std::get<double>(optional_chain_receiver), 2.0); }()); if (!named_coalesce_value.is_nullish()) return named_coalesce_value; return flight::String(\"\"); }());\\n' +\n  '}\\n' +\n  '\\n' +\n  '} // namespace flighthq_math'\n"
+        },
+        {
+          "name": "lowers chained primitive members the runtime binds and preserves their fallbacks",
+          "pass": false,
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(actual.includes(expected))\n"
+        },
+        {
+          "name": "refuses a primitive member the compiler binds no representation for",
+          "pass": true
+        },
+        {
+          "name": "defaults an optional call result instead of dropping the fallback as a tautology",
+          "pass": true
+        },
+        {
+          "name": "emits optional call expression as guarded invocation",
+          "pass": true
+        },
+        {
+          "name": "emits optional void calls without forming optional<void>",
+          "pass": true
+        },
+        {
+          "name": "recovers an instantiated optional property-call result only for one callable surface",
+          "pass": true
+        },
+        {
+          "name": "emits optional call with receiverNullish excluded",
+          "pass": true
+        },
+        {
+          "name": "emits optional property chain on class getter with method call form",
+          "pass": true
+        },
+        {
+          "name": "emits optional property chain with receiver indexing runtime collection",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "originalPublicSource": {
+    "strictOriginalConsumerGraph": "pass",
+    "checks": 129,
+    "groups": {
+      "installation": 10,
+      "identity": 12,
+      "detectors": 32,
+      "dispatch": 5,
+      "options": 36,
+      "result": 8,
+      "errors": 26
+    },
+    "scope": "Actual original TypeScript public registration/detection/registry/callback/parser edge controls. No compiler emission, installed native callback/header, SDK or ledger claim."
+  },
+  "strictBuild": {
+    "baseline118": "pass",
+    "candidate119": "pass",
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.build.json"
+  },
+  "candidateComposition": {
+    "compiler": 119,
+    "total": 321,
+    "orderedApply": true,
+    "candidateContentIdentical": true,
+    "reverseRawBackendIdentical": true,
+    "records": [
+      {
+        "dependency": "flight-compiler",
+        "digest": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164",
+        "id": "compiler-dependent-indexed-access-reference-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f",
+        "id": "compiler-dependent-erased-object-recovery-template",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e",
+        "id": "compiler-error-name-and-erased-error-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7",
+        "id": "compiler-unrepresented-error-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b02689718a4b47624f10ae30b3f8745b84e72659d7f517fbad834ad5467026ff",
+        "id": "compiler-structural-row-weak-keys",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "17f47ccc904d65fb495d38f45d2c59a5bff9989a59db17a6cc01c6d047698510",
+        "id": "compiler-concrete-owner-union-row-assertions",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5aed3efd29ec4939052bceb5504930b7cb8a7e62fcdd06ba38a50b8e6912f255",
+        "id": "compiler-union-import-runtime-identity",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3436926b4125a60232033d4dbc4526c165781fc90223e2ff29a0255b19326f46",
+        "id": "compiler-erased-ref-weak-map-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8e2fdcadd6b9cf7bfb1b6b7fc65d1461e7cbacec2edf4747fc391d815f238644",
+        "id": "compiler-generic-erased-map-reference-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "83614af822c7e842e6d75d94c3d8d95d5ef85edd18b655fea6728f3e8a7162fa",
+        "id": "compiler-nullable-structural-row-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0072f315ef85d72f36a1edbbc886f83d414ba8ac8375f9e530e3dbc83eec577e",
+        "id": "compiler-external-optional-result-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "288b524ea0a3389f7bc2bd2decbf18954ad8eb33de04c180e4fa568e8d8775bc",
+        "id": "compiler-readonly-union-view-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "052bf7fe5b4753a4dc343fe642bc78d3cfb175bb2cc295c9c0b1a27c75983bdf",
+        "id": "compiler-contextual-imported-union-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "06f969236c93eb9a12726deaabf20794e7e8d7d24df6949907b2a24b13d22a8b",
+        "id": "compiler-present-dual-sentinel-multivariant",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "14655ce90d5c9a22f5e1c435e8b9a024fcfa591e168d1e867e9946db5ef3451d",
+        "id": "compiler-exact-variant-owner-priority",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a5370242528a7b45b42d12555e84de83702e6a213a184ee60d6a529bec88babb",
+        "id": "compiler-imported-alias-outer-union-abi",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "351729a88df1ad6eba3fe0924ff5893edd155828caa42894fb0d949fe31b1325",
+        "id": "compiler-canvas-context-overload-result",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "53371cbd4743e855da063a9f475e6b13f8d642aae895a6f8dfeb57df0f0b3e53",
+        "id": "compiler-owner-preserving-named-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5176cacf29fcc11f8007b1097930b8856507cb018b044e7a4e04920173a282e4",
+        "id": "compiler-flattened-optional-chain-union-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "652a856aaecd27035ecf47db110486bb249d5d16b8de8041c810e0b956752d95",
+        "id": "compiler-imported-readonly-view-owner-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e6b567cd7244cac90f437fcd978f1c14fc610e0cd489532aaac13c0c08ecc78d",
+        "id": "compiler-imported-variant-owner-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "36a2a678fcee9bbd854e056ce8ef03270790c996d494e5450fdab8cd492aae06",
+        "id": "compiler-concrete-structural-union-view-selection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "622b0503864d02b2134889cd21b4a5368d091577587abba4df92052042276a4a",
+        "id": "compiler-structural-union-exact-native-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "18d87f3574366f6592917d4d54c778d21150e62b203bb7964b621e5cf79071e7",
+        "id": "compiler-imported-alias-parameter-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "809adc849b8c486b932c99ee8b1af2f3a45f52b2c82ebb2fd7283f76bb35926f",
+        "id": "compiler-imported-alias-local-flow-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3010ebb868a6dbdf12ca200a2a87bae7fd38a2e55d227231c3af2c6aa33f2462",
+        "id": "compiler-imported-alias-call-declaration-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b6609b8eea331d2067a24aa4799ca507295e4261cf8b5f13dc202b7432a91766",
+        "id": "compiler-error-stack-cause-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a6faab48365c93a0daf4bd57691fd600f1899d7b2378ab5aa195c7039971ceb8",
+        "id": "compiler-host-timer-return-type-handle",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "1638ff18e9efecf738b72c7df1afec3189c1c0d43b828d47a6db1dd10758e0a0",
+        "id": "compiler-nullable-optional-parameter-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7f7ae843354297c55eba1d93337162c687494a6a564277bfe56d55d20b613f07",
+        "id": "compiler-closed-key-external-member-call",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c1d3393d6f91cbb89404155d2cfd774f71847aa50501571dfddbb673de0e58f5",
+        "id": "compiler-host-object-dynamic-index-refusal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad4b95bf90a84830a1c3c2d91796009b68cd4c7a9ff73b4ab83ef86d3dd4cb18",
+        "id": "compiler-nullish-assignment-statement-in-catch",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "46d8947034986c7143c66cd63b91f4bd7e31ce779b357fdf39fb77af61bb35b0",
+        "id": "compiler-catch-recorded-slot-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7d7b38db348726bae56840f5bb5a1a88792218b9d3f42ef3861420eac1102042",
+        "id": "compiler-catch-handler-breadth",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10",
+        "id": "compiler-readonly-view-argument-substitution",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4193c5b5211770c8b3ee97f2e15a17a8e694662335e1979185795bb1f04a3e64",
+        "id": "compiler-host-timer-local-storage-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "523f94df836e5f7562357768b1fdbade55890276d67ad4c5a9a387038578bc9e",
+        "id": "compiler-nested-nullable-property-narrowed-null-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ec9d24d1e269c2ed8d9fe6589ca57d933b0f208811a161fe338d597620997d6",
+        "id": "compiler-placeholder-graph-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts, packages/compiler-types/src/compilerBackendContract.ts, packages/compiler-orchestration/src/compilerPackageCompilation.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f2a6f053e15631b4b08e8bc18235cd2d04cdbdf80ec4c4af9466de0e4a08473d",
+        "id": "compiler-constructor-parameter-property-assignment",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8eba5041a0db63560cde1d6b2fec88d15db7886d4851fed5739e8058126fa67d",
+        "id": "compiler-indexed-element-presence-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f281424105f66dd2a847b79e4051e82854d03d10e2f6e51174f4219f89e111ee",
+        "id": "compiler-constrained-type-parameter-union-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ed37cd746bee997f5f3e615a16c4dd4f2ec06d4c5888d28c4135cf32d6d25ebc",
+        "id": "compiler-dependent-callable-pack-reuse",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5105e7a3a57c86cbf2b4beb8ef2b26fce2d7066234ee08ab9f687da2ce140b14",
+        "id": "compiler-runtime-instanceof-lowering",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b82d88ab8157b69233e22292e58922e5e7fab9c1120f8282ebb83b7e0dd41849",
+        "id": "compiler-profile-type-name-evidence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2d10c022c42dc8006ad924ef3c040bb4845ed8d02e2f46b902c4d62de7f772e0",
+        "id": "compiler-guarded-path-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e48d51c610294a6eb138036d3db11734914dc5462f47abe51901d5e62ec3433e",
+        "id": "compiler-catch-await-owned-carrier",
+        "module": "packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts",
+        "package": "@flighthq/compiler-lowering"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e575a351676fde146b22003c49379629c6aa5d459c8fea41529930486c0caa4e",
+        "id": "compiler-promise-resolve-domain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6493ede41b94d493501690ef7094be544feaa14d36e8c498e32c5c07c982582a",
+        "id": "compiler-callable-arity-adaptation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8faa111a17b55f48adb6c83173c5e22e145a19accf1e1a4aa125a439fce63c89",
+        "id": "compiler-nul-string-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d609d18915598b6a5b363d54a7d1886985ffbc66a02742442a0cea75890706a8",
+        "id": "compiler-generic-receiver-null-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e2b35fd34c7ae5cb0fb2c65ea762d49573cb8948be5720479878d81668f4ac95",
+        "id": "compiler-new-map-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "597593e1b256d84f62e056df3d120da9c8dfac2b130a84db2a8510989cb2b61b",
+        "id": "compiler-new-set-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "334ca08252477612fb3a869c28ba4d4a43ac534f321c1a5b7fbf0e4ac1600509",
+        "id": "compiler-new-set-from-iterator",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "faed6e00141e3e976e5ab08a7067b44f15bd8b98b212676cd59ab91fcba10652",
+        "id": "compiler-nullish-conditional-absent-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d74c93685375817aefca246260b6972a9ec383b528f291d094fbedc1c19bce34",
+        "id": "compiler-declared-present-reference-chain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5ae844a099b0bbbac6be9552e9c7b89d73e811e93ea453eac4275ee31786d52d",
+        "id": "compiler-asserted-empty-object-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9c008abdd99d3dcb22652f4ee15a3680e4a2b89d3bc7fd41036a50322b06bf7c",
+        "id": "compiler-coalesced-union-member-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5072d8f9f0b8493929f273b31c113daa0ccbdb3f5c08e5f40b5c0c9b58146c35",
+        "id": "compiler-narrowed-coalesced-arm-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4d618509cc70d0ebc6e82a221cb50edc21531426c4944f2fec254ee5f63bfc9",
+        "id": "compiler-dependent-indexed-access-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "05c0f2a60d83a99fc4dc39e41c5178846388a67113db0f59538eb78fad53cd89",
+        "id": "compiler-async-closure-coroutine",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c89b56761105c07c388b1676c1ef38122b8737c560aba5e289cc25f14ec066d2",
+        "id": "compiler-exported-type-owner-cache",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fc1b04a682a8ce4c4b2595617d8cc60d8c04bbb6bc015249f9a6b6b36c209a8",
+        "id": "compiler-derived-render-state-owner-fixture",
+        "module": "packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b8f09f5a35986a3afbf96e694f0d0f792849b9c1d81eb5c14d280fa6f8877f7c",
+        "id": "compiler-shadow-checked-capability-flow",
+        "module": "packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78",
+        "id": "compiler-named-reexport-provenance",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts emitReexportsCpp",
+        "package": "@flighthq/scene3d"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0044f4f924c67ad11c04d3d8cd1f685e1205e5af0eebd4cc468ca4db0bbff352",
+        "id": "compiler-erased-array-iteration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
+        "id": "compiler-nullable-map-get-nullish-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346",
+        "id": "compiler-interface-native-heritage-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c",
+        "id": "compiler-inferred-invocation-type-arguments",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "953aeb3686a0f53b0ad009e039e3b2589704d27186b11519bd120d95da9e188f",
+        "id": "compiler-erased-array-length-index",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8a1e679fa8ce48194555fff6b889a2b8e7b8a7523e3f5c45395d047f4406f25a",
+        "id": "compiler-present-readonly-row-context",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPresentReadonlyRowReturn.test.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab",
+        "id": "compiler-callable-value-identity",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35",
+        "id": "compiler-optional-record-literal-materialization",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f78224dedf15bea1a840b6b140ad743fe41635c270fdb2ddb9caab76e71d05e6",
+        "id": "compiler-readonly-json-record-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad62c0d079d119e37e03ad454a63cdb459e2def8bb9f225a380ef4bcdc43b618",
+        "id": "compiler-typed-record-missing-key",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4c95512067d677d96e64cc51bbbf82308fd59b8b1b4833ae0d47b0bd9a0c0bf4",
+        "id": "compiler-nullable-element-dual-sentinel",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f",
+        "id": "compiler-readonly-contextual-source-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppReadonlyHelperProjection.test.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1",
+        "id": "compiler-contextual-optional-map-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppContextualFreshMapOwner.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709",
+        "id": "compiler-contextual-new-value-object-any",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/loader"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63",
+        "id": "compiler-external-object-field-literal-type",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635",
+        "id": "compiler-private-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce",
+        "id": "compiler-record-computed-delete",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordDeleteProperty.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42",
+        "id": "compiler-primitive-record-nullish-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrimitiveRecordNullishStorage.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "41f0bc10a57c1ab32d932a13c81b93d2f735c9edaaac53c561ebc51e4d5a53bc",
+        "id": "compiler-erased-external-member-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "66424d0fafd05a309bb73a2f4385128e265527a5e539c78af02f8cb599d661eb",
+        "id": "compiler-interface-absence-refinement-heritage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fd765af8a838ff382afe73debf4e2e1d39549ca7b54a40fdb226d1e67257b787",
+        "id": "compiler-membership-test-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c",
+        "id": "compiler-regexp-capture-member-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c",
+        "id": "compiler-defaulted-nullable-present-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppDefaultedNullableBinding.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e3f3e239ad2c4889e564df21456fa5ec0d300991e9c5196c0a1b391d95e86c2c",
+        "id": "compiler-structural-member-view-assertion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899",
+        "id": "compiler-private-guarded-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateGuardedJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022",
+        "id": "compiler-contextual-tuple-element-array-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2276aca307eed2259bdb1ea3137f621aeb565ec170c03c4806be92ff8f613490",
+        "id": "compiler-finish-entity-construction-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "591ac0c8444ec8973095cbd1b12564604036a9226d3ccc4786b76ddcf6fd1543",
+        "id": "compiler-record-missing-key-falsiness-guard",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordMissingKeyGuard.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4e0557549d81e925ab43e163cd061564224c5ea57d87a2464291d2f886e5af91",
+        "id": "compiler-inferred-member-written-union",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "03ab2079a4035fef44a6bbafdb662db109f7b1f47886c22f609d6922cfd2f046",
+        "id": "compiler-symbol-membership-variant-arm",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts and packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ae8ba1319364e05b5f229d3dda15a15a8110c632ad3657c5de5a1b59f224ec4f",
+        "id": "compiler-numeric-enum-string-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppNumericEnumStringConversion.test.ts",
+        "package": "@flighthq/render"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4a6d558dff6861711348dd6c8a0553d0fdd15ec40031f8a56362f3db10a90cd",
+        "id": "compiler-inherited-alias-reference-representation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410",
+        "id": "compiler-private-record-forwarded-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateRecordForwardedReads.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509",
+        "id": "compiler-guarded-indexed-nullable-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda",
+        "id": "compiler-loop-bound-indexed-element-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e931613ede280463c98560c37b3f3819871e949f491dc83eeecb1e21e5b71830",
+        "id": "compiler-checked-derived-member-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25a6e4beb1df63018a1dd7d1a2446fbf834e3e736ea0acad6e6459b13167b281",
+        "id": "compiler-structural-value-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5",
+        "id": "compiler-single-carrier-union-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c2eea4d061e189620cfb71335e15ef85fce24fe71d1c8b6725a9fb245c1f7eb7",
+        "id": "compiler-inherited-callable-initializer-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b4ca431185b332354a76a73a34582e02240dcc9286d3828583d7615c645f5f0a",
+        "id": "compiler-self-returning-array-iterable-lifetime",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "09962470833600196748e2955962ec8a19673d1fb9005b6f47c82bed9bb5cb32",
+        "id": "compiler-shared-reference-cells",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fc98f4858d4cc1f7329bbd906bab057847cb3f7c283df2e2f3ccad2606db2bc8",
+        "id": "compiler-inherited-callable-declaration-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d",
+        "id": "compiler-checked-record-member-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7",
+        "id": "compiler-private-json-record-graph-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100",
+        "id": "compiler-json-assertion-scalar-row",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "695dd5568912c3d87080e836dc2738f17aedc9def76b42ef5857a4a5707b920d",
+        "id": "compiler-symbol-own-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fb75e2fc9b47274854cfda989f9fd6996edb158ace6a30f52bcc350aee482b4",
+        "id": "compiler-readonly-named-callable-views",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db",
+        "id": "compiler-nullish-map-construction-and-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "19dfb5e6a5c4ef6201cc23fe0dbdee53a2fbe2a9bb134fe0065bec4be20d2a12",
+        "id": "compiler-nullable-json-and-indexed-string-trim",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507",
+        "id": "compiler-erased-array-selection-and-fill",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2190c726952f0094779da59a6fddc76bcbf50873a3ef6ffd1d59c417da1f968b",
+        "id": "compiler-erased-host-result-evidence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "58871773838c4eb4fed581bc7ab90466eb75045a90459f83622d57985e8de758",
+        "id": "compiler-lazy-nullish-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2064d76712c6322c4142ee492c3bf7e34482927138b110a3a9699982e9c79d81",
+        "id": "compiler-structural-value-carrier-host-handle-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a2b481665a7b79c982bd0f0eba5bea6b75491f416f47d7c28b586f8c13b0b8c9",
+        "id": "compiler-generic-array-owner-and-narrowed-field",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6039c5df40c9568ecd3ee62bc3be4b93b4d104e774455c056b646d3a617c3656",
+        "id": "compiler-typed-empty-fallback-iteration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      }
+    ]
+  }
+}

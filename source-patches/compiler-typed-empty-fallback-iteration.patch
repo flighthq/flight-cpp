@@ -1,0 +1,137 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -11512,6 +11512,22 @@
+   return `{ auto&& ${collectionName} = ${emitExpression(view.collection, context)}; for (const auto& [${keyName}, ${itemName}] : ${collectionName}) {${unused} ${resultName}.${append}(${projected}); } }`;
+ }
+ 
++// Only direct iteration of `knownArray ?? []` supplies this context. The left must resolve
++// to one closed array domain after removing sentinels; neither the loop binding nor an erased
++// receiver guesses an element type. Other fallback expressions and ambiguous unions keep their lane.
++function getCppTypedEmptyFallbackIterationArrayCpp(
++  expression: Readonly<IrExpression>, context: EmitContext,
++): Readonly<Extract<IrType, { kind: 'array' }>> | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.kind !== 'binary' ||
++      expression.operator !== '??' || expression.right.kind !== 'array' || expression.right.elements.length) return undefined;
++  const left = getIrExpressionBindingTypeCpp(expression.left, context) ?? getIrExpressionTypeEvidenceCpp(expression.left, context);
++  if (!left || (!hasIrTypeAbsentMember(left) && !hasCppAbsenceStorageCpp(expression.left, context))) return undefined;
++  const present = getCppNonNullableType(left, context, new Set());
++  const array = getIrArrayTypeCpp(present, context, new Set());
++  if (!array || getCppOpenTypeParameterName(array)) return undefined;
++  return array;
++}
++
+ function getIrArrayTypeCpp(
+   type: Readonly<IrType> | undefined,
+   context: EmitContext,
+@@ -11866,7 +11882,8 @@
+       if ('pattern' in statement.variable) {
+         emissionError(context, 'binding patterns require destructuring lowering before C++ emission');
+       }
+-      const iterableType = getIrExpressionTypeEvidenceCpp(statement.iterable, context);
++      const emptyFallbackArray = getCppTypedEmptyFallbackIterationArrayCpp(statement.iterable, context);
++      const iterableType = getIrExpressionTypeEvidenceCpp(statement.iterable, context) ?? emptyFallbackArray;
+       const iterableElementType = iterableType
+         ? getIrIterableElementTypeCpp(iterableType, context, new Set())
+         : undefined;
+@@ -11910,7 +11927,7 @@
+       const literalElementType =
+         !collectionView && statement.iterable.kind === 'array' && statement.variable.type
+           ? ({ element: statement.variable.type, kind: 'array', readonly: false } as const)
+-          : undefined;
++          : emptyFallbackArray;
+       const narrowedIndexedStorageType =
+         iterableExpression.kind === 'identifier' &&
+         iterableExpression.reference.kind === 'binding' &&
+@@ -11963,6 +11980,22 @@
+           ]),
+           '}',
+         ];
++      }
++      if (emptyFallbackArray) {
++        // Keep the selected source array itself, and re-read its length before each element. A
++        // descriptor getter or loop callback may mutate that same array; a cached vector end iterator
++        // would neither keep JavaScript's order nor observe newly appended elements safely.
++        const source = getGeneratedTargetName('forOfSource', context);
++        const index = getGeneratedTargetName('forOfIndex', context);
++        const value = sharedCaptureTargetName ? generateUniqueName(`${variableName}_iteration_value`, context) : variableName;
++        const body = [`auto ${value} = ${source}.element(${index});`];
++        if (sharedCaptureTargetName) body.push(`const auto ${sharedCaptureTargetName} = ${emitSharedCaptureCellConstructionCpp(emitType(statement.variable.type ?? emptyFallbackArray.element, context), value, context)};`);
++        body.push(...emitStatementBody(statement.body, context));
++        return ['{', ...indentSourceLines([
++          `const auto ${source} = ${iterable};`,
++          `for (double ${index} = 0.0; ${index} < static_cast<double>(${source}.size()); ${index} += 1.0) {`,
++          ...indentSourceLines(body), '}',
++        ]), '}'];
+       }
+       if (collectionView && !(collectionView.collectionKind === 'set' && collectionView.projection !== 'entry')) {
+         if (sharedCaptureTargetName && !statement.variable.type) {
+diff --git a/packages/compiler-backend-cpp/src/cppTypedEmptyFallbackIteration.test.ts b/packages/compiler-backend-cpp/src/cppTypedEmptyFallbackIteration.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppTypedEmptyFallbackIteration.test.ts
+@@ -0,0 +1,64 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++function emit(source: string): string {
++  const result = lowerTypeScriptSource(ts.createSourceFile('/flight/packages/example/src/emptyFallback.ts', source, ts.ScriptTarget.Latest, true), { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++function attempt(source: string): string | undefined {
++  const result = lowerTypeScriptSource(ts.createSourceFile('/flight/packages/example/src/emptyFallback.ts', source, ts.ScriptTarget.Latest, true), { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  if (result.diagnostics.length) return undefined;
++  try { return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents; } catch (error) {
++    if (typeof error !== 'object' || error === null || !('kind' in error) || error.kind !== 'backend-emission') throw error;
++    return undefined;
++  }
++}
++const prefix = 'export interface Item{size:number}export interface Other{name:string}export interface Options{formats?:readonly Item[]}';
++const body = 'export function visit(options:Readonly<Options>,use:(item:Item)=>void):void{for(const item of options.formats??[])use(item)}';
++const positives: readonly (readonly [string,string])[] = [
++ ['optional readonly member', prefix+body],
++ ['nullable readonly member', prefix.replace('readonly Item[]}', 'readonly Item[]|null}')+body],
++ ['closed array parameter', prefix+'export function visit(items:readonly Item[]|undefined,use:(item:Item)=>void):void{for(const item of items??[])use(item)}'],
++ ['closed alias', prefix+'type Items=readonly Item[];export function visit(items:Items|null|undefined,use:(item:Item)=>void):void{for(const item of items??[])use(item)}'],
++ ['effectful array source', prefix+'export function visit(read:()=>readonly Item[]|undefined,use:(item:Item)=>void):void{for(const item of read()??[])use(item)}'],
++ ['optional owner chain',prefix+body.replace('options:Readonly<Options>', 'options:Readonly<Options>|undefined').replace('options.formats', 'options?.formats')],
++ ['guarded optional owner', prefix+body.replace('options:Readonly<Options>', 'options:Readonly<Options>|undefined').replace('for(const item', 'if(options!==undefined)for(const item')],
++];
++it.each(positives)('uses one declared array owner for typed empty fallback iteration: %s', (_name, source) => {
++ const output=emit(source);
++ expect(output).toContain('for_of_source');
++ expect(output).toMatch(/for \(double for_of_index[^\n]*< static_cast<double>\(for_of_source[^\n]*\.size\(\)\)/);
++ expect(output).toMatch(/\.element\(for_of_index/);
++ expect(output).not.toContain('flight::Array<flight::Any>');
++});
++it('keeps the empty construction behind the original presence branch and reads a getter once', () => {
++ const output=emit(prefix+body);
++ expect(output.match(/row_get<flight::RowKey<"formats">>/g)?.length).toEqual(1);
++ expect(output).toContain('if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<');
++ expect(output).not.toMatch(/\.value_or\(flight::Array/);
++ expect(output).not.toContain('.clone(');
++});
++const excluded: readonly (readonly [string,string])[] = [
++ ['nonnullable array',prefix.replace('formats?:','formats:')+body],
++ ['multiple array domains',prefix.replace('readonly Item[]}', 'readonly Item[]|readonly Other[]}')+body.replace('use:(item:Item)', 'use:(item:Item|Other)')],
++ ['array or scalar',prefix.replace('readonly Item[]}', 'readonly Item[]|number}')+body],
++ ['erased left',prefix.replace('readonly Item[]}', 'unknown}')+body],
++ ['generic element', 'export function visit<T>(items:T[]|undefined,use:(item:T)=>void):void{for(const item of items??[])use(item)}'],
++ ['nonempty fallback',prefix+body.replace('options.formats??[]','options.formats??[{size:1}]')],
++ ['aliased fallback',prefix+body.replace('for(const item','const empty:Item[]=[];for(const item').replace('options.formats??[]','options.formats??empty')],
++ ['spread fallback',prefix+body.replace('options.formats??[]','options.formats??[...[]]')],
++ ['logical OR',prefix+body.replace('options.formats??[]','options.formats||[]')],
++ ['string domain', 'export function visit(text:string|undefined,use:(item:string)=>void):void{for(const item of text??[])use(item)}'],
++ ['tuple domain', 'export function visit(items:readonly[number,string]|undefined,use:(item:number|string)=>void):void{for(const item of items??[])use(item)}'],
++ ['captured mutable loop without binding evidence',prefix+'export function capture(options:Readonly<Options>):(()=>number)[]{const out:(()=>number)[]=[];for(let item of options.formats??[]){out.push(()=>item.size);item={size:item.size+10};}return out;}'],
++ ['outside iteration', prefix+'export function value(options:Readonly<Options>){return options.formats??[]}'],
++];
++it.each(excluded)('retains the preceding lane for %s', (_name, source) => {
++ const output=attempt(source);if(output)expect(output).not.toContain('for_of_source');
++});
++it.each([
++ ['unguarded optional owner', prefix+body.replace('options:Readonly<Options>', 'options:Readonly<Options>|undefined')],
++ ['wrong owner branch',prefix+body.replace('options:Readonly<Options>', 'options:Readonly<Options>|undefined').replace('for(const item','if(options===undefined)for(const item')],
++] as const)('never invents owner presence: %s', (_name,source) => {expect(attempt(source)).toBeUndefined();});
