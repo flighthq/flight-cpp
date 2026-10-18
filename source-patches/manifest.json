@@ -5437,6 +5437,23 @@
       "unblocks": "Original applyParticleImportOptions registration loop; public native registry proof remains gated on coordinated shared Types and a normal particles run.",
       "expires": "When upstream supplies declared nullable array context at direct empty-fallback iteration and preserves the same source array iterator semantics.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-narrowed-filter-and-optional-subset",
+      "dependency": "flight-compiler",
+      "patch": "compiler-narrowed-filter-and-optional-subset.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d-formats",
+      "answers": "diagnostic",
+      "refusal": "Original createLottiePositionSampler loses the source filter type predicate and a later optional-union predicate leaves an excluded payload in the presence context.",
+      "rewrite": "Declare the standard filter type-predicate overload. For a mutable array of one represented nullable payload, project selected original elements only after a synchronous expression predicate proves all original absence sentinels excluded and does not assign its original parameter. A type annotation alone gives no proof. Rebuild a strictly smaller optional-union payload from its original uniquely matched native slots after source narrowing. Ordinary boolean filters retain their existing operation; unsupported narrowed carriers fail loudly.",
+      "equivalence": "The filter allocates one fresh result and retains each selected original element handle, original callback evaluation, mutation and exception behavior. The success guard authorizes payload access only after selection. Optional-union narrowing reuses stored original native handles without structural substitutes, new owners, public source changes or scalar ABI changes.",
+      "verification": "Pre-serialization production strict PASS;9 focused files48/48PASS0skips, native filter/subset13checks and existing owner15checks. Whole untouched original Lottie module emits all bodies from a freshly lowered1467-module declared dependency graph. The whole public native consumer still COMPILE FAIL at readonly Record forwarding, Array.flat, native slot conversions and raw membership;0/32cases run. Ordered composition and post-commit checks pending; no SDK success or exact21 promotion.",
+      "whyNotUpstreamFirst": "The pinned backend loses standard source filter evidence and existing stored union slot identity. This pin-bound capability keeps every original source body unchanged.",
+      "unblocks": "Original Lottie filtered-track callback and optional position-property union body emission; public native32 remains pending.",
+      "expires": "When upstream retains equivalent guarded filter result and optional-union subset proofs with original owner semantics.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

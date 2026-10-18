@@ -1,0 +1,418 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5353,6 +5353,8 @@
+       if (arrayPushSpread) return arrayPushSpread;
+       const typedArrayFill = emitCppTypedArrayRangeFillCpp(expression, context);
+       if (typedArrayFill) return typedArrayFill;
++      const projectedFilter = emitCppArrayFilterProjectionCpp(expression, context);
++      if (projectedFilter) return projectedFilter;
+       // `valueOf` on a primitive IS the primitive: Number/String/Boolean.prototype.valueOf return their
+       // receiver, so the operation is the identity and there is no C++ member to call -- emitting one wrote
+       // `value.value_of()` on a `double`, which g++ rejects outright. Only a primitive receiver is rewritten;
+@@ -16528,6 +16530,8 @@
+   }
+   if (plan?.kind === 'optionalVariant') {
+     const narrowedUnion = narrowedType ? getIrUnionTypeCpp(narrowedType, context, new Set()) : undefined;
++    const subset = narrowedUnion ? emitCppOptionalVariantSubsetCpp(binding, plan, narrowedUnion, context) : undefined;
++    if (subset) return subset;
+     const narrowedPresentMembers = (narrowedUnion?.types ?? (narrowedType ? [narrowedType] : [])).filter(
+       (member) => member.kind !== 'null' && member.kind !== 'undefined',
+     );
+@@ -21145,13 +21149,34 @@
+   const stored = getCppBindingTypeCpp(expression.reference.binding.id, context);
+   const storedUnion = stored ? getIrUnionTypeCpp(stored, context, new Set()) : undefined;
+   const presenceContext = storedUnion?.types.some((member) => member.kind === 'null' || member.kind === 'undefined');
+-  return presenceContext &&
+-    source &&
+-    contextualUnion &&
+-    contextualUnion.types.length > 1 &&
+-    !getIrUnionTypeCpp(source, context, new Set())
+-    ? source
+-    : (contextual ?? source);
++  if (presenceContext && source && contextualUnion && contextualUnion.types.length > 1) {
++    const sourceUnion = getIrUnionTypeCpp(source, context, new Set());
++    if (!sourceUnion) return source;
++    if (!hasIrTypeAbsentMember(sourceUnion)) {
++      const inspection = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++      const from = getCppUnionRepresentationPlan(contextualUnion, inspection);
++      const representation = {
++        direct: false,
++        alternatives: from.valueSlots.map((slot) => ({
++          members: slot.sourceAlternatives,
++          runtimeType: slot.runtimeType,
++          targetType: slot.targetType,
++        })),
++      };
++      const selected = sourceUnion.types.map((member) => {
++        const matches = getCppVariantAlternativesMatchingUnionMemberEvidenceCpp(representation, member, inspection);
++        return matches.length === 1 && matches[0]!.members.length === 1 ? matches[0] : undefined;
++      });
++      if (
++        selected.every((slot) => slot !== undefined) &&
++        new Set(selected).size === selected.length &&
++        selected.length < from.valueSlots.length
++      ) {
++        return createIrTypeEvidenceUnionCpp(selected.map((slot) => slot!.runtimeType));
++      }
++    }
++  }
++  return contextual ?? source;
+ }
+ 
+ function emitNarrowedUnionMemberCpp(
+@@ -21249,6 +21274,35 @@
+   // this plan's own `.value()`, producing `optional.value().value()`.
+   const storage = emitExpression({ ...expression, narrowedType: undefined, presence: undefined }, context);
+   return emitCppNarrowedUnionValueCpp(storage, union, expression.narrowedType, undefined, context);
++}
++
++// Presence plus a later source predicate can remove only some payload alternatives. Rebuild the
++// smaller variant from its original handles, never by retyping the owner or picking one arbitrary arm.
++function emitCppOptionalVariantSubsetCpp(
++  binding: string,
++  original: ReturnType<typeof getCppUnionRepresentationPlan>,
++  narrowed: Readonly<Extract<IrType, { kind: 'union' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (original.kind !== 'optionalVariant' || hasIrTypeAbsentMember(narrowed)) return undefined;
++  const plan = getCppUnionRepresentationPlan(narrowed, context);
++  if (
++    plan.kind !== 'multiVariant' ||
++    plan.valueSlots.length >= original.valueSlots.length ||
++    !plan.valueSlots.every(
++      (slot) => original.valueSlots.filter((source) => source.targetType === slot.targetType).length === 1,
++    )
++  )
++    return undefined;
++  const carrier = emitUnionTypeCpp(narrowed, context);
++  const value = getGeneratedTargetName('presentSubset', context);
++  const branches = plan.valueSlots.map(
++    (slot) =>
++      `if (const auto* alternative = std::get_if<${slot.targetType}>(&${value})) return ${emitCppUnionValueConstruction('*alternative', slot.targetType, narrowed, plan.kind, context)};`,
++  );
++  context.includes.add('stdexcept');
++  context.includes.add('variant');
++  return `([&]() -> ${carrier} { const auto& ${value} = ${binding}.value(); ${branches.join(' ')} throw std::logic_error("present union holds an excluded alternative"); }())`;
+ }
+ 
+ function emitCppNarrowedUnionValueCpp(
+@@ -27446,6 +27500,8 @@
+     return undefined;
+   }
+   const callee = expression.callee;
++  const projectedFilter = getCppArrayFilterProjectionPlanCpp(expression, context);
++  if (projectedFilter) return projectedFilter.result;
+   if (callee.object.kind === 'identifier' && callee.object.reference.kind === 'ambient') {
+     if (callee.object.reference.name === 'Math' && cppNumericMathCallNames.has(callee.name)) {
+       return { kind: 'primitive', name: 'number' };
+@@ -29567,6 +29623,160 @@
+   };
+ }
+ 
++// Only the source predicate's success proof authorizes removing absence from a freshly filtered
++// result. An annotation alone may lie, so it never causes an eager payload read on a kept null.
++function getCppArrayFilterProjectionPlanCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): Readonly<{ result: Extract<IrType, { kind: 'array' }>; targetType: string }> | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.optional ||
++    expression.semantics.optionalChain ||
++    expression.callee.kind !== 'property' ||
++    expression.callee.optional ||
++    expression.callee.member?.receiver !== 'array' ||
++    expression.callee.name !== 'filter' ||
++    expression.arguments.length !== 1
++  )
++    return undefined;
++  const sourceType = getIrExpressionTypeEvidenceCpp(expression.callee.object, context);
++  const source = getIrArrayTypeCpp(sourceType, context, new Set());
++  const result = getIrArrayTypeCpp(expression.semantics.resultType, context, new Set());
++  if (!source || source.readonly || !result) return undefined;
++  const union = getIrUnionTypeCpp(source.element, context, new Set());
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (plan?.kind !== 'optionalSingle' || plan.valueSlots.length !== 1 || hasIrTypeAbsentMember(result.element))
++    return undefined;
++  const targetType = emitType(result.element, { ...context, anonymousStructs: new Map(), includes: new Set() });
++  if (targetType !== plan.valueSlots[0]!.targetType) return undefined;
++  const predicate = expression.arguments[0];
++  if (
++    predicate?.kind !== 'function' ||
++    predicate.async ||
++    !predicate.expression ||
++    !predicate.parameters[0] ||
++    predicate.parameters.some((parameter) => parameter.rest)
++  )
++    return undefined;
++  const bindingId = predicate.parameters[0].binding.id;
++  let assigned = false;
++  analyzeIrExpressionSubtreeTraversal(predicate, {
++    expression(node) {
++      const target =
++        node.kind === 'assignment'
++          ? node.left
++          : node.kind === 'unary' && ['++', '--'].includes(node.operator)
++            ? node.operand
++            : undefined;
++      if (
++        target?.kind === 'identifier' &&
++        target.reference.kind === 'binding' &&
++        target.reference.binding.id === bindingId
++      )
++        assigned = true;
++    },
++  });
++  if (assigned) return undefined;
++  const excluded = getCppPredicateExcludedSentinelsCpp(predicate.expression, bindingId, true);
++  if (
++    (plan.sentinels.null !== 'absent' && !excluded.has('null')) ||
++    (plan.sentinels.undefined !== 'absent' && !excluded.has('undefined'))
++  )
++    return undefined;
++  return { result, targetType };
++}
++
++function getCppPredicateExcludedSentinelsCpp(
++  condition: Readonly<IrExpression>,
++  bindingId: string,
++  result: boolean,
++): ReadonlySet<'null' | 'undefined'> {
++  if (condition.kind === 'unary' && condition.operator === '!')
++    return getCppPredicateExcludedSentinelsCpp(condition.operand, bindingId, !result);
++  if (condition.kind !== 'binary') return new Set();
++  if (condition.operator === '&&' || condition.operator === '||') {
++    const left = getCppPredicateExcludedSentinelsCpp(condition.left, bindingId, result);
++    const right = getCppPredicateExcludedSentinelsCpp(condition.right, bindingId, result);
++    const both = condition.operator === '&&' ? result : !result;
++    return both ? new Set([...left, ...right]) : new Set([...left].filter((sentinel) => right.has(sentinel)));
++  }
++  if (
++    !((['!==', '!='].includes(condition.operator) && result) || (['===', '=='].includes(condition.operator) && !result))
++  )
++    return new Set();
++  const original = (value: Readonly<IrExpression>) =>
++    value.kind === 'identifier' && value.reference.kind === 'binding' && value.reference.binding.id === bindingId;
++  const compared = original(condition.left) ? condition.right : original(condition.right) ? condition.left : undefined;
++  if (compared?.kind === 'literal' && compared.value === null)
++    return new Set(condition.operator.length === 2 ? ['null', 'undefined'] : ['null']);
++  if (
++    compared?.kind === 'undefinedValue' ||
++    (compared?.kind === 'identifier' &&
++      compared.reference.kind === 'ambient' &&
++      compared.reference.name === 'undefined')
++  )
++    return new Set(condition.operator.length === 2 ? ['null', 'undefined'] : ['undefined']);
++  return new Set();
++}
++
++function emitCppArrayFilterProjectionCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.optional ||
++    expression.semantics.optionalChain ||
++    expression.callee.kind !== 'property' ||
++    expression.callee.optional ||
++    expression.callee.member?.receiver !== 'array' ||
++    expression.callee.name !== 'filter' ||
++    expression.arguments.length !== 1
++  )
++    return undefined;
++  const plan = getCppArrayFilterProjectionPlanCpp(expression, context);
++  if (!plan) {
++    const source = getIrArrayTypeCpp(
++      getIrExpressionTypeEvidenceCpp(expression.callee.object, context),
++      context,
++      new Set(),
++    );
++    const result = getIrArrayTypeCpp(expression.semantics.resultType, context, new Set());
++    const sourceUnion = source ? getIrUnionTypeCpp(source.element, context, new Set()) : undefined;
++    const resultUnion = result ? getIrUnionTypeCpp(result.element, context, new Set()) : undefined;
++    const removedAbsence =
++      result &&
++      sourceUnion?.types.some(
++        (member) =>
++          (member.kind === 'null' || member.kind === 'undefined') &&
++          !resultUnion?.types.some((other) => other.kind === member.kind),
++      );
++    const changedGenericCarrier =
++      source &&
++      result &&
++      expression.typeArguments.length > 0 &&
++      emitType(source.element, { ...context, anonymousStructs: new Map(), includes: new Set() }) !==
++        emitType(result.element, { ...context, anonymousStructs: new Map(), includes: new Set() });
++    if (removedAbsence || changedGenericCarrier) {
++      emissionError(
++        context,
++        'a narrowed array filter requires a proven original-element success guard and one represented payload carrier',
++        'cpp-array-filter-projection-unproven',
++      );
++    }
++  }
++  const callbackType =
++    getCppContextualArrayCallbackTypeCpp(expression, undefined, 0, context) ??
++    getIrCallArgumentExpectedTypeCpp(expression, 0, context);
++  const callback = emitExpression(expression.arguments[0]!, context, callbackType);
++  const receiver = emitExpression(expression.callee.object, context);
++  // The source S is a result-domain parameter, not the runtime predicate's callable template argument.
++  return plan
++    ? `${receiver}.filter_projected(${callback}, [](const auto& selected_filter_value) -> ${plan.targetType} { return selected_filter_value.value(); })`
++    : `${receiver}.filter(${callback})`;
++}
++
+ function getCppContextualArrayCallbackTypeCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   expectedType: Readonly<IrType> | undefined,
+--- a/packages/compiler-ambient/src/compilerAmbientSurface.ts
++++ b/packages/compiler-ambient/src/compilerAmbientSurface.ts
+@@ -103,6 +103,7 @@
+   readonly [index: number]: T;
+   concat(...values: readonly T[][]): T[];
+   every(predicate: (value: T, index: number) => boolean): boolean;
++  filter<S extends T>(predicate: (value: T, index: number) => value is S): S[];
+   filter(predicate: (value: T, index: number) => boolean): T[];
+   flatMap<U>(project: (value: T, index: number) => U[]): U[];
+   find(predicate: (value: T, index: number) => boolean): T | undefined;
+@@ -125,6 +126,7 @@
+   concat(...values: readonly T[][]): T[];
+   every(predicate: (value: T, index: number) => boolean): boolean;
+   fill(value: T, start?: number, end?: number): T[];
++  filter<S extends T>(predicate: (value: T, index: number) => value is S): S[];
+   filter(predicate: (value: T, index: number) => boolean): T[];
+   flatMap<U>(project: (value: T, index: number) => U[]): U[];
+   find(predicate: (value: T, index: number) => boolean): T | undefined;
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNarrowedFilterResult.test.ts
+@@ -0,0 +1,129 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++const toolchain = findCppCompilerToolchain();
++const source = `
++export interface Clip { samples:number[] }
++export interface Left { kind:0; left:number }
++export interface Right { kind:1; right:number }
++export interface Other { kind:2; other:number }
++export type Pair=Left|Right;
++export type Full=Pair|Other;
++function isOther(value:Readonly<Full>):value is Readonly<Other>{return value.kind===2;}
++export function selectPair(value:Readonly<Full>|undefined):Readonly<Pair>|null{
++ if(value===undefined)return null;
++ if(isOther(value))return null;
++ return value;
++}
++export function select(input:(Clip|null)[]):Clip[]{
++ return input.filter((clip):clip is Clip=>clip!==null&&clip.samples.length>0);
++}
++export function read(input:(Clip|null)[]):number[]{
++ const active=input.filter((clip):clip is Clip=>clip!==null&&clip.samples.length>0);
++ return active.map(clip=>clip.samples[0]);
++}
++export function defined(input:(Clip|undefined)[]):Clip[]{
++ return input.filter((clip):clip is Clip=>clip!==undefined);
++}
++`;
++function emit(text = source): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/example/src/filter.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/example',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/example': { namespace: 'probe', includePrefix: 'probe' } },
++  }).contents;
++}
++it('represents proven filter success in the fresh result carrier and following mapper', () => {
++  const output = emit();
++  expect(output).toContain('.filter_projected(');
++  expect(output).toContain('selected_filter_value.value()');
++  expect(output).not.toContain('NOT GENERATED');
++});
++it('does not project merely because a predicate annotation claims a narrower type', () => {
++  for (const condition of ['true', 'clip!==null||clip===null']) {
++    expect(() =>
++      emit(
++        `export interface Clip { samples:number[] } export function unsafe(input:(Clip|null)[]):Clip[]{return input.filter((clip):clip is Clip=>${condition});}`,
++      ),
++    ).toThrow('a narrowed array filter requires a proven original-element success guard');
++  }
++});
++it('does not project an element whose callback parameter is reassigned before its success guard', () => {
++  expect(() =>
++    emit(
++      `export interface Clip { samples:number[] } export function unsafe(input:(Clip|null)[]):Clip[]{return input.filter((clip):clip is Clip=>((clip={samples:[1]})!==null));}`,
++    ),
++  ).toThrow('a narrowed array filter requires a proven original-element success guard');
++});
++it.skipIf(!toolchain || includes.length === 0)(
++  'compiles filter results and preserves native element owners, absence and live data',
++  () => {
++    const reference = {} as { read: (input: unknown[]) => number[] };
++    new Function(
++      'exports',
++      ts.transpileModule(source, {
++        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
++      }).outputText,
++    )(reference);
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-narrowed-filter-'));
++    try {
++      writeFileSync(path.join(directory, 'filter.hpp'), emit());
++      const input = path.join(directory, 'native.cpp'),
++        output = path.join(directory, getCppExecutableName(toolchain!, 'native'));
++      writeFileSync(
++        input,
++        `#include "filter.hpp"
++#include <iostream>
++int main(){int checks=0,failures=0;auto check=[&](bool ok){++checks;if(!ok)++failures;};
++auto live=flight::make_ref<probe::Clip>();live->samples=flight::Array<double>{4};auto empty=flight::make_ref<probe::Clip>();
++flight::Array<std::optional<flight::Ref<probe::Clip>>> input{std::nullopt,live,empty};
++auto selected=probe::select(input);check(selected.size()==1);check(selected.element(0)==live);check(selected.identity()!=input.identity());
++auto values=probe::read(input);check(values.size()==1&&values.element(0)==${reference.read([null, { samples: [4] }, { samples: [] }])[0]});
++live->samples.element(0)=9;check(selected.element(0)->samples.element(0)==9);check(probe::read(input).element(0)==9);
++check(probe::defined(input).size()==2);check(probe::select(flight::Array<std::optional<flight::Ref<probe::Clip>>>{}).empty());
++check(!probe::select_pair(std::nullopt).has_value());
++auto left=flight::make_ref<probe::Left>();left->kind=0;left->left=5;
++auto left_pair=probe::select_pair(std::optional<probe::Full>{probe::Full{left}});check(left_pair.has_value()&&std::get<flight::Ref<probe::Left>>(left_pair.value())==left);
++auto right=flight::make_ref<probe::Right>();right->kind=1;right->right=7;
++auto right_pair=probe::select_pair(std::optional<probe::Full>{probe::Full{right}});check(right_pair.has_value()&&std::get<flight::Ref<probe::Right>>(right_pair.value())==right);
++auto other=flight::make_ref<probe::Other>();other->kind=2;check(!probe::select_pair(std::optional<probe::Full>{probe::Full{other}}).has_value());
++left->left=8;check(std::get<flight::Ref<probe::Left>>(left_pair.value())->left==8);
++std::cout<<checks<<" checks, "<<failures<<" failures\\n";return failures?1:0;}
++`,
++      );
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, input, output, [directory, ...includes]),
++        { stdio: 'pipe' },
++      );
++      expect(execFileSync(output, [], { encoding: 'utf8', stdio: 'pipe' })).toContain('13 checks, 0 failures');
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120000,
++);
