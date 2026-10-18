@@ -197,8 +197,9 @@ void registry() {
       return inner(t, options);
     };
     pf::register_particle_format(test_kind, spy);
-    pf::parse_registered_particle_format(String("MY_FORMAT:75"), test_kind,
-                                         flight::make_ref<types::ParseParticleConfigOptions>(types::ParseParticleConfigOptions{.texture_size = 32}));
+    auto options = flight::make_ref<types::ParseParticleConfigOptions>();
+    options->texture_size = 32;
+    pf::parse_registered_particle_format(String("MY_FORMAT:75"), test_kind, options);
     check(seen == 32.0, "passes shared parse options to the registered codec");
     pf::unregister_particle_format(test_kind);
   }
