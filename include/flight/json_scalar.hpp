@@ -83,6 +83,17 @@ class JsonScalarCell final {
   [[nodiscard]] double unary_plus() const { return to_number(); }
   [[nodiscard]] double unary_minus() const { return -to_number(); }
 
+  // `Number.isFinite` and `Number.isNaN` ask about the VALUE; they do not coerce. A JSON null, a
+  // numeric string, or a boolean is not a number to them even though `> 0` and arithmetic on the same
+  // value go through ToNumber. Answering these from `operator double` would make null finite.
+  [[nodiscard]] bool is_finite() const noexcept {
+    return present_ && value_.kind() == AnyKind::number && std::isfinite(value_.as_number());
+  }
+
+  [[nodiscard]] bool is_nan() const noexcept {
+    return present_ && value_.kind() == AnyKind::number && std::isnan(value_.as_number());
+  }
+
   // C++ arithmetic/comparison on this cell is a JavaScript numeric operation, so it uses ToNumber.
   [[nodiscard]] operator double() const { return to_number(); }
 

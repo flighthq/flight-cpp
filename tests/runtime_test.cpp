@@ -4568,6 +4568,31 @@ static void test_json_scalar_cell() {
   check(number.to_string() == flight::String("2") && string_value.to_string() == flight::String("30") &&
             absent.to_string() == flight::String("undefined"),
         "ToString keeps the raw scalar (undefined for absence)");
+
+  // Source oracle (Node) for the same six values, because Number.isFinite asks about the VALUE while
+  // relational/arithmetic operations coerce through ToNumber:
+  //   30    -> isFinite true  | > 0 true  | 1/x 1/30
+  //   null  -> isFinite false | > 0 false | 1/x Infinity
+  //   absent-> isFinite false | > 0 false | 1/x NaN
+  //   "30"  -> isFinite false | > 0 true  | 1/x 1/30
+  //   true  -> isFinite false | > 0 true  | 1/x 1
+  //   NaN   -> isFinite false | > 0 false | 1/x NaN
+  const JsonScalarCell thirty{Any(30.0)};
+  const JsonScalarCell boolean_true{Any(true)};
+  const JsonScalarCell nan_value{Any(std::numeric_limits<double>::quiet_NaN())};
+  check(thirty.is_finite() && !null_value.is_finite() && !absent.is_finite() &&
+            !string_value.is_finite() && !boolean_true.is_finite() && !nan_value.is_finite(),
+        "Number.isFinite is false for null, absent, a numeric string, a boolean and NaN");
+  check(thirty > 0.0 && !(null_value > 0.0) && !(absent > 0.0) && string_value > 0.0 &&
+            boolean_true > 0.0 && !(nan_value > 0.0),
+        "relational comparison coerces through ToNumber (null 0, string 30, true 1, absent NaN)");
+  check(1.0 / static_cast<double>(thirty) == 1.0 / 30.0 &&
+            std::isinf(1.0 / static_cast<double>(null_value)) &&
+            std::isnan(1.0 / static_cast<double>(absent)) &&
+            1.0 / static_cast<double>(boolean_true) == 1.0,
+        "division coerces through ToNumber (null Infinity, absent NaN, true 1)");
+  check(nan_value.is_nan() && !thirty.is_nan() && !null_value.is_nan() && !string_value.is_nan(),
+        "Number.isNaN is false for every non-number, even when its ToNumber is NaN");
 }
 
 int main() {
