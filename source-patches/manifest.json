@@ -5081,6 +5081,23 @@
       "expires": "when the backend proves an indexed read in bounds from its enclosing loop without this collected set, or the presence lane accepts required element access",
       "appliedOn": "2026-10-18",
       "verification": "New cppRequiredIndexedElementMember.test.ts: 2 pass (a loop-bound `lines[i].trim()` emits lines.element(i).trim(); an unguarded nullable element member keeps the refusal). The pinned dense-array control test still passes (unguarded literal reads refuse; the length-guarded literal-0 case emits). Backend regression: 81 failures, the same pre-existing set as the recorded baseline (the one title that flips is the pre-existing nested-readonly-array failure, unchanged from every recorded baseline; no new failure)."
+    },
+    {
+      "id": "compiler-checked-derived-member-read",
+      "dependency": "flight-compiler",
+      "patch": "compiler-checked-derived-member-read.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/render-wgpu",
+      "answers": "diagnostic",
+      "refusal": "`(target as WgpuTextureRenderTarget).view` in bindWgpuRenderPassTarget asserts a native interface base to a derived owner and reads a member only the derived owner declares. The pinned backend refuses it as cpp-reference-assertion-without-heritage, and an unchecked downcast would read another type's storage when the object is not the derived type.",
+      "rewrite": "A member read whose receiver is a base-to-derived interface assertion is lowered as one checked read with the receiver evaluated once: the derived field of the SAME live owner when flight::recover_owner<Derived> recovers the allocation (the derived type or a subclass, recorded by make_ref for structs emitting `using flight_native_base = Base;`, which the backend now emits on native-heritage structs); otherwise the member cell of another owner that declares it, through flight::StructuralMemberView; otherwise the member's absent state, or flight::absent_host_handle for a declared opaque host-handle absence carrier. A member type with no absent state refuses (cpp-checked-derived-member-absence-unrepresented), and a bare value assertion keeps its existing refusal.",
+      "equivalence": "TypeScript emits no check for the assertion, so JavaScript reads the member of whatever object it has: the derived field when the object declares it, and undefined when it does not. The lowering reads exactly that, from the same object, without a cast, and never throws where the source would have read undefined.",
+      "verification": "6 focused fixtures in cppCheckedDerivedMemberRead.test.ts (the recovered-owner read with its structural and host-handle-absence fallbacks, single receiver evaluation, an optional member reading its own absence, the no-absent-state refusal, the bare value-assertion refusal, and a grandchild literal writing the base cell its parent refines); A1 fixture expectations updated for the typedef line. Native: tests/recover_owner_test.cpp and check_wgpu_texture_view_absence_carrier in tests/host_sdl_test.cpp. Parity: see the handoff for the base87 run.",
+      "whyNotUpstreamFirst": "The read needs a runtime identity recovery (flight::recover_owner) that only this runtime defines, and the WGPU render-pass functions it unblocks are on the 117-row path.",
+      "unblocks": "The texture-target arm of bindWgpuRenderPassTarget; with compiler-structural-value-carrier, its screen-target arm.",
+      "expires": "when upstream lowers derived member reads through a base-to-derived interface assertion with a checked identity recovery.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

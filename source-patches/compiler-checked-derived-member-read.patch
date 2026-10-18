@@ -1,0 +1,229 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCheckedDerivedMemberRead.test.ts b/packages/compiler-backend-cpp/src/cppCheckedDerivedMemberRead.test.ts
+new file mode 100644
+index 0000000..1277cc1
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCheckedDerivedMemberRead.test.ts
+@@ -0,0 +1,92 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// `(target as WgpuTextureRenderTarget).view` reads a member of an object asserted from a native interface
++// base to a derived owner. TypeScript checks nothing at runtime, and JavaScript reads the member of
++// whatever object it has. The lowering reads it that way, evaluating the receiver once: the SAME live owner
++// when the allocation is the derived type or a subclass (flight::recover_owner); otherwise the member cell
++// of another owner that declares it (flight::StructuralMemberView); otherwise the member's absence. A
++// missing member is never thrown at the read. It is the member's own absent state, or, for a declared
++// opaque host-handle absence carrier, the empty handle. A member type with no absent state refuses, and a
++// bare value assertion keeps its existing refusal.
++const declarations = `export interface Target { context: NativeContext | null; width: number }
++export interface Texture extends Target { readonly context: null; view: NativeView; level: number; label?: string }
++export interface CustomTexture extends Texture { extra: number }
++`;
++
++const handle = (sourceName: string, targetName: string) => ({
++  headers: ['host/view.hpp'],
++  nullability: 'non-null' as const,
++  ownership: 'shared' as const,
++  sourceName,
++  space: 'type' as const,
++  targetName,
++});
++const bindings = {
++  bindings: [handle('NativeView', 'host::View'), handle('NativeContext', 'host::Context')],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(body: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/read.ts', declarations + body, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { externalBindings: bindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function refusal(body: string) {
++  try {
++    emit(body);
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error.rule;
++    throw error;
++  }
++  return undefined;
++}
++
++describe('a member read through a base-to-derived interface assertion', () => {
++  it('recovers the same owner, then reads a structural member, then reports the handle as absent', () => {
++    const contents = emit('export function f(t: Target): NativeView { return (t as Texture).view; }');
++    expect(contents).toContain('struct Texture : public Target {\n  using flight_native_base = Target;');
++    expect(contents).toContain(
++      'return ([&]() -> host::View { const auto asserted_receiver = t; if (const auto recovered_owner = flight::recover_owner<Texture>(asserted_receiver)) return recovered_owner->view; if (const auto structural_member = flight::StructuralMemberView<Target>(asserted_receiver).template read<host::View>("view"); structural_member.has_value()) return static_cast<const host::View&>(structural_member); return flight::absent_host_handle<host::View>(); }());',
++    );
++    expect(contents).toContain('#include <flight/host_handle_absence.hpp>');
++    expect(contents).not.toMatch(/static_pointer_cast|dynamic_pointer_cast|reinterpret_cast/u);
++  });
++
++  it('evaluates the receiver expression exactly once', () => {
++    const contents = emit('export function f(get: () => Target): NativeView { return (get() as Texture).view; }');
++    expect(contents.match(/get\(\)/gu)).toHaveLength(1);
++    expect(contents).toContain('const auto asserted_receiver = get();');
++  });
++
++  it('reports an optional member as its own absence', () => {
++    expect(emit('export function f(t: Target): string | undefined { return (t as Texture).label; }')).toContain(
++      'return std::optional<flight::String>{}; }());',
++    );
++  });
++
++  it('refuses a member whose type has no absent state', () => {
++    expect(refusal('export function f(t: Target): number { return (t as Texture).level; }')).toBe(
++      'cpp-checked-derived-member-absence-unrepresented',
++    );
++  });
++
++  it('keeps a bare value assertion refused', () => {
++    expect(refusal('export function f(t: Target): Texture { return t as Texture; }')).toBe(
++      'cpp-reference-assertion-without-heritage',
++    );
++  });
++
++  it('writes a grandchild literal into the base cell its parent refines', () => {
++    const contents = emit('export function f(view: NativeView): CustomTexture { return { context: null, width: 1, view, level: 2, extra: 3 }; }');
++    expect(contents).toContain('auto object_member_context = std::nullopt;');
++    expect(contents).not.toContain('object_member_context = flight::null');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index febb327..234b54c 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2453,6 +2453,9 @@ function emitInterface(declaration: Readonly<IrInterfaceDeclaration>, outer: Emi
+       ? ' : public flight::ReferenceEnabled'
+       : '';
+   lines.push(`struct ${name}${base} {`);
++  // The primary native base, named for the runtime: `flight::make_ref` registers such an allocation as a
++  // recoverable owner, which is what a checked base-to-derived member read recovers.
++  if (heritage) lines.push(`  using flight_native_base = ${emitType(heritage.base, context, 'storage')};`);
+   const emittedMemberNames = new Set<string>();
+   for (const property of declaration.properties) {
+     if (heritage?.inheritedNames.has(property.name)) continue;
+@@ -6692,6 +6695,8 @@ function emitExpression(
+       return construction(initializer);
+     }
+     case 'property': {
++      const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
++      if (checkedDerivedMember) return checkedDerivedMember;
+       if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
+         context.includes.add('flight/structural_ref.hpp');
+         const key = emitLiteral(expression.name, context);
+@@ -14654,6 +14659,72 @@ function hasCppAbsenceStorageCpp(expression: Readonly<IrExpression>, context: Em
+ // from `Base | null` to `Derived`: the read is Derived, but the carrier is still optional<Ref<Base>>.
+ // Recover the declaration through the receiver rather than asking the property expression, whose
+ // narrowedType is supposed to win for every value-side question.
++// `(base as Derived).member`: a source assertion from a native interface base to one of its derived
++// owners, read for one member. TypeScript checks nothing at runtime, and JavaScript reads the member of
++// whatever object it is. The read is lowered exactly that way, in three checked steps, evaluating the
++// receiver once:
++//   1. the allocation IS a Derived (or derives from it): read the member of that same live owner;
++//   2. otherwise, an object of another owner that declares the member structurally: read its own cell;
++//   3. otherwise the member is absent, which is `undefined` in the source. Where the member's storage admits
++//      absence, that is its absence; where it is a declared opaque host-handle absence carrier, the empty
++//      handle; anything else has no representation and refuses.
++// No pointer cast is made and no early check is added: a missing member is reported, never thrown at the
++// read. Only the member-read form is lowered; a bare value assertion keeps its refusal.
++function emitCppCheckedDerivedMemberReadCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.optional) return undefined;
++  const assertion = expression.object;
++  if (assertion.kind !== 'cast') return undefined;
++  const sourceType = getIrExpressionTypeEvidenceCpp(assertion.expression, context);
++  const targetType = assertion.type;
++  if (
++    !sourceType ||
++    sourceType.kind !== 'named' ||
++    targetType.kind !== 'named' ||
++    !hasFlightReferenceRepresentationCpp(sourceType, context) ||
++    !hasFlightReferenceRepresentationCpp(targetType, context) ||
++    emitType(sourceType, context) === emitType(targetType, context) ||
++    !isCppNativeInterfaceDerivedFromCpp(targetType, sourceType, context)
++  ) {
++    return undefined;
++  }
++  if (getCppRefinedMemberStorageTypeCpp(targetType, expression.name, context)) return undefined;
++  const memberType = getIrObjectPropertyTypeCpp(targetType, expression.name, context);
++  if (!memberType) return undefined;
++  const memberStorage = emitType(memberType, context);
++  const absent = hasIrTypeAbsentMember(memberType)
++    ? `${memberStorage}{}`
++    : isCppExternalHostHandleTypeCpp(memberType, context)
++      ? (context.includes.add('flight/host_handle_absence.hpp'), `flight::absent_host_handle<${memberStorage}>()`)
++      : undefined;
++  if (!absent) {
++    emissionError(
++      context,
++      `the asserted member ${expression.name} read from ${emitType(sourceType, context)} as ${emitType(targetType, context)} can be absent at runtime, and its type ${memberStorage} has no absent state: declare the member optional, or make its type a declared opaque host-handle absence carrier`,
++      'cpp-checked-derived-member-absence-unrepresented',
++    );
++  }
++  context.includes.add('flight/reference.hpp');
++  context.includes.add('flight/structural_ref.hpp');
++  const receiver = getGeneratedTargetName('assertedReceiver', context);
++  const owner = getGeneratedTargetName('recoveredOwner', context);
++  const structural = getGeneratedTargetName('structuralMember', context);
++  const sourceStorage = emitType(sourceType, context, 'storage');
++  const targetStorage = emitType(targetType, context, 'storage');
++  return `([&]() -> ${memberStorage} { const auto ${receiver} = ${emitExpression(assertion.expression, context)}; if (const auto ${owner} = flight::recover_owner<${targetStorage}>(${receiver})) return ${owner}->${safeCppName(expression.name)}; if (const auto ${structural} = flight::StructuralMemberView<${sourceStorage}>(${receiver}).template read<${memberStorage}>(${JSON.stringify(expression.name)}); ${structural}.has_value()) return static_cast<const ${memberStorage}&>(${structural}); return ${absent}; }())`;
++}
++
++// A bound external type whose profile ownership is shared: an opaque host handle (GPUTextureView), never a
++// value dictionary. Whether it may stand for absence is the runtime's declared contract, checked by
++// `flight::absent_host_handle` at compile time.
++function isCppExternalHostHandleTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (type.kind !== 'named' || type.reference.kind !== 'ambient') return false;
++  const evidence = getCompilerExternalBindingEvidenceCpp(type.reference.name, 'type', context.options.externalBindings);
++  return evidence?.ownership === 'shared' && evidence.nullability === 'non-null';
++}
++
+ // Marks a read already lifted to its refinement's presence proof. Object spread copies symbol-keyed
+ // properties, so the carrier spelling emitted beneath the proof keeps the mark and is not lifted again.
+ const cppRefinedPresentReadMarker = Symbol('cppRefinedPresentRead');
+@@ -14663,8 +14734,18 @@ function getCppRefinedMemberStorageTypeCpp(
+   receiverType: Readonly<IrType>,
+   name: string,
+   context: EmitContext,
++  visited: ReadonlySet<string> = new Set(),
+ ): Readonly<IrType> | undefined {
+-  return getCppInterfaceNativeHeritageForTypeCpp(receiverType, context)?.refinedMembers.get(name);
++  const heritage = getCppInterfaceNativeHeritageForTypeCpp(receiverType, context);
++  if (!heritage) return undefined;
++  const refined = heritage.refinedMembers.get(name);
++  if (refined) return refined;
++  // A member inherited unchanged keeps whatever cell its base owner has, so a subclass of a refining
++  // owner (`CustomTexture extends Texture`) reaches the same base cell through the chain.
++  if (!heritage.inheritedNames.has(name)) return undefined;
++  const key = emitType(heritage.base, context);
++  if (visited.has(key)) return undefined;
++  return getCppRefinedMemberStorageTypeCpp(heritage.base, name, context, new Set(visited).add(key));
+ }
+ 
+ // A read of a member the receiver's type refines to present-only is proven present by that refinement:
+diff --git a/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts b/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts
+index 0e2ea64..8bb034d 100644
+--- a/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts
++++ b/packages/compiler-backend-cpp/src/cppInterfaceAbsenceRefinementHeritage.test.ts
+@@ -29,8 +29,8 @@ describe('absence-only interface refinements on native heritage', () => {
+   it('derives both refinements from the base and keeps the one base cell', () => {
+     const contents = emit('');
+     expect(contents).toContain('struct Target : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<Ctx>> context;');
+-    expect(contents).toContain('struct Screen : public Target {\n  double swap;\n};');
+-    expect(contents).toContain('struct Texture : public Target {\n  double view;\n};');
++    expect(contents).toContain('struct Screen : public Target {\n  using flight_native_base = Target;\n  double swap;\n};');
++    expect(contents).toContain('struct Texture : public Target {\n  using flight_native_base = Target;\n  double view;\n};');
+   });
+ 
+   it('widens each derived owner to the base as the same reference', () => {
