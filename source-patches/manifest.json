@@ -5166,6 +5166,22 @@
       "expires": "when the emitter keeps a temporary receiver alive for the loop without this binding, or the runtime offers an iterable that owns the call result",
       "appliedOn": "2026-10-18",
       "verification": "New cppSelfReturningIterableLifetime.test.ts: 2 pass (a spread.sort() iterable is bound first and iterated; a named array's sort stays direct). A native probe of the two shapes confirms direct iteration yields 0 elements and the bound form yields all elements. Patched compiler build exit 0; stack applies/reverts clean."
+    },
+    {
+      "id": "compiler-shared-reference-cells",
+      "dependency": "flight-compiler",
+      "patch": "compiler-shared-reference-cells.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/types",
+      "answers": "diagnostic",
+      "refusal": "A declared covariant reference payload requires a live view of the physical base cell, with lazy object reads and a checked partial native escape; distinct emitted Ref payload types cannot be shared by pretending their storage is equal.",
+      "rewrite": "Extend the existing structuralValueCarriers option with explicit cells sites. Keep source inheritance checking intact, elect proven base-reference storage for those fields, and emit same-family cell reads/writes and explicit native escapes. Undeclared refinements retain their current storage gate. Normal GL site activation remains held; only the two approved relations are recorded in a fixture pending the inherited anonymous callable owner prerequisite.",
+      "equivalence": "One native base-reference cell stores the original source object; derived value views preserve identity/control block and observe replacement on the next read. Optional clearing preserves absence and computed written-undefined presence. A base-written non-GL object remains lazy and by-name readable; only a typed GL native escape throws the shared NativeScalarEscapeError. No casts, copies, shadow fields, or payload attachments.",
+      "whyNotUpstreamFirst": "The portable source declares the same writable property through base and derived annotations. This is a runtime/compiler representation capability, not a source rewrite or emitted-header repair.",
+      "unblocks": "Qualified bounded compiler/runtime capability for exactly EntityRuntimeKey RenderStateRuntime/GlRenderStateRuntime and runtime.registries RenderRegistries/GlRenderRegistries. Does not yet activate normal GL generation or claim package qualification.",
+      "expires": "When the pinned compiler supports explicitly declared common physical reference cells and lazy derived views with checked native escapes; activate GL profile sites only after the actual inherited callable owner prerequisite is qualified.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

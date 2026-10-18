@@ -45,6 +45,7 @@ export function loadStructuralValueCarriers(root) {
     const sites = [
       ...(carrier.parameters ?? []).map((site) => ['parameter', site, ['package', 'function', 'parameter']]),
       ...(carrier.fields ?? []).map((site) => ['field', site, ['package', 'owner', 'field']]),
+      ...(carrier.cells ?? []).map((site) => ['shared cell', site, ['package', 'owner', 'baseOwner', 'field']]),
       ...(carrier.callbackParameters ?? []).map((site) => ['callback parameter', site, ['package', 'owner', 'field']]),
     ];
     if (sites.length === 0) throw new Error(`${where} declares no sites`);
@@ -62,8 +63,9 @@ export function loadStructuralValueCarriers(root) {
 
 // The compiler option: the declaration minus its bookkeeping.
 export function structuralValueCarrierOptions(carriers) {
-  return carriers.map(({ base, callbackParameters, fields, nominal, parameters, target }) => ({
+  return carriers.map(({ base, callbackParameters, cells, fields, nominal, parameters, target }) => ({
     base,
+    ...(cells ? { cells } : {}),
     ...(callbackParameters ? { callbackParameters } : {}),
     ...(fields ? { fields } : {}),
     nominal,
@@ -87,6 +89,13 @@ export function unmatchedStructuralValueCarrierSites(carriers, packageSources) {
     for (const site of carrier.parameters ?? []) {
       check(site, `function ${site.function} parameter ${site.parameter}`, [
         new RegExp(`function\\s+${site.function}\\s*(?:<[^>]*>)?\\s*\\([^)]*\\b${site.parameter}\\s*:[^)]*\\b${carrier.nominal}\\b`, 'su'),
+      ]);
+    }
+    for (const site of carrier.cells ?? []) {
+      check(site, `${site.owner}.${site.field} shared with ${site.baseOwner}`, [
+        new RegExp(`\\binterface\\s+${site.owner}\\s+extends\\s+${site.baseOwner}\\b`, 'u'),
+        new RegExp(`\\b(?:interface|type)\\s+${site.baseOwner}\\b`, 'u'),
+        new RegExp(`\\b${site.field}\\b`, 'u'),
       ]);
     }
     for (const site of [...(carrier.fields ?? []), ...(carrier.callbackParameters ?? [])]) {

@@ -1,0 +1,37 @@
+{
+  "schema": "flight-cpp-structural-value-carriers/1",
+  "carriers": [
+    {
+      "id": "gl-runtime-physical-cell",
+      "nominal": "GlRenderStateRuntime",
+      "base": "RenderStateRuntime",
+      "target": "flight::NominalOrStructuralView<flight::types::GlRenderStateRuntime, flight::types::RenderStateRuntime>",
+      "reason": "The GL runtime annotation refines the same EntityRuntimeKey cell. The base optional reference remains physical storage; derived reads carry its object lazily and typed native escape is partial with NativeScalarEscapeError.",
+      "request": "docs/compiler-requests/gl-shared-reference-cells.md",
+      "cells": [
+        {
+          "package": "@flighthq/types",
+          "owner": "GlRenderState",
+          "baseOwner": "RenderState",
+          "field": "EntityRuntimeKey"
+        }
+      ]
+    },
+    {
+      "id": "gl-registries-physical-cell",
+      "nominal": "GlRenderRegistries",
+      "base": "RenderRegistries",
+      "target": "flight::NominalOrStructuralView<flight::types::GlRenderRegistries, flight::types::RenderRegistries>",
+      "reason": "GlRenderStateRuntime.registries refines the same RenderStateRuntime.registries cell. Base reference storage stays shared and derived value reads use the existing lazy family; only an actual typed native escape requires a GL owner.",
+      "request": "docs/compiler-requests/gl-shared-reference-cells.md",
+      "cells": [
+        {
+          "package": "@flighthq/types",
+          "owner": "GlRenderStateRuntime",
+          "baseOwner": "RenderStateRuntime",
+          "field": "registries"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,590 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -1,4 +1,4 @@
+-import { applyCppStructuralValueCarriersCpp, getCppStructuralValueCarrierPlanCpp } from './cppStructuralValueCarrier.js';
++import { applyCppStructuralValueCarriersCpp, getCppSharedReferenceCellPlanCpp, getCppStructuralValueCarrierPlanCpp } from './cppStructuralValueCarrier.js';
+ import path from 'node:path';
+ import { isDeepStrictEqual } from 'node:util';
+ 
+@@ -3317,7 +3317,9 @@
+   // same carried value: it keeps the carrier's storage rather than the nominal type the checker names.
+   const carrierInitializerStorage =
+     !arrayElement && variable.initializer
+-      ? variable.initializer.kind === 'property'
++      ? variable.initializer.kind === 'element'
++        ? getCppSharedReferenceCellExpressionTypeCpp(variable.initializer, context)
++        : variable.initializer.kind === 'property'
+         ? getCppDeclaredPropertyReadTypeCpp(variable.initializer, context)
+         : variable.initializer.kind === 'identifier' && variable.initializer.reference.kind === 'binding'
+           ? getCppBindingTypeCpp(variable.initializer.reference.binding.id, context)
+@@ -4092,6 +4094,10 @@
+     const message = conditional.whenTrue as Readonly<Extract<IrExpression, { kind: 'property' }>>;
+     return `flight::String(${emitExpression(message.object, context)}.what())`;
+   }
++  if (!expectedType && (expression.kind === 'property' || expression.kind === 'element')) {
++    const sharedCell = emitCppSharedReferenceCellReadCpp(expression, context);
++    if (sharedCell) return sharedCell;
++  }
+   if (expectedType && getCppRuntimeProfile(context.options) === 'flight-cpp') {
+     if (
+       expression.kind === 'element' &&
+@@ -4099,6 +4105,8 @@
+       hasCppRegExpExecArrayIndexedReceiverCpp(expression, context)
+     )
+       return emitOptionalExpressionCpp(expression, context, expectedType);
++    const nativeCell = emitCppSharedReferenceCellNativeCpp(expression, expectedType, context);
++    if (nativeCell) return nativeCell;
+     const carrierValue = emitCppStructuralValueCarrierWrapCpp(expression, expectedType, context);
+     if (carrierValue) return carrierValue;
+     const voidValueConversion = emitCppContextualVoidValueCpp(expression, expectedType, context);
+@@ -4133,6 +4141,8 @@
+     case 'array':
+       return emitArrayExpressionCpp(expression, context, expectedType);
+     case 'assignment': {
++      const cellWrite = emitCppSharedReferenceCellWriteCpp(expression, context);
++      if (cellWrite) return cellWrite;
+       const carrierWrite = emitCppStructuralValueCarrierMemberWriteCpp(expression, context);
+       if (carrierWrite) return carrierWrite;
+       if (
+@@ -6819,6 +6829,8 @@
+       if (structuralMemberViewRead) return structuralMemberViewRead;
+       const checkedDerivedMember = emitCppCheckedDerivedMemberReadCpp(expression, context);
+       if (checkedDerivedMember) return checkedDerivedMember;
++      const cellRead = emitCppSharedReferenceCellReadCpp(expression, context);
++      if (cellRead) return cellRead;
+       const carrierMember = emitCppStructuralValueCarrierMemberReadCpp(expression, context);
+       if (carrierMember) return carrierMember;
+       if (isCppJsonReadValueCpp(expression.object, context) && isCppJsonDataPropertyNameCpp(expression.name)) {
+@@ -15558,6 +15570,10 @@
+   const members = expectedType.kind === 'union' ? expectedType.types : [expectedType];
+   const plan = members.map((member) => getCppStructuralValueCarrierPlanCpp(context.options, member)).find(Boolean);
+   if (!plan) return undefined;
++  if (expression.kind === 'property' || expression.kind === 'element') {
++    const cell = getCppSharedReferenceCellAccessCpp(expression, context);
++    if (cell?.plan.sourceName === plan.sourceName) return emitCppSharedReferenceCellReadCpp(expression, context);
++  }
+   const inner = expression.kind === 'cast' ? expression.expression : expression;
+   const evidence = getIrExpressionTypeEvidenceCpp(inner, context);
+   if (!evidence || getCppStructuralValueCarrierPlanCpp(context.options, evidence)) return undefined;
+@@ -15613,6 +15629,8 @@
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+ ): Readonly<IrType> | undefined {
++  const cellType = getCppSharedReferenceCellExpressionTypeCpp(expression, context);
++  if (cellType) return cellType;
+   const receiverType = getIrExpressionTypeEvidenceCpp(expression.object, context);
+   if (!receiverType) return undefined;
+   const row = getCppStructuralRowExpressionPlanCpp(expression.object, context);
+@@ -24295,7 +24313,7 @@
+     case 'cast':
+       return expression.type;
+     case 'element':
+-      return getIrExpressionTypeEvidenceCpp(expression, context);
++      return getCppSharedReferenceCellExpressionTypeCpp(expression, context) ?? getIrExpressionTypeEvidenceCpp(expression, context);
+     case 'property': {
+       // A carried member read answers the nominal owner's declared member type, and its present payload
+       // when the read was proved present (the lowering projects it with `.value()`).
+@@ -28502,6 +28520,8 @@
+   expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
+   context: EmitContext,
+ ): string | undefined {
++  const cellRead = emitCppSharedReferenceCellReadCpp(expression, context);
++  if (cellRead) return cellRead;
+   const property = getComputedSymbolElementPropertyCpp(expression, context);
+   return property
+     ? `${emitExpression(expression.object, context)}${memberOp(expression.object, context)}${safeCppName(property.name)}`
+@@ -34321,11 +34341,220 @@
+ // A dual-sentinel variant also needs an explicit default: omitted object-literal fields use the C++
+ // member initializer, and a bare variant would default to its first VALUE alternative instead of the
+ // authored `undefined` state. This keeps omission zero-copy and local to the stored object.
++function emitCppSharedReferenceCellNativeCpp(
++  expression: Readonly<IrExpression>,
++  expected: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  const source =
++    expression.kind === 'identifier' && expression.reference.kind === 'binding'
++      ? getCppBindingTypeCpp(expression.reference.binding.id, context)
++      : expression.kind === 'property'
++        ? getCppDeclaredPropertyReadTypeCpp(expression, context)
++        : expression.kind === 'element'
++          ? getCppSharedReferenceCellExpressionTypeCpp(expression, context)
++          : undefined;
++  const plan = (source?.kind === 'union' ? source.types : [source])
++    .map((member) => getCppStructuralValueCarrierPlanCpp(context.options, member))
++    .find(Boolean);
++  if (!plan?.carrier.cells?.length || expected.kind !== 'named') return undefined;
++  const sourceIdentity = getCppNominalTypeIdentityCpp(
++    plan.nominal,
++    getCppNamedTypeBindingModuleCpp(plan.nominal, context),
++    context,
++  );
++  const expectedIdentity = getCppNominalTypeIdentityCpp(
++    expected,
++    getCppNamedTypeBindingModuleCpp(expected, context),
++    context,
++  );
++  if (sourceIdentity && expectedIdentity === sourceIdentity) return `${emitExpression(expression, context)}.native()`;
++  // A base native consumer needs the base object already held, without demanding a derived allocation.
++  if (isCppNativeInterfaceDerivedFromCpp(plan.nominal, expected, context))
++    return `${emitExpression(expression, context)}.object()`;
++  return undefined;
++}
++
++function emitCppSharedReferenceCellWriteCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'assignment' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (expression.left.kind !== 'property' && expression.left.kind !== 'element') return undefined;
++  const cell = getCppSharedReferenceCellAccessCpp(expression.left, context);
++  if (!cell) return undefined;
++  if (expression.operator !== '=')
++    emissionError(context, 'shared reference cells support plain assignment only', 'cpp-shared-reference-cell-write');
++  const value = emitExpression(
++    expression.right,
++    context,
++    cell.baseCell ? cell.property.type : getCppSharedReferenceCellReadTypeCpp(cell),
++  );
++  const receiver = emitExpression(expression.left.object, context);
++  const field = safeCppName(cell.property.name);
++  const owner = emitType(cell.nominal, context, 'storage');
++  if (cell.row) {
++    return expression.left.kind === 'element'
++      ? `${cell.plan.carrier.target}::write_row_cell(${receiver}, ${emitExpression(expression.left.index, context)}, ${value})`
++      : `${cell.plan.carrier.target}::write_row_cell<flight::RowKey<${JSON.stringify(cell.property.name)}>>(${receiver}, ${value})`;
++  }
++  if (cell.receiverCarrier) {
++    return `${receiver}.template write_cell_member<flight::RowKey<${JSON.stringify(cell.property.name)}>, ${cell.plan.carrier.target}, &${owner}::${field}>(${value})`;
++  }
++  if (expression.left.kind === 'element') {
++    return `${cell.plan.carrier.target}::write_symbol_cell<&${owner}::${field}>(${receiver}, ${emitExpression(expression.left.index, context)}, ${value})`;
++  }
++  if (cell.baseCell) return `(${receiver}${memberOp(expression.left.object, context)}${field} = ${value})`;
++  return `${cell.plan.carrier.target}::write_cell(${receiver}${memberOp(expression.left.object, context)}${field}, ${value})`;
++}
++
++function getCppSharedReferenceCellAccessCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' | 'element' }>>,
++  context: EmitContext,
++) {
++  const receiverType = getIrExpressionTypeEvidenceCpp(expression.object, context);
++  const receiverCarrier = getCppStructuralValueCarrierPlanCpp(context.options, receiverType);
++  const row = getCppStructuralRowExpressionPlanCpp(expression.object, context);
++  const nominal = receiverCarrier?.nominal ?? (row ? getCppStructuralRowObjectTypeCpp(row) : receiverType);
++  if (!nominal) return undefined;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(nominal, context.module, context);
++  const property =
++    expression.kind === 'property'
++      ? context.referenceRepresentationPlanner
++          .resolveObjectShape(nominal, context.module)
++          ?.find((p) => p.name === expression.name)
++      : getComputedSymbolElementPropertyCpp(expression, context);
++  if (!property || !owner || owner.declaration.kind !== 'interface') return undefined;
++  const ownerName = owner.declaration.binding.name;
++  const plan = getCppSharedReferenceCellPlanCpp(
++    context.options,
++    property.type,
++    ownerName,
++    property.name,
++    owner.module.packageName,
++  );
++  return plan
++    ? {
++        plan,
++        property,
++        nominal,
++        receiverCarrier,
++        row,
++        baseCell: plan.carrier.cells?.some((c) => c.baseOwner === ownerName) === true,
++      }
++    : undefined;
++}
++
++function emitCppSharedReferenceCellReadCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' | 'element' }>>,
++  context: EmitContext,
++): string | undefined {
++  const cell = getCppSharedReferenceCellAccessCpp(expression, context);
++  if (!cell || cell.baseCell) return undefined;
++  const receiver = emitExpression(expression.object, context);
++  const field = safeCppName(cell.property.name);
++  if (cell.row) {
++    if (expression.kind === 'element') {
++      const owner = emitType(cell.nominal, context, 'storage');
++      const raw = `${cell.plan.carrier.target}::read_row_cell<${owner}, &${owner}::${field}>(${receiver}, ${emitExpression(expression.index, context)})`;
++      return hasIrTypeAbsentMember(cell.property.type) && expression.presence === 'narrowedPresent'
++        ? `${raw}.value()`
++        : raw;
++    }
++    return `${cell.plan.carrier.target}::read_cell(flight::row_get<flight::RowKey<${JSON.stringify(cell.property.name)}>>(${receiver}))`;
++  }
++  if (cell.receiverCarrier) {
++    // Read the base cell by name when the runtime value itself is a structural view.
++    const owner = emitType(cell.nominal, context, 'storage');
++    return `${receiver}.template read_cell_member<flight::RowKey<${JSON.stringify(cell.property.name)}>, ${cell.plan.carrier.target}, &${owner}::${field}>()`;
++  }
++  const raw = `${receiver}${memberOp(expression.object, context)}${field}`;
++  const result = `${cell.plan.carrier.target}::read_cell(${raw})`;
++  return hasIrTypeAbsentMember(cell.property.type) && expression.presence === 'narrowedPresent'
++    ? `${result}.value()`
++    : result;
++}
++
++function getCppSharedReferenceCellExpressionTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' | 'element' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  const cell = getCppSharedReferenceCellAccessCpp(expression, context);
++  return cell && !cell.baseCell ? getCppSharedReferenceCellReadTypeCpp(cell) : undefined;
++}
++
++function getCppSharedReferenceCellReadTypeCpp(
++  cell: NonNullable<ReturnType<typeof getCppSharedReferenceCellAccessCpp>>,
++): Readonly<IrType> {
++  const synthetic: Readonly<IrType> = {
++    kind: 'named',
++    reference: { kind: 'ambient', name: cell.plan.sourceName },
++    typeArguments: [],
++  };
++  return cell.property.type.kind === 'union'
++    ? ({
++        ...cell.property.type,
++        types: cell.property.type.types.map((member) =>
++          member.kind === 'null' || member.kind === 'undefined' ? member : synthetic,
++        ),
++      } as unknown as Readonly<IrType>)
++    : synthetic;
++}
++
++function getCppSharedReferenceCellStorageCpp(
++  property: Readonly<{ name?: string; optional: boolean; type: IrType }>,
++  context: EmitContext,
++): Readonly<{ initializer?: string; optional: boolean; type: string }> | undefined {
++  const plan = getCppSharedReferenceCellPlanCpp(
++    context.options,
++    property.type,
++    context.currentInterface?.binding.name,
++    property.name,
++    context.module.packageName,
++  );
++  if (!plan || !plan.carrier.cells?.some((cell) => cell.owner === context.currentInterface?.binding.name))
++    return undefined;
++  const owner = getCppNamedTypeDeclarationOwnerCpp(plan.nominal, context.module, context);
++  const base = owner?.declaration.kind === 'interface' ? owner.declaration.extends[0] : undefined;
++  if (
++    !base ||
++    base.reference.kind !== 'binding' ||
++    base.reference.binding.name !== plan.carrier.base ||
++    !isCppNativeInterfaceDerivedFromCpp(plan.nominal, base, context)
++  ) {
++    emissionError(
++      context,
++      `shared reference cell ${context.currentInterface?.binding.name}.${property.name} requires proven native payload heritage ${plan.carrier.nominal} -> ${plan.carrier.base}`,
++      'cpp-shared-reference-cell-payload',
++    );
++  }
++  const ownerContext = {
++    ...context,
++    module: owner!.module,
++    targetNames: new Map(context.targetNameMaps.get(getCppModuleIdentityKey(owner!.module)) ?? []),
++  };
++  const type =
++    property.type.kind === 'union'
++      ? ({
++          ...property.type,
++          types: property.type.types.map((member) =>
++            member.kind === 'null' || member.kind === 'undefined' ? member : base,
++          ),
++        } as unknown as Readonly<IrType>)
++      : base;
++  const storage = emitCppObjectPropertyStorageCpp(
++    { ...property, type },
++    emitOptionalTypeCpp(emitType(type, ownerContext), property.optional, ownerContext),
++    ownerContext,
++  );
++  return { ...storage, type: qualifyCppDeclaringModuleTypeCpp(storage.type, ownerContext) };
++}
+ function emitCppObjectPropertyStorageCpp(
+-  property: Readonly<{ optional: boolean; type: IrType }>,
++  property: Readonly<{ name?: string; optional: boolean; type: IrType }>,
+   emitted: string,
+   context: EmitContext,
+ ): Readonly<{ initializer?: string; optional: boolean; type: string }> {
++  const sharedCell = getCppSharedReferenceCellStorageCpp(property, context);
++  if (sharedCell) return sharedCell;
+   if (!property.optional || !hasIrTypeAbsentMember(property.type)) {
+     return { optional: false, type: emitted };
+   }
+diff --git a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts
+--- a/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts
++++ b/packages/compiler-backend-cpp/src/cppStructuralValueCarrier.ts
+@@ -40,7 +40,10 @@
+ 
+ // The plans of one rewrite, keyed by the options object the rewrite returned, which is the object every
+ // module of that emission receives as its options.
+-const cppStructuralValueCarrierPlans = new WeakMap<object, ReadonlyMap<string, Readonly<CppStructuralValueCarrierPlan>>>();
++const cppStructuralValueCarrierPlans = new WeakMap<
++  object,
++  ReadonlyMap<string, Readonly<CppStructuralValueCarrierPlan>>
++>();
+ 
+ export function getCppStructuralValueCarrierPlanCpp(
+   options: Readonly<CppCompilerBackendOptions>,
+@@ -48,6 +51,30 @@
+ ): Readonly<CppStructuralValueCarrierPlan> | undefined {
+   if (type?.kind !== 'named' || type.reference.kind !== 'ambient') return undefined;
+   return cppStructuralValueCarrierPlans.get(options)?.get(type.reference.name);
++}
++
++export function getCppSharedReferenceCellPlanCpp(
++  options: Readonly<CppCompilerBackendOptions>,
++  type: Readonly<IrType>,
++  owner: string | undefined,
++  field: string | undefined,
++  packageName: string,
++): Readonly<CppStructuralValueCarrierPlan> | undefined {
++  return [...(cppStructuralValueCarrierPlans.get(options)?.values() ?? [])].find(
++    (plan) =>
++      plan.carrier.cells?.some(
++        (cell) =>
++          (cell.owner === owner || cell.baseOwner === owner) &&
++          cell.field === field &&
++          (cell.package === undefined || cell.package === packageName),
++      ) &&
++      (type.kind === 'union' ? type.types : [type]).some((member) =>
++        carriedNominalReference(
++          member,
++          plan.carrier.cells?.some((c) => c.baseOwner === owner) ? plan.carrier.base : plan.carrier.nominal,
++        ),
++      ),
++  );
+ }
+ 
+ export function getCppStructuralValueCarrierSourceNameCpp(nominal: string): string {
+@@ -133,7 +160,10 @@
+   if (type.kind !== 'union') return type;
+   const present = type.types.filter((member) => !isAbsent(member));
+   if (present.length !== 1 || present[0]!.kind !== 'object') return type;
+-  return { ...type, types: type.types.map((member) => (isAbsent(member) ? member : synthetic)) } as unknown as Readonly<IrType>;
++  return {
++    ...type,
++    types: type.types.map((member) => (isAbsent(member) ? member : synthetic)),
++  } as unknown as Readonly<IrType>;
+ }
+ 
+ function substituteCallbackParameter(
+@@ -205,15 +235,19 @@
+               .filter((candidate) => candidate.owner === owner && matchesPackage(candidate, module))
+               .map((candidate) => candidate.field),
+           );
++          const cells = new Set(
++            (carrier.cells ?? []).filter((c) => c.owner === owner && matchesPackage(c, module)).map((c) => c.field),
++          );
+           const callbacks = (carrier.callbackParameters ?? []).filter(
+             (candidate) => candidate.owner === owner && matchesPackage(candidate, module),
+           );
+-          if (fields.size > 0 || callbacks.length > 0) {
++          if (fields.size > 0 || cells.size > 0 || callbacks.length > 0) {
+             const iface = next;
+             next = {
+               ...iface,
+               properties: iface.properties.map((property): IrObjectTypeProperty => {
+                 let type = property.type;
++                if (cells.has(property.name)) substitute(type, carrier.nominal, found);
+                 if (fields.has(property.name)) type = substitute(type, carrier.nominal, found);
+                 for (const callback of callbacks) {
+                   if (callback.field === property.name) {
+diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
+--- a/packages/compiler-types/src/compilerBackendContract.ts
++++ b/packages/compiler-types/src/compilerBackendContract.ts
+@@ -274,6 +274,10 @@
+  * sites only (see cppStructuralValueCarrier.ts). `target` spells the C++ carrier type.
+  */
+ export interface CppCompilerStructuralValueCarrier {
++  /** Derived reads use the view; storage remains the base payload's physical cell. */
++  readonly cells?:
++    | readonly Readonly<{ baseOwner: string; field: string; owner: string; package?: string | undefined }>[]
++    | undefined;
+   readonly base: string;
+   readonly callbackParameters?:
+     | readonly Readonly<{ field: string; owner: string; package?: string | undefined; position: number }>[]
+diff --git a/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts b/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppSharedReferenceCells.test.ts
+@@ -0,0 +1,174 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const source = `
++export const EntityRuntimeKey = Symbol.for('EntityRuntime');
++export interface RenderRegistries { marker: number }
++export interface GlRenderRegistries extends RenderRegistries { glTag: number }
++export interface RenderStateRuntime { registries: RenderRegistries; frame: number }
++export interface GlRenderStateRuntime extends RenderStateRuntime { registries: GlRenderRegistries; glFrame: number }
++export interface RenderState { [EntityRuntimeKey]: RenderStateRuntime | undefined }
++export interface GlRenderState extends RenderState { [EntityRuntimeKey]: GlRenderStateRuntime | undefined }
++export function readTag(runtime: GlRenderStateRuntime): number { const regs = runtime.registries; return regs.glTag; }
++export function readFrame(state: GlRenderState): number { const runtime = state[EntityRuntimeKey]; if (runtime === undefined) return -1; return runtime.glFrame; }
++export function replaceRegistries(runtime: GlRenderStateRuntime, registries: GlRenderRegistries): void { runtime.registries = registries; }
++export function replaceRuntime(state: GlRenderState, runtime: GlRenderStateRuntime): void { state[EntityRuntimeKey] = runtime; }
++export function clearRuntime(state: GlRenderState): void { state[EntityRuntimeKey] = undefined; }
++export function baseReplaceRuntime(state: RenderState, runtime: RenderStateRuntime): void { state[EntityRuntimeKey] = runtime; }
++export function baseClearRuntime(state: RenderState): void { state[EntityRuntimeKey] = undefined; }
++export function baseReplaceRegistries(runtime: RenderStateRuntime, registries: RenderRegistries): void { runtime.registries = registries; }
++export function nestedTag(state: GlRenderState): number { const runtime = state[EntityRuntimeKey]; if (runtime === undefined) return -1; const registries = runtime.registries; return registries.glTag; }
++export function nestedReplace(state: GlRenderState, registries: GlRenderRegistries): void { const runtime = state[EntityRuntimeKey]; if (runtime !== undefined) runtime.registries = registries; }
++export function readonlyRuntime(state: Readonly<GlRenderState>): GlRenderStateRuntime { return state[EntityRuntimeKey]!; }
++export function nativeRuntime(state: GlRenderState): GlRenderStateRuntime { const runtime = state[EntityRuntimeKey]; if (runtime === undefined) throw new Error('missing'); return runtime; }
++export function nativeRegistries(runtime: GlRenderStateRuntime): GlRenderRegistries { return runtime.registries; }
++`;
++const carriers = [
++  {
++    nominal: 'GlRenderRegistries',
++    base: 'RenderRegistries',
++    target: 'flight::NominalOrStructuralView<GlRenderRegistries, RenderRegistries>',
++    cells: [{ baseOwner: 'RenderStateRuntime', owner: 'GlRenderStateRuntime', field: 'registries' }],
++  },
++  {
++    nominal: 'GlRenderStateRuntime',
++    base: 'RenderStateRuntime',
++    target: 'flight::NominalOrStructuralView<GlRenderStateRuntime, RenderStateRuntime>',
++    cells: [{ baseOwner: 'RenderState', owner: 'GlRenderState', field: 'EntityRuntimeKey' }],
++  },
++];
++function emit(options = carriers) {
++  const sf = ts.createSourceFile('/flight/packages/math/src/cells.ts', source, ts.ScriptTarget.Latest, true);
++  const lowered = lowerTypeScriptSource(sf, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  expect(lowered.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered.module, { runtimeProfile: 'flight-cpp', structuralValueCarriers: options }).contents;
++}
++
++it('elects the same physical base cell at exactly the declared relations', () => {
++  const output = emit();
++  expect(output).toContain('struct GlRenderStateRuntime : public RenderStateRuntime {');
++  expect(output).toContain('struct GlRenderState : public RenderState {');
++  expect(output.match(/struct GlRenderStateRuntime : public RenderStateRuntime \{([\s\S]*?)\n\};/u)![1]).not.toMatch(
++    /registries\s*[;=]/u,
++  );
++  expect(output.match(/struct GlRenderState : public RenderState \{([\s\S]*?)\n\};/u)![1]).not.toMatch(
++    /entity_runtime_key\s*[;=]/u,
++  );
++  expect(output).toContain('::write_symbol_cell<&RenderState::entity_runtime_key>');
++  expect(output).toContain('.native()');
++});
++
++it('keeps undeclared refinements off native heritage', () => {
++  const output = emit([]);
++  expect(output).toContain('struct GlRenderStateRuntime : public flight::ReferenceEnabled {');
++  expect(output).toContain('struct GlRenderState : public flight::ReferenceEnabled {');
++});
++
++it('refuses a declared payload without the promised native base proof', () => {
++  expect(() => emit(carriers.map((c, i) => (i === 0 ? { ...c, base: 'OtherRegistries' } : c)))).toThrow(
++    /requires proven native payload heritage/u,
++  );
++});
++
++const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const runtime = resolveDependency(repositoryRoot, 'flight-cpp');
++const includes = collectCppRuntimeIncludeDirectories(runtime.directory);
++const toolchain = findCppCompilerToolchain();
++
++it.skipIf(!toolchain || includes.length === 0)(
++  'runs complete emitted cell reads, writes, absence and partial native escapes',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-shared-cells-'));
++    try {
++      writeFileSync(path.join(directory, 'cells-emitted.hpp'), emit());
++      const native = path.join(directory, 'native.cpp');
++      writeFileSync(native, NATIVE);
++      const executable = path.join(directory, getCppExecutableName(toolchain!, 'shared-cells'));
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, native, executable, [directory, ...includes]),
++        { encoding: 'utf8', stdio: 'pipe' },
++      );
++      execFileSync(executable, [], { encoding: 'utf8' });
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120_000,
++);
++
++const NATIVE = `#include "cells-emitted.hpp"
++#include <cassert>
++#include <cmath>
++#include <type_traits>
++namespace n = flighthq_math;
++int main() {
++  static_assert(std::is_base_of_v<n::RenderStateRuntime, n::GlRenderStateRuntime>);
++  static_assert(std::is_base_of_v<n::RenderState, n::GlRenderState>);
++  static_assert(std::is_same_v<decltype(n::GlRenderState::entity_runtime_key), std::optional<flight::Ref<n::RenderStateRuntime>>>);
++  static_assert(std::is_same_v<decltype(n::GlRenderStateRuntime::registries), flight::Ref<n::RenderRegistries>>);
++  auto state = flight::make_ref<n::GlRenderState>();
++  flight::Ref<n::RenderState> base = state;
++  auto runtime = flight::make_ref<n::GlRenderStateRuntime>(); runtime->gl_frame = 17;
++  auto registry = flight::make_ref<n::GlRenderRegistries>(); registry->gl_tag = 23;
++  runtime->registries = registry;
++  n::replace_runtime(state, runtime);
++  assert(n::readonly_runtime(state) == runtime);
++  assert(n::read_frame(state) == 17 && n::native_runtime(state) == runtime);
++  assert(n::read_tag(runtime) == 23 && n::native_registries(runtime) == registry);
++  assert(&base->entity_runtime_key == &state->entity_runtime_key);
++  flight::Ref<n::RenderStateRuntime> runtime_base = runtime;
++  assert(&runtime_base->registries == &runtime->registries);
++  auto second = flight::make_ref<n::GlRenderRegistries>(); second->gl_tag = 29;
++  n::nested_replace(state, second);
++  assert(n::nested_tag(state) == 29);
++  assert(runtime_base->registries == second && n::read_tag(runtime) == 29);
++  n::base_replace_registries(runtime_base, registry);
++  assert(n::read_tag(runtime) == 23);
++  n::clear_runtime(state); assert(!base->entity_runtime_key && n::read_frame(state) == -1);
++  flight::StructuralRef<flight::RowOf<flight::Ref<n::RenderState>>> row{base};
++  assert(flight::row_has_own_property(row, n::entity_runtime_key));
++  auto fresh = flight::make_ref<n::GlRenderState>();
++  flight::StructuralRef<flight::RowOf<flight::Ref<n::RenderState>>> fresh_row{flight::Ref<n::RenderState>(fresh)};
++  assert(!flight::row_has_own_property(fresh_row, n::entity_runtime_key));
++  n::base_clear_runtime(fresh);
++  assert(flight::row_has_own_property(fresh_row, n::entity_runtime_key));
++  assert(!flight::row_has_own_property(row, flight::Symbol(flight::String("EntityRuntime"))));
++  assert(!row.shared_owner()->has_dynamic_value(n::entity_runtime_key));
++  n::base_replace_runtime(base, runtime); assert(n::read_frame(state) == 17);
++  auto wrong = flight::make_ref<n::RenderStateRuntime>();
++  n::base_replace_runtime(base, wrong);
++  assert(base->entity_runtime_key == wrong && std::isnan(n::read_frame(state)));
++  bool refused = false;
++  try { (void)n::native_runtime(state); } catch (const flight::NativeScalarEscapeError&) { refused = true; }
++  assert(refused);
++  auto wrong_registry = flight::make_ref<n::RenderRegistries>();
++  runtime_base->registries = wrong_registry;
++  assert(std::isnan(n::read_tag(runtime)));
++  refused = false;
++  try { (void)n::native_registries(runtime); } catch (const flight::NativeScalarEscapeError&) { refused = true; }
++  assert(refused);
++  {
++    auto retained = flight::make_ref<n::GlRenderStateRuntime>();
++    std::weak_ptr<n::GlRenderStateRuntime> weak = retained;
++    n::replace_runtime(state, retained); retained.reset();
++    auto view = flight::NominalOrStructuralView<n::GlRenderStateRuntime, n::RenderStateRuntime>::read_cell(state->entity_runtime_key);
++    n::base_clear_runtime(base); assert(!weak.expired());
++    view.reset(); assert(weak.expired());
++  }
++}
++`;

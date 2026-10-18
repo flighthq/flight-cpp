@@ -80,3 +80,17 @@ test('a site the pinned source no longer declares is reported, and packages outs
   assert.equal(unmatchedStructuralValueCarrierSites([carrier], retyped).length, 1);
   assert.deepEqual(unmatchedStructuralValueCarrierSites([renamed], new Map()), []);
 });
+
+test('shared physical cells retain explicit base owners and report stale declarations', () => {
+  const cell = { ...carrier, fields: [], callbackParameters: [], parameters: [],
+    cells: [{ owner: 'GlRuntime', baseOwner: 'Runtime', field: 'registries', package: '@flighthq/types' }] };
+  withDeclaration({ ...declaration, carriers: [cell] }, (directory) => {
+    const [loaded] = loadStructuralValueCarriers(directory);
+    assert.deepEqual(structuralValueCarrierOptions([loaded])[0].cells, cell.cells);
+  });
+  const source = new Map([['@flighthq/types', ['interface Runtime {} interface GlRuntime extends Runtime { registries: Screen }']]]);
+  assert.deepEqual(unmatchedStructuralValueCarrierSites([cell], source), []);
+  const stale = new Map([['@flighthq/types', ['interface Runtime {} interface GlRuntime extends Other { registries: Screen }']]]);
+  assert.equal(unmatchedStructuralValueCarrierSites([cell], stale).length, 1);
+  assert.throws(() => withDeclaration({ ...declaration, carriers: [{ ...cell, cells: [{ ...cell.cells[0], baseOwner: '' }] }] }, loadStructuralValueCarriers));
+});
