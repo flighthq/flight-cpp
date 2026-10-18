@@ -27,7 +27,22 @@ namespace flight {
 
 class String;
 
+template <typename Value>
+class Array;
+
 namespace detail {
+
+template <typename Value>
+struct ArrayFlatElement {
+  using type = Value;
+  static constexpr bool nested = false;
+};
+
+template <typename Value>
+struct ArrayFlatElement<Array<Value>> {
+  using type = Value;
+  static constexpr bool nested = true;
+};
 
 template <typename Element>
 inline constexpr bool is_optional_element = false;
@@ -322,6 +337,20 @@ class Array {
       }
     }
     return result;
+  }
+
+  // The default depth flattens exactly one level. Copies retain element handles while the result
+  // has fresh array storage; deeper arrays stay arrays, and present undefined values stay present.
+  [[nodiscard]] Array<typename detail::ArrayFlatElement<Value>::type> flat() const {
+    if constexpr (detail::ArrayFlatElement<Value>::nested) {
+      Array<typename detail::ArrayFlatElement<Value>::type> result;
+      for (const auto& nested : *values_) {
+        for (const auto& value : nested) result.push(value);
+      }
+      return result;
+    } else {
+      return clone();
+    }
   }
 
   template <typename Predicate>
