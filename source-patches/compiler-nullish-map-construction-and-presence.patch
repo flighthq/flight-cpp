@@ -1,0 +1,326 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6717,6 +6717,28 @@
+           ? getIrAmbientCollectionTypeCpp(constructedType, context, new Set())
+           : undefined;
+       const args = expression.arguments.map((argument, index) => {
++        // Map accepts a nullish iterable as empty. Keep a map argument at its declared carrier:
++        // contextualizing it as an entries array loses both optional storage and Map identity.
++        if (
++          index === 0 &&
++          getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++          ambientConstructorName === 'Map' &&
++          getCppMapConstructorSourceTypeCpp(argument, context)
++        ) {
++          if (argument.kind === 'identifier' && argument.reference.kind === 'binding') {
++            return context.defaultedParameterIds.has(argument.reference.binding.id)
++              ? emitInitializedBindingValueCpp(argument.reference.binding, context)
++              : emitIdentifierReference(argument.reference, context);
++          }
++          return emitExpression(
++            argument.kind === 'property'
++              ? { ...argument, narrowedType: undefined, presence: undefined, type: undefined }
++              : argument,
++            withoutCppGuardedPathKindCpp(argument, context),
++            undefined,
++            false,
++          );
++        }
+         const mapEntries =
+           index === 0 && mapType?.reference.name === 'Map'
+             ? emitCppMapLiteralConstructorEntriesCpp(argument, mapType, context)
+@@ -6879,9 +6901,9 @@
+         getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+         ambientConstructorName === 'Map' &&
+         expression.arguments.length === 1 &&
+-        isCppMapCopySourceCpp(expression.arguments[0]!, context)
++        getCppMapConstructorSourceTypeCpp(expression.arguments[0]!, context)
+       ) {
+-        return `${typeName}${typeArguments}(${args[0]}).clone()`;
++        return emitCppMapConstructorCopyCpp(expression.arguments[0]!, args[0]!, `${typeName}${typeArguments}`, context);
+       }
+       // `new Set(existingSet)` is the same construction for a Set: a NEW set with the same values in the same
+       // order. flight::Set's copy constructor shares storage exactly as Map's does, so a Set argument is cloned.
+@@ -17255,9 +17277,14 @@
+             // An un-narrowed property read keeps the existing path, which is what every passing case uses.
+             emitExpression({ ...operand, narrowedType: undefined, presence: undefined }, context)
+           : emitExpression(operand, context);
+-    const test = strict
+-      ? `std::holds_alternative<${selected}>(${value})`
+-      : `(std::holds_alternative<${sentinels.null}>(${value}) || std::holds_alternative<${sentinels.undefined}>(${value}))`;
++    // A loose test asks both sentinel alternatives of ONE evaluated operand. Repeating the
++    // expression would re-run a getter/call and could observe another value or exception.
++    if (!strict) {
++      const operandName = getGeneratedTargetName('presenceOperand', context);
++      const test = `(std::holds_alternative<${sentinels.null}>(${operandName}) || std::holds_alternative<${sentinels.undefined}>(${operandName}))`;
++      return `([&]() { const auto& ${operandName} = ${value}; return ${present ? `!(${test})` : test}; }())`;
++    }
++    const test = `std::holds_alternative<${selected}>(${value})`;
+     return present ? `!(${test})` : test;
+   }
+   if (
+@@ -34282,12 +34309,49 @@
+   return constraint ? getIrObjectPropertyTypeCpp(constraint, expression.name, context) : undefined;
+ }
+ 
+-// Whether a `new Map(argument)` argument is itself a Map: a ReadonlyMap or Map value, whose entries the new
+-// map must copy rather than share.
+-function isCppMapCopySourceCpp(argument: Readonly<IrExpression>, context: EmitContext): boolean {
+-  const type = getIrExpressionBindingTypeCpp(argument, context) ?? getIrExpressionTypeEvidenceCpp(argument, context);
+-  const collection = type ? getIrAmbientCollectionTypeCpp(type, context, new Set()) : undefined;
+-  return collection?.reference.name === 'Map' || collection?.reference.name === 'ReadonlyMap';
++// A Map constructor accepts a closed Map payload plus nullish sentinels. Inspect the declaration,
++// since flow narrowing must not project a second source read before construction handles absence.
++function getCppMapConstructorSourceTypeCpp(
++  argument: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (argument.kind === 'undefinedValue') return { kind: 'undefined' };
++  if (argument.kind === 'literal' && argument.value === null) return { kind: 'null' };
++  const type = getCppNullishComparisonOperandTypeCpp(argument, context);
++  if (!type) return undefined;
++  if (type.kind === 'null' || type.kind === 'undefined') return type;
++  const payload = getCppNonNullableType(type, context, new Set());
++  const collection = payload ? getIrAmbientCollectionTypeCpp(payload, context, new Set()) : undefined;
++  return collection?.reference.name === 'Map' || collection?.reference.name === 'ReadonlyMap' ? type : undefined;
++}
++
++function emitCppMapConstructorCopyCpp(
++  argument: Readonly<IrExpression>,
++  value: string,
++  target: string,
++  context: EmitContext,
++): string {
++  const source = getCppMapConstructorSourceTypeCpp(argument, context)!;
++  if (source.kind === 'null' || source.kind === 'undefined') {
++    return `([&]() { static_cast<void>(${value}); return ${target}{}; }())`;
++  }
++  const union = getIrUnionTypeCpp(source, context, new Set());
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  if (!plan || plan.kind === 'singleValue') return `${target}(${value}).clone()`;
++  const sourceName = getGeneratedTargetName('mapConstructorSource', context);
++  if (plan.kind === 'optionalSingle') {
++    return `([&]() { const auto ${sourceName} = ${value}; if (!${sourceName}.has_value()) return ${target}{}; return ${target}(${sourceName}.value()).clone(); }())`;
++  }
++  if (plan.kind === 'dualSentinelVariant' && plan.valueSlots.length === 1) {
++    context.includes.add('variant');
++    const payloadName = getGeneratedTargetName('mapConstructorPayload', context);
++    return `([&]() { const auto ${sourceName} = ${value}; if (const auto* ${payloadName} = std::get_if<${plan.valueSlots[0]!.targetType}>(&${sourceName})) return ${target}(*${payloadName}).clone(); return ${target}{}; }())`;
++  }
++  emissionError(
++    context,
++    'Map constructor requires one represented Map payload and nullish sentinels',
++    'cpp-map-constructor-source-unrepresented',
++  );
+ }
+ 
+ // Whether a `new Set(argument)` argument is itself a Set: a ReadonlySet or Set value, whose values the new set
+diff --git a/packages/compiler-backend-cpp/src/cppRegistryConstruction.test.ts b/packages/compiler-backend-cpp/src/cppRegistryConstruction.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRegistryConstruction.test.ts
+@@ -0,0 +1,203 @@
++import { execFileSync } from 'node:child_process';
++import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import {
++  collectCppRuntimeIncludeDirectories,
++  createCppExecutableArguments,
++  findCppCompilerToolchain,
++  getCppExecutableName,
++} from '../../../scripts/cppToolchain.js';
++import { resolveDependency } from '../../../scripts/dependencyLock.js';
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++const source = `
++export interface Entry { value: number }
++declare class Entries<T> implements Iterable<readonly [string,T]> { [Symbol.iterator](): Iterator<readonly [string,T]>; }
++export interface Options { map?: ReadonlyMap<string, Entry>; passes?: readonly Entry[] | null }
++export function copyMap(options: Readonly<Options>): Map<string, Entry> { return new Map(options.map); }
++export function copyNullableMap(input: ReadonlyMap<string, Entry> | null | undefined): Map<string, Entry> { return new Map(input); }
++export function copyRequiredMap(input: ReadonlyMap<string, Entry>): Map<string, Entry> { return new Map(input); }
++export function copyUndefinedMap(): Map<string, Entry> { return new Map<string,Entry>(undefined); }
++export function copyNullMap(): Map<string, Entry> { return new Map<string,Entry>(null); }
++export function copyDefaultMap(input: ReadonlyMap<string,Entry> | undefined = undefined): Map<string,Entry> { return new Map(input); }
++export function copyGuardedMap(options: Readonly<Options>): Map<string,Entry> { if(options.map !== undefined) return new Map(options.map); return new Map<string,Entry>(); }
++export function copyKeyedMap(input: ReadonlyMap<Entry,Entry> | undefined): Map<Entry,Entry> { return new Map(input); }
++export function copyPasses(options: Readonly<Options>): Entry[] | null { return options.passes == null ? null : [...options.passes]; }
++export function fromEntries(input: Entries<Entry>): Map<string,Entry> { return new Map<string,Entry>(input); }
++export function entriesThenPasses(input: Entries<Entry>, options: Readonly<Options>): Entry[] | null { const copied = new Map<string,Entry>(input); return copyPasses(options); }
++export function present(options: Readonly<Options>): boolean { return options.passes != null; }
++export function nullish(options: Readonly<Options>): boolean { return options.passes == null; }
++`;
++const [result] = lowerTypeScriptSources(
++  [
++    {
++      packageName: '@flighthq/registry',
++      upstreamDirectory: '/flight',
++      sourceFile: ts.createSourceFile(
++        '/flight/packages/registry/src/registry.ts',
++        source,
++        ts.ScriptTarget.Latest,
++        true,
++      ),
++    },
++  ],
++  undefined,
++  { profileTypeNames: ['Entries', 'Iterable'] },
++);
++expect(result!.diagnostics).toEqual([]);
++const cpp = emitIrModuleCpp(result!.module, {
++  runtimeProfile: 'flight-cpp',
++  externalBindings: {
++    schema: 'flight-cpp-external-bindings/1',
++    bindings: [
++      {
++        sourceName: 'Entries',
++        space: 'type',
++        targetName: 'host::Entries',
++        ownership: 'value',
++        nullability: 'non-null',
++        headers: ['host.hpp'],
++      },
++      {
++        sourceName: 'Iterable',
++        space: 'type',
++        targetName: 'flight::Iterable',
++        ownership: 'shared',
++        nullability: 'non-null',
++        headers: ['flight/iterable.hpp'],
++      },
++    ],
++  },
++}).contents;
++it('evaluates each loose nullish test operand once', () => {
++  const fn = cpp.split('inline bool nullish(')[1]!;
++  expect(fn.match(/RowKey<"passes">/gu)?.length).toBe(1);
++});
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
++const toolchain = findCppCompilerToolchain();
++const includes = collectCppRuntimeIncludeDirectories(resolveDependency(root, 'flight-cpp').directory);
++it.skipIf(!toolchain || !includes.length)(
++  'runs emitted fresh Map and single-read presence source semantics',
++  () => {
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-registry-construction-'));
++    try {
++      writeFileSync(path.join(directory, 'fixture.hpp'), cpp);
++      writeFileSync(
++        path.join(directory, 'host.hpp'),
++        `#pragma once
++#include <flight/string.hpp>
++#include <memory>
++#include <vector>
++#include <utility>
++namespace host {
++template<class T>struct Entries {
++ using Value=std::pair<flight::String,T>;
++ struct Control {std::vector<int> trace; int failAt=-1;};
++ std::shared_ptr<std::vector<Value>> values=std::make_shared<std::vector<Value>>();
++ std::shared_ptr<Control> control=std::make_shared<Control>();
++ struct Iterator {
++  const Entries* owner; std::size_t index;
++  const Value& operator*()const {return (*owner->values)[index];}
++  Iterator& operator++(){++index;owner->control->trace.push_back(static_cast<int>(index));if(static_cast<int>(index)==owner->control->failAt)throw 501;return *this;}
++  bool operator!=(const Iterator& other)const{return index!=other.index;}
++ };
++ Iterator begin()const {control->trace.push_back(0);if(control->failAt==0)throw 500;return {this,0};}
++ Iterator end()const {return {this,values->size()};}
++};
++}
++`,
++      );
++      const main = path.join(directory, 'main.cpp');
++      writeFileSync(
++        main,
++        `#include "fixture.hpp"
++#include <cassert>
++#include <functional>
++#include <vector>
++namespace n = flighthq_registry;
++using Entry = flight::Ref<n::Entry>;
++using Map = flight::Map<flight::String, Entry>;
++using Passes = decltype(n::Options::passes);
++using Row = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<n::Options>>>>;
++template<class V> struct Getter final : flight::TypedRowCell<V> {
++ V value; int reads=0; std::function<void(int)> onRead;
++ explicit Getter(V initial):value(std::move(initial)){}
++ V& get() override { ++reads; if(onRead)onRead(reads); return value; }
++ void set(V v) override { value=std::move(v); }
++};
++int main(){
++ auto a=flight::make_ref<n::Entry>(); a->value=1;
++ auto b=flight::make_ref<n::Entry>(); b->value=2;
++ auto owner=std::make_shared<flight::RowOwner>();
++ auto mapCell=std::make_shared<Getter<std::optional<Map>>>(std::nullopt);
++ auto passCell=std::make_shared<Getter<Passes>>(flight::undefined);
++ owner->set_named_cell("map",mapCell); owner->set_named_cell("passes",passCell);
++ auto row=Row::from_owner(owner);
++ auto empty=n::copy_map(row); assert(empty.empty()&&mapCell->reads==1);
++ auto empty2=n::copy_map(row); empty.set(flight::String("one"),a); assert(empty2.empty());
++ Map original;original.set(flight::String("one"),a); original.set(flight::String("two"),b);
++ mapCell->value=original;mapCell->reads=0;
++ auto copied=n::copy_map(row);assert(mapCell->reads==1&&copied.size()==2);
++ assert(copied.get(flight::String("one")).value()==a);
++ assert(copied.begin()->first==flight::String("one"));
++ original.set(flight::String("source"),a);assert(!copied.has(flight::String("source")));
++ copied.set(flight::String("copy"),b);assert(!original.has(flight::String("copy")));
++ a->value=9;assert(copied.get(flight::String("one")).value()->value==9);
++ std::weak_ptr<n::Entry> weak=a; original.clear(); mapCell->value.reset(); a.reset();assert(!weak.expired());
++ copied.clear();empty.clear();assert(weak.expired());
++ using Nullable=std::variant<Map,flight::Null,flight::Undefined>;
++ assert(n::copy_nullable_map(Nullable{flight::null}).empty());
++ assert(n::copy_nullable_map(Nullable{flight::undefined}).empty());
++ Map present;present.set(flight::String("held"),b);auto nullableCopy=n::copy_nullable_map(Nullable{present});
++ nullableCopy.clear();assert(present.size()==1);
++ auto requiredCopy=n::copy_required_map(present);requiredCopy.clear();assert(present.size()==1);
++ assert(n::copy_undefined_map().empty()&&n::copy_null_map().empty()&&n::copy_default_map().empty());
++ auto key=flight::make_ref<n::Entry>(); auto sameShape=flight::make_ref<n::Entry>();key->value=sameShape->value=4;
++ flight::Map<Entry,Entry> keyed;keyed.set(key,b); auto keyCopy=n::copy_keyed_map(keyed);
++ assert(keyCopy.get(key).value()==b&&!keyCopy.has(sameShape));keyCopy.clear();assert(keyed.size()==1);
++ mapCell->reads=0; mapCell->onRead=[](int){throw 73;};
++ try{(void)n::copy_map(row);assert(false);}catch(int value){assert(value==73&&mapCell->reads==1);}mapCell->onRead={};
++ mapCell->value=present;mapCell->reads=0;std::vector<int> order;
++ mapCell->onRead=[&](int count){order.push_back(count);if(count==2)mapCell->value.reset();};
++ assert(n::copy_guarded_map(row).empty()&&mapCell->reads==2&&order==std::vector<int>({1,2}));mapCell->onRead={};
++ for(auto absence:{Passes{flight::null},Passes{flight::undefined}}){passCell->value=absence;passCell->reads=0;assert(!n::copy_passes(row)&&passCell->reads==1);passCell->reads=0;assert(n::nullish(row)&&passCell->reads==1);passCell->reads=0;assert(!n::present(row)&&passCell->reads==1);}
++ flight::Array<Entry> passes{b,key};passCell->value=passes;passCell->reads=0;
++ auto passCopy=n::copy_passes(row);assert(passCopy&&passCell->reads==2&&passCopy->size()==2&&(*passCopy)[0]==b);
++ passes.push(sameShape);assert(passCopy->size()==2);passCopy->push(b);assert(passes.size()==3&&(*passCopy)[2]==b&&passes[2]==sameShape);
++ passCell->reads=0;assert(!n::nullish(row)&&passCell->reads==1);passCell->reads=0;assert(n::present(row)&&passCell->reads==1);
++ passCell->reads=0;passCell->onRead=[](int){throw 91;};
++ try{(void)n::nullish(row);assert(false);}catch(int value){assert(value==91&&passCell->reads==1);}
++ passCell->onRead=[](int count){if(count==2)throw 92;};passCell->reads=0;
++ try{(void)n::copy_passes(row);assert(false);}catch(int value){assert(value==92&&passCell->reads==2);}passCell->onRead={};
++ passCell->value=passes;passCell->reads=0;
++ passCell->onRead=[&](int count){if(count==2)passCell->value=flight::Array<Entry>{sameShape};};
++ auto changed=n::copy_passes(row);assert(changed->size()==1&&(*changed)[0]==sameShape&&passCell->reads==2);
++ passCell->onRead={};passCell->reads=0;
++ host::Entries<Entry> entries;entries.values->push_back({flight::String("one"),b});entries.values->push_back({flight::String("two"),key});
++ auto iterCopy=n::from_entries(entries);assert(iterCopy.size()==2&&iterCopy.get(flight::String("one")).value()==b);
++ assert(entries.control->trace==std::vector<int>({0,1,2}));iterCopy.clear();assert(entries.values->size()==2);
++ for(int failAt:{0,1}){entries.control->trace.clear();entries.control->failAt=failAt;
++  try{(void)n::entries_then_passes(entries,row);assert(false);}catch(int value){assert(value==(failAt==0?500:501)&&passCell->reads==0);}
++  assert(entries.control->trace==(failAt==0?std::vector<int>({0}):std::vector<int>({0,1})));
++ }
++}
++`,
++      );
++      const binary = path.join(directory, getCppExecutableName(toolchain!, 'registry'));
++      execFileSync(
++        toolchain!.command,
++        createCppExecutableArguments(toolchain!, main, binary, [directory, ...includes]),
++        { encoding: 'utf8', stdio: 'pipe' },
++      );
++      execFileSync(binary, [], { encoding: 'utf8', stdio: 'pipe' });
++    } finally {
++      rmSync(directory, { recursive: true, force: true });
++    }
++  },
++  120_000,
++);
