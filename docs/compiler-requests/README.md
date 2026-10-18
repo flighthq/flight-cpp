@@ -543,6 +543,7 @@ patch has retired because the fix landed upstream keep their row, marked, as the
   identity](class-instance-as-implemented-interface.md) — swf hands its `SwfReader` to every tag handler.
 - [A chained call's null and undefined sentinels must both survive into a
   dual-sentinel result](optional-chain-dual-sentinel-result.md) — swf's placement-node helper.
+- [A nullable map lookup and a partially narrowed union must keep their own sentinels](optional-map-lookup-and-narrowed-absence.md) — swf's mask-clip helper.
 - [A partially refused module's retained declarations must keep their names in
   scope](partial-module-placeholder-qualification.md) — the swf video handler placeholder.
 - [Calls to overloaded functions lower through the selected overload](source-overload-call-through-selected-signature.md) —

@@ -1,0 +1,307 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index 4ac6feb..9395f25 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -13389,35 +13389,34 @@ export function read(s: S): number | undefined { if (s.top != null) return s.top
+     );
+     expect(loose).toContain('std::get<double>(s->top)');
+ 
+-    // FIXED at the reached site (emitCppNarrowedUnionValueCpp): the projection now requires a narrowing
+-    // that removed EVERY sentinel, so the strict form refuses with the presence rule the reference path
+-    // already uses, while the loose form above keeps lowering.
+-    const strict = captureBackendEmissionFailure(() =>
+-      emitIrModuleCpp(
+-        lower(
+-          'layout-strict-read.ts',
+-          `${member}
++    // FIXED at the reached site (emitCppNarrowedUnionValueCpp): a narrowing that removed one sentinel
++    // but kept the other now projects the storage into the narrowed carrier sentinel by sentinel
++    // instead of reading the value alternative. The kept Undefined becomes the optional's absence; the
++    // excluded Null is unreachable and throws rather than being read as a value.
++    const strict = emitIrModuleCpp(
++      lower(
++        'layout-strict-read.ts',
++        `${member}
+ export function read(s: S): number | undefined { if (s.top !== null) return s.top; return 0; }`,
+-        ).module,
+-        { runtimeProfile: 'flight-cpp' },
+-      ),
+-    );
+-    expect(strict.rule).toBe('cpp-member-projection-without-present-storage');
+-    expect(strict.message).toContain('still admits absence');
++      ).module,
++      { runtimeProfile: 'flight-cpp' },
++    ).contents;
++    expect(strict).toContain('std::holds_alternative<flight::Undefined>(s->top)');
++    expect(strict).toContain('throw std::logic_error("narrowed union holds a sentinel the narrowing excluded")');
++    expect(strict).toContain('std::optional<double>{*present}');
++    expect(strict).not.toContain('std::get<0>(s->top)');
+ 
+     // The same shape through a ternary and a local, to show it is not one statement form.
+-    expect(
+-      captureBackendEmissionFailure(() =>
+-        emitIrModuleCpp(
+-          lower(
+-            'layout-strict-local.ts',
+-            `${member}
++    const strictLocal = emitIrModuleCpp(
++      lower(
++        'layout-strict-local.ts',
++        `${member}
+ export function read(s: S): number { const v: number | undefined = s.top !== null ? s.top : undefined; return v ?? 0; }`,
+-          ).module,
+-          { runtimeProfile: 'flight-cpp' },
+-        ),
+-      ).rule,
+-    ).toBe('cpp-member-projection-without-present-storage');
++      ).module,
++      { runtimeProfile: 'flight-cpp' },
++    ).contents;
++    expect(strictLocal).toContain('const std::optional<double> v =');
++    expect(strictLocal).toContain('narrowed union holds a sentinel the narrowing excluded');
+   });
+ 
+   it('documents the layout style fields, their live records, and what clearing writes', () => {
+@@ -13490,22 +13489,20 @@ export function read(s: S): number { if (s.top != null) return s.top; return 0;
+     );
+     expect(loose).toContain('return std::get<double>(s->top);');
+ 
+-    // FIXED, as this assertion was written to require: the strict test excludes only one sentinel, so the
+-    // projection was unpacking storage that may hold the other -- `std::get<0>` over a variant that could
+-    // hold Undefined, which is that field's own default, and which throws. The emitter now refuses it with
+-    // the presence rule the reference path already uses.
+-    const strict = captureBackendEmissionFailure(() =>
+-      emitIrModuleCpp(
+-        lower(
+-          'layout-strict-test.ts',
+-          `export interface S2 { top?: number | null }
+-export function read(s: S2): number { if (s.top !== null) return s.top; return 0; }`,
+-        ).module,
+-        { runtimeProfile: 'flight-cpp' },
+-      ),
+-    );
+-    expect(strict.rule).toBe('cpp-member-projection-without-present-storage');
+-    expect(strict.message).toContain('still admits absence');
++    // FIXED, as this assertion was written to require: the strict test excludes only one sentinel, and the
++    // value's own type still admits the other, so the projection rebuilds the narrowed optional instead of
++    // unpacking a variant that may hold Undefined (that field's own default). The kept Undefined becomes
++    // the optional's absence and the excluded Null throws as unreachable.
++    const strict = emitIrModuleCpp(
++      lower(
++        'layout-strict-test.ts',
++        `export interface S2 { top?: number | null }
++export function read(s: S2): number | undefined { if (s.top !== null) return s.top; return 0; }`,
++      ).module,
++      { runtimeProfile: 'flight-cpp' },
++    ).contents;
++    expect(strict).toContain('std::holds_alternative<flight::Undefined>(s->top)');
++    expect(strict).toContain('narrowed union holds a sentinel the narrowing excluded');
+   });
+ 
+   it('pins both InteractionManager service inputs against their nullable live carriers', () => {
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index faab419..b17563a 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -22687,6 +22687,85 @@ function emitCppOptionalVariantSubsetCpp(
+   return `([&]() -> ${carrier} { const auto& ${value} = ${binding}.value(); ${branches.join(' ')} throw std::logic_error("present union holds an excluded alternative"); }())`;
+ }
+ 
++// A sentinel-preserving projection for a narrowed union that still admits absence. The storage is the
++// ORIGINAL carrier; the source expression's value is the narrowed union. Rebuild that value from the
++// storage one alternative at a time: a present value enters the narrowed value slot, a sentinel the
++// narrowing kept becomes the narrowed carrier's own absence, and a sentinel the narrowing excluded is
++// unreachable and throws rather than being folded into a different state. Only the dual-sentinel
++// storage is projected here; every other pairing keeps the caller's existing path or refusal.
++// `Map.get` on a map whose stored value is itself nullable returns `optional<optional<T>>`. The
++// contextual dual-sentinel destination is the three-state carrier the source declares, so rebuild it
++// from the lookup instead of converting the nested optional (which has no such constructor, and whose
++// two absence layers mean different things): outer absence is undefined, inner absence is the stored
++// null, and a present entry contributes its value. Bounded to a single value slot on both sides and
++// to a stored-null value domain.
++function emitCppNestedOptionalMapLookupCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  union: Readonly<Extract<IrType, { kind: 'union' }>>,
++  plan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): string | undefined {
++  if (expression.callee.kind !== 'property') return undefined;
++  const receiverType = getIrExpressionTypeEvidenceCpp(expression.callee.object, context);
++  const collection = receiverType ? getIrAmbientCollectionTypeCpp(receiverType, context, new Set()) : undefined;
++  if (!collection || !['Map', 'ReadonlyMap'].includes(collection.reference.name)) return undefined;
++  if (collection.typeArguments.length !== 2) return undefined;
++  const valueType = collection.typeArguments[1]!;
++  const valueUnion = getIrUnionTypeCpp(valueType, context, new Set());
++  const valuePlan = valueUnion ? getCppUnionRepresentationPlan(valueUnion, context) : undefined;
++  if (valuePlan?.kind !== 'optionalSingle') return undefined;
++  if (valuePlan.valueSlots.length !== 1 || valuePlan.sentinels.null !== 'optionalAbsence') return undefined;
++  const targetSlot = plan.valueSlots[0]!;
++  if (valuePlan.valueSlots[0]!.targetType !== targetSlot.targetType) return undefined;
++  const undefinedSentinel = emitCppUnionSentinelConstruction('undefined', union, plan.kind, context);
++  const nullSentinel = emitCppUnionSentinelConstruction('null', union, plan.kind, context);
++  const present = emitCppUnionValueConstruction('lookup.value().value()', targetSlot.targetType, union, plan.kind, context);
++  const carrier = qualifyCppDeclaringModuleTypeCpp(emitUnionTypeCpp(union, context), context);
++  const lookup = emitExpression(expression, context, undefined, false);
++  context.includes.add('optional');
++  return `([&]() -> ${carrier} { auto lookup = ${lookup}; if (!lookup.has_value()) return ${undefinedSentinel}; if (!lookup.value().has_value()) return ${nullSentinel}; return ${present}; }())`;
++}
++
++function emitCppAbsencePreservingNarrowedProjectionCpp(
++  binding: string,
++  storagePlan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  narrowedType: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  if (storagePlan.kind !== 'dualSentinelVariant') return undefined;
++  const narrowedUnion = getIrUnionTypeCpp(narrowedType, context, new Set());
++  if (!narrowedUnion) return undefined;
++  const narrowedPlan = getCppUnionRepresentationPlan(narrowedUnion, context);
++  if (narrowedPlan.kind === 'singleValue') return undefined;
++  if (narrowedPlan.valueSlots.length !== 1) return undefined;
++  const narrowedSlot = narrowedPlan.valueSlots[0]!;
++  const storageSlot = storagePlan.valueSlots.find((slot) => slot.targetType === narrowedSlot.targetType);
++  if (!storageSlot) return undefined;
++  // The narrowed carrier's absence must be a sentinel the storage actually represents.
++  const narrowedAbsent =
++    narrowedPlan.sentinels.null !== 'absent'
++      ? 'null'
++      : narrowedPlan.sentinels.undefined !== 'absent'
++        ? 'undefined'
++        : undefined;
++  if (!narrowedAbsent) return undefined;
++  if (storagePlan.sentinels[narrowedAbsent] === 'absent') return undefined;
++  const narrowedCarrier = emitUnionTypeCpp(narrowedUnion, context);
++  context.includes.add('optional');
++  context.includes.add('stdexcept');
++  context.includes.add('variant');
++  const absentIndex = storagePlan.valueSlots.indexOf(storageSlot);
++  const absentConstruction =
++    narrowedPlan.kind === 'optionalSingle' || narrowedPlan.kind === 'optionalVariant'
++      ? '{}'
++      : emitCppUnionSentinelConstruction(narrowedAbsent, narrowedUnion, narrowedPlan.kind, context);
++  const presentConstruction =
++    narrowedPlan.kind === 'optionalSingle'
++      ? `std::optional<${narrowedSlot.targetType}>{*present}`
++      : emitCppUnionValueConstruction('*present', narrowedSlot.targetType, narrowedUnion, narrowedPlan.kind, context);
++  return `([&]() -> ${narrowedCarrier} { if (const auto* present = std::get_if<${storageSlot.targetType}>(&${binding})) return ${presentConstruction}; if (${storagePlan.sentinels[narrowedAbsent] === 'variantAlternative' ? `std::holds_alternative<${getCppDualSentinelTargetTypes(context)[narrowedAbsent]}>(${binding})` : 'true'}) return ${absentConstruction}; throw std::logic_error("narrowed union holds a sentinel the narrowing excluded"); }())`;
++}
++
+ function emitCppNarrowedUnionValueCpp(
+   binding: string,
+   union: Readonly<Extract<IrType, { kind: 'union' }>>,
+@@ -22750,6 +22829,20 @@ function emitCppNarrowedUnionValueCpp(
+       // the projection would throw bad_variant_access for a value the source returns as undefined -- and
+       // undefined is the slot's own default. A narrowing that removed every sentinel reaches the read.
+       if (hasIrTypeAbsentMember(narrowedType)) {
++        // The narrowing removed at least one sentinel but left another reachable: `x !== undefined`
++        // on `T | null | undefined` leaves `T | null`. The expression's own value is that narrowed
++        // union, so project the storage into the narrowed carrier sentinel by sentinel instead of
++        // reading the value alternative (which would throw for the sentinel the guard left). A
++        // sentinel the narrowing excluded is unreachable and says so; one it kept is rebuilt as the
++        // narrowed carrier represents it. When the storage and the narrowed type share no faithful
++        // projection, the refusal below still applies.
++        const preserved = emitCppAbsencePreservingNarrowedProjectionCpp(
++          binding,
++          plan,
++          narrowedType,
++          context,
++        );
++        if (preserved) return preserved;
+         emissionError(
+           context,
+           'narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way',
+@@ -23674,6 +23767,30 @@ function emitContextualUnionExpressionInContextCpp(
+     const dualSentinelChain = emitCppDualSentinelOptionalChainCallCpp(expression, union, plan, context);
+     if (dualSentinelChain) return dualSentinelChain;
+   }
++  // A runtime Map lookup stores its value as `optional<V>` and adds one outer `optional` for a missing
++  // key, so `map.get(k)` on a `V = T | null` map has three outcomes: undefined (no entry), null
++  // (stored null), and the value. A dual-sentinel destination names exactly those three carriers, and
++  // the raw nested optional has no conversion to it. Rebuild the destination from the lookup itself:
++  // the outer absence is undefined, the inner absence is the stored null, and the value is unwrapped
++  // once. Other destinations keep their existing path; a value domain that does not match one slot is
++  // left alone rather than guessed.
++  if (
++    plan.kind === 'dualSentinelVariant' &&
++    plan.valueSlots.length === 1 &&
++    plan.sentinels.null !== 'absent' &&
++    plan.sentinels.undefined !== 'absent' &&
++    expression.kind === 'call' &&
++    !expression.optional &&
++    !expression.semantics.optionalChain &&
++    expression.arguments.length === 1 &&
++    expression.callee.kind === 'property' &&
++    expression.callee.name === 'get' &&
++    !expression.callee.optional &&
++    !expression.callee.optionalChain
++  ) {
++    const mapLookup = emitCppNestedOptionalMapLookupCpp(expression, union, plan, context);
++    if (mapLookup) return mapLookup;
++  }
+   if (
+     (expression.kind === 'call' && (expression.optional || expression.semantics.optionalChain)) ||
+     (expression.kind === 'element' && (expression.optional || expression.semantics.optionalChain)) ||
+diff --git a/packages/compiler-backend-cpp/src/cppNarrowedUnionAbsencePreservation.test.ts b/packages/compiler-backend-cpp/src/cppNarrowedUnionAbsencePreservation.test.ts
+new file mode 100644
+index 0000000..491a0a2
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNarrowedUnionAbsencePreservation.test.ts
+@@ -0,0 +1,58 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/narrowed.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const prelude = `
++  interface ClipRegion { version: number }
++  interface Placement { characterId: number; depth: number }
++`;
++
++it('rebuilds a nested optional Map lookup into the three-state dual-sentinel carrier', () => {
++  const output = emit(`${prelude}
++    export function f(clips: Map<Readonly<Placement>, ClipRegion | null>, key: Readonly<Placement>): ClipRegion | null {
++      const cached = clips.get(key);
++      if (cached !== undefined) return cached;
++      return null;
++    }
++  `);
++  // Outer absence is undefined; the stored null stays null; a present entry contributes its value.
++  expect(output).toContain('if (!lookup.has_value()) return std::variant<');
++  expect(output).toContain('std::in_place_type<flight::Undefined>, flight::undefined');
++  expect(output).toContain('if (!lookup.value().has_value()) return std::variant<');
++  expect(output).toContain('std::in_place_type<flight::Null>, flight::null');
++  expect(output).toContain('lookup.value().value()');
++});
++
++it('projects a value that still admits null into the narrowed optional carrier', () => {
++  const output = emit(`${prelude}
++    export function f(clips: Map<Readonly<Placement>, ClipRegion | null>, key: Readonly<Placement>): ClipRegion | null {
++      const cached = clips.get(key);
++      if (cached !== undefined) return cached;
++      return null;
++    }
++  `);
++  // The `!== undefined` guard leaves null reachable; the projection keeps it and never reads the
++  // value alternative out of a Null state.
++  expect(output).toContain('if (std::holds_alternative<flight::Null>(cached)) return {};');
++  expect(output).toContain('throw std::logic_error("narrowed union holds a sentinel the narrowing excluded")');
++  expect(output).toContain('std::optional<flight::Ref<ClipRegion>>{*present}');
++});
++
++it('keeps the direct value read when the narrowing removes every sentinel', () => {
++  const output = emit(`${prelude}
++    export function f(clips: Map<Readonly<Placement>, ClipRegion | null>, key: Readonly<Placement>): ClipRegion | null {
++      const cached = clips.get(key);
++      if (cached != null) return cached;
++      return null;
++    }
++  `);
++  expect(output).not.toContain('narrowed union holds a sentinel the narrowing excluded');
++});

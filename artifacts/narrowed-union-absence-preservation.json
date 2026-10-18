@@ -1,0 +1,30 @@
+{
+  "schema": "flight-cpp-narrowed-union-absence-preservation/1",
+  "cause": "a Map.get on a map storing a nullable value returns optional<optional<T>> (outer missing, inner stored null), which has no conversion to the declared T | null | undefined variant; and a value narrowed by `!== undefined` that still admits null was refused instead of projected into the narrowed carrier",
+  "site": "packages/swf/src/swfDocument.ts resolveSwfMaskClip (source line 670); first failure flight/swf/swf_document.hpp",
+  "focused": {
+    "test": "packages/compiler-backend-cpp/src/cppNarrowedUnionAbsencePreservation.test.ts",
+    "result": "3 pass",
+    "covers": [
+      "nested-optional lookup rebuilt into the three-state dual-sentinel carrier",
+      "the narrowed projection keeps Null and treats the excluded Undefined as unreachable",
+      "a != null control keeps the direct value read"
+    ]
+  },
+  "native": {
+    "fixture": "compiler-emitted raw()/lookup() over flight::Map<String, optional<Ref<ClipRegion>>>",
+    "output": "lookup: raw-missing=undefined raw-null=null raw-value=value identity=1 narrowed-missing-null=1 narrowed-value=1",
+    "exit": 0
+  },
+  "source_oracle": {
+    "output": "lookup: raw-missing=undefined raw-null=null raw-value=value identity=true narrowed-missing-null=true narrowed-value=true",
+    "exit": 0,
+    "matches_native": true
+  },
+  "scratch_measurement": {
+    "exit": 0,
+    "tree": "/tmp/measure-134",
+    "result": "resolveSwfMaskClip emits; its NOT GENERATED marker is gone; both projections present; the five document-dependent headers advance to the separate createSwfMaskClipRegion refusal"
+  },
+  "patch": "source-patches/compiler-narrowed-union-absence-preservation.patch"
+}
