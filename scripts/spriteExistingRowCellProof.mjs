@@ -38,7 +38,7 @@ try {
     const directory = fs.mkdtempSync(path.join(temporary, 'reconstruct-'));
     fs.mkdirSync(path.dirname(path.join(directory, relative)), { recursive: true });
     fs.writeFileSync(path.join(directory, relative), bytes(source));
-    execFileSync('git', ['apply', path.join(repo, patch)], { cwd: directory });
+    execFileSync('git', ['apply', '--unidiff-zero', path.join(repo, patch)], { cwd: directory });
     assert.equal(sha(fs.readFileSync(path.join(directory, relative))), after);
     assert.equal(sha(bytes(target)), after);
   }

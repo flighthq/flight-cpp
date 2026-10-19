@@ -1,39 +1,18 @@
 --- a/include/flight/structural_ref.hpp
 +++ b/include/flight/structural_ref.hpp
-@@ -142,6 +142,11 @@
- 
- } // namespace detail
- 
+@@ -144,0 +145,5 @@
 +namespace detail {
 +template <typename Value>
 +[[nodiscard]] std::optional<Any> row_cell_value_as_any(const Value& value);
 +} // namespace detail
 +
- // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
- // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
- class RowCell {
-@@ -243,7 +248,7 @@
-   }
- 
-   [[nodiscard]] std::optional<Any> as_any() const override {
+@@ -246 +251 @@
 -    return detail::any_from(const_cast<TypedRowCell<Value>*>(this)->get());
 +    return detail::row_cell_value_as_any(const_cast<TypedRowCell<Value>*>(this)->get());
-   }
- };
- 
-@@ -291,7 +296,7 @@
-         if (!const_cast<NativeRowCell*>(this)->get().has_value()) return Any(nullptr);
-       }
-     }
+@@ -294 +299 @@
 -    return detail::any_from(const_cast<NativeRowCell*>(this)->get());
 +    return detail::row_cell_value_as_any(const_cast<NativeRowCell*>(this)->get());
-   }
- 
-   // The member's own address, taken once while the native object is being bound. Do not retain the
-@@ -601,6 +606,25 @@
-   std::unordered_map<const void*, SymbolCell> symbol_cells_;
-   std::unordered_map<const void*, Symbol> symbol_written_;
- };
+@@ -603,0 +609,19 @@
 +
 +namespace detail {
 +template <typename Value>
@@ -53,26 +32,14 @@
 +  }
 +}
 +} // namespace detail
- 
- template <typename Schema>
- class StructuralRef;
-@@ -1975,6 +1999,12 @@
- 
- namespace detail {
- 
+@@ -1977,0 +2002,6 @@
 +template <typename Value>
 +inline constexpr bool readonly_partial_row_value = false;
 +template <typename Schema>
 +inline constexpr bool readonly_partial_row_value<StructuralRef<Schema>> =
 +    schema_readonly<Schema> && schema_partial<Schema>;
 +
- template <typename Type, typename Key>
- struct indexed_member {
-   using type = generated_row_member_t<Key, Type>;
-@@ -2036,6 +2066,18 @@
-     using Present = detail::optional_value_t<Value>;
-     if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
-       return Value(*present);
+@@ -2038,0 +2069,12 @@
 +    }
 +    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<Present>) {
 +      if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
@@ -85,13 +52,7 @@
 +        }
 +        throw std::bad_cast();
 +      }
-     }
-     return Value{};
-   } else if constexpr (detail::schema_member_required<Key, Schema>) {
-@@ -2064,6 +2106,18 @@
-     using Present = detail::optional_value_t<Value>;
-     if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
-       return Value(*present);
+@@ -2066,0 +2109,12 @@
 +    }
 +    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<Present>) {
 +      if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
@@ -104,6 +65,3 @@
 +        }
 +        throw std::bad_cast();
 +      }
-     }
-     if (source.shared_owner()->has_named_cell(Key::name.view())) throw std::bad_cast();
-     return Value{};

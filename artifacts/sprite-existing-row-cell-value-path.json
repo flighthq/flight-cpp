@@ -11,7 +11,7 @@
   "runtime": {
     "mechanism": "Existing as_any + RowOwner.raw_value exact-owner proof, no new virtual/layout/Any member. V1 globally changes Typed/Native as_any row-value erasure.",
     "patch": "artifacts/sprite-existing-row-cell-value-runtime.patch",
-    "sha256": "88a28c38c6be0608be556ab0448139825d14ca3ec7d45e47c00e3b362d7ac6ed",
+    "sha256": "c0fc6d4468c68a38aae470c9ec21d2d54630530771a4f86daa2e5c2659317e77",
     "baselineSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
     "candidateSha256": "106adff5a76731d28f721a4410e5e2fac10186bd1025e4cc785c639a89391972",
     "activation": "FORBIDDEN: measured NamedProperties scope expansion, marked and unmarked, baseline unrepresented/UnrepresentedProperty -> candidate represented/Any(object).",
@@ -33,7 +33,8 @@
           "stderr": ""
         }
       ]
-    }
+    },
+    "patchFormat": "Zero-context inactive patch; reconstruct with git apply --unidiff-zero. Exact runtime candidate bytes unchanged."
   },
   "emitter": {
     "mechanism": "Existing private readonly accessor cell as_any invokes original getter exactly once into owning value, preserves declared null/undefined mapping, and leaves get/set/cache layout text unchanged.",
