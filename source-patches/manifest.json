@@ -5860,7 +5860,8 @@
       "verification": "Applied over the full 137-flight-compiler-patch stack, the six regression tests pass: non-exported emits `!= nullptr`, exported and same-module keep std::optional + has_value(), the undefined arm does not become a null-pointer test, the callee is emitted once, and the native fixture compiles/links/runs absent=-1 present=1 (exit 0, pair unaffected). Without the patch the same fixture emits `(true ? widget->value : -1.0)` and the absent arm dereferences nullptr.",
       "whyNotUpstreamFirst": "The pin already represents null as a runtime reference on this path; only the presence decision used the degraded type spelling. The change is a bounded addition on the null-only reference-carrier case and leaves the optional and dual-sentinel paths untouched. docs/compiler-requests/imported-call-null-arm-guard-fold.md records the cause and the reproduction.",
       "unblocks": "A nullable imported non-exported return used in a null guard no longer folds to a constant true; the guarded member read is only reachable for a present value. The SWF correction has no null test and was not exposed to this fold; this is the general compiler cause it surfaced.",
-      "expires": "when upstream resolves an imported non-exported return type's declaring declaration in the nullish-comparison storage evidence, or lowers a nullable reference carrier's null test itself."
+      "expires": "when upstream resolves an imported non-exported return type's declaring declaration in the nullish-comparison storage evidence, or lowers a nullable reference carrier's null test itself.",
+      "appliedOn": "2026-10-18"
     },
     {
       "id": "compiler-narrowed-union-absence-preservation",
