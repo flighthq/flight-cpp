@@ -5896,6 +5896,23 @@
       "unblocks": "Complete original lottieBezierPath.ts on the retained native numeric storage profile; nonnumeric fixtures and unrelated consumer gaps remain explicitly partial.",
       "expires": "when upstream emits bounded erased readonly projections, source-ordered raw native escapes and exact getter value readers against the runtime contract.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-nullable-indexed-fallback",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullable-indexed-fallback.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/animation",
+      "answers": "diagnostic",
+      "refusal": "cpp-contextual-union-missing-expression-type:optionalSingle",
+      "rewrite": "Recover optional indexed reads from the declared present collection element plus the neutral undefined short-circuit. Preserve a nullable stored element separately from missing receiver/index in the existing dual-sentinel union, including immutable local bindings. Coalesce exact present carriers into nullable destinations with a lazy checked selection and fallback.",
+      "equivalence": "Receiver, index, lookup and fallback keep source evaluation order and original owners. A stored null differs from an absent lookup until the source nullish coalesce deliberately selects its fallback. No source/IR body rewrite, defaulting, guard narrowing, owner reconstruction, raw core family or ABI change. Unknown/unindexable present receivers still refuse.",
+      "verification": "Generic easing native controls pass19/0 (null versus undefined, lazy key/fallback, original exception). Whole original numeric public consumer qualification is in progress; the original sampler now emits, with unrelated cloneNumberBuffer refusal retained. No whole-module cloning, factory or SDK promotion.",
+      "whyNotUpstreamFirst": "The locked compiler needs this existing-family optional indexed evidence and sentinel projection to emit the unchanged original sampleAnimationTrack on the approved numeric public path.",
+      "unblocks": "The original sampleAnimationTrack easing selection and equivalent nullable indexed fallback expressions; all numeric public track consumers still require native/source qualification.",
+      "expires": "When upstream preserves nullable indexed payload evidence and both absence sentinels through lazy native nullish selection.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

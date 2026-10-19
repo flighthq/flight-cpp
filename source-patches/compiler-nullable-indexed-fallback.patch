@@ -1,0 +1,150 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3617,6 +3617,15 @@
+       return `${variable.mutable ? '' : 'const '}auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context)};`;
+     }
+   }
++  if (!variable.mutable && variable.initializer?.kind === 'element' && variable.initializer.optional &&
++      variable.initializer.semantics.optionalChain?.receiverNullish === 'possible') {
++    const evidence = getIrExpressionTypeEvidenceCpp(variable.initializer, context);
++    const union = evidence ? getIrUnionTypeCpp(evidence, context, new Set()) : undefined;
++    if (evidence && union && getCppUnionRepresentationPlan(union, context).kind === 'dualSentinelVariant') {
++      context.preservedInitializerTypes.set(variable.binding.id, evidence);
++      return `const auto ${getBindingTargetName(variable.binding, context)} = ${emitExpression(variable.initializer, context, evidence)};`;
++    }
++  }
+   const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
+   if (caughtValueRebinding) return caughtValueRebinding;
+   const name = getBindingTargetName(variable.binding, context);
+@@ -4431,6 +4440,18 @@
+     const valueName = getGeneratedTargetName('coalesce_left', context);
+     const absent = `(std::holds_alternative<${sentinels.null}>(${valueName}) || std::holds_alternative<${sentinels.undefined}>(${valueName}))`;
+     return `([&]() -> ${emitType(expectedType, context)} { const auto& ${valueName} = ${left}; if (${absent}) return ${fallback}; return ${valueName}; }())`;
++  }
++  if (sourceType && expectedUnion && expectedPlan?.kind === 'optionalSingle' &&
++      plan.valueSlots.length === 1 && expectedPlan.valueSlots.length === 1 &&
++      plan.valueSlots[0]!.targetType === expectedPlan.valueSlots[0]!.targetType) {
++    const source = getGeneratedTargetName('nullishCallableSource', context);
++    const held = getGeneratedTargetName('nullishPresentValue', context);
++    const carrier = plan.valueSlots[0]!.targetType;
++    const present = emitCppUnionValueConstruction('*' + held, carrier, expectedUnion, expectedPlan.kind, context);
++    const left = emitExpression(expression.left, context, sourceType);
++    const fallback = emitExpression(expression.right, context, expectedType);
++    context.includes.add('variant');
++    return `([&]() -> ${emitType(expectedType, context)} { const auto ${source} = ${left}; if (const auto* ${held} = std::get_if<${carrier}>(&${source})) return ${present}; return ${fallback}; }())`;
+   }
+   if (plan.valueSlots.length !== 1) return undefined;
+   const slot = plan.valueSlots[0]!;
+@@ -32808,14 +32829,18 @@
+       }
+       const objectType = getIrExpressionTypeEvidenceCpp(expression.object, context);
+       const indexedObjectType =
+-        objectType && 'presence' in expression.object && expression.object.presence === 'narrowedPresent'
++        objectType && (expression.optional || ('presence' in expression.object && expression.object.presence === 'narrowedPresent'))
+           ? (getCppNonNullableType(objectType, context, new Set()) ?? objectType)
+           : objectType;
+       const elementType = indexedObjectType
+         ? getIrIndexedElementTypeCpp(indexedObjectType, expression, context, new Set())
+         : undefined;
+-      return elementType && expression.presence === 'narrowedPresent'
+-        ? (getCppNonNullableType(elementType, context, new Set()) ?? elementType)
++      if (!elementType) return undefined;
++      if (expression.presence === 'narrowedPresent') {
++        return getCppNonNullableType(elementType, context, new Set()) ?? elementType;
++      }
++      return expression.optional
++        ? createIrTypeEvidenceUnionCpp([elementType, { kind: 'undefined' }])
+         : elementType;
+     }
+     case 'property': {
+@@ -37794,6 +37819,30 @@
+   const receiverPlan = getCppOptionalElementReceiverPlanCpp(expression, semantics.receiverType, context);
+   const valueUnion = getIrUnionTypeCpp(semantics.valueType, context, new Set());
+   const valuePlan = valueUnion ? getCppUnionRepresentationPlan(valueUnion, context) : undefined;
++  const storedUnion = receiverPlan && 'elementType' in receiverPlan && receiverPlan.elementType
++    ? getIrUnionTypeCpp(receiverPlan.elementType, context, new Set()) : undefined;
++  const storedPlan = storedUnion ? getCppUnionRepresentationPlan(storedUnion, context) : undefined;
++  if ((receiverPlan?.kind === 'runtimeIndexed' || receiverPlan?.kind === 'record') &&
++      storedPlan?.kind === 'optionalSingle' && storedPlan.sentinels.null === 'optionalAbsence' &&
++      valuePlan?.kind === 'optionalSingle' && valuePlan.sentinels.null === 'optionalAbsence' &&
++      storedPlan.valueSlots.length === 1 && valuePlan.valueSlots.length === 1 &&
++      storedPlan.valueSlots[0]!.targetType === valuePlan.valueSlots[0]!.targetType && valueUnion) {
++    const resultUnion: Extract<IrType, { kind: 'union' }> = { kind: 'union', types: [...valueUnion.types, { kind: 'undefined' }] };
++    const resultPlan = getCppUnionRepresentationPlan(resultUnion, context);
++    const receiver = getGeneratedTargetName('nullableElementReceiver', context);
++    const lookup = getGeneratedTargetName('nullableElementLookup', context);
++    const key = receiverPlan.kind === 'record'
++      ? emitCppRequiredRecordKeyCpp(expression.index, receiverPlan.key, context)
++      : emitExpression(expression.index, context);
++    const missing = emitCppUnionSentinelConstruction('undefined', resultUnion, resultPlan.kind, context);
++    const storedNull = emitCppUnionSentinelConstruction('null', resultUnion, resultPlan.kind, context);
++    const present = emitCppUnionValueConstruction(lookup + '.value().value()', storedPlan.valueSlots[0]!.targetType, resultUnion, resultPlan.kind, context);
++    const object = emitOptionalChainReceiverCpp(expression.object, context);
++    context.includes.add('variant');
++    context.includes.add('optional');
++    return `([&]() -> ${emitUnionTypeCpp(resultUnion, context)} { const auto ${receiver} = ${object}; if (!${receiver}.has_value()) return ${missing}; const auto ${lookup} = ${receiver}.value().get(${key}); if (!${lookup}.has_value()) return ${missing}; if (!${lookup}.value().has_value()) return ${storedNull}; return ${present}; }())`;
++  }
++
+   if (
+     receiverPlan?.kind !== 'tuple' &&
+     receiverPlan?.kind !== 'regexpExecArray' &&
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullableIndexedFallback.test.ts
+@@ -0,0 +1,57 @@
++import { describe, expect, it } from 'vitest';
++import ts from 'typescript';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const result = lowerTypeScriptSource(
++    ts.createSourceFile('/flight/packages/fixture/src/nullable.ts', source, ts.ScriptTarget.Latest, true),
++    { packageName: '@flighthq/fixture', upstreamDirectory: '/flight' },
++  );
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, {
++    runtimeProfile: 'flight-cpp',
++    packageTargets: { '@flighthq/fixture': { namespace: 'fixture', includePrefix: 'fixture' } },
++  }).contents;
++}
++
++describe('nullable indexed values and lazy nullish fallback', () => {
++  it('retains the original nullable easing selection and call', () => {
++    expect(() => emit(`
++      export type Easing = (alpha: number) => number;
++      export interface Track { segmentEasings: Array<Easing | null> | null; easing: Easing | null; }
++      export function sample(track: Readonly<Track>, i: number, time: number): number {
++        const easing = track.segmentEasings?.[i] ?? track.easing;
++        if (easing !== null) return easing(time);
++        return time;
++      }
++    `)).not.toThrow();
++  });
++  it('keeps a stored null distinct from an absent indexed value', () => {
++    expect(() => emit(`
++      export interface Values { values: Array<number | null> | null; }
++      export function kind(owner: Readonly<Values>, i: number): string {
++        const selected = owner.values?.[i];
++        if (selected === null) return 'null';
++        if (selected === undefined) return 'undefined';
++        return 'present';
++      }
++    `)).not.toThrow();
++  });
++  it('accepts readonly indexed values without acquiring mutable capability', () => {
++    expect(() => emit(`
++      export interface Values { values: readonly (number | null)[] | null; fallback: number | null; }
++      export function choose(owner: Readonly<Values>, i: number): number | null {
++        return owner.values?.[i] ?? owner.fallback;
++      }
++    `)).not.toThrow();
++  });
++  it('refuses an unindexable present receiver instead of inventing contextual evidence', () => {
++    expect(() => emit(`
++      export interface Values { values: Array<number | null> | number | null; fallback: number | null; }
++      export function choose(owner: Readonly<Values>, i: number): number | null {
++        return owner.values?.[i] ?? owner.fallback;
++      }
++    `)).toThrow();
++  });
++});

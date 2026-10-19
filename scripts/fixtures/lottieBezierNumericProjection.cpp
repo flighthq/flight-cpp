@@ -12,6 +12,8 @@
 namespace {
 using flight::Any;
 namespace api = flight::scene2d_formats;
+template <class Result, class Argument>
+typename Argument::element_type animation_options_type(Result (*)(Argument));
 int checks = 0, failures = 0, partial = 0, sampler_gaps = 0;
 void check(bool good) { ++checks; if (!good) { ++failures; std::cerr << "FAIL " << checks << '\n'; } }
 void numbers(const flight::Array<double>& actual, const std::vector<double>& expected) {
@@ -74,7 +76,7 @@ int main() {
    check(restored->c==source.closed);
    if(!source.flat.empty()) {
      // Use the existing public native numeric consumer; this is not a replacement createLottieTrack.
-     using Options=flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+     using Options=decltype(animation_options_type(&flight::animation::create_animation_track));
      const auto options=flight::make_ref<Options>();
      options->times=flight::SequenceView<double>(flight::Array<double>{0.0});
      options->values=flight::SequenceView<double>(flat);
@@ -107,7 +109,7 @@ int main() {
 
  for(const auto& source:sampler_cases) {
    const auto array=[](const std::vector<double>& input){flight::Array<double> out;for(const double value:input)out.push(value);return out;};
-   using Options=flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+   using Options=decltype(animation_options_type(&flight::animation::create_animation_track));
    const auto options=flight::make_ref<Options>();const auto values=array(source.values);
    options->times=flight::SequenceView<double>(array(source.times));options->values=flight::SequenceView<double>(values);
    options->components=source.components;options->interpolation=flight::String(source.interpolation);options->quaternion=source.quaternion;
@@ -128,7 +130,7 @@ int main() {
    } catch(const std::exception& error) {std::cerr<<"sampler source case "<<source.name<<": "<<error.what()<<'\n';check(false);}
  }
  {
-   using Options=flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
+   using Options=decltype(animation_options_type(&flight::animation::create_animation_track));
    const auto options=flight::make_ref<Options>();options->times=flight::SequenceView<double>(flight::Array<double>{0.0});options->components=2.0;
    const auto sentinel=std::make_exception_ptr(flight::RangeError("later sample value"));std::vector<int> reads;
    options->values=flight::SequenceView<double>::from_erased_array(Any(flight::Array<Any>{Any(1.0),Any(2.0)}),[&](const Any& value){

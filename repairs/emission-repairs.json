@@ -9453,6 +9453,19 @@
       "defect": "The compiler refuses the registry body because the contextual union value type flight::Map<flight::String, bind_skeleton_2d_bone_channel> is not a represented runtime domain (cpp-contextual-union-value-type-unrepresented), but retains four callers that call the emitted symbol in registry positions. Declare only the emitter's own result carrier: the retained calls construct exactly flight::Map<flight::String, flight::types::Skeleton2DAnimationTargetBinder>. Declaration only -- the callers compile and the registry itself stays unavailable at link, never substituted by a hand-written map. The slot binder body is exercised through the original whole header.",
       "expectedWhen": "always",
       "expires": "when getSkeleton2DAnimationTargetBinderRegistry emits and its exact NOT GENERATED marker disappears; sdk:check rejects an obsolete repair."
+    },
+    {
+      "id": "animation-declare-refused-clone-number-buffer",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/animation/animation_track.hpp",
+      "symbol": "clone_number_buffer",
+      "refusedFunction": "cloneNumberBuffer",
+      "declaration": "std::variant<flight::Array<double>, flight::Float32Array> clone_number_buffer(flight::SequenceView<double> src);",
+      "sourceDeclaration": "packages/animation/src/animationTrack.ts -- cloneNumberBuffer(src: ArrayLike<number>): number[] | Float32Array, refused; retained cloneAnimationTrack calls it for times and values",
+      "diagnostic": "use of undeclared identifier 'clone_number_buffer'",
+      "defect": "The original cloneNumberBuffer declaration is refused at its Float32Array instanceof test on ArrayLike<number>. Original sampleAnimationTrack and its actual sampling callees can be retained independently, but the unused retained cloneAnimationTrack body still requires the missing helper name. This declaration follows the original IR signature exactly: ArrayLike<number> uses SequenceView<double>, and the owned result is Array<double> | Float32Array. Declaration only, no replacement body: any call to the cloning helper still fails to link, and cloning is not qualified by the bounded numeric public track proof.",
+      "expectedWhen": "always",
+      "expires": "When cloneNumberBuffer emits and its NOT GENERATED marker disappears; sdk:check must report an obsolete repair."
     }
   ]
 }

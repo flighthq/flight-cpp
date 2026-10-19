@@ -1,5 +1,7 @@
 # Bounded Bezier projection on existing numeric storage
 
+This records the earlier component qualification. The subsequent [original public numeric path](lottie-bezier-public-numeric.md) separately qualifies original Lottie track construction and sampling.
+
 The approved profile retains `Path.data: Array<double>`, `AnimationTrack.values: SequenceView<double>`, and numeric sample arrays. The alternative raw storage family in [the earlier return design](lottie-bezier-raw-return-design.md) remains declined. This change uses existing `Any`, `JsonScalarCell`, assertion rows, and live `ArrayIterator` carriers. No Flight source body or native storage ABI changes.
 
 The compiler elects a genuinely erased assertion to a named readonly interface only when its member types are scalar values or finite nested arrays/tuples of scalars. The assertion keeps the original owner without reading members or validating their declared types. Its nested property/index reads remain raw cells. Mutable assertions, unrelated schemas, callable/recursive shapes, and unrepresented native calls do not acquire this election.

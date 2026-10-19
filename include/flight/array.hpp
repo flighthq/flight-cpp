@@ -21,6 +21,7 @@
 
 #include <flight/equality.hpp>
 #include <flight/iterator.hpp>
+#include <flight/out_of_profile.hpp>
 #include <flight/presence.hpp>
 
 namespace flight {
@@ -215,6 +216,19 @@ class Array {
   }
 
   [[nodiscard]] reference element(double index) const { return (*values_)[required_index(index)]; }
+
+  // A represented indexed write updates this owner or grows it exactly at its current end.
+  // Holes and non-index properties need a separate representation; no default values are invented.
+  Value set_index(double index, Value value) const {
+    if (!std::isfinite(index) || index < 0.0 || std::trunc(index) != index ||
+        index >= static_cast<double>(maximum_array_length) || index > static_cast<double>(size())) {
+      throw OutOfProfileError("Array indexed write requires an existing index or a contiguous append");
+    }
+    const auto offset = static_cast<size_type>(index);
+    if (offset == size()) values_->push_back(value);
+    else (*values_)[offset] = value;
+    return value;
+  }
 
   [[nodiscard]] std::optional<Value> get(double index) const {
     const auto normalized = property_index(index);

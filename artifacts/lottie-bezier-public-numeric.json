@@ -1,0 +1,2077 @@
+{
+  "schema": "flight-lottie-bezier-public-numeric/1",
+  "qualificationCodeCommit": "a1a7e30062b386de49ce8aeb1bc8d202fd682c7d",
+  "base": "63f0e10124659b9369c3ce903aa3b561895bde3a",
+  "authority": "Foreman-c25dc1a6 original complete numeric public consumer; former component accepted separately",
+  "scope": "Complete original Bezier + createLottieTrack/sampleAnimationTrack numeric public consumer and callees, through fresh per-module official emission sessions. Seven nonnumeric native storage escapes PARTIAL, not JS equivalence. No full factory/SVG/clone/SDK or normal particles claim.",
+  "storage": {
+    "Path.data": "Array<double>",
+    "AnimationTrack.values": "SequenceView<double>",
+    "sampleOutputs": "Array<double> / Float32Array",
+    "abiChanged": false,
+    "rawPublicEntryAdded": false,
+    "rawCoreStorageFamilyAdded": false
+  },
+  "original": {
+    "flightPin": "a62784923f3be814463286c9fb28edfe6ab15789",
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "originalBezierHeaderSha256": "cfbf0abce647d282b5da3ce7a6a541a0efec9c950ff4d85d52b116fe44761589",
+    "byteIdenticalAcceptedBezier": true,
+    "graphModules": 1467,
+    "graphDescription": "Saved Flight203, not refreshed Flight208",
+    "rawAnimationWholeModuleReLowered": true,
+    "historicalInitializerSourcePatchRetiredGlobally": false,
+    "checkerContextFiles": 1037,
+    "checkerContextPinCheck": {
+      "contextFiles": 1037,
+      "verifiedByOracle": 1035,
+      "allContextAtRawPin": true,
+      "bezierHeaders": [
+        {
+          "tree": "emitted/include",
+          "sha256": "cfbf0abce647d282b5da3ce7a6a541a0efec9c950ff4d85d52b116fe44761589"
+        },
+        {
+          "tree": "public-isolated141/include",
+          "sha256": "cfbf0abce647d282b5da3ce7a6a541a0efec9c950ff4d85d52b116fe44761589"
+        },
+        {
+          "tree": "public-native-final141/include",
+          "sha256": "3ff99d3f8aaabe58da55013779afebadc82217f55fd5d3ffc8ee7387fffc4303"
+        }
+      ]
+    },
+    "irIntegrity": {
+      "beforeRaw": "b99a4bc2c0830bd9e8ee21c49e0dbd9514604fb834cd520522a30589401b12ae",
+      "afterRaw": "b99a4bc2c0830bd9e8ee21c49e0dbd9514604fb834cd520522a30589401b12ae",
+      "otherBefore": "7953cb0f74d505fae279fd55ebf556672713940145cd83b6d9318b1626a707de",
+      "otherAfter": "7953cb0f74d505fae279fd55ebf556672713940145cd83b6d9318b1626a707de",
+      "unchanged": true,
+      "rawFunctions": 59,
+      "rawFingerprintMatches": 59,
+      "source": "packages/animation/src/animationTrack.ts",
+      "reLoweredWholeRawModule": true,
+      "savedGraphOther1466ModulesUnchanged": true
+    },
+    "finalEmissionIrIntegrity": {
+      "beforeEmit": "5686b9abe1dcd13e24e458f647e011367f8063bfd04d4295c89a1588046bb09a",
+      "afterEmit": "5686b9abe1dcd13e24e458f647e011367f8063bfd04d4295c89a1588046bb09a",
+      "unchanged": true,
+      "modules": 1467,
+      "files": [
+        {
+          "file": "flight/scene2d_formats/lottie_bezier_path.hpp",
+          "sha256": "cfbf0abce647d282b5da3ce7a6a541a0efec9c950ff4d85d52b116fe44761589",
+          "same": true
+        },
+        {
+          "file": "flight/animation/animation_track.hpp",
+          "sha256": "4d5db8769c17dc84ba7a3f4e2a85ee16293e458421079d93ebe5e331998577bb",
+          "same": true
+        },
+        {
+          "file": "flight/scene2d_formats/lottie_document.hpp",
+          "sha256": "909d0890bbd3516fb30c974d027cb6b14a1d385236e7db744bbcd8b77a97f1de",
+          "same": true
+        }
+      ]
+    },
+    "allSelectedFunctions": [
+      {
+        "file": "packages/scene2d-formats/src/lottieBezierPath.ts",
+        "function": "createLottieBezierPath",
+        "rawFingerprint": "sha256:5f8cec29a8a142f3a6add0a5030342b41ff4f5418b28562ff26f8bcb43a35b3d",
+        "irSourceFingerprint": "sha256:5f8cec29a8a142f3a6add0a5030342b41ff4f5418b28562ff26f8bcb43a35b3d",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieBezierPath.ts",
+        "function": "flattenLottieShapePath",
+        "rawFingerprint": "sha256:21fa0b85685f180d4acb87718792fa0b482997a040a4c31e21771447bdbc2829",
+        "irSourceFingerprint": "sha256:21fa0b85685f180d4acb87718792fa0b482997a040a4c31e21771447bdbc2829",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieBezierPath.ts",
+        "function": "toLottieShapePath",
+        "rawFingerprint": "sha256:bf119c57e86cb9512bbd1d3deb372d7c9d5209dad8737ffa2e5cafe84bc49794",
+        "irSourceFingerprint": "sha256:bf119c57e86cb9512bbd1d3deb372d7c9d5209dad8737ffa2e5cafe84bc49794",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieBezierPath.ts",
+        "function": "unflattenLottieShapePath",
+        "rawFingerprint": "sha256:e09a085554228d566c6863a067001e50a9f59f88d5d6e1929e90e1b7a1ac1ff4",
+        "irSourceFingerprint": "sha256:e09a085554228d566c6863a067001e50a9f59f88d5d6e1929e90e1b7a1ac1ff4",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "appendLottieLayers",
+        "rawFingerprint": "sha256:64ff35bb2a7889d46535f4cd5cde1d6af1160f2fb4456100e3f6bed0d1823624",
+        "irSourceFingerprint": "sha256:64ff35bb2a7889d46535f4cd5cde1d6af1160f2fb4456100e3f6bed0d1823624",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyAnimationClipToLottieDocument",
+        "rawFingerprint": "sha256:d23f9ead7e62c358ef95d4b7d212f8e6715b3d7bb19dee10c16d8c2770344c74",
+        "irSourceFingerprint": "sha256:d23f9ead7e62c358ef95d4b7d212f8e6715b3d7bb19dee10c16d8c2770344c74",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyLottieMaskFamily",
+        "rawFingerprint": "sha256:20e122e703f2a73a653bd526ead0f9bba033419ca0e0960169559dd9db702b85",
+        "irSourceFingerprint": "sha256:20e122e703f2a73a653bd526ead0f9bba033419ca0e0960169559dd9db702b85",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyLottieTransform",
+        "rawFingerprint": "sha256:f70f6f9328e353e9e4800cce6190c30dbda58e777b052aa758d72bbe34b9524a",
+        "irSourceFingerprint": "sha256:f70f6f9328e353e9e4800cce6190c30dbda58e777b052aa758d72bbe34b9524a",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottieLayerNode",
+        "rawFingerprint": "sha256:90ae37dc2150472723b92bcb9399f825e69e267fd9c988a2bcefe946e8255e22",
+        "irSourceFingerprint": "sha256:90ae37dc2150472723b92bcb9399f825e69e267fd9c988a2bcefe946e8255e22",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "bindMutableLottieNumericProperty",
+        "rawFingerprint": "sha256:e689a9d365598287e45c6152ca89832cf7f1ebb54c42804821e1bd9229b6c464",
+        "irSourceFingerprint": "sha256:e689a9d365598287e45c6152ca89832cf7f1ebb54c42804821e1bd9229b6c464",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyVectorProperty",
+        "rawFingerprint": "sha256:57746a6e32914d8d9bbe9f2c340b61d1a892e6b1a6eec87124babfda7353c3da",
+        "irSourceFingerprint": "sha256:57746a6e32914d8d9bbe9f2c340b61d1a892e6b1a6eec87124babfda7353c3da",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyScalarProperty",
+        "rawFingerprint": "sha256:2712736997eaf41e000c1434228674b9c4978c537376914a1aacf75c5f1aa5dc",
+        "irSourceFingerprint": "sha256:2712736997eaf41e000c1434228674b9c4978c537376914a1aacf75c5f1aa5dc",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "appendNumericPropertyChannels",
+        "rawFingerprint": "sha256:65aa3af85aae05edc32d68d7ea4b3f6cbb43debda2facfd52c1aab3f39bcadb7",
+        "irSourceFingerprint": "sha256:65aa3af85aae05edc32d68d7ea4b3f6cbb43debda2facfd52c1aab3f39bcadb7",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "appendLottieAutoOrientation",
+        "rawFingerprint": "sha256:04735522dd87a939525d252c88370c7083ca8890056d438b7d0324164844a3f9",
+        "irSourceFingerprint": "sha256:04735522dd87a939525d252c88370c7083ca8890056d438b7d0324164844a3f9",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottiePositionSampler",
+        "rawFingerprint": "sha256:f40168e6a828b32e1f69965fd49d5c09551927af56641aa42ac70ca41de30913",
+        "irSourceFingerprint": "sha256:f40168e6a828b32e1f69965fd49d5c09551927af56641aa42ac70ca41de30913",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottieTrack",
+        "rawFingerprint": "sha256:b23dc49108abed44dc57a37e0602da0a816089fcca6e846ffceca3adc263e9f0",
+        "irSourceFingerprint": "sha256:b23dc49108abed44dc57a37e0602da0a816089fcca6e846ffceca3adc263e9f0",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottieSpatialTrackValues",
+        "rawFingerprint": "sha256:4e25ec1709cdf404986976b7865f03ee07a82e332f188231b353ef8688bc1443",
+        "irSourceFingerprint": "sha256:4e25ec1709cdf404986976b7865f03ee07a82e332f188231b353ef8688bc1443",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "spatialTangent",
+        "rawFingerprint": "sha256:cc2ccefbf7c659b3e8162accdf49edb4f67fcb19fa4f616a5d5b4e46bde75814",
+        "irSourceFingerprint": "sha256:cc2ccefbf7c659b3e8162accdf49edb4f67fcb19fa4f616a5d5b4e46bde75814",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottieSpatialSegmentEasing",
+        "rawFingerprint": "sha256:2b530797fdac116319b4c8b519f8ca08e3aa21f65ab2bd34990e314f42a20adb",
+        "irSourceFingerprint": "sha256:2b530797fdac116319b4c8b519f8ca08e3aa21f65ab2bd34990e314f42a20adb",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "sampleLottieSpatialBezier",
+        "rawFingerprint": "sha256:8cbf71cad788c8440ec395a34e27720703ebf1559ad3a19406f0d56f01868e49",
+        "irSourceFingerprint": "sha256:8cbf71cad788c8440ec395a34e27720703ebf1559ad3a19406f0d56f01868e49",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createLottieSegmentEasing",
+        "rawFingerprint": "sha256:ff09bf4ae24d6ba6b1d6c2fc3ff753c79f3d829b2bcaf3970419bf57579ce69c",
+        "irSourceFingerprint": "sha256:ff09bf4ae24d6ba6b1d6c2fc3ff753c79f3d829b2bcaf3970419bf57579ce69c",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "createScene2DFromLottieDocumentWithRegistry",
+        "rawFingerprint": "sha256:3a804d76218a3d9ea9fa285c8f41a42b419b1f06ce9f11f94b27a914d7b0e0f9",
+        "irSourceFingerprint": "sha256:3a804d76218a3d9ea9fa285c8f41a42b419b1f06ce9f11f94b27a914d7b0e0f9",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "hasComponentSpecificLottieEasing",
+        "rawFingerprint": "sha256:c299dae6637e084803889411e96f15de2ff6fce6e85deb74424c9db6cd08bda8",
+        "irSourceFingerprint": "sha256:c299dae6637e084803889411e96f15de2ff6fce6e85deb74424c9db6cd08bda8",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "initializeLottieDocumentImportResult",
+        "rawFingerprint": "sha256:bbcb06f2acfd2a057e0d1864c4b20d0697ba7b7062e37bfe574c38bd65c731d7",
+        "irSourceFingerprint": "sha256:bbcb06f2acfd2a057e0d1864c4b20d0697ba7b7062e37bfe574c38bd65c731d7",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "initialLottieValue",
+        "rawFingerprint": "sha256:3bfecbbcb9eec04f9b0044ca88901840cc80faf68c0558634fb4d8d9e21616ae",
+        "irSourceFingerprint": "sha256:3bfecbbcb9eec04f9b0044ca88901840cc80faf68c0558634fb4d8d9e21616ae",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "isAnimatedLottieProperty",
+        "rawFingerprint": "sha256:22a23c501adbf78a199e601a9f360b2c89103e8583a6db3068d7351ffe661973",
+        "irSourceFingerprint": "sha256:22a23c501adbf78a199e601a9f360b2c89103e8583a6db3068d7351ffe661973",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "lottieClamp",
+        "rawFingerprint": "sha256:d142b90b8287818c3655898071f30412ab19ea1e9a53eb26bdcc7006f291c977",
+        "irSourceFingerprint": "sha256:d142b90b8287818c3655898071f30412ab19ea1e9a53eb26bdcc7006f291c977",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyLottieLayerVisibility",
+        "rawFingerprint": "sha256:9591af23d32a925dca6cb05cf9c5fa438238ba898e62b1344c068b6c04483601",
+        "irSourceFingerprint": "sha256:9591af23d32a925dca6cb05cf9c5fa438238ba898e62b1344c068b6c04483601",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyLottieBlendMode",
+        "rawFingerprint": "sha256:abe7fd7487417dc6a78eddbd293d2e52245d131bbf048f3d3d6379c001dc2bce",
+        "irSourceFingerprint": "sha256:abe7fd7487417dc6a78eddbd293d2e52245d131bbf048f3d3d6379c001dc2bce",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "lottieDegreesToRadians",
+        "rawFingerprint": "sha256:ccad347f747f166473951318b7b212d5e0e26769cbb4dc0c8ed66ee1ef1175d6",
+        "irSourceFingerprint": "sha256:ccad347f747f166473951318b7b212d5e0e26769cbb4dc0c8ed66ee1ef1175d6",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "applyDisplaySample",
+        "rawFingerprint": "sha256:9dfbc798873253585f85881f676a00121b600453fe67559608147826f582fb27",
+        "irSourceFingerprint": "sha256:9dfbc798873253585f85881f676a00121b600453fe67559608147826f582fb27",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "parseLottieDocument",
+        "rawFingerprint": "sha256:c326d6865b283cf75138b79d3a6554fe7ccaad40620ede116d3f7cbe1e09ae50",
+        "irSourceFingerprint": "sha256:c326d6865b283cf75138b79d3a6554fe7ccaad40620ede116d3f7cbe1e09ae50",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "isValidLottieDocument",
+        "rawFingerprint": "sha256:034810002d29507248340dfa5e49a29c3bb576411fd769aa2e15e0660bbcb2af",
+        "irSourceFingerprint": "sha256:034810002d29507248340dfa5e49a29c3bb576411fd769aa2e15e0660bbcb2af",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "lottieNumericValue",
+        "rawFingerprint": "sha256:a73e953f0a72726c27fe2a1c1b602c591d65fd69e7cf4e7bd629c5a8bd17c164",
+        "irSourceFingerprint": "sha256:a73e953f0a72726c27fe2a1c1b602c591d65fd69e7cf4e7bd629c5a8bd17c164",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "isSeparatedPosition",
+        "rawFingerprint": "sha256:d1e57fb9fff883056975e65c26009d486658f2329c04d7831e07399604ff0bd5",
+        "irSourceFingerprint": "sha256:d1e57fb9fff883056975e65c26009d486658f2329c04d7831e07399604ff0bd5",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "lottieRgba",
+        "rawFingerprint": "sha256:5821bcae354729e9967c94c2bf2e73221eb33626affda2676b4e472116e48c71",
+        "irSourceFingerprint": "sha256:5821bcae354729e9967c94c2bf2e73221eb33626affda2676b4e472116e48c71",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "hasSpatialTangents",
+        "rawFingerprint": "sha256:4545d8b5be7554c76d120d94effbf2cebce056873f77f095bf0819ac9cab37f2",
+        "irSourceFingerprint": "sha256:4545d8b5be7554c76d120d94effbf2cebce056873f77f095bf0819ac9cab37f2",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "handleVaries",
+        "rawFingerprint": "sha256:635e336504cacf05f3c697ffa77ab4bfabdfe8e669e9d0b30abb7128c471100a",
+        "irSourceFingerprint": "sha256:635e336504cacf05f3c697ffa77ab4bfabdfe8e669e9d0b30abb7128c471100a",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "handleComponent",
+        "rawFingerprint": "sha256:3b726db069a0bd1de180f0e82a7b4f1c4aeaf0e20a65346f14734957ca56d874",
+        "irSourceFingerprint": "sha256:3b726db069a0bd1de180f0e82a7b4f1c4aeaf0e20a65346f14734957ca56d874",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "frameToSeconds",
+        "rawFingerprint": "sha256:d61f05f3819c1c5c2202df2087f8f551a2e5744f620755033499fd01f74dc3c3",
+        "irSourceFingerprint": "sha256:d61f05f3819c1c5c2202df2087f8f551a2e5744f620755033499fd01f74dc3c3",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "reportLottieDrop",
+        "rawFingerprint": "sha256:f9f34afdef2ae517cd3af7a641a5065694829c490de0f2851a22434d2732859f",
+        "irSourceFingerprint": "sha256:f9f34afdef2ae517cd3af7a641a5065694829c490de0f2851a22434d2732859f",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "reportLottieExpression",
+        "rawFingerprint": "sha256:140ed641b4c300a7f1c13311ee59ea197fa247d40e0e705e971af1392c527a02",
+        "irSourceFingerprint": "sha256:140ed641b4c300a7f1c13311ee59ea197fa247d40e0e705e971af1392c527a02",
+        "match": true
+      },
+      {
+        "file": "packages/scene2d-formats/src/lottieDocument.ts",
+        "function": "reportLottieSkip",
+        "rawFingerprint": "sha256:58cd14432590f0bb9c20a9244682102dc8abc281c005b38a73ec2011e5399ec9",
+        "irSourceFingerprint": "sha256:58cd14432590f0bb9c20a9244682102dc8abc281c005b38a73ec2011e5399ec9",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "cloneAnimationTrack",
+        "rawFingerprint": "sha256:95908f3ca49987bb527190d358f365c438c672d70292827f8f9ce7c733c61fc3",
+        "irSourceFingerprint": "sha256:95908f3ca49987bb527190d358f365c438c672d70292827f8f9ce7c733c61fc3",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "createAnimationTrack",
+        "rawFingerprint": "sha256:7e9a5bff0f7086ced269c9e9b32337a7269e1d345b1b7080699da615b5474ed5",
+        "irSourceFingerprint": "sha256:7e9a5bff0f7086ced269c9e9b32337a7269e1d345b1b7080699da615b5474ed5",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "initializeAnimationTrack",
+        "rawFingerprint": "sha256:8adc49483b637592f6009c32d44496647259fa0e65727fe74a9ad27b6b15fc43",
+        "irSourceFingerprint": "sha256:8adc49483b637592f6009c32d44496647259fa0e65727fe74a9ad27b6b15fc43",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "sampleAnimationTrack",
+        "rawFingerprint": "sha256:a5c929505d79ccfc118e556cb8955b806459055dd6df8109d6e6a6ea905aec93",
+        "irSourceFingerprint": "sha256:a5c929505d79ccfc118e556cb8955b806459055dd6df8109d6e6a6ea905aec93",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "trimAnimationTrack",
+        "rawFingerprint": "sha256:819681754c8631eef3e3f98991f7a2f53b106ce3b1c40fec99d464f9666a068f",
+        "irSourceFingerprint": "sha256:819681754c8631eef3e3f98991f7a2f53b106ce3b1c40fec99d464f9666a068f",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "validateAnimationTrack",
+        "rawFingerprint": "sha256:3ea8d827119680c465f8f1c08f175221bfe903bb30af3966a155ae04e851c8d1",
+        "irSourceFingerprint": "sha256:3ea8d827119680c465f8f1c08f175221bfe903bb30af3966a155ae04e851c8d1",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "cloneNumberBuffer",
+        "rawFingerprint": "sha256:56d5a71aaf2f8e156472fdf43270fd6795abe41708ed3bf6827e9703d9233d93",
+        "irSourceFingerprint": "sha256:56d5a71aaf2f8e156472fdf43270fd6795abe41708ed3bf6827e9703d9233d93",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "copyKeyframeValue",
+        "rawFingerprint": "sha256:a8a6432e8aafc0e3cdda64f4622109b12a808207f46c605fab870c212fc8b353",
+        "irSourceFingerprint": "sha256:a8a6432e8aafc0e3cdda64f4622109b12a808207f46c605fab870c212fc8b353",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "keyframeStride",
+        "rawFingerprint": "sha256:77ed62d4bbd7102f42c0ffb8b442fe336754659119db38e2d5f4eb3d323abddd",
+        "irSourceFingerprint": "sha256:77ed62d4bbd7102f42c0ffb8b442fe336754659119db38e2d5f4eb3d323abddd",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "keyframeValueOffset",
+        "rawFingerprint": "sha256:ce606dc82b35170e8704e4d0b7a3427938480661f477090d7f38c10fae61f9a3",
+        "irSourceFingerprint": "sha256:ce606dc82b35170e8704e4d0b7a3427938480661f477090d7f38c10fae61f9a3",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "normalizeFlatQuaternion",
+        "rawFingerprint": "sha256:3c0eb378d901657036fc6544526ce2dd597a3d99e612c2ff940a0dfa72c431c9",
+        "irSourceFingerprint": "sha256:3c0eb378d901657036fc6544526ce2dd597a3d99e612c2ff940a0dfa72c431c9",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "sampleCubicSegment",
+        "rawFingerprint": "sha256:203784436de5aa20d8335dac6a9e46df43f30b4d025a26416166f716f38f594d",
+        "irSourceFingerprint": "sha256:203784436de5aa20d8335dac6a9e46df43f30b4d025a26416166f716f38f594d",
+        "match": true
+      },
+      {
+        "file": "packages/animation/src/animationTrack.ts",
+        "function": "slerpFlatQuaternion",
+        "rawFingerprint": "sha256:9b08b69a1e005abe948ae9941fc55cc725ae91e62cbb1dd92bcde027261f6b47",
+        "irSourceFingerprint": "sha256:9b08b69a1e005abe948ae9941fc55cc725ae91e62cbb1dd92bcde027261f6b47",
+        "match": true
+      },
+      {
+        "file": "packages/easing/src/easeCubicBezier.ts",
+        "function": "easeCubicBezier",
+        "rawFingerprint": "sha256:23a5fe65cdee9102442d6d0949a97ffd22c4aa05c30bdd4bd8e8b00ac830d578",
+        "irSourceFingerprint": "sha256:23a5fe65cdee9102442d6d0949a97ffd22c4aa05c30bdd4bd8e8b00ac830d578",
+        "match": true
+      },
+      {
+        "file": "packages/entity/src/entity.ts",
+        "function": "allocateEntity",
+        "rawFingerprint": "sha256:cc77da336a484e047eea18472719919b3c1992ca87cff40616d5f35799dcdc46",
+        "irSourceFingerprint": "sha256:cc77da336a484e047eea18472719919b3c1992ca87cff40616d5f35799dcdc46",
+        "match": true
+      },
+      {
+        "file": "packages/entity/src/entity.ts",
+        "function": "finishEntity",
+        "rawFingerprint": "sha256:332b11f75ece02989572ab6944b9fb93daca2ae88c4e81bc957609ad1b762d3c",
+        "irSourceFingerprint": "sha256:332b11f75ece02989572ab6944b9fb93daca2ae88c4e81bc957609ad1b762d3c",
+        "match": true
+      }
+    ],
+    "selectedHeaders": [
+      "flight/scene2d_formats/lottie_bezier_path.hpp",
+      "flight/scene2d_formats/lottie_document.hpp",
+      "flight/animation/animation_track.hpp",
+      "flight/easing/ease_cubic_bezier.hpp",
+      "flight/entity/entity.hpp"
+    ],
+    "replacementBodies": false,
+    "sourceBodyRewrites": false,
+    "irBodyEdits": false,
+    "unrelatedClone": "cloneNumberBuffer visibly refused; declaration only, no body; using it fails to link"
+  },
+  "compiler": {
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "count": 141,
+    "patches": [
+      {
+        "dependency": "flight-compiler",
+        "digest": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164",
+        "id": "compiler-dependent-indexed-access-reference-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b39dfc0234da13d16399e66bac612b4be38a26753e29d40007146ffb0024d08f",
+        "id": "compiler-dependent-erased-object-recovery-template",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/materials"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e",
+        "id": "compiler-error-name-and-erased-error-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7",
+        "id": "compiler-unrepresented-error-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/log"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b02689718a4b47624f10ae30b3f8745b84e72659d7f517fbad834ad5467026ff",
+        "id": "compiler-structural-row-weak-keys",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "17f47ccc904d65fb495d38f45d2c59a5bff9989a59db17a6cc01c6d047698510",
+        "id": "compiler-concrete-owner-union-row-assertions",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5aed3efd29ec4939052bceb5504930b7cb8a7e62fcdd06ba38a50b8e6912f255",
+        "id": "compiler-union-import-runtime-identity",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3436926b4125a60232033d4dbc4526c165781fc90223e2ff29a0255b19326f46",
+        "id": "compiler-erased-ref-weak-map-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8e2fdcadd6b9cf7bfb1b6b7fc65d1461e7cbacec2edf4747fc391d815f238644",
+        "id": "compiler-generic-erased-map-reference-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "83614af822c7e842e6d75d94c3d8d95d5ef85edd18b655fea6728f3e8a7162fa",
+        "id": "compiler-nullable-structural-row-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0072f315ef85d72f36a1edbbc886f83d414ba8ac8375f9e530e3dbc83eec577e",
+        "id": "compiler-external-optional-result-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "288b524ea0a3389f7bc2bd2decbf18954ad8eb33de04c180e4fa568e8d8775bc",
+        "id": "compiler-readonly-union-view-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "052bf7fe5b4753a4dc343fe642bc78d3cfb175bb2cc295c9c0b1a27c75983bdf",
+        "id": "compiler-contextual-imported-union-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "06f969236c93eb9a12726deaabf20794e7e8d7d24df6949907b2a24b13d22a8b",
+        "id": "compiler-present-dual-sentinel-multivariant",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/texture"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "14655ce90d5c9a22f5e1c435e8b9a024fcfa591e168d1e867e9946db5ef3451d",
+        "id": "compiler-exact-variant-owner-priority",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a5370242528a7b45b42d12555e84de83702e6a213a184ee60d6a529bec88babb",
+        "id": "compiler-imported-alias-outer-union-abi",
+        "module": "packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts and cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "351729a88df1ad6eba3fe0924ff5893edd155828caa42894fb0d949fe31b1325",
+        "id": "compiler-canvas-context-overload-result",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "53371cbd4743e855da063a9f475e6b13f8d642aae895a6f8dfeb57df0f0b3e53",
+        "id": "compiler-owner-preserving-named-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5176cacf29fcc11f8007b1097930b8856507cb018b044e7a4e04920173a282e4",
+        "id": "compiler-flattened-optional-chain-union-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "652a856aaecd27035ecf47db110486bb249d5d16b8de8041c810e0b956752d95",
+        "id": "compiler-imported-readonly-view-owner-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e6b567cd7244cac90f437fcd978f1c14fc610e0cd489532aaac13c0c08ecc78d",
+        "id": "compiler-imported-variant-owner-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "36a2a678fcee9bbd854e056ce8ef03270790c996d494e5450fdab8cd492aae06",
+        "id": "compiler-concrete-structural-union-view-selection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "622b0503864d02b2134889cd21b4a5368d091577587abba4df92052042276a4a",
+        "id": "compiler-structural-union-exact-native-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "18d87f3574366f6592917d4d54c778d21150e62b203bb7964b621e5cf79071e7",
+        "id": "compiler-imported-alias-parameter-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "809adc849b8c486b932c99ee8b1af2f3a45f52b2c82ebb2fd7283f76bb35926f",
+        "id": "compiler-imported-alias-local-flow-abi",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3010ebb868a6dbdf12ca200a2a87bae7fd38a2e55d227231c3af2c6aa33f2462",
+        "id": "compiler-imported-alias-call-declaration-recovery",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b6609b8eea331d2067a24aa4799ca507295e4261cf8b5f13dc202b7432a91766",
+        "id": "compiler-error-stack-cause-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a6faab48365c93a0daf4bd57691fd600f1899d7b2378ab5aa195c7039971ceb8",
+        "id": "compiler-host-timer-return-type-handle",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "1638ff18e9efecf738b72c7df1afec3189c1c0d43b828d47a6db1dd10758e0a0",
+        "id": "compiler-nullable-optional-parameter-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7f7ae843354297c55eba1d93337162c687494a6a564277bfe56d55d20b613f07",
+        "id": "compiler-closed-key-external-member-call",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c1d3393d6f91cbb89404155d2cfd774f71847aa50501571dfddbb673de0e58f5",
+        "id": "compiler-host-object-dynamic-index-refusal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad4b95bf90a84830a1c3c2d91796009b68cd4c7a9ff73b4ab83ef86d3dd4cb18",
+        "id": "compiler-nullish-assignment-statement-in-catch",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "46d8947034986c7143c66cd63b91f4bd7e31ce779b357fdf39fb77af61bb35b0",
+        "id": "compiler-catch-recorded-slot-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7d7b38db348726bae56840f5bb5a1a88792218b9d3f42ef3861420eac1102042",
+        "id": "compiler-catch-handler-breadth",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10",
+        "id": "compiler-readonly-view-argument-substitution",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4193c5b5211770c8b3ee97f2e15a17a8e694662335e1979185795bb1f04a3e64",
+        "id": "compiler-host-timer-local-storage-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/power"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "523f94df836e5f7562357768b1fdbade55890276d67ad4c5a9a387038578bc9e",
+        "id": "compiler-nested-nullable-property-narrowed-null-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ec9d24d1e269c2ed8d9fe6589ca57d933b0f208811a161fe338d597620997d6",
+        "id": "compiler-placeholder-graph-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts, packages/compiler-types/src/compilerBackendContract.ts, packages/compiler-orchestration/src/compilerPackageCompilation.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f2a6f053e15631b4b08e8bc18235cd2d04cdbdf80ec4c4af9466de0e4a08473d",
+        "id": "compiler-constructor-parameter-property-assignment",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8eba5041a0db63560cde1d6b2fec88d15db7886d4851fed5739e8058126fa67d",
+        "id": "compiler-indexed-element-presence-test",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f281424105f66dd2a847b79e4051e82854d03d10e2f6e51174f4219f89e111ee",
+        "id": "compiler-constrained-type-parameter-union-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ed37cd746bee997f5f3e615a16c4dd4f2ec06d4c5888d28c4135cf32d6d25ebc",
+        "id": "compiler-dependent-callable-pack-reuse",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5105e7a3a57c86cbf2b4beb8ef2b26fce2d7066234ee08ab9f687da2ce140b14",
+        "id": "compiler-runtime-instanceof-lowering",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b82d88ab8157b69233e22292e58922e5e7fab9c1120f8282ebb83b7e0dd41849",
+        "id": "compiler-profile-type-name-evidence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2d10c022c42dc8006ad924ef3c040bb4845ed8d02e2f46b902c4d62de7f772e0",
+        "id": "compiler-guarded-path-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e48d51c610294a6eb138036d3db11734914dc5462f47abe51901d5e62ec3433e",
+        "id": "compiler-catch-await-owned-carrier",
+        "module": "packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts",
+        "package": "@flighthq/compiler-lowering"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e575a351676fde146b22003c49379629c6aa5d459c8fea41529930486c0caa4e",
+        "id": "compiler-promise-resolve-domain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6493ede41b94d493501690ef7094be544feaa14d36e8c498e32c5c07c982582a",
+        "id": "compiler-callable-arity-adaptation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8faa111a17b55f48adb6c83173c5e22e145a19accf1e1a4aa125a439fce63c89",
+        "id": "compiler-nul-string-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d609d18915598b6a5b363d54a7d1886985ffbc66a02742442a0cea75890706a8",
+        "id": "compiler-generic-receiver-null-write",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e2b35fd34c7ae5cb0fb2c65ea762d49573cb8948be5720479878d81668f4ac95",
+        "id": "compiler-new-map-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "597593e1b256d84f62e056df3d120da9c8dfac2b130a84db2a8510989cb2b61b",
+        "id": "compiler-new-set-copy",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "334ca08252477612fb3a869c28ba4d4a43ac534f321c1a5b7fbf0e4ac1600509",
+        "id": "compiler-new-set-from-iterator",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "faed6e00141e3e976e5ab08a7067b44f15bd8b98b212676cd59ab91fcba10652",
+        "id": "compiler-nullish-conditional-absent-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "d74c93685375817aefca246260b6972a9ec383b528f291d094fbedc1c19bce34",
+        "id": "compiler-declared-present-reference-chain",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5ae844a099b0bbbac6be9552e9c7b89d73e811e93ea453eac4275ee31786d52d",
+        "id": "compiler-asserted-empty-object-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9c008abdd99d3dcb22652f4ee15a3680e4a2b89d3bc7fd41036a50322b06bf7c",
+        "id": "compiler-coalesced-union-member-narrowing",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5072d8f9f0b8493929f273b31c113daa0ccbdb3f5c08e5f40b5c0c9b58146c35",
+        "id": "compiler-narrowed-coalesced-arm-slot",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4d618509cc70d0ebc6e82a221cb50edc21531426c4944f2fec254ee5f63bfc9",
+        "id": "compiler-dependent-indexed-access-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "05c0f2a60d83a99fc4dc39e41c5178846388a67113db0f59538eb78fad53cd89",
+        "id": "compiler-async-closure-coroutine",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c89b56761105c07c388b1676c1ef38122b8737c560aba5e289cc25f14ec066d2",
+        "id": "compiler-exported-type-owner-cache",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fc1b04a682a8ce4c4b2595617d8cc60d8c04bbb6bc015249f9a6b6b36c209a8",
+        "id": "compiler-derived-render-state-owner-fixture",
+        "module": "packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b8f09f5a35986a3afbf96e694f0d0f792849b9c1d81eb5c14d280fa6f8877f7c",
+        "id": "compiler-shadow-checked-capability-flow",
+        "module": "packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "353b1108df83022607052dee0d64fdae2d8206eca8fdd28eb93dc4229dbb9f78",
+        "id": "compiler-named-reexport-provenance",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts emitReexportsCpp",
+        "package": "@flighthq/scene3d"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0044f4f924c67ad11c04d3d8cd1f685e1205e5af0eebd4cc468ca4db0bbff352",
+        "id": "compiler-erased-array-iteration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "20d4b5c1b4148c444993dd19fe3d6cb2503b463d020fb71016006077f4f4e8fe",
+        "id": "compiler-nullable-map-get-nullish-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8ae3e02fb34baaba6cfa8bb200b31bd57a647bb011e1e3343bde2bc3c6532346",
+        "id": "compiler-interface-native-heritage-widening",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b9beb845391e546decdb6ea11754f77821ddf5d374fa56ad689363f9559adc1c",
+        "id": "compiler-inferred-invocation-type-arguments",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "953aeb3686a0f53b0ad009e039e3b2589704d27186b11519bd120d95da9e188f",
+        "id": "compiler-erased-array-length-index",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8a1e679fa8ce48194555fff6b889a2b8e7b8a7523e3f5c45395d047f4406f25a",
+        "id": "compiler-present-readonly-row-context",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPresentReadonlyRowReturn.test.ts",
+        "package": "@flighthq/scene2d-canvas"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "248f9ea3cafa23026b2cbca59fc9fca90b2b3b4b5e434743daf68e48aadfeaab",
+        "id": "compiler-callable-value-identity",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/shape"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25ba04b3549c4d93e001e3e0721f9e64299ee889947c353ea7b4893b10fdfc35",
+        "id": "compiler-optional-record-literal-materialization",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppOptionalRecordLiteralMaterialization.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f78224dedf15bea1a840b6b140ad743fe41635c270fdb2ddb9caab76e71d05e6",
+        "id": "compiler-readonly-json-record-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ad62c0d079d119e37e03ad454a63cdb459e2def8bb9f225a380ef4bcdc43b618",
+        "id": "compiler-typed-record-missing-key",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4c95512067d677d96e64cc51bbbf82308fd59b8b1b4833ae0d47b0bd9a0c0bf4",
+        "id": "compiler-nullable-element-dual-sentinel",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0101824e039123fd94452c55daaaded18167267f9836389d605086d1e74a429f",
+        "id": "compiler-readonly-contextual-source-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppReadonlyHelperProjection.test.ts",
+        "package": "@flighthq/scene3d-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "388236ff6db12cf2ea02ed52df80e0957fa4ae1710b0a740dd5db74cbd1ae9d1",
+        "id": "compiler-contextual-optional-map-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppContextualFreshMapOwner.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "9946c3d99b06abca614fbcaa90a9ac6d882b093c6546f80d993f8be9fc436709",
+        "id": "compiler-contextual-new-value-object-any",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/loader"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fe7118e48b29b2183fd4293bb23b2da2212f5211b30f13af39dd918b7038df63",
+        "id": "compiler-external-object-field-literal-type",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f7450cb1857a5051ac4895c27f11d9ca5b8614163868ee1764fec67ae0821635",
+        "id": "compiler-private-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ab01011310ba280544716fbb854bcc55fee7665387bfd799d813291a67294cce",
+        "id": "compiler-record-computed-delete",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordDeleteProperty.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "3bf3c7b22d726c4b6f38eb881ca7aea83dbb11b7f186eba285321bb5b8deec42",
+        "id": "compiler-primitive-record-nullish-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrimitiveRecordNullishStorage.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "41f0bc10a57c1ab32d932a13c81b93d2f735c9edaaac53c561ebc51e4d5a53bc",
+        "id": "compiler-erased-external-member-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "66424d0fafd05a309bb73a2f4385128e265527a5e539c78af02f8cb599d661eb",
+        "id": "compiler-interface-absence-refinement-heritage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fd765af8a838ff382afe73debf4e2e1d39549ca7b54a40fdb226d1e67257b787",
+        "id": "compiler-membership-test-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "378a57cf7bb87bf1658d129e412744c48c01791865672bcbafbd65bf0407229c",
+        "id": "compiler-regexp-capture-member-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2fae3e8559b82049666a8cd900e4a29f554482382f88bf47522ebcd84486f61c",
+        "id": "compiler-defaulted-nullable-present-storage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppDefaultedNullableBinding.test.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e3f3e239ad2c4889e564df21456fa5ec0d300991e9c5196c0a1b391d95e86c2c",
+        "id": "compiler-structural-member-view-assertion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "69fa8e0df693a62904323d858a98fe51dd8af6aaa6153d6ca5f2ef7f98235899",
+        "id": "compiler-private-guarded-json-read-flow",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateGuardedJsonReadFlow.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7671f5b020b0ed09e358c5aa8ebf64a4523aa007c76916a78b02b6cc39849022",
+        "id": "compiler-contextual-tuple-element-array-literal",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene3d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2276aca307eed2259bdb1ea3137f621aeb565ec170c03c4806be92ff8f613490",
+        "id": "compiler-finish-entity-construction-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "591ac0c8444ec8973095cbd1b12564604036a9226d3ccc4786b76ddcf6fd1543",
+        "id": "compiler-record-missing-key-falsiness-guard",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppRecordMissingKeyGuard.test.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4e0557549d81e925ab43e163cd061564224c5ea57d87a2464291d2f886e5af91",
+        "id": "compiler-inferred-member-written-union",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "03ab2079a4035fef44a6bbafdb662db109f7b1f47886c22f609d6922cfd2f046",
+        "id": "compiler-symbol-membership-variant-arm",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts and packages/compiler-backend-cpp/src/cppSymbolMembershipArm.test.ts",
+        "package": "@flighthq/compiler-semantic"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "ae8ba1319364e05b5f229d3dda15a15a8110c632ad3657c5de5a1b59f224ec4f",
+        "id": "compiler-numeric-enum-string-conversion",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppNumericEnumStringConversion.test.ts",
+        "package": "@flighthq/render"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f4a6d558dff6861711348dd6c8a0553d0fdd15ec40031f8a56362f3db10a90cd",
+        "id": "compiler-inherited-alias-reference-representation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a627d6138a16a8964a09ff984ef439636f83d111973550fa317cb98dbfa95410",
+        "id": "compiler-private-record-forwarded-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts and cppPrivateRecordForwardedReads.test.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "39af02d1a83f3cdca42ab0c843b9660faa08d2223162c9ea8166a3115980b509",
+        "id": "compiler-guarded-indexed-nullable-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "145c9f1cd24d89af939b992c70dbe621f4bbd181cba18486c4d151b639a92cda",
+        "id": "compiler-loop-bound-indexed-element-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "e931613ede280463c98560c37b3f3819871e949f491dc83eeecb1e21e5b71830",
+        "id": "compiler-checked-derived-member-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "25a6e4beb1df63018a1dd7d1a2446fbf834e3e736ea0acad6e6459b13167b281",
+        "id": "compiler-structural-value-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "63b092e04423d5df5692b68ec65a4a6b464ef26f3840d4386c18995b58b134b5",
+        "id": "compiler-single-carrier-union-member",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/skeleton2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c2eea4d061e189620cfb71335e15ef85fce24fe71d1c8b6725a9fb245c1f7eb7",
+        "id": "compiler-inherited-callable-initializer-qualification",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b4ca431185b332354a76a73a34582e02240dcc9286d3828583d7615c645f5f0a",
+        "id": "compiler-self-returning-array-iterable-lifetime",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "09962470833600196748e2955962ec8a19673d1fb9005b6f47c82bed9bb5cb32",
+        "id": "compiler-shared-reference-cells",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "fc98f4858d4cc1f7329bbd906bab057847cb3f7c283df2e2f3ccad2606db2bc8",
+        "id": "compiler-inherited-callable-declaration-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "34e82ebcffb91dbd995054ef6548f4e88d3f44b1f04f37bbabbc8467e3303b1d",
+        "id": "compiler-checked-record-member-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/types"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "8546de0b8204501adefb7c7d01adae6b6c56242bf38146774394dd9e741017b7",
+        "id": "compiler-private-json-record-graph-reads",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "552a72253c68a66b043fa604af7135545012d8ee0b40e789597c6518fe793100",
+        "id": "compiler-json-assertion-scalar-row",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "695dd5568912c3d87080e836dc2738f17aedc9def76b42ef5857a4a5707b920d",
+        "id": "compiler-symbol-own-presence",
+        "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts, packages/compiler-types/src/compilerOperatorSemanticIntermediateRepresentation.ts and packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "5fb75e2fc9b47274854cfda989f9fd6996edb158ace6a30f52bcc350aee482b4",
+        "id": "compiler-readonly-named-callable-views",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a12042c5fadf164d0b25101c3f004cd46d99ba7051dbb345ef078ee0e979d3db",
+        "id": "compiler-nullish-map-construction-and-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-gl"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "19dfb5e6a5c4ef6201cc23fe0dbdee53a2fbe2a9bb134fe0065bec4be20d2a12",
+        "id": "compiler-nullable-json-and-indexed-string-trim",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "726eeaa6c62e2957869f8e8af77e10c6e061c2be4fb0a5764bfdea03352d3507",
+        "id": "compiler-erased-array-selection-and-fill",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2190c726952f0094779da59a6fddc76bcbf50873a3ef6ffd1d59c417da1f968b",
+        "id": "compiler-erased-host-result-evidence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "58871773838c4eb4fed581bc7ab90466eb75045a90459f83622d57985e8de758",
+        "id": "compiler-lazy-nullish-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "2064d76712c6322c4142ee492c3bf7e34482927138b110a3a9699982e9c79d81",
+        "id": "compiler-structural-value-carrier-host-handle-read",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/render-wgpu"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a2b481665a7b79c982bd0f0eba5bea6b75491f416f47d7c28b586f8c13b0b8c9",
+        "id": "compiler-generic-array-owner-and-narrowed-field",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6039c5df40c9568ecd3ee62bc3be4b93b4d104e774455c056b646d3a617c3656",
+        "id": "compiler-typed-empty-fallback-iteration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a4396017b29ea09288e5426bf8438d36689edac093b06b44837474b54afccad7",
+        "id": "compiler-narrowed-filter-and-optional-subset",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "65ca74c364ca1be7ad20c35c41cc1018d13d957b00ce1d3ce605c552e6dcef87",
+        "id": "compiler-lazy-json-union-document-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/spritesheet-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7d33d6372b467a651a6e5e4a662f924dfeaf480a1ee5adcad8ecc6486cb4e841",
+        "id": "compiler-original-optional-slot-and-erased-membership",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "09e0c030079a77564ebfa25915007d0b074c9dea8d83456fe6163c24cd7bbfeb",
+        "id": "compiler-readonly-forwarded-options",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "cfc8dd6213ae6bd5907e0db9717cacc351afcf2255389b16de4841092a1bb429",
+        "id": "compiler-closed-readonly-record-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "7f3817751956daf842777ad49c83cfe4d3c7bf789fb83f61e1607e4aabe4671d",
+        "id": "compiler-original-lottie-array-and-object-carriers",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "63270bc87ce794fb48f468ae0a20613cdd9d3756279bfcc39e0dc28d9cf328ad",
+        "id": "compiler-generic-nullish-callable-default",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/node"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "813375db2c9fbdd07e194025d72e667bfda3210e4301d64f81a9b1b021eaf3b4",
+        "id": "compiler-named-required-result-view",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/particles-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "4d3ef0fba1f2c04b1feb81fc79a3d2755384472dbb4481f6c9540ac90eb9cb4b",
+        "id": "compiler-json-readonly-sequence-owner",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "0b19e5272666de7a6ed49750850a6afc199fe449632e140b99a54d8f7cdf5983",
+        "id": "compiler-interface-to-class-owner-adoption",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "bca2b847cf6f9fa49a20a306870fc85f72de9a893b3cd158e325e8d16314c319",
+        "id": "compiler-class-interface-heritage",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "a34fbd9bd3fa7689b1a8e4dc08fc22c875a64df44d4a0ad3454e3fbbbca44474",
+        "id": "compiler-erased-member-query",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "6926cd5307168e9011fc280fec61352ddedb7409657b1f7ac71e647841671184",
+        "id": "compiler-optional-chain-dual-sentinel-result",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "cd45bebe5e2bd9817ac518c0fe97f0aaed08c92fc92a0ff0e8771e2061064297",
+        "id": "compiler-native-literal-own-presence",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/spritesheet-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "131619502d6135284aea8d7102a94fb7c9aed9cde8615f01113cb103c8b28209",
+        "id": "compiler-json-optional-member-argument",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/spritesheet-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "780f06570b20770d7da2b86766b8732f3ebd984d11ab241711e3613c730470c5",
+        "id": "compiler-original-lottie-carrier-boundaries",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "b592912bb91f1a63e0db49eb024fd7ea1eccff6c7ec7913bab9a22559c13c353",
+        "id": "compiler-fresh-mapped-indexed-object-allocation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/scene2d-formats"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "1efe337bed596d47224a98e938614de412d20be2bb6d51becca18a4cc8255c50",
+        "id": "compiler-class-field-registration",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "f676b9f3a12cd18591525aa3a904a0284588493f414ba0ae1fa1b7cc39f5ab63",
+        "id": "compiler-imported-nullable-guard-carrier",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "aa459dfd2325de7ed4c70db0cf7a504a80b22b83fc6a7f91b58ba70c464d5ddd",
+        "id": "compiler-narrowed-union-absence-preservation",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/swf"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "361155c47191d300268f1a24c1f29dc05e7af69e486eb8815028f3df7919a6d6",
+        "id": "compiler-erased-readonly-json-projection",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/compiler-backend-cpp"
+      },
+      {
+        "dependency": "flight-compiler",
+        "digest": "c0311e76ac9b68a40e17f84ac6ecdf12d2cb530e2af04da600a2447f9f0f5a95",
+        "id": "compiler-nullable-indexed-fallback",
+        "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+        "package": "@flighthq/animation"
+      }
+    ],
+    "backendSha256": "13cd0e68c520a7f47351e48be91c767c8f7779137ff70af45595d6bf058cb140",
+    "testSha256": "f1900d1187eaa8e768ad0acc364b3b02032b10a91a2d4e3e27d453ac5a04f483",
+    "manifestSha256": "cdbce6b01229108968ff88b912bc42a85f16eb256e4294a3efbb78cef109fdd4",
+    "strictBuild": {
+      "exitCode": 0,
+      "log": "compiler-final-public141-build.log",
+      "command": "node /tmp/builder3-result-owner/compiler/node_modules/typescript/lib/tsc.js -p compiler-final-public141/tsconfig.build.json --tsBuildInfoFile bezier-final-public141.tsbuildinfo"
+    },
+    "focused": [
+      {
+        "log": "public-focused141.log",
+        "runner": "Node assert adapter; Vitest unavailable, no install",
+        "outcomes": [
+          {
+            "name": "retains the original nullable easing selection and call",
+            "pass": true
+          },
+          {
+            "name": "keeps a stored null distinct from an absent indexed value",
+            "pass": true
+          },
+          {
+            "name": "accepts readonly indexed values without acquiring mutable capability",
+            "pass": true
+          },
+          {
+            "name": "refuses an unindexable present receiver instead of inventing contextual evidence",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "log": "erased-focused141.log",
+        "runner": "Node assert adapter; Vitest unavailable, no install",
+        "outcomes": [
+          {
+            "name": "projects only the elected readonly schema and reads nested values lazily",
+            "pass": true
+          },
+          {
+            "name": "captures both source arguments before either native conversion",
+            "pass": true
+          },
+          {
+            "name": "keeps mutable assertions outside the raw election and callable schemas refused",
+            "pass": true
+          },
+          {
+            "name": "emits a separate checked getter value callback without changing metadata presence",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "log": "retained-scalar-controls141.log",
+        "runner": "Node assert adapter of unchanged original selected test statements; Vitest unavailable",
+        "outcomes": [
+          {
+            "name": "emits a lazy row on the existing public row ABI with explicit native sinks",
+            "pass": true
+          },
+          {
+            "name": "runs 24 malformed-field cases, nine roots and all four native escapes against the TypeScript oracle",
+            "skipped": true,
+            "reason": "native environment gate; native checks run separately"
+          },
+          {
+            "name": "retains ordinary identical-shape rows, nominal owners, structured and unknown member paths",
+            "pass": true
+          },
+          {
+            "name": "keeps primitive roots after a nullable parsed row is narrowed by the source guard",
+            "skipped": true,
+            "reason": "native environment gate; native checks run separately"
+          }
+        ]
+      }
+    ]
+  },
+  "sourceOracle": {
+    "verifiedRawBlobs": 1250,
+    "cases": 13,
+    "behaviorCases": 5,
+    "sampleComparisons": 624,
+    "failures": 0,
+    "stdout": "{\"publicCases\":13,\"behaviorCases\":5,\"sampleComparisons\":624,\"verifiedOriginalBlobs\":1250,\"failures\":0}\n",
+    "outputSha256": "1acf24f700a76f3ccf40b8f3baf218c4a6406f55797972457c6a8ef7f74f5df6",
+    "goldenSha256": "f2c03e8413aaf3d21f803b0e2b13a8d3a728699a3dbc61864bb2a890d0a56e38",
+    "goldenWrittenInSourceProcess": true
+  },
+  "native": {
+    "name": "public",
+    "command": [
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+      "-std=c++20",
+      "-ffp-contract=off",
+      "-g0",
+      "-w",
+      "-MMD",
+      "-MF",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-original-native141.d",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+      "-I",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+      "scripts/fixtures/lottieBezierPublicConsumer.cpp",
+      "-o",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-original-native141"
+    ],
+    "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+    "buildExit": 0,
+    "runExit": 0,
+    "stdout": "{\"checks\":3358,\"failures\":0,\"sampleComparisons\":624,\"partialNumericEscapes\":7,\"behaviorCases\":5}\n",
+    "binarySha256": "cb4a03d1f83ae12347a5e97668b549ed89b6e3913109a9a0edee481c752f4749",
+    "result": {
+      "checks": 3358,
+      "failures": 0,
+      "sampleComparisons": 624,
+      "partialNumericEscapes": 7,
+      "behaviorCases": 5
+    },
+    "inputCount": 1172,
+    "inputHashesFile": "public-final-native-inputs.json",
+    "heldRichTextHeaderConsumed": false,
+    "animationSamplerOverrideConsumed": false
+  },
+  "runtimeAndCompilerRegressions": [
+    {
+      "name": "component",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/component-native141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "scripts/fixtures/lottieBezierNumericProjection.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/component-native141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "{\"checks\":424,\"failures\":0,\"partialNumericEscapes\":7,\"independentEmptySamplerOutputGaps\":0}\n",
+      "binarySha256": "068007d1e4dabb21d75818ee0a5b9ca2afc95d0072f851f47d03cd005fe5355a"
+    },
+    {
+      "name": "array",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/array-owner-native141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "tests/array_callback_test.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/array-owner-native141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "63 checks, 0 failures\n",
+      "binarySha256": "a687599a199b1aa474530227bcf5e344d270585bb43b6877d057f58a641062b7"
+    },
+    {
+      "name": "easing",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/easing-native141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/easing-final141.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/easing-native141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "19 easing checks, 0 failures\n",
+      "binarySha256": "6af38847780c262188c9c704a61bfa2c21c72fa30619834bc3b8f95bceb66f26"
+    },
+    {
+      "name": "scalar",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-native141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression141",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-regression141/native.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-native141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "586 checks, 0 failures\n",
+      "binarySha256": "698380ca6dde16330b2aef5f32d2be132d6926505f90838946443501b2713c79"
+    },
+    {
+      "name": "raw",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/raw-native141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "tests/json_raw_projection_test.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/raw-native141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "",
+      "binarySha256": "01c953cc4981fe9439d465da4c3ac5c06f0ceaeea15116c43a7a95dd7daf1d8a"
+    },
+    {
+      "name": "scalarRuntime",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-runtime141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "tests/json_scalar_slice_test.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/scalar-runtime141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": 0,
+      "stdout": "JSON scalar vertical slice: PASS\n",
+      "binarySha256": "d475de6696f6e0cacd49c3e94644adeb7924698cce240ec8b6fc97dc2562916f"
+    }
+  ],
+  "diagnosticPair": [
+    {
+      "file": "flight/types/import_diagnostic.hpp",
+      "prior139": "fa74b665ef0f4be08f599e0ded55cf5640c0ff7aebc1e7aa5254ff98ee20e56c",
+      "final141": "fa74b665ef0f4be08f599e0ded55cf5640c0ff7aebc1e7aa5254ff98ee20e56c",
+      "same": true
+    },
+    {
+      "file": "flight/importdiagnostics/import_diagnostic_collector.hpp",
+      "prior139": "df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6",
+      "final141": "df9b6331d733d50fb3aff610fe1b401fec11e321ebda71a1204c617fd957f4a6",
+      "same": true
+    }
+  ],
+  "repairs": {
+    "aliases": {
+      "files": [
+        "flight/scene2d_formats/lottie_document.hpp"
+      ],
+      "structs": [
+        "times_values_components_interpolation_quaternion_easing_segment_easings_3c26683290079166"
+      ]
+    },
+    "repairs": [
+      {
+        "appliesTo": "flight/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp",
+          "flight/node/revision.hpp"
+        ],
+        "id": "respell-reference-alias-node"
+      },
+      {
+        "appliesTo": "flight/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp",
+          "flight/node/revision.hpp"
+        ],
+        "id": "respell-reference-alias-noderuntime"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp",
+          "flight/node/revision.hpp"
+        ],
+        "id": "node-node-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp"
+        ],
+        "id": "node-nodesignals-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp",
+          "flight/node/revision.hpp"
+        ],
+        "id": "node-noderuntime-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp"
+        ],
+        "id": "node-nodetraits-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp"
+        ],
+        "id": "node-allocate-entity-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp"
+        ],
+        "id": "node-finish-entity-using-declaration"
+      },
+      {
+        "appliesTo": "flight/node/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/node/node.hpp"
+        ],
+        "id": "node-create-signal-using-declaration"
+      },
+      {
+        "appliesTo": "flight/animation/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/animation/animation_track.hpp"
+        ],
+        "id": "animation-unqualified-types-names"
+      },
+      {
+        "appliesTo": "flight/scene2d_formats/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/scene2d_formats/lottie_bezier_path.hpp",
+          "flight/scene2d_formats/lottie_document.hpp"
+        ],
+        "id": "scene2d-formats-unqualified-types-names"
+      },
+      {
+        "appliesTo": "flight/",
+        "expectedWhen": "always",
+        "files": [
+          "flight/scene2d_formats/lottie_document.hpp"
+        ],
+        "id": "math-power-runtime-call-namespace-collision"
+      },
+      {
+        "appliesTo": "flight/animation/animation_track.hpp",
+        "expectedWhen": "always",
+        "files": [
+          "flight/animation/animation_track.hpp"
+        ],
+        "id": "animation-declare-refused-clone-number-buffer"
+      }
+    ]
+  },
+  "negativeControls": [
+    {
+      "name": "previous139 compiler actual original sampler",
+      "expectedRefusal": true,
+      "log": "negative-sampler-139.log",
+      "missingBody": "sampleAnimationTrack"
+    },
+    {
+      "name": "negativeArray",
+      "expectedFailure": true,
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "-std=c++20",
+        "-ffp-contract=off",
+        "-g0",
+        "-w",
+        "-MMD",
+        "-MF",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/negative-array-write141.d",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/controls/pre-array-write",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/public-native-final141/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/overrides/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/generated/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/sdl/include",
+        "-I",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/include",
+        "scripts/fixtures/lottieBezierPublicConsumer.cpp",
+        "-o",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/negative-array-write141"
+      ],
+      "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo",
+      "buildExit": 0,
+      "runExit": "signal:SIGABRT",
+      "stdout": "empty-track: flight::Array index is outside the array\none-keyframe: flight::Array index is outside the array\ntwo-keyframe-linear: flight::Array index is outside the array\nhold-segment: flight::Array index is outside the array\ntemporal-easing: flight::Array index is outside the array\nprevious-end-fallback: flight::Array index is outside the array\nsource-index-after-skipped-time: flight::Array index is outside the array\nframe-conversion: flight::Array index is outside the array\nspatial-fallback-linear: flight::Array index is outside the array\nspatial-cubic: flight::Array index is outside the array\nline: flight::Array index is outside the array\nclosed-cubic: flight::Array index is outside the array\nlibc++abi: terminating due to uncaught exception of type std::range_error: flight::Array index is outside the array\n",
+      "binarySha256": "324f29744da3f5831717c1a8954bb458b646f5dd5d37590db29e3060bc7ea14f"
+    }
+  ],
+  "automation": {
+    "command": "node --test scripts/sourcePatches.test.mjs scripts/emissionRepairs.test.mjs scripts/overrides.test.mjs",
+    "tests": 48,
+    "pass": 47,
+    "fail": 0,
+    "skip": 1,
+    "log": "public-automation-final.log",
+    "followup": {
+      "command": [
+        "env",
+        "CXX=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/repo/out/tooling/zig-cxx-build",
+        "/usr/bin/node",
+        "--test",
+        "--test-name-pattern=the repaired caller compiles and links",
+        "scripts/emissionRepairs.test.mjs"
+      ],
+      "actualPattern": "the repaired caller compiles and links",
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "log": "declaration-link-focused-final.log",
+      "reason": "Resolved the initial missing default c++ environment skip using the existing project Zig wrapper; no install."
+    }
+  },
+  "limitations": [
+    "Seven nonnumeric coordinate/native storage policy rows PARTIAL; source JS can store them.",
+    "Animation cloneNumberBuffer remains refused and link-unavailable; no whole-animation-module promotion.",
+    "Shared emission-session projection-election state is order-sensitive after unrelated refusals. Final procedure uses fresh sessions and the byte-identical qualified Bezier module. Shared-session native abort retained and excluded.",
+    "CMake unavailable; project Zig0.17.0 direct C++20 builds used. Vitest unavailable; unchanged tests run with disclosed Node assert adapter, Two native-gated tests are explicit adapter skips. The first has a separately measured586-check native fixture; the other narrowed-primitive-root native test was not rerun.",
+    "No SDK generation or new header inventory; no normal particles conditional run.",
+    "Five old RichText product commits HELD, excluded from eligible patch and native dependency closure."
+  ],
+  "excludedAttempts": [
+    "raw-animation-original-emission.log: isolated raw lowering lacked project checker context; not used.",
+    "raw-animation-project-emission.log: missing source-patch-introduced file in raw pin setup; not used.",
+    "excluded-shared-session-public-original-native141-run.log: native bad_cast/absent properties from projection election state; not PASS.",
+    "excluded-shared-session-component-native141-build.log: historical anonymous option type name, not PASS.",
+    "excluded-fixture-alias-deduction-build.log: non-deduced conditional Ref alias in fixture-only inference; not PASS.",
+    "public-numeric-full-run.log: earlier3358 candidate used historical effective initializer; superseded by original raw-module final proof.",
+    "public-final-composition.log: inherited managed manifest date missing; repaired separately and retry succeeded."
+  ],
+  "archive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/7e6e10b2-3808-4bf4-b600-0c6b6559bf04/scratch-archives/bezier-numeric/builder3-bezier-public-numeric-qualification-v3.tgz",
+    "sha256": "133011491fc478265e6da93db1c761781d8c8ce4b20a536a070c0279385e6d86",
+    "bytes": 19110354,
+    "indexedFiles": 6016,
+    "files": 6017
+  }
+}

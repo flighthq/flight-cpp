@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include <variant>
 
 #include <flight/array.hpp>
 #include <flight/structural_ref.hpp>
@@ -30,6 +31,14 @@ template <typename Target, typename Source>
     return Target(source);
   }
 }
+
+template <typename Target, typename Source>
+struct SequenceArrayReader {
+  Array<Source> source;
+  Target operator()(std::size_t index) const {
+    return sequence_view_project<Target>(source[index]);
+  }
+};
 
 }  // namespace detail
 
@@ -121,14 +130,19 @@ class SequenceView {
     return *this;
   }
 
+  // Each alternative must already provide this exact view. Selection retains its actual owner,
+  // element projection and typed backing; no element buffer is copied or reconstructed.
+  template <typename... Sources>
+    requires (std::constructible_from<SequenceView, const Sources&> && ...)
+  SequenceView(const std::variant<Sources...>& source)
+      : SequenceView(std::visit([](const auto& held) { return SequenceView(held); }, source)) {}
+
   template <typename SourceValue>
     requires std::constructible_from<Value, const SourceValue&>
   SequenceView(Array<SourceValue> source)
       : identity_(source.identity()),
         size_([source] { return source.size(); }),
-        get_([source](size_type index) {
-          return detail::sequence_view_project<Value>(source[index]);
-        }) {}
+        get_(detail::SequenceArrayReader<Value, SourceValue>{source}) {}
 
   template <typename SourceValue>
     requires std::constructible_from<Value, const SourceValue&>
@@ -207,6 +221,13 @@ class SequenceView {
   [[nodiscard]] size_type size() const { return size_(); }
   [[nodiscard]] bool empty() const { return size() == 0; }
   [[nodiscard]] const void* identity() const noexcept { return identity_; }
+  // Recover only the exact Array already retained by this view's reader. Projected, typed,
+  // erased and foreign sources cannot be mistaken for an owning Array of this element type.
+  [[nodiscard]] std::optional<Array<Value>> array_owner_if() const {
+    const auto* held = get_.template target<detail::SequenceArrayReader<Value, Value>>();
+    return held ? std::optional<Array<Value>>(held->source) : std::nullopt;
+  }
+
   // ArrayLike<number> erases its concrete Array/typed-array carrier into SequenceView<double>.
   // AnimationTrack's clone contract nevertheless promises to preserve Float32Array backing, so
   // retain that one observable carrier fact alongside the already-retained identity. This is a

@@ -103,6 +103,65 @@ int main() {
                                     [](double value) { return value; }); }
   catch (const std::runtime_error&) { projected_threw = true; }
   check(projected_threw, "projected filter preserves predicate exceptions");
+  const flight::Array<double> output;
+  const auto output_owner = output.identity();
+  check(output.set_index(0, 1) == 1 && output.size() == 1,
+        "an indexed write grows an empty output at its end");
+  const auto output_alias = output;
+  output_alias.set_index(1, 2);
+  check(output.identity() == output_owner && output.size() == 2 && output.element(1) == 2,
+        "append retains the same observable output owner");
+  output.set_index(0, 9);
+  check(output.element(0) == 9 && output.element(1) == 2,
+        "an indexed overwrite preserves the existing tail");
+  for (const double index : {-1.0, 0.5, 3.0, 4294967295.0,
+                            std::numeric_limits<double>::infinity(),
+                            std::numeric_limits<double>::quiet_NaN()}) {
+    bool refused = false;
+    try { output.set_index(index, 5); } catch (const flight::OutOfProfileError&) { refused = true; }
+    check(refused && output.size() == 2 && output.element(0) == 9 && output.element(1) == 2,
+          "unrepresented holes and properties refuse without changing earlier writes");
+  }
+  bool write_read_threw = false;
+  try { output.set_index(2, []() -> double { throw std::runtime_error("later value"); }()); }
+  catch (const std::runtime_error&) { write_read_threw = true; }
+  check(write_read_threw && output.size() == 2 && output.element(1) == 2,
+        "a failed right-hand read preserves the already-written prefix");
+  output.set_index(2, [&]() { output.push(13); return 7.0; }());
+  check(output.size() == 3 && output.element(2) == 7 && output.identity() == output_owner,
+        "the write uses the length after right-hand side effects");
+  using NumericSource = std::variant<flight::Array<double>, flight::Float32Array>;
+  static_assert(!std::constructible_from<flight::SequenceView<double>,
+                                       std::variant<flight::Array<double>, std::string>>);
+  const flight::Array<double> numbers{1, 2};
+  NumericSource selected(numbers);
+  const flight::SequenceView<double> retained_array(selected);
+  numbers.push(3);
+  check(retained_array.identity() == numbers.identity() && retained_array.size() == 3 &&
+            retained_array[2] == 3 && !retained_array.is_float32_array_backed(),
+        "a union sequence view retains the live original Array owner");
+  const flight::Float32Array floats(2.0);
+  floats.set_index(0, 7); floats.set_index(1, 8);
+  selected = floats;
+  const flight::SequenceView<double> retained_typed(selected);
+  floats.set_index(1, 9);
+  check(retained_typed.identity() == floats.identity() && retained_typed[1] == 9 &&
+            retained_typed.is_float32_array_backed(),
+        "a union sequence view retains its exact typed backing and live values");
+  selected = numbers;
+  check(retained_typed.identity() == floats.identity() && retained_typed[0] == 7,
+        "reassigning the source variant does not replace the retained view owner");
+  const auto recovered_array = retained_array.array_owner_if();
+  check(recovered_array && recovered_array->identity() == numbers.identity(),
+        "exact Array recovery returns the original owner without copying elements");
+  recovered_array->set_index(0, 11);
+  check(numbers.element(0) == 11 && retained_array[0] == 11,
+        "writes through a recovered original Array remain visible in its view");
+  check(!retained_typed.array_owner_if(), "typed backing cannot be fabricated as an Array owner");
+  const flight::SequenceView<double> projected_array(flight::Array<int>{1, 2});
+  check(!projected_array.array_owner_if(), "an element conversion cannot fabricate an Array owner");
+  const flight::SequenceView<double> foreign_array(std::make_shared<std::vector<double>>(2, 5));
+  check(!foreign_array.array_owner_if(), "a foreign indexed provider remains a foreign owner");
   std::cout << checks << " checks, " << failures << " failures\n";
   return failures ? 1 : 0;
 }
