@@ -1,0 +1,264 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -15081,7 +15081,85 @@
+   }
+   const target = getCppClosedCallableType(expression.type, context, new Set());
+   const source = getCppFunctionDeclarationForBindingCpp(expression.expression.expression.reference.binding.id, context);
+-  if (!target || !source || source.parameters.length !== 0 || source.typeParameters.length === 0) return undefined;
++  if (!target || !source || source.typeParameters.length === 0) return undefined;
++  if (source.parameters.length > 0) {
++    // The unknown assertion is a source-level view of this exact declaration, not erased storage.
++    // Reuse the existing generic substitution and representation evidence; never choose a constraint
++    // owner, drop an optional argument, or synthesize a new callable implementation.
++    const ids = new Set(source.typeParameters.map((parameter) => parameter.binding.id));
++    const inferred = new Map<string, Readonly<IrType>>();
++    const refuse = (): never =>
++      emissionError(
++        context,
++        'generic callable assertion requires one exact declaration specialization: every type argument, constraint, optional parameter and result representation must be proven; the compiler will not guess an instantiation, erase the function into Any, adapt its signature or materialize an owner',
++        'cpp-generic-callable-assertion-source-unproven',
++      );
++    if (
++      source.async ||
++      source.overloads.length ||
++      target.typeParameters.length ||
++      expression.expression.type.source !== 'unknown' ||
++      source.parameters.length !== target.parameters.length ||
++      source.parameters.some(
++        (parameter, index) =>
++          parameter.rest || target.parameters[index]!.rest || parameter.optional !== target.parameters[index]!.optional,
++      )
++    )
++      return refuse();
++    for (let index = 0; index < source.parameters.length; index++) {
++      if (
++        !collectCppResultTypeSubstitutionsCpp(
++          source.parameters[index]!.type,
++          target.parameters[index]!.type,
++          ids,
++          inferred,
++          context,
++        )
++      )
++        return refuse();
++    }
++    // Parameters may already prove every generic argument. In that case the final substituted
++    // signature comparison checks the return, including unions, without inferring it a second time.
++    if (source.typeParameters.some((parameter) => !inferred.has(parameter.binding.id) && !parameter.default)) {
++      if (!collectCppResultTypeSubstitutionsCpp(source.returns, target.returns, ids, inferred, context))
++        return refuse();
++    }
++    const arguments_ = source.typeParameters.map(
++      (parameter) => inferred.get(parameter.binding.id) ?? parameter.default,
++    );
++    if (!arguments_.every((argument): argument is Readonly<IrType> => argument !== undefined)) return refuse();
++    const plan = createIrTypeParameterSubstitutionPlan(source.typeParameters, arguments_);
++    const probe = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++    if (
++      !source.typeParameters.every((parameter, index) => {
++        if (!parameter.constraint) return true;
++        const argument = arguments_[index]!;
++        const evidence = getCppTypeParameterConstraintCpp(argument, context) ?? argument;
++        return areCppTypesRepresentationEquivalent(
++          resolveIrTypeStructuralSubstitution(parameter.constraint, plan),
++          evidence,
++          probe,
++        );
++      })
++    )
++      return refuse();
++    if (
++      !source.parameters.every((parameter, index) =>
++        areCppTypesRepresentationEquivalent(
++          resolveIrTypeStructuralSubstitution(parameter.type, plan),
++          target.parameters[index]!.type,
++          probe,
++        ),
++      ) ||
++      !areCppTypesRepresentationEquivalent(
++        resolveIrTypeStructuralSubstitution(source.returns, plan),
++        target.returns,
++        probe,
++      )
++    )
++      return refuse();
++    return `${emitIdentifierReference(expression.expression.expression.reference, context)}${emitCppTypeArguments(arguments_, context)}`;
++  }
+   const targetReturnConstraint = getCppTypeParameterConstraintCpp(target.returns, context) ?? target.returns;
+   const parameterIds = new Set(source.typeParameters.map((parameter) => parameter.binding.id));
+   const substitutions = new Map<string, Readonly<IrType>>();
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGenericFunctionValueAssertion.test.ts
+@@ -0,0 +1,172 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(text: string): string {
++  const [lowered] = lowerTypeScriptSources([
++    {
++      sourceFile: ts.createSourceFile('/flight/packages/probe/src/probe.ts', text, ts.ScriptTarget.Latest, true),
++      packageName: '@flighthq/probe',
++      upstreamDirectory: '/flight',
++    },
++  ]);
++  expect(lowered!.diagnostics).toEqual([]);
++  return emitIrModuleCpp(lowered!.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('retains exact original generic function specialization: required_unknown', () => {
++  const output = emit(
++    'export function identity<T>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++  );
++  expect(output).toContain('identity<R>');
++  expect(output).not.toContain('static_cast<flight::Any>');
++  expect(output).not.toContain('generic_native_owner');
++});
++
++it('retains exact original generic function specialization: optional_unknown', () => {
++  const output = emit(
++    'export function identity<T>(value?:T):T|undefined{return value;} export type Factory<R>=(value?:R)=>R|undefined; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++  );
++  expect(output).toContain('identity<R>');
++  expect(output).not.toContain('static_cast<flight::Any>');
++  expect(output).not.toContain('generic_native_owner');
++});
++
++it('retains exact original generic function specialization: constrained_exact', () => {
++  const output = emit(
++    'export function identity<T extends number>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R extends number>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++  );
++  expect(output).toContain('identity<R>');
++  expect(output).not.toContain('static_cast<flight::Any>');
++  expect(output).not.toContain('generic_native_owner');
++});
++
++it('retains exact original generic function specialization: default_generic', () => {
++  const output = emit(
++    'export function identity<T,U=number>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++  );
++  expect(output).toContain('identity<R, double>');
++  expect(output).not.toContain('static_cast<flight::Any>');
++  expect(output).not.toContain('generic_native_owner');
++});
++
++it('refuses unproven unknown-bridged generic function signature: conflicting_unknown', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(first:T,second:T):T{return first;} export type Factory<R>=(first:R,second:string)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: constrained_wrong', () => {
++  expect(() =>
++    emit(
++      'export function identity<T extends number>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R extends string>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: return_mismatch', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(value:T):T{return value;} export type Factory=(value:number)=>string; export function select(factory?:Factory):Factory{return factory??(identity as unknown as Factory);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: unused_generic', () => {
++  expect(() =>
++    emit(
++      'export function identity<T,U>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: optional_mismatch', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(value:T):T{return value;} export type Factory<R>=(value?:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: rest_source', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(...values:T[]):T{return values[0]!;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: original_argument_shape', () => {
++  expect(() =>
++    emit(
++      'export interface Runtime{value:number;} export function identity<T extends Runtime=Runtime>(methods?:Readonly<Partial<Runtime>>):T{throw 1;} export type Factory<R extends Runtime>=(obj?:Readonly<Partial<R>>)=>R; export function select<R extends Runtime>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('preserves existing independent function-value control: required_direct', () => {
++  const output = emit(
++    'export function identity<T>(value:T):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??identity;}',
++  );
++  expect(output).toContain('return (factory.has_value() ? factory.value() : identity<R>);');
++});
++
++it('preserves existing independent function-value control: optional_direct', () => {
++  const output = emit(
++    'export function identity<T>(value?:T):T|undefined{return value;} export type Factory<R>=(value?:R)=>R|undefined; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??identity;}',
++  );
++  expect(output).toContain('return (factory.has_value() ? factory.value() : identity);');
++});
++
++it('preserves existing independent function-value control: erased_source', () => {
++  const output = emit(
++    'export type Factory<R>=(value:R)=>R; export function recover<R>(value:unknown):Factory<R>{return value as unknown as Factory<R>;}',
++  );
++  expect(output).toContain('return static_cast<Factory<R>>(value);');
++});
++
++it('preserves existing independent function-value control: return_only_unknown', () => {
++  const output = emit(
++    'export function identity<T>():T{throw 1;} export type Factory<R>=()=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++  );
++  expect(output).toContain(
++    'return (factory.has_value() ? factory.value() : [&]() -> R { return static_cast<R>(identity<R>()); });',
++  );
++});
++
++it('preserves existing independent function-value control: non_generic_control', () => {
++  const output = emit(
++    'export function identity(value:number):number{return value;} export type Factory=(value:number)=>number; export function select(factory?:Factory):Factory{return factory??(identity as unknown as Factory);}',
++  );
++  expect(output).toContain(
++    'return (factory.has_value() ? factory.value() : static_cast<Factory>(static_cast<flight::Any>(identity)));',
++  );
++});
++
++it('refuses unproven unknown-bridged generic function signature: overloaded_source', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(value:T):T; export function identity<T>(value:T,unused?:number):T{return value;} export type Factory<R>=(value:R)=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: target_rest', () => {
++  expect(() =>
++    emit(
++      'export function identity<T>(value:T):T{return value;} export type Factory<R>=(...values:R[])=>R; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});
++
++it('refuses unproven unknown-bridged generic function signature: async_source', () => {
++  expect(() =>
++    emit(
++      'export async function identity<T>(value:T):Promise<T>{return value;} export type Factory<R>=(value:R)=>Promise<R>; export function select<R>(factory?:Factory<R>):Factory<R>{return factory??(identity as unknown as Factory<R>);}',
++    ),
++  ).toThrow(expect.objectContaining({ rule: 'cpp-generic-callable-assertion-source-unproven' }));
++});

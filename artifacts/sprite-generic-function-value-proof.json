@@ -1,0 +1,192 @@
+{
+  "schema": "sprite-generic-function-value-proof/1",
+  "scope": "Bounded inactive compiler fix in the existing generic function-value specialization-evidence lane, with exact baseline/candidate/source/native evidence. No product activation.",
+  "authority": [
+    "Foreman-6791b901 first native factory-value cause",
+    "Foreman-ab1c1aaf accepted bounded implementation",
+    "Foreman-edcd4d1e additive common-view coordination; retain all legacy APIs"
+  ],
+  "cause": {
+    "helper": "emitCppUnknownBridgedGenericFactoryAssertionCpp",
+    "baseline": "The existing helper only accepted a zero-parameter generic declaration. A transparent unknown assertion of the same nonzero-parameter declaration fell through to an uninstantiated generic function cast into flight::Any; unchanged minimal source is strict-clean but native compilation fails.",
+    "nativeError": "address of overloaded function 'identity' cannot be static_cast to type 'flight::Any'"
+  },
+  "implementation": {
+    "file": "artifacts/sprite-generic-function-value-compiler.patch",
+    "sourceFile": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+    "existingLane": "getCppFunctionDeclarationForBindingCpp / collectCppResultTypeSubstitutionsCpp / createIrTypeParameterSubstitutionPlan / areCppTypesRepresentationEquivalent",
+    "requirements": [
+      "Transparent nested assertion through literal unknown of one resolved original generic declaration",
+      "Unique arguments from exact parameter/result evidence or an authored generic default",
+      "Every declared constraint proven using the existing representation evidence",
+      "Exact substituted parameter and result representations and matching optionality and arity",
+      "Reject async, overloaded, rest-parameter, conflicting or unbound generic signatures",
+      "Return the original function specialization; preserve every supplied argument and original function pointer"
+    ],
+    "unchangedZeroArgumentBranch": true,
+    "newCallableBodyOrNativeOwner": false,
+    "refusalRule": "cpp-generic-callable-assertion-source-unproven"
+  },
+  "composition": {
+    "compilerPin": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "declaredCompilerPatches": 142,
+    "baselineBackendSha256": "e201ab9eabf55c352b8f389a17a6ef127f1a50d3ced3d154f3e106a6172a6d5b",
+    "candidateBackendSha256": "aa265fa27f6e90f474a0e4a8de3dcffffa23e8708a529f7ada17f50905c618f3",
+    "recipe": "Pinned compiler plus precisely the 142 declared patches in evidence/composition.json; candidate adds only the attached backend hunk and regression file. All applied patch bytes are archived. No normal package or SDK generation.",
+    "strictBuildCommand": "npm run build --silent",
+    "baselineBuildExit": 0,
+    "candidateBuildExit": 0,
+    "initialCandidateBuildFailure": "An invalid explicit emission classification argument caused TS2345; removed before final strict build. Original failed log retained."
+  },
+  "semantic": {
+    "strictCasesPerVersion": 19,
+    "strictDiagnosticsPerVersion": 0,
+    "supported": [
+      "required_unknown",
+      "optional_unknown",
+      "constrained_exact",
+      "default_generic"
+    ],
+    "refused": [
+      "conflicting_unknown",
+      "constrained_wrong",
+      "return_mismatch",
+      "unused_generic",
+      "optional_mismatch",
+      "rest_source",
+      "original_argument_shape",
+      "overloaded_source",
+      "target_rest",
+      "async_source"
+    ],
+    "unchanged": [
+      "required_direct",
+      "optional_direct",
+      "erased_source",
+      "return_only_unknown",
+      "non_generic_control"
+    ],
+    "focusedTests": {
+      "pass": 19,
+      "fail": 0,
+      "skip": 0,
+      "command": "TMPDIR=<owned scratch>/test-tmp node_modules/.bin/vitest run packages/compiler-backend-cpp/src/cppGenericFunctionValueAssertion.test.ts --maxWorkers=1 --no-file-parallelism"
+    },
+    "limits": "Unchanged controls preserve existing output; optional_direct, erased_source, legacy zero-argument and non-generic assertion paths are not newly qualified by this patch."
+  },
+  "native": {
+    "testedCommit": "6206d88ddccaca144a8096d058357b3075d90b43",
+    "currentContentCommits": [
+      "e02f5e75",
+      "3baf933f"
+    ],
+    "inputCount": 3312,
+    "inputChangesAfterRebase": 0,
+    "fixture": "artifacts/sprite-generic-function-value-native.cpp",
+    "compiler": "Existing /tmp/builder5-json-exact21-128/cxx-hostcache wrapper, Zig 0.17.0 / Clang 22.1.8",
+    "flags": [
+      "-std=c++20",
+      "-g0",
+      "-O0",
+      "-pthread"
+    ],
+    "baselineCompileExit": 1,
+    "candidateCompileExit": 0,
+    "candidateLinkExit": 0,
+    "candidateRunExit": 0,
+    "checks": 27,
+    "controls": [
+      "Exact original specialization address and repeated selection identity",
+      "Supplied zero, negative and positive required and optional argument values",
+      "Optional absence and optional caller owner forwarded",
+      "Supplied callback selected lazily, invoked exactly once",
+      "Caller-supplied shared owner identity, live writes, retained lifetime and last release",
+      "Original thrown shared owner and effect prefix",
+      "Exact constrained and authored-default specializations"
+    ],
+    "inputsFrozenAndJobsSerial": true,
+    "allJobsReaped": true,
+    "limits": "Same-signature function specialization identity only; global JavaScript function identity across different generic C++ signatures is not claimed. Caller payloads are shared_ptr<int>; no Node/Sprite allocation was fabricated."
+  },
+  "source": {
+    "checks": 38,
+    "failures": 0,
+    "input": "Exact four minimal TypeScript source bodies, transpiled to CommonJS with the pinned local TypeScript dependency",
+    "controls": "Original function object, repeated identity, numeric and owner argument use, live writes, supplied callback selection/invocation, optional absence, thrown owner and effect order",
+    "sourceBodiesRewritten": 0
+  },
+  "existingRegression": {
+    "files": [
+      "cppGenericNullishCallableDefault.test.ts",
+      "cppCallableArityAdaptation.test.ts",
+      "cppCallableSignatureAbi.test.ts"
+    ],
+    "baseline": {
+      "pass": 13,
+      "fail": 1,
+      "skip": 0
+    },
+    "candidate": {
+      "pass": 13,
+      "fail": 1,
+      "skip": 0
+    },
+    "newFailures": 0,
+    "actualNativeChecksInNullishTests": 9,
+    "sameFailure": "cppCallableArityAdaptation.test.ts > a callable with fewer accepted parameters stored into a wider callable > adapts the field the loader stores, not only a returned value",
+    "reason": "The unchanged old exact-output assertion expects a naked member assignment; the 142-patch composition emits an own-key-marking IIFE. No assertion changed."
+  },
+  "fullCompilerCheck": {
+    "command": "npm run check --silent",
+    "baselineExit": 1,
+    "candidateExit": 1,
+    "failedGatesBoth": [
+      "packages:check",
+      "exports:check",
+      "docs:check",
+      "format:check",
+      "lint",
+      "order:check",
+      "license:check",
+      "api:check",
+      "typecheck:root"
+    ],
+    "newLintOrTypeDiagnostics": 0,
+    "normalizedIdenticalLintAndTypeDiagnosticLines": 19,
+    "limitations": [
+      "Disposable compiler copies lack .git, so docs/license git-ls-files gates fail setup.",
+      "Existing 142-patch composition API/source/static debt remains.",
+      "Baseline static copy has an earlier unformatted 16-case injected test; candidate has the final formatted 19-case test. Full normalized logs differ only in that formatting entry (58 vs 57 files).",
+      "This is a failing full check and a paired regression result, not a green compiler suite.",
+      "Initial focused run failed before tests because /tmp was full; retry used owned TMPDIR and passed. Both logs retained."
+    ]
+  },
+  "originalPublicFactory": {
+    "nativeQualified": false,
+    "status": "OPEN separate argument/owner representation mismatch",
+    "minimalMismatchWitness": "original_argument_shape refuses fixed Readonly<Partial<Runtime>> source parameter vs Readonly<Partial<R>> target under the existing refusal rule. This patterned witness is not a full original-source re-emission.",
+    "remainingGate": "Original public Sprite/image source factory must still compile, link and run; getter not newly reached here. No constraint-owner-to-R cast, copied body, ignored methods argument or default replacement factory is admitted."
+  },
+  "activation": {
+    "sourcePatchManifestChanged": false,
+    "runtimeTypesOrMetadataChanged": false,
+    "sdkGenerationRuns": 0,
+    "normalPackageGenerationRuns": 0,
+    "fourteenFileProductMigrationActivated": false,
+    "legacyPublicSignaturesRetired": false,
+    "hostAbiAndBHold": "Unchanged. Nine older held product commits remain ineligible; use only the four named proof artifact/script paths."
+  },
+  "coordination": {
+    "mappedMemberLane": "Builder4 overlap cleared; mapped alias helper proof independent",
+    "strictLane": "Builder3 overlap cleared; strict owner/finishEntity lane independent",
+    "bounds": "Builder owns concrete bounds. Sent exact existing helper/reference header and legacy bytes; existing view schema covers base/transform/cache, not the five bounds cells and does not initialize them. Any B projection must read exact existing named cells on the real base allocation and preserve legacy APIs. No duplicate bounds implementation."
+  },
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-archives/builder5-generic-function-value-proof.tgz",
+    "sha256": "e325e2777f3e2682300123922a46521b228620ddd01b8fbf0c1bf51034cf7fad",
+    "bytes": 5684949,
+    "members": 3551,
+    "checksummedFiles": 3550
+  },
+  "verification": "node scripts/spriteGenericFunctionValueProof.mjs [optional archive path] verifies all hashes, frozen snapshots, candidate reconstruction and recorded outcomes; it does not rerun or replace the native/compiler checks."
+}
