@@ -1,0 +1,108 @@
+{
+  "schema": "sprite-source-generic-contract-analysis/1",
+  "status": "ANALYSIS COMPLETE; SOURCE CONTRACT DECISION REQUIRED; NATIVE SPRITE/IMAGE UNQUALIFIED",
+  "scope": "Original strict220/two-owned source/callback N/D-null and Sprite receiver contracts. Diagnostic/design evidence only.",
+  "proofArchive": {
+    "path": "../scratch-archives/sprite-generic-contracts/builder3-sprite-source-generic-contracts-v1.tgz",
+    "sha256": "23e656de8a3286faeb5de858896b6b0826439146baf3c29a0bd5294ab07de125",
+    "memberCount": 3343,
+    "checksummedFileCount": 3342,
+    "bytes": 9714196
+  },
+  "receivedInputs": [
+    {
+      "path": "received/builder4-original-sprite-frozen-inputs-20261018.tgz",
+      "sha256": "2951965992e17babed679d1e2f8d1ff6963c49d0122ad0c70161a830cc54a794",
+      "bytes": 39692,
+      "members": 28
+    },
+    {
+      "path": "received/builder4-original-sprite-frozen-supplement.tgz",
+      "sha256": "4c7b839c83ee56f3322e93406124b80b8f5e68f674325af18979024ab3f22502",
+      "bytes": 2167148,
+      "members": 1042
+    },
+    {
+      "path": "received/builder4-original-strict220-full.tgz",
+      "sha256": "81c850b06f2bd25827c6ef9b23ec82cebe6f065bb709480d06976ef2cd00c54c",
+      "bytes": 11793,
+      "members": 4
+    }
+  ],
+  "ownedSourceModules": [
+    "packages/scene2d/src/sprite.ts",
+    "packages/scene2d/src/displayObject.ts",
+    "packages/node/src/node.ts"
+  ],
+  "strict220": {
+    "baselineTotal": 220,
+    "candidateTotal": 220,
+    "ownedEach": 2,
+    "foreignEach": 218,
+    "foreignMultisetEqual": true,
+    "key": [
+      "file",
+      "code",
+      "message"
+    ],
+    "lineMovementExcluded": true,
+    "freshFull220Rerun": false,
+    "reason": "Exact canonical runtime source closure not fully supplied. Compare delivered receipts; scoped exact Types replay separate."
+  },
+  "minimalDiagnosticCases": 12,
+  "effectiveTypesCases": 18,
+  "expectedEffectiveOwnedDiagnostics": 8,
+  "retainedEffectiveForeignDiagnostics": 203,
+  "effectiveContextFiles": 1033,
+  "initialAssumption": {
+    "passed": 11,
+    "cases": 12,
+    "failure": "Reduced method-syntax control accepted, but exact Types still reject runner due reverse runtime-slot incompatibility. Original failed run retained; no compiler or source implementation changed."
+  },
+  "sourceOracleChecks": 39,
+  "sourceContractChecks": 10,
+  "sourceScope": "Exact received3 frozen original-body overlays; other executed source modules from raw pinned local checkout, with every executed source hash in source-original-oracle.json. Not a rerun of the full1211 frozen strict closure or native Sprite/image39.",
+  "nativeFinishOwnerChecks": 10,
+  "nativeFinishScope": "Unchanged original Entity module in exact emitted generic/derived finish controls; original pointer/control block/writes/lifetime/refusal. No fresh anonymous allocation or whole native Sprite/image claim.",
+  "findings": [
+    "PartialNode<Node2D> admits null data; NodeInitialization/NodeDataFactory<D> exclude null. Original custom callback observes null unchanged.",
+    "N and D independent: declared API admits mismatched factory data and missing factory while promising Sprite. Inference cannot establish an absent source relation.",
+    "BoundsNode->Sprite fails nullable data. Sprite->BoundsNode independently fails recursive symbol-keyed runtime view callback receiver.",
+    "Method syntax and MethodsOf<R> alone do not repair actual complete contracts.",
+    "Existing implicit finishEntity inference preserves exact argument owner in emitted/native controls."
+  ],
+  "boundedProposal": {
+    "data": "Preserve exact input/absence/null/identity and callback effects; model factory input independently of output, correlate returned data/runtime with actual factories or absence. Public choice between truthful result projection and constrained generic admission requires Foreman/Types review; do not silently narrow current source domain.",
+    "callback": "Carry one exact receiver family through existing callback fields, runtime slot, bounds dispatch and slot mutation. Preserve objects/functions/access order. Replace no bodies; prove assignability instead of Any/cast/bivariance.",
+    "compiler": "No independent ordinary compiler implementation justified by these two TS errors or measured finishEntity controls. Builder4 owns demonstrated mapped-member evidence recovery; Builder5 owns generic function-value/unknown-Any cause."
+  },
+  "coreAbiActivation": false,
+  "compilerImplementationChanges": false,
+  "typesChanges": false,
+  "sdkGeneration": false,
+  "sourceBodyReplacements": 0,
+  "newRuntimeFamilies": 0,
+  "actualNativeSpriteFactory": "UNQUALIFIED",
+  "actualNativeImage": "UNQUALIFIED",
+  "ownership": {
+    "builder2": "sole Types writer; design decision first",
+    "builder4": "runtime/metadata plus optional mapped-member semantic recovery",
+    "builder5": "generic function-value/unknown-Any display_object196 failure",
+    "builder3": "this independent source-contract proof only"
+  },
+  "conditionalNormalParticles": "WAIT for sole Builder2 actual matching normal Types/import diagnostics/current composition green; not run.",
+  "compilerProvenance": {
+    "compiler": "Builder3 accepted public141 scratch compiler; no candidate compiler change for this task. Same semantic baseline as delivered Builder4 baseline136.",
+    "semanticSha256": "50de198f825c974a3d4b861bb6ec64ee7a392a86beee397336510c1e9ab53025",
+    "builder4SemanticBaselineSha256": "50de198f825c974a3d4b861bb6ec64ee7a392a86beee397336510c1e9ab53025",
+    "backendSha256": "13cd0e68c520a7f47351e48be91c767c8f7779137ff70af45595d6bf058cb140",
+    "priorCompilerArchiveSha256": "133011491fc478265e6da93db1c761781d8c8ce4b20a536a070c0279385e6d86",
+    "wholeOriginalEmission": "Delivered Builder4 receipt only, NOT rerun with this public141 compiler. Its independent PREP/nested-data/allocation patches retained in frozen input provenance.",
+    "typescript": "5.9.3",
+    "typescriptImplementationSha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+    "sourceBodiesReplaced": 0,
+    "sdkGeneration": false
+  },
+  "sourceReplayInputFiles": 758,
+  "nativeHeaderInputs": 63
+}
