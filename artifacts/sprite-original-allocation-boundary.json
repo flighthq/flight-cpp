@@ -1,0 +1,120 @@
+{
+  "schema": "flight-sprite-original-allocation-boundary/1",
+  "state": "WORKING SAME ORIGINAL FACTORY CLOSURE; BOUNDED INACTIVE PROOF",
+  "authority": "Foreman856c67a1",
+  "baseAtProof": "3ee73d3d",
+  "originalFunctions": {
+    "IRSha256": "721c40a2373f765a0cb0a09a07973637912fdddb612878e659142a1bf3d2c8fc",
+    "candidateHeaderSha256": "d3d63ce688bdc38735ae4a3d18bb8b3e0e5b78f3c753ae85ac4497e8a32aca48",
+    "scope": "Actual ORIGINAL allocateEntity/finishEntity emitted whole functions. No body rewriting or synthesized replacement. Existing structural VALUE carrier is schema only; native Model never fabricated.",
+    "strictDiagnostics": []
+  },
+  "native": [
+    {
+      "variant": "candidate-emitter+existing-shared-error-scratch-runtime",
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 58 ORIGINAL allocate/finish getters return-store aliases lifetime and sharedOutOfProfile escape checks\n",
+      "stderr": ""
+    },
+    {
+      "variant": "prior-runtime",
+      "compileExitCode": 0,
+      "runExitCode": 1,
+      "stdout": "",
+      "stderr": "FAIL after 34 checks: original allocation boundary check failed\n"
+    },
+    {
+      "variant": "baseline",
+      "compileExitCode": 0,
+      "runExitCode": 1,
+      "stdout": "",
+      "stderr": "FAIL after 1 checks: original allocation boundary check failed\n"
+    }
+  ],
+  "positiveScope": [
+    "58 actual native checks: one original anonymous allocation/RowOwner/native pointer/control block across original finish",
+    "early aliases, live writes and same original dynamic texture/symbol/getter cell",
+    "original finish called through its function pointer, returned value stored in native member/vector/binding cell preserving owner",
+    "getter runs only on reads, once per read; original thrown error and prefix retained",
+    "returned/stored value retains original source allocation until final alias is cleared",
+    "native input preserves its exact native Model reference/control block and physical texture cell address",
+    "foreign anonymous native argument/return rejects with existing shared OutOfProfileError and no fabricated native owner or callee side effects"
+  ],
+  "inactiveNativeEscapePatch": {
+    "path": "artifacts/sprite-original-allocation-native-escape.patch",
+    "sha256": "8fed816a2c8387fd271919d307009f01f28150d36a57f2460fed7b3969b150ac",
+    "baselineHeaderSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+    "candidateHeaderSha256": "a748925cc161af41c8bc7c884f8a3b08b39f883c00d2ff173e9dfe0553777003",
+    "mechanism": "Only existing structural_ref_cast failed exact native recovery now raises existing NativeScalarEscapeError with actual owner type. Success/materialization branches unchanged. No new class, virtual, member, signature or ABI.",
+    "scopeRisk": "Changes exception category at that failed native cast branch for all callers if activated; SCRATCH ONLY, product header unchanged."
+  },
+  "fixtureCorrection": {
+    "v1": "Getter cell attached without marking its new own-key on an explicitly constructed empty source. Correctly hidden by existing own-key mask; check17 failed.",
+    "v2": "Mark only that newly defined height getter as an own property using existing constructed metadata before installing it. No production code change or relaxed assertion."
+  },
+  "wholeOriginalEmissionV5": {
+    "sourceCount": 1211,
+    "selectedModuleCount": 4,
+    "report": "whole-original-factory-v5/emission.json",
+    "functions": "Original allocateEntity, finishEntity, createNodeRuntime, createNode2D, createNode2DRuntime, createSprite and createSpriteRuntime emitted; four existing displayObject getter/Sprite renderer refusals remain.",
+    "sourceEqualityV4": [
+      {
+        "path": "packages/node/src/node.ts",
+        "v4Sha256": "56449e8168592110590b043d99107d778f89d311df150ecc432414f09ddef1d4",
+        "v5Sha256": "56449e8168592110590b043d99107d778f89d311df150ecc432414f09ddef1d4"
+      },
+      {
+        "path": "packages/scene2d/src/displayObject.ts",
+        "v4Sha256": "b3c60666a39760dc1eac6d0e7e7a3a4c5bb40f79068d4905f515b1303bd68464",
+        "v5Sha256": "b3c60666a39760dc1eac6d0e7e7a3a4c5bb40f79068d4905f515b1303bd68464"
+      },
+      {
+        "path": "packages/scene2d/src/sprite.ts",
+        "v4Sha256": "6039465e0c2ab1a1f5d2e8629bf60bd576efe1ce83bd65033452e847f8194413",
+        "v5Sha256": "6039465e0c2ab1a1f5d2e8629bf60bd576efe1ce83bd65033452e847f8194413"
+      }
+    ],
+    "sourceStrict": "Reused exact unchanged source files/types: baseline220/candidate220, two owned diagnostics each. This is NOT strict factory success.",
+    "combinedCompilerStrictBuild": "npm run build --silent EXIT0; frozen combined backend source/dist captured."
+  },
+  "nestedDataABIReview": {
+    "proposal": "artifacts/sprite-nested-data-rowcell-abi-review.json",
+    "sha256": "1eefaf3745ef54f9e238261d3dd0f8147d85b21d68d358c7a1010bab2f6af7eb",
+    "status": "DESIGN ONLY, NOT ACTIVATION READY",
+    "counterexample": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "RequiredNullable empty optional: existing as_any=1; scratch snapshot=0; policy-mismatch=YES\nCONFIRMED scratch design exclusion: RequiredNullable disengaged storage loses null policy; present native owner unchanged. Prototype NOT activation-ready.\n",
+      "stderr": "",
+      "qualification": "CONFIRMED DESIGN GAP, not activation qualification"
+    },
+    "finding": "RequiredNullable NativeRowCell empty optional as_any=null but scratch typed metadata=undefined. Prior44/15 receipts did not cover that policy. Also restrict new hook dispatch to readonly partial-object case before any activation.",
+    "sentToForemanForManagerReview": true
+  },
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "coreAbiActivation": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "sourceBodyReplacements": 0,
+  "valueABIMappingActivated": false,
+  "remainingContracts": [
+    "Manager review of exact nested data virtual ABI design, sentinel policy and exclusions before any activation.",
+    "Original independent N/D+nullable data forwarding and Sprite callback receiver strict errors.",
+    "Generic factory function value cast through Any and NodeOf<Any> evidence loss.",
+    "Source interface VALUE schema versus physical native runtime slots; anonymous row cannot escape as physical native Sprite.",
+    "Actual factory/image39 only after compatible Builder2/Builder5 freeze and closure."
+  ],
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-allocation-boundary-proof.tgz",
+    "sha256": "46224b4676f04ef1a8db4cb60d5cdc4fcdbcc56c9915f15b037488c980581fce",
+    "bytes": 5013043,
+    "memberCount": 151,
+    "checksummedFileCount": 150
+  },
+  "priorProofArchiveSha256": "baeb180c720a9f22f49ede172745f209a15e0b86157910b412cb80ac01dcde66",
+  "builder5CompatibilityArchiveSha256": "464230e2aa243f2ebc3c1570a70e0f3476929f57b9de658122fbf18d92750080",
+  "verifyCommand": "node scripts/spriteFactoryBoundaryProof.mjs [archive]",
+  "verificationScope": "Immutable evidence hash/receipt/patch reconstruction; does not run native Sprite or SDK."
+}

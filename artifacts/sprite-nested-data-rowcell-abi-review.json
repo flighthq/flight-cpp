@@ -1,0 +1,81 @@
+{
+  "schema": "sprite-nested-data-rowcell-abi-review/1",
+  "authority": "Foreman856c67a1",
+  "state": "DESIGN ONLY; SCRATCH PROTOTYPE NOT ACTIVATION READY",
+  "scope": "Original readonly PartialNode<N>.data -> NodeInitialization<D>.data -> createData read. Preserve the one original nested source allocation and outer physical cell. No Types/source-body/caller/SDK changes.",
+  "existingCounterexample": "Same-owner outer row assertion succeeds, then original stored Ref<Data> physical data cell read as optional<Readonly<Partial<Data>>> throws std::bad_cast. Cell storage is not target value-view type and must not be retyped, replaced, or shadowed.",
+  "exactScratchABI": {
+    "file": "include/flight/structural_ref.hpp",
+    "candidateSha256": "8379b7659e4a41021bb4ab7fccde6a35b20da3232f24725f30e3ef9d485b5163",
+    "metadataDeclaration": "struct ReadonlyObjectValue {\n  AnyKind kind = AnyKind::undefined;\n  bool represented = false;\n  std::shared_ptr<RowOwner> owner;\n  std::shared_ptr<void> retained_native;\n};\ntemplate <typename Value>\n[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value);\n",
+    "newRowCellVirtual": "[[nodiscard]] virtual detail::ReadonlyObjectValue readonly_object_value() const;",
+    "baseDefault": "inline detail::ReadonlyObjectValue RowCell::readonly_object_value() const {\n  const auto value = as_any();\n  return value ? detail::readonly_nested_object_value(*value) : detail::ReadonlyObjectValue{};\n}\n\n",
+    "TypedRowCellOverride": "[[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override { return detail::readonly_nested_object_value(const_cast<TypedRowCell<Value>*>(this)->get()); }",
+    "helperDefinition": "template <typename Value>\n[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value) {\n  if constexpr (is_std_optional<std::remove_cvref_t<Value>>::value) {\n    return value ? readonly_nested_object_value(*value)\n                 : ReadonlyObjectValue{AnyKind::undefined, true, {}, {}};\n  } else if constexpr (requires { { value.shared_owner() } -> std::convertible_to<std::shared_ptr<RowOwner>>; }) {\n    return {AnyKind::object, bool(value.shared_owner()), value.shared_owner(), value.shared_native_object()};\n  } else {\n    const auto erased = any_from(value);\n    if (!erased) return {};\n    auto owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());\n    auto retained = owner ? owner->native_object() : nullptr;\n    return {erased->kind(), true, std::move(owner), std::move(retained)};\n  }\n}\n",
+    "layoutImpact": "ReadonlyObjectValue is a new internal returned-by-value C++ struct (AnyKind/bool/two shared_ptr fields). New non-pure virtual changes RowCell vtable and every derived type ABI even though it adds no instance member. It requires a coordinated runtime header/ABI decision and rebuild of every translation unit/derived implementation; this is not a local binding workaround. Exceptions deliberately propagate; no noexcept/catch wrapper.",
+    "noActivation": "Product include/ unchanged; inactive patch only in prior proof. No contract.hpp version claim."
+  },
+  "dispatchAndDerivedImplementations": [
+    {
+      "implementation": "RowCell direct subclasses",
+      "dispatch": "New default calls virtual as_any exactly once; derive object-owner metadata while returned Any strongly owns its value.",
+      "incoming": [
+        "detail::ReadonlyNamedCell",
+        "detail::JsonObjectMemberCell",
+        "detail::JsonArrayIndexCell"
+      ],
+      "qualification": "ReadonlyNamedCell fresh object/throw/undefined/null proved in44; JSON object/index/external unrepresented carriers NOT qualified by that receipt and excluded from activation scope."
+    },
+    {
+      "implementation": "TypedRowCell<Value>",
+      "dispatch": "New override calls virtual get exactly once while Value is known; StructuralRef keeps original shared_owner/shared_native_object; native Ref uses existing Any exact row-owner thunk.",
+      "incoming": [
+        "OwnedRowCell<Value>",
+        "NativeRowCell<Value,Getter>",
+        "compiler-generated readonly getter cells with optional<Value> cache",
+        "tests/generated_texture_options_row_test.cpp GetterCell",
+        "tests/generated_video_texture_options_test.cpp RecordedCell",
+        "tests/generated_video_texture_helpers_test.cpp Cell",
+        "tests/generated_video_texture_callable_proxies_test.cpp Cell",
+        "tests/generated_particles_formats_codec_options_test.cpp ObservableCell"
+      ],
+      "qualification": "Compiler emits getter get() that reads original getter, assigns cache, then returns cache reference. No extra getter read allowed. NativeRowCell as_any has RequiredNullable policy override which the scratch typed hook bypasses: confirmed counterexample below. External/custom subclasses with own as_any semantics must be explicitly audited; do not assume get() and as_any() have equivalent sentinel policy."
+    }
+  ],
+  "readDispatch": {
+    "currentScratch": "After exact Value and bare Present physical TypedRowCell reads fail, query actual cell object-value snapshot. A readonly optional member whose Present is a readonly partial structural row may construct Present::from_owner(snapshot.owner).",
+    "requiredNarrowingBeforeAnyActivation": "Limit the new hook dispatch to schema_readonly<Schema> && readonly_partial_row_value<Present>. The current scratch partial-row branch calls the hook even outside that guard to reject wrong-typed present values; that broadens other partial reads/getter effects and must not ride along as an incidental fix.",
+    "physicalStorage": "No dynamic_cast<TargetCell> claim for Ref<Data> -> row view; original TypedRowCell<Value>, value_type, storage address, member presence and outer owner remain unchanged. Native Ref<Model> escape remains checked at the actual consumer.",
+    "compilerEvidence": "Target outer row readonly, target nested value readonly Partial<D>, matching property evidence and no explicit nullable source union; exact native D or compatible existing structural row value. Writable target/full native target/unrelated native/callback targets retain original refusals. IR evidence does not authorize new sentinel guesses."
+  },
+  "snapshotVersusView": {
+    "oneOuterRead": "Run original property getter exactly once at the source read; capture current kind/owner/strong native reference. Do not validate earlier, read twice on failure, or memoize the outer result.",
+    "snapshot": "Returned row points to the object value read now. If outer data cell later changes to another object, an earlier row keeps the first object; the next read returns the replacement.",
+    "liveView": "Within that captured object, nested reads/writes through other aliases remain live. No copy of fields or callback adapter.",
+    "freshGetterLifetime": "An Any or typed getter may return its sole fresh-object reference. Retain it in metadata.retained_native until Target::from_owner acquires the same strong owner. Holding only RowOwner is insufficient because NativeRowOwner retains native object weakly.",
+    "errorPrefix": "Any getter exception propagates unchanged at this read. The 44-check scratch proof covers once-only fresh result, thrown original error, and explicit undefined/null getter values."
+  },
+  "confirmedNewCounterexample": {
+    "source": "abi-policy-counterexample.cpp",
+    "result": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "RequiredNullable empty optional: existing as_any=1; scratch snapshot=0; policy-mismatch=YES\nCONFIRMED scratch design exclusion: RequiredNullable disengaged storage loses null policy; present native owner unchanged. Prototype NOT activation-ready.\n",
+      "stderr": "",
+      "qualification": "CONFIRMED DESIGN GAP, not activation qualification"
+    },
+    "exactCase": "NativeRowCell<optional<Ref<Data>>> with MemberPresence::RequiredNullable and disengaged storage: existing as_any() returns AnyKind::null(1); scratch TypedRowCell snapshot returns AnyKind::undefined(0). Present storage still returns the exact native owner.",
+    "consequence": "Existing44/15 passes did not cover this policy. They remain narrow scratch receipts, not evidence that all cell sentinel semantics are preserved. No product activation is justified.",
+    "proposedDesignCorrectionOnly": "NativeRowCell needs its own snapshot override (or policy-aware typed dispatch) that reads the stored Value once and preserves RequiredNullable null versus SourceOptional undefined. Ambiguous disengaged Required policy needs an explicit refusal, never a guessed state. Generated and external typed getter overrides require the same semantic-policy audit. Do not edit the prototype silently and retain old receipts as if they tested this case."
+  },
+  "exclusions": [
+    "No write projection, writable nested row, native-data fabrication, materialize_row, new native object, or native pointer reinterpretation.",
+    "No callback widening or adapter; no generic runtime-factory signature narrowing.",
+    "Explicit null data source remains independent source/callback contract; typed non-null row read cannot convert null to undefined.",
+    "No changes to unrelated partial scalar/callback reads or their getter effects under this mechanism.",
+    "No physical slot type/address change, attachment replacement, or shadow cell on native holders.",
+    "No claim for JSON/external/raw functions/variants/array/existing subclass semantic overrides without exact proof.",
+    "No public ABI activation or SDK/caller work before Manager review."
+  ],
+  "wholeFactoryStatus": "PARTIAL: strict baseline220/candidate220, two owned diagnostics (independent N/D+nullable data and Sprite callback receiver variance) unchanged. Same four selected-module refusals; actual native Sprite factory/image39 NOTRUN."
+}

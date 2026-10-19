@@ -1,0 +1,14 @@
+--- a/include/flight/structural_ref.hpp
++++ b/include/flight/structural_ref.hpp
+@@ -2343,7 +2343,10 @@
+       return detail::wrap_ref<Target>(detail::materialize_row<To>(source).shared_object());
+     } else {
+       auto recovered = source.template shared_exact_object<To>();
+-      if (!recovered) throw std::bad_cast();
++      if (!recovered) {
++        throw NativeScalarEscapeError(source.shared_owner()
++            ? source.shared_owner()->native_type().name() : "an empty structural value");
++      }
+       return detail::wrap_ref<Target>(std::move(recovered));
+     }
+   }
