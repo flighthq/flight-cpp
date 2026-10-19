@@ -1,0 +1,151 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 2a14ccf..8364700 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6382,6 +6382,8 @@ function emitExpression(
+         }
+         return coalesced;
+       }
++      const tokenDiscriminant = emitCppTokenStringDiscriminantComparisonCpp(expression, context);
++      if (tokenDiscriminant) return tokenDiscriminant;
+       const logicalOr = emitCppValueLogicalOrExpression(expression, context, expectedType);
+       if (logicalOr) return logicalOr;
+       if (
+@@ -17152,6 +17154,63 @@ function getCppDualSentinelTargetTypes(context: EmitContext): Readonly<{ null: s
+   return { null: 'std::nullptr_t', undefined: 'std::monostate' };
+ }
+ 
++// A strict comparison between a union token and a String tests the token's String alternative, which is
++// the source's own discriminant: a stored null token and every non-string alternative mismatch, an equal
++// String matches, and a different String mismatches. Comparing the whole carrier with a String is what
++// C++ rejects (`optional<variant<...>> != String`), and a global operator or Any coercion would decide
++// comparisons the emitter already knows the alternative of. The operands are evaluated once, in source
++// order, and only their declared carriers are inspected -- no alternative is converted or dropped.
++function emitCppTokenStringDiscriminantComparisonCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  if (expression.operator !== '!==' && expression.operator !== '===') return undefined;
++  const leftType = getIrExpressionTypeEvidenceCpp(expression.left, context);
++  const rightType = getIrExpressionTypeEvidenceCpp(expression.right, context);
++  const planFor = (type: Readonly<IrType> | undefined) => {
++    const union = type ? getIrUnionTypeCpp(type, context, new Set()) : undefined;
++    return union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  };
++  const isTokenPlan = (plan: ReturnType<typeof getCppUnionRepresentationPlan> | undefined): boolean =>
++    plan !== undefined &&
++    (plan.kind === 'optionalVariant' || plan.kind === 'dualSentinelVariant') &&
++    plan.valueSlots.filter((slot) => isIrStringTypeEvidenceCpp(slot.runtimeType)).length === 1;
++  // The string side may be a variable of string type or a string literal (the source's discriminant
++  // keys are both); anything else -- a nullable string, a template, an erased value -- keeps the
++  // ordinary comparison path rather than guessing what it means against a token.
++  const isStringOperand = (operand: Readonly<IrExpression>, type: Readonly<IrType> | undefined): boolean =>
++    isIrStringTypeEvidenceCpp(type) ||
++    (type?.kind === 'literal' && typeof type.value === 'string') ||
++    (operand.kind === 'literal' && typeof operand.value === 'string');
++  const leftPlan = planFor(leftType);
++  const rightPlan = planFor(rightType);
++  const tokenOnLeft = isTokenPlan(leftPlan) && isStringOperand(expression.right, rightType);
++  const tokenOnRight = !tokenOnLeft && isTokenPlan(rightPlan) && isStringOperand(expression.left, leftType);
++  if (!tokenOnLeft && !tokenOnRight) return undefined;
++  const plan = tokenOnLeft ? leftPlan : rightPlan;
++  if (!plan || (plan.kind !== 'optionalVariant' && plan.kind !== 'dualSentinelVariant')) return undefined;
++  const stringSlot = plan.valueSlots.find((slot) => isIrStringTypeEvidenceCpp(slot.runtimeType));
++  if (!stringSlot) return undefined;
++  // Generated names: the source may itself declare `token` or `key`, and a binding named after its own
++  // initializer would both shadow and fail to compile.
++  const tokenName = getGeneratedTargetName('tokenDiscriminant', context);
++  const keyName = getGeneratedTargetName('tokenDiscriminantKey', context);
++  const inspected = plan.kind === 'optionalVariant' ? `${tokenName}.value()` : tokenName;
++  const present = `std::holds_alternative<${stringSlot.targetType}>(${inspected}) && std::get<${stringSlot.targetType}>(${inspected}) == ${keyName}`;
++  const positive = plan.kind === 'optionalVariant' ? `${tokenName}.has_value() && ${present}` : present;
++  const decision = expression.operator === '===' ? positive : `!(${positive})`;
++  // Source order is left then right, each operand evaluated exactly once.
++  const tokenExpression = tokenOnLeft ? expression.left : expression.right;
++  const stringExpression = tokenOnLeft ? expression.right : expression.left;
++  const tokenBinding = `const auto& ${tokenName} = ${emitExpression(tokenExpression, context)};`;
++  const stringBinding = `const auto ${keyName} = ${emitExpression(stringExpression, context)};`;
++  const bindings = tokenOnLeft ? [tokenBinding, stringBinding] : [stringBinding, tokenBinding];
++  context.includes.add('optional');
++  context.includes.add('variant');
++  return `([&]() -> bool { ${bindings.join(' ')} return ${decision}; }())`;
++}
++
+ function emitNullishComparisonCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'binary' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppTokenDiscriminantComparison.test.ts b/packages/compiler-backend-cpp/src/cppTokenDiscriminantComparison.test.ts
+new file mode 100644
+index 0000000..72aec64
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppTokenDiscriminantComparison.test.ts
+@@ -0,0 +1,68 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const prelude = `
++  interface Matrix { a: number }
++  interface Texture { id: number }
++  export type Token = readonly number[] | Matrix | Texture | boolean | number | string | null;
++`;
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/tokenCompare.ts', prelude + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('compares a token against a literal discriminant through its String alternative', () => {
++  const output = emit(`
++    export function f(commands: Token[], i: number): void { if (commands[i] !== 'beginFill') return; }
++  `);
++  expect(output).toContain('std::holds_alternative<flight::String>(');
++  expect(output).toContain('std::get<flight::String>(');
++  expect(output).toContain('== token_discriminant_key');
++  expect(output).toContain('!(token_discriminant.has_value()');
++});
++
++it('emits the positive form for strict equality', () => {
++  const output = emit(`
++    export function f(commands: Token[], i: number): void { if (commands[i] === 'beginFill') return; }
++  `);
++  expect(output).toContain('return token_discriminant.has_value()');
++  expect(output).not.toContain('!(token_discriminant.has_value()');
++});
++
++it('compares against a dynamic String without shadowing the source name', () => {
++  const output = emit(`
++    export function f(commands: Token[], i: number, key: string): void { if (commands[i] !== key) return; }
++  `);
++  expect(output).toContain('const auto token_discriminant_key = key;');
++  expect(output).not.toContain('const auto key = key;');
++});
++
++it('evaluates the string operand before the token when the source writes it first', () => {
++  const output = emit(`
++    export function f(commands: Token[], i: number, key: string): void { if (key !== commands[i]) return; }
++  `);
++  const key = output.indexOf('const auto token_discriminant_key');
++  const token = output.indexOf('const auto& token_discriminant');
++  expect(key).toBeGreaterThanOrEqual(0);
++  expect(token).toBeGreaterThan(key);
++});
++
++it('evaluates the token expression once', () => {
++  const output = emit(`
++    function tokenAt(commands: Token[], i: number): Token { return commands[i]; }
++    export function f(commands: Token[], i: number, key: string): void { if (tokenAt(commands, i) !== key) return; }
++  `);
++  expect(output.match(/token_at\(commands, i\)/gu)?.length).toBe(1);
++});
++
++it('leaves a comparison whose operands are not a union token and a String unchanged', () => {
++  const output = emit(`
++    export function f(a: number, b: number): boolean { return a !== b; }
++  `);
++  expect(output).not.toContain('holds_alternative');
++});

@@ -1,0 +1,28 @@
+{
+  "schema": "flight-cpp-token-discriminant-comparison/1",
+  "cause": "a union token carried as optional<variant<...>> was compared strictly with a String as a whole carrier, which C++ rejects; the source tests the token's String discriminant",
+  "site": "packages/shape/src/morphShapePaint.ts sampleMorphShapePaintBinding; first failure flight/shape/morph_shape_paint.hpp:77 (also :85 literal and :93 dynamic key)",
+  "focused": {
+    "test": "packages/compiler-backend-cpp/src/cppTokenDiscriminantComparison.test.ts",
+    "result": "6 pass",
+    "covers": [
+      "literal inequality through the String alternative",
+      "positive form for strict equality",
+      "dynamic String without shadowing the source name",
+      "reversed operand order binds the string before the token",
+      "the token expression is evaluated once",
+      "a non-token comparison is unchanged"
+    ]
+  },
+  "native": {
+    "fixture": "compiler-emitted Token alias plus differs()/same() driven with real tokens",
+    "output": "token: equal=1 different=1 null=1 number=1 boolean=1 array=1 no-coercion=1",
+    "exit": 0
+  },
+  "source_oracle": {
+    "output": "oracle: equal=true different=true null=true number=true boolean=true array=true no-coercion=true",
+    "exit": 0,
+    "matches_native": true
+  },
+  "patch": "source-patches/compiler-token-discriminant-comparison.patch"
+}

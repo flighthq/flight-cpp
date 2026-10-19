@@ -5930,6 +5930,23 @@
       "unblocks": "createSwfMaskClipRegion and the five SWF headers whose first failure is flight/swf/swf_document.hpp:542 (swf_content_capabilities, swf_document, swf_header, swf_requirements, swf_tag_census)",
       "expires": "when upstream proves the same fully-written pair-write construction from the source without a declaration or a narrowed domain",
       "appliedOn": "2026-10-19"
+    },
+    {
+      "id": "compiler-token-discriminant-comparison",
+      "dependency": "flight-compiler",
+      "patch": "compiler-token-discriminant-comparison.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/shape",
+      "answers": "diagnostic",
+      "refusal": "emitted shape diagnostic at flight/shape/morph_shape_paint.hpp:77-93: invalid operands to binary expression ('value_type' aka std::optional<std::variant<Array<double>, Ref<Texture2DArray>, Ref<Matrix>, Ref<TextureCube>, Ref<Texture2D>, Ref<Texture3D>, bool, double, flight::String>> and flight::String) -- a union-token String discriminant compared strictly with a String",
+      "rewrite": "For a strict (=== or !==) comparison whose one operand is a union token carried as optional<variant<...>> (or a dual-sentinel variant) with exactly one String alternative and whose other operand is a String (a string-typed expression or a string literal), evaluate both operands once in source order into generated locals and test the String alternative: the token is present AND holds that alternative AND its value equals the key; !== negates that. Absence and every non-string alternative therefore mismatch, an equal String matches, a different String mismatches. No global comparison operator, no Any coercion, no alternative converted, dropped or narrowed, and no read or write of the token's other arms.",
+      "equivalence": "The source's own discriminant semantics: null and every non-string token mismatch a string key (strict equality never coerces), the String arm compares by value, and each operand is evaluated exactly once in the source's left-to-right order. The token carrier is inspected, never rewritten: array/matrix aliases and explicit clones in the surrounding function are untouched.",
+      "verification": "New cppTokenDiscriminantComparison.test.ts: 6 pass (literal inequality through the String alternative; positive form for equality; dynamic String without shadowing the source name; reversed operand order binds the string first; the token call expression evaluated once; a non-token comparison unchanged). Complete compiler-emitted fixture compiles; the native consumer over the emitted alias and functions and the JavaScript oracle agree on equal/different/null/number/boolean/array and no-coercion (equal 'beginFill' matches, everything else mismatches, and 5 !== '5').",
+      "whyNotUpstreamFirst": "The emitter knows the alternative it is testing and already carries the representation plan; the pinned backend simply lowered the comparison over the whole carrier. docs/compiler-requests/token-discriminant-comparison.md records the request.",
+      "unblocks": "the shape morph-paint headers whose first failure is flight/shape/morph_shape_paint.hpp:77 (morph_shape_paint and its importers)",
+      "expires": "when upstream compares a union-token String discriminant by its alternative instead of the whole carrier",
+      "appliedOn": "2026-10-19"
     }
   ]
 }

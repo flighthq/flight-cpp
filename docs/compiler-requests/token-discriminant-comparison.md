@@ -92,3 +92,31 @@ Qualification is **0/5 pass, 5 fail**, retained from G1 with the original diagno
 Only these five rows and their cause are reclassified to compiler lowering. No production C++ input
 changed, so no generation, unchanged five-header compile or global sweep was run. No paint execution,
 new native pass or upstream test coverage is claimed.
+
+## Landed: strict comparison through the String alternative
+
+`compiler-token-discriminant-comparison` lowers a strict (`===` / `!==`) comparison where one operand is
+a union token carried as `optional<variant<...>>` (or a dual-sentinel variant) with exactly one String
+alternative and the other operand is a String (a string-typed expression or a string literal):
+
+```cpp
+([&]() -> bool {
+  const auto& token_discriminant = <token>;     // evaluated once, in source order
+  const auto token_discriminant_key = <string>; // evaluated once, after the token when it is on the left
+  return !(token_discriminant.has_value() &&
+           std::holds_alternative<flight::String>(token_discriminant.value()) &&
+           std::get<flight::String>(token_discriminant.value()) == token_discriminant_key);
+}())
+```
+
+`===` emits the same predicate without the negation. Absence (a stored null token) and every
+non-string alternative mismatch; an equal String matches; a different String mismatches. Nothing is
+coerced, no alternative is converted or dropped, and the surrounding array/matrix aliases and explicit
+clones are untouched. The operands use generated names, so a source operand called `key` cannot shadow
+its own initializer.
+
+Measured: six focused tests (the three guard shapes, reversed operand order, a single token evaluation,
+and a non-token control); the emitted fixture compiles; the native consumer and the JavaScript oracle
+agree on equal / different / null / number / boolean / array tokens and on no string coercion
+(`5 !== '5'`). The three original guards — `!== 'beginFill'`, `!== 'lineStyle'` and
+`!== binding.commandKey` — are the literal, literal and dynamic forms this lane covers.
