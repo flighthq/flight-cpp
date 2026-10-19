@@ -5913,6 +5913,23 @@
       "unblocks": "The original sampleAnimationTrack easing selection and equivalent nullable indexed fallback expressions; all numeric public track consumers still require native/source qualification.",
       "expires": "When upstream preserves nullable indexed payload evidence and both absence sentinels through lazy native nullish selection.",
       "appliedOn": "2026-10-18"
+    },
+    {
+      "id": "compiler-dense-pair-write-construction",
+      "dependency": "flight-compiler",
+      "patch": "compiler-dense-pair-write-construction.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "emitted SWF diagnostic: `use of undeclared identifier 'create_swf_mask_clip_region'` at swf_document.hpp:542, whose declaration is the NOT GENERATED marker for createSwfMaskClipRegion (source line 693) refused as cpp-array-length-sparse-runtime-required -- `new Array<number>(contour.length)` followed by a pair-write loop",
+      "rewrite": "Extend the existing dense-array-length proof to the pair-write shape the runtime's verified-append lane already documents: a `new Array<T>(bound)` whose loop (`i < bound; i += 2`) writes `arr[i]` and `arr[i + 1]` is fully written before it can be observed, so it lowers to the sized-then-cleared array with each write an append checked at the current length. Two proof extensions make the real source reach that lane: an unassigned parameter is a stable bound whatever its type (the assigned-binding sweep still removes reassigned parameters), and a call in the loop body only invalidates a `.length` bound when it can actually reach the array (the binding itself, a callee, or an argument other than an element/length read). A call that is handed the array, or a body that mutates it, keeps the existing refusal.",
+      "equivalence": "Every element of the sized array is written exactly once, in source order, before the array escapes, so the cleared allocation's holes are never observed and no zero-filled value is read. Writes append at the current length, which preserves JavaScript's growth by one for a final odd pair; a write that is not sequential throws instead of silently filling. Element reads and transform calls happen in the source's own order, and the transform's exception propagates. The two refusal controls keep the loud boundary for a call that receives the array or a body that mutates it.",
+      "verification": "New cppDensePairWriteConstruction.test.ts: 8 pass (real shape constructs sized+cleared and appends each pair with the index==size check; the proven slot keeps element(i) and the unproven partner read uses the checked array read + JsonScalarCell.to_number; an unassigned array parameter is accepted as the bound; a raw read outside the lane keeps element; a call receiving the array, a mutating body, a capturing closure, an alias passed to a call, and a module-global store all keep the loud refusal). Complete compiler-emitted native fixture: even -> 3,-1,7,-1 in order; zero-length -> one empty array; odd -> length 4 with BOTH transformed slots NaN; a stored NaN partner stays NaN; a throwing transform propagates its exact error and the source contour is unmodified; the general out-of-range read still throws (existing partial, unchanged). The JS source oracle prints the same even/zero/odd(NaN)/stored-NaN/throw results.",
+      "whyNotUpstreamFirst": "The pin already has the sized-then-cleared append lane and documents this exact partial-stride pair write; only the stability and call-reach proofs kept the real source out. docs/compiler-requests/dense-pair-write-array-construction.md records the request.",
+      "unblocks": "createSwfMaskClipRegion and the five SWF headers whose first failure is flight/swf/swf_document.hpp:542 (swf_content_capabilities, swf_document, swf_header, swf_requirements, swf_tag_census)",
+      "expires": "when upstream proves the same fully-written pair-write construction from the source without a declaration or a narrowed domain",
+      "appliedOn": "2026-10-19"
     }
   ]
 }

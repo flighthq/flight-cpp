@@ -1,0 +1,34 @@
+{
+  "schema": "flight-cpp-dense-pair-write-construction/1",
+  "cause": "new Array<number>(contour.length) filled by an i += 2 pair-write loop was refused as sparse (unstable array-parameter bound; any call invalidated the .length; closures/aliases/globals unchecked), and the unproven partner read threw instead of JavaScript's undefined->NaN",
+  "site": "packages/swf/src/swfDocument.ts createSwfMaskClipRegion (source line 693); first failure flight/swf/swf_document.hpp:542",
+  "focused": {
+    "test": "packages/compiler-backend-cpp/src/cppDensePairWriteConstruction.test.ts",
+    "result": "8 pass",
+    "covers": [
+      "real shape constructs sized-then-cleared and appends each pair with the index == size check",
+      "the proven slot keeps element(i); the partner read uses the checked array read + JsonScalarCell.to_number",
+      "an unassigned array parameter is accepted as the stable bound",
+      "a raw read outside the pair lane keeps element() (general lane unchanged)",
+      "mutation via a call receiving the array, a mutating body, a capturing closure, an alias passed to a call, and a module-global store all keep the loud refusal"
+    ]
+  },
+  "native": {
+    "output": "pairs: even=4 zero-empty=1 odd=NaN,NaN stored-nan=NaN throw=transform-failed source-unmodified=1",
+    "exit": 0,
+    "checks": [
+      "even contours transform to 3,-1,7,-1 in order",
+      "a zero-length contour yields one empty array, not a filled one",
+      "an odd-length contour produces NaN at BOTH transformed slots and grows by one",
+      "a stored NaN read as the partner stays NaN",
+      "a throwing transform propagates and the source array is unmodified"
+    ]
+  },
+  "source_oracle": {
+    "output": "oracle: even=3,-1|7,-1 zero-empty=true odd=3,-1,NaN,NaN length=4 stored-nan=true throw=transform-failed",
+    "exit": 0,
+    "matches_native": true
+  },
+  "general_lane_boundary": "indexed reads outside the pair lane still lower to element() and throw out of range; documented, not changed",
+  "patch": "source-patches/compiler-dense-pair-write-construction.patch"
+}

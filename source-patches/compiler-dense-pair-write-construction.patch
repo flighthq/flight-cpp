@@ -1,0 +1,414 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 62a1180..b39b096 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -248,6 +248,10 @@ interface CppNominalObjectAccessorConstructionPlan {
+ }
+ 
+ interface CppDenseArraySequentialAppendPlan {
++  // The array whose `.length` bounds the write loop, when the bound names one. The partner read of the
++  // last pair comes from THIS array, not from the array being written, so the numeric-read lowering
++  // matches the plan through this binding.
++  readonly boundObjectBindingId?: string | undefined;
+   readonly directOffsets: ReadonlySet<number>;
+   readonly indexCoefficient: number;
+   readonly indexBindingId: string;
+@@ -7631,6 +7635,15 @@ function emitExpression(
+       ) {
+         return `${emitExpression(expression.object, context)}.char_at(${emitExpression(expression.index, context)})`;
+       }
++      // A pair-write loop's partner slot (`arr[i + 1]`) is not proven in bounds: JavaScript answers an
++      // absent index with undefined and a numeric use turns that into NaN. At that source numeric
++      // argument only, read through the existing checked array read and the presence-aware scalar cell,
++      // so a present NaN stays NaN and an absent partner is NaN rather than a range error. The array and
++      // index are evaluated once, in source order; a read anywhere else keeps its existing lowering.
++      if (getCppRuntimeProfile(context.options) === 'flight-cpp' && expectedType) {
++        const pairPartner = emitCppDensePairPartnerReadCpp(expression, expectedType, context);
++        if (pairPartner) return pairPartner;
++      }
+       if (
+         getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+         !isCppObjectEntriesTupleStorageExpressionCpp(expression.object, context) &&
+@@ -34652,9 +34665,10 @@ function collectCppStableDenseArrayBindingIdsCpp(module: Readonly<IrModule>): Se
+   const assignedBindingIds = new Set<string>();
+   analyzeIrModuleTraversal(module, {
+     parameter(parameter) {
+-      if (parameter.type.kind === 'primitive' && parameter.type.name === 'number') {
+-        immutableBindingIds.add(parameter.binding.id);
+-      }
++      // A parameter that is never assigned is a stable bound whatever its type: the assigned-binding
++      // sweep below removes every parameter the source reassigns, so an array or object parameter that
++      // survives it cannot change identity under the loop.
++      immutableBindingIds.add(parameter.binding.id);
+     },
+     variable(variable) {
+       if ('binding' in variable && !variable.mutable) immutableBindingIds.add(variable.binding.id);
+@@ -34680,6 +34694,11 @@ function collectCppStableDenseArrayBindingIdsCpp(module: Readonly<IrModule>): Se
+ // source order, clear the unobservable holes, then append the values that the source writes at the
+ // current length. This also preserves a final partial stride -- `i += 2` followed by writes at `i` and
+ // `i + 1` grows an odd-sized JavaScript array by one, which a fixed dense allocation cannot model.
++// A binding whose array value can be reached by code the dense write proof cannot see: assigned to
++// another binding, handed to a call as the array (not merely an element or `.length` read), captured by
++// a closure that mutates it through a method, or stored in a module global. Only an element read/write
++// and a `.length` read keep the array where the proof can still reason about it. Any other reference
++// rejects the plan, so a call is never trusted merely because its own arguments look safe.
+ function collectIrModuleDenseArraySequentialAppendPlansCpp(
+   module: Readonly<IrModule>,
+ ): ReadonlyMap<string, Readonly<CppDenseArraySequentialAppendPlan>> {
+@@ -34704,6 +34723,7 @@ function collectIrModuleDenseArraySequentialAppendPlansCpp(
+             ? getDenseArraySequentialAppendPlanCpp(
+                 variable.binding.id,
+                 length,
++                statements.slice(0, statementIndex),
+                 statements.slice(statementIndex + 1),
+                 immutableBindingIds,
+                 immutableBindingInitializers,
+@@ -34782,9 +34802,80 @@ function getDirectDenseArrayLengthExpressionCpp(
+     : undefined;
+ }
+ 
++// The numeric partner read of a proven pair write. The loop writes `arr[i]` and `arr[i + k]`, so `i` is
++// in bounds but `i + k` is not proven: an odd final pair reads past the end. JavaScript answers that
++// read with undefined, and a numeric use of undefined is NaN (a stored NaN is NaN too), so the read is
++// lowered through the checked array read and the presence-aware scalar cell at this argument only.
++function emitCppDensePairPartnerReadCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
++  expectedType: Readonly<IrType>,
++  context: EmitContext,
++): string | undefined {
++  if (expectedType.kind !== 'primitive' || expectedType.name !== 'number') return undefined;
++  if (expression.object.kind !== 'identifier' || expression.object.reference.kind !== 'binding') return undefined;
++  const objectBindingId = expression.object.reference.binding.id;
++  const plan = [...context.denseArraySequentialAppendPlans.values()].find(
++    (candidate) =>
++      candidate.boundObjectBindingId === objectBindingId &&
++      (() => {
++        const read = getDenseArraySequentialWriteIndexCpp(expression.index, candidate.indexBindingId);
++        return read !== undefined && read.coefficient === 1 && read.constant > 0;
++      })(),
++  );
++  if (!plan) return undefined;
++  const index = getDenseArraySequentialWriteIndexCpp(expression.index, plan.indexBindingId);
++  if (!index || index.coefficient !== 1 || index.constant <= 0) return undefined;
++  const objectType = getIrExpressionTypeEvidenceCpp(expression.object, context);
++  const elementType = objectType ? getIrArrayTypeCpp(objectType, context, new Set())?.element : undefined;
++  if (!elementType || elementType.kind !== 'primitive' || elementType.name !== 'number') return undefined;
++  context.includes.add('flight/any.hpp');
++  context.includes.add('flight/json_scalar.hpp');
++  context.includes.add('optional');
++  const receiver = getGeneratedTargetName('pairPartnerArray', context);
++  const bound = getGeneratedTargetName('pairPartnerIndex', context);
++  const value = getGeneratedTargetName('pairPartnerValue', context);
++  return `([&]() -> double { auto&& ${receiver} = ${emitExpression(expression.object, context)}; const auto ${bound} = ${emitExpression(expression.index, context)}; if (const auto ${value} = ${receiver}.get(${bound})) return flight::JsonScalarCell{flight::Any{*${value}}}.to_number(); return flight::JsonScalarCell{}.to_number(); }())`;
++}
++
++// Whether a statement reaches the array whose `.length` bounds a dense pair write anywhere except an
++// element read and a `.length` read. The bound stays valid only while nothing can replace the array,
++// hand it to a callee, store it in an alias or a global, or mutate its length; a closure defined before
++// the loop is exactly such a statement, and the pair read inside the transform call is not.
++function doesCppStatementReachDenseBoundCpp(
++  statement: Readonly<IrStatement>,
++  bindingId: string,
++): boolean {
++  const nodes = new Map<string, Readonly<IrExpression>>();
++  const referencePaths: string[] = [];
++  analyzeIrStatementSubtreeTraversal(statement, {
++    expression(expression, path) {
++      const key = JSON.stringify(path);
++      nodes.set(key, expression);
++      if (
++        expression.kind === 'identifier' &&
++        expression.reference.kind === 'binding' &&
++        expression.reference.binding.id === bindingId
++      ) {
++        referencePaths.push(key);
++      }
++    },
++  });
++  return referencePaths.some((key) => {
++    const path: readonly (number | string)[] = JSON.parse(key);
++    const parent = nodes.get(JSON.stringify(path.slice(0, -1)));
++    const role = path.at(-1);
++    return !(
++      parent !== undefined &&
++      ((parent.kind === 'element' && role === 'object') ||
++        (parent.kind === 'property' && role === 'object' && parent.name === 'length'))
++    );
++  });
++}
++
+ function getDenseArraySequentialAppendPlanCpp(
+   arrayBindingId: string,
+   length: Readonly<IrExpression>,
++  precedingStatements: readonly Readonly<IrStatement>[],
+   statements: readonly Readonly<IrStatement>[],
+   immutableBindingIds: ReadonlySet<string>,
+   immutableBindingInitializers: ReadonlyMap<string, Readonly<IrExpression>>,
+@@ -34838,6 +34929,14 @@ function getDenseArraySequentialAppendPlanCpp(
+   if (step === undefined) return undefined;
+   const body = statement.body.kind === 'block' ? statement.body.statements : [statement.body];
+   const propertyBoundObject = getDenseArrayLengthPropertyObjectBindingIdCpp(condition.right);
++  if (
++    propertyBoundObject &&
++    [...precedingStatements, ...statements.slice(0, statements.indexOf(statement))].some((candidate) =>
++      doesCppStatementReachDenseBoundCpp(candidate, propertyBoundObject),
++    )
++  ) {
++    return undefined;
++  }
+   const freshBodyArrayBindingIds = collectDenseArrayFreshBindingIdsCpp(body);
+   let indexCoefficient: number | undefined;
+   let firstIndexConstant: number | undefined;
+@@ -34861,6 +34960,7 @@ function getDenseArraySequentialAppendPlanCpp(
+       continue;
+     }
+     if (
++      (propertyBoundObject !== undefined && doesCppStatementReachDenseBoundCpp(bodyStatement, propertyBoundObject)) ||
+       doesIrStatementReferenceBindingCpp(bodyStatement, arrayBindingId) ||
+       doesIrStatementContainLoopControlCpp(bodyStatement) ||
+       (propertyBoundObject &&
+@@ -34888,6 +34988,7 @@ function getDenseArraySequentialAppendPlanCpp(
+     return undefined;
+   }
+   return {
++    ...(propertyBoundObject ? { boundObjectBindingId: propertyBoundObject } : {}),
+     directOffsets,
+     indexCoefficient,
+     indexBindingId: index.binding.id,
+@@ -35048,6 +35149,28 @@ function getDenseArrayLengthPropertyObjectBindingIdCpp(expression: Readonly<IrEx
+     : undefined;
+ }
+ 
++// Whether a call can change the array whose `.length` bounds a dense write loop. A callee can only
++// mutate that array when it can reach it: passing the binding itself, calling it, or handing it on
++// through a property. Reading one of its elements and passing the ELEMENT is not reaching the
++// array -- an element of a numeric array is a value -- which is the shape a transform loop uses.
++function doesCppCallReachDensePropertyBoundCpp(
++  call: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  objectBindingId: string,
++): boolean {
++  const isSafeRead = (expression: Readonly<IrExpression>): boolean =>
++    expression.kind === 'element' ||
++    (expression.kind === 'property' &&
++      (expression.name === 'length' ||
++        (expression.object.kind === 'identifier' &&
++          expression.object.reference.kind === 'binding' &&
++          expression.object.reference.binding.id === objectBindingId)));
++  if (doesIrExpressionReferenceBindingCpp(call.callee, objectBindingId)) return true;
++  return call.arguments.some(
++    (argument) => doesIrExpressionReferenceBindingCpp(argument, objectBindingId) && !isSafeRead(argument),
++  );
++}
++
++
+ function doesIrStatementInvalidateDenseArrayPropertyBoundCpp(
+   statement: Readonly<IrStatement>,
+   objectBindingId: string,
+@@ -35056,7 +35179,12 @@ function doesIrStatementInvalidateDenseArrayPropertyBoundCpp(
+   let invalidates = false;
+   analyzeIrStatementSubtreeTraversal(statement, {
+     expression(expression) {
+-      if (expression.kind === 'call') invalidates = true;
++      if (
++        expression.kind === 'call' &&
++        doesCppCallReachDensePropertyBoundCpp(expression, objectBindingId)
++      ) {
++        invalidates = true;
++      }
+       if (expression.kind === 'assignment' && doesIrExpressionReferenceBindingCpp(expression.left, objectBindingId)) {
+         invalidates = true;
+       }
+@@ -35108,14 +35236,24 @@ function collectIrModuleDenseArrayLengthBindingIdsCpp(module: Readonly<IrModule>
+         for (const variable of statement.declarations) {
+           if ('binding' in variable && variable.initializer) {
+             const length = getDenseArrayLengthExpressionCpp(variable.initializer);
++            const later = statements.slice(statementIndex + 1);
++            const boundObject =
++              length &&
++              length.kind === 'property' &&
++              length.name === 'length' &&
++              length.object.kind === 'identifier' &&
++              length.object.reference.kind === 'binding'
++                ? length.object.reference.binding.id
++                : undefined;
++            const boundReached =
++              boundObject !== undefined &&
++              [...statements.slice(0, statementIndex), ...later].some((candidate) =>
++                doesCppStatementReachDenseBoundCpp(candidate, boundObject),
++              );
+             if (
+               length &&
+-              hasCompleteDenseArrayWritesCpp(
+-                variable.binding.id,
+-                length,
+-                immutableBindingIds,
+-                statements.slice(statementIndex + 1),
+-              )
++              !boundReached &&
++              hasCompleteDenseArrayWritesCpp(variable.binding.id, length, immutableBindingIds, later)
+             ) {
+               result.add(variable.binding.id);
+             }
+diff --git a/packages/compiler-backend-cpp/src/cppDensePairWriteConstruction.test.ts b/packages/compiler-backend-cpp/src/cppDensePairWriteConstruction.test.ts
+new file mode 100644
+index 0000000..7d0b3c3
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDensePairWriteConstruction.test.ts
+@@ -0,0 +1,157 @@
++import ts from 'typescript';
++import { expect, it } from 'vitest';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const prelude = `
++  interface Point { x: number; y: number }
++  const point: Point = { x: 0, y: 0 };
++  function transformPoint(out: Point, a: number, b: number): void { out.x = a + b; out.y = a - b; }
++`;
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/pairs.ts', prelude + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++it('constructs a length-sized array that a pair-write loop fills before it escapes', () => {
++  const output = emit(`
++    export function build(contours: number[][]): number[][] {
++      const out: number[][] = [];
++      for (const contour of contours) {
++        const transformed = new Array<number>(contour.length);
++        for (let i = 0; i < contour.length; i += 2) {
++          transformPoint(point, contour[i], contour[i + 1]);
++          transformed[i] = point.x;
++          transformed[i + 1] = point.y;
++        }
++        out.push(transformed);
++      }
++      return out;
++    }
++  `);
++  // The sized allocation is cleared, then every pair is an append checked at the current length: the
++  // unobservable holes are never read and no zero-filled value is ever observed.
++  expect(output).toContain('flight::Array<double>(static_cast<double>(contour.size()))');
++  expect(output).toContain('.clear()');
++  expect(output).toContain('sequential_append_index != static_cast<double>(sequential_append_receiver.size())');
++  // The in-bounds element keeps its checked read; the partner slot is read through the presence-aware
++  // scalar cell at its numeric argument, so an absent partner is NaN rather than a range error.
++  expect(output).toContain('contour.element(i)');
++  expect(output).toContain('.get(');
++  expect(output).toContain('flight::JsonScalarCell{flight::Any{*');
++  expect(output).toContain('flight::JsonScalarCell{}.to_number()');
++  // The result is still a flight::Array, not a copied or substituted owner.
++  expect(output).toContain('flight::Array<double> transformed');
++});
++
++it('accepts an unassigned array parameter as the stable write bound', () => {
++  const output = emit(`
++    export function build(contour: number[]): number[] {
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        transformPoint(point, contour[i], contour[i + 1]);
++        transformed[i] = point.x;
++        transformed[i + 1] = point.y;
++      }
++      return transformed;
++    }
++  `);
++  expect(output).toContain('sequential_append_index');
++});
++
++it('refuses when the call can reach the array itself', () => {
++  const source = `
++    function mutate(values: number[]): void { values.push(1); }
++    export function build(contour: number[]): number[] {
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        mutate(contour);
++        transformed[i] = contour[i];
++        transformed[i + 1] = contour[i + 1];
++      }
++      return transformed;
++    }
++  `;
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/pairs.ts', prelude + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  expect(() => emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' })).toThrow(/Array length construction/);
++});
++
++it('refuses when the loop body mutates the bound array', () => {
++  const source = `
++    export function build(contour: number[]): number[] {
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        contour.push(0);
++        transformed[i] = contour[i];
++        transformed[i + 1] = contour[i + 1];
++      }
++      return transformed;
++    }
++  `;
++  const sourceFile = ts.createSourceFile('/flight/packages/example/src/pairs.ts', prelude + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/example', upstreamDirectory: '/flight' });
++  expect(result.diagnostics).toEqual([]);
++  expect(() => emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' })).toThrow(/Array length construction/);
++});
++
++it('keeps the general indexed read unchanged outside a pair-write numeric argument', () => {
++  const output = emit(`
++    export function raw(values: number[], index: number): number { return values[index]; }
++  `);
++  expect(output).toContain('values.element(index)');
++  expect(output).not.toContain('JsonScalarCell');
++});
++
++it('refuses when a closure defined before the loop can mutate the bound array', () => {
++  const source = `
++    export function build(contour: number[]): number[] {
++      const mutate = (): void => { contour.push(0); };
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        mutate();
++        transformed[i] = contour[i];
++        transformed[i + 1] = contour[i + 1];
++      }
++      return transformed;
++    }
++  `;
++  expect(() => emit(source)).toThrow(/Array length construction/);
++});
++
++it('refuses when an alias of the array is handed to a call', () => {
++  const source = `
++    function consume(values: number[]): void { values.push(0); }
++    export function build(contour: number[]): number[] {
++      const alias = contour;
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        consume(alias);
++        transformed[i] = contour[i];
++        transformed[i + 1] = contour[i + 1];
++      }
++      return transformed;
++    }
++  `;
++  expect(() => emit(source)).toThrow(/Array length construction/);
++});
++
++it('refuses when the bound array is stored in a module global before the loop', () => {
++  const source = `
++    const registry: number[][] = [];
++    export function build(contour: number[]): number[] {
++      registry.push(contour);
++      const transformed = new Array<number>(contour.length);
++      for (let i = 0; i < contour.length; i += 2) {
++        transformed[i] = contour[i];
++        transformed[i + 1] = contour[i + 1];
++      }
++      return transformed;
++    }
++  `;
++  expect(() => emit(source)).toThrow(/Array length construction/);
++});
