@@ -1,0 +1,434 @@
+{
+  "schema": "flight-cpp-final-common-helper-upstream-project-qualification/1",
+  "authority": "Foreman-ac6bb4f9, supplemental verification only; product migration remains HELD",
+  "preparedProductContent": "Unchanged from accepted ad596edf fourteen-product-file preparation, with final20 physical-field descriptions and SourceOptional UID.",
+  "inputs": {
+    "commit": "ad596edf864cb4bd68bc609eae0fd699c0f2e171",
+    "base": "3ee73d3ddec22596470fa63e1628bf0c03026835",
+    "hashes": {
+      "include/flight/node/native_node2d_access.hpp": "e216acc384e88f6355d151b7a7b1cd3e3cffceaa7cfcbe7780526426010b8eac",
+      "examples/upstream/camera2d.cpp": "f26a9ca2dbf6527c1b44d4ea988681cddc0a7609ed7d32a35115d74e554d5100",
+      "examples/upstream/font_host.cpp": "19680af3b7295c85c83d0603ff37c6fba2fbe175dfba6ee2006c86524ca94bf4",
+      "examples/upstream/font_host.hpp": "319be97da0033ea5851f7886063c8d322259a23973ab42b4e1615ea1ef99a46b",
+      "examples/upstream/CMakeLists.txt": "c3139248481dadfa0b55cd8e1047cef0688e5d618f785ba71378653399c348ef",
+      "CMakeLists.txt": "b8f391c1b1f62f92567d88c457e105b1914ce13d73666dce0dfbad92508a4c92",
+      "overrides/include/flight/scene2d_gl/gl_mesh_shape_renderer.hpp": "d7e50e632ff204c6a4b709e70789c8b3dce295e672389650cf860091aada8006",
+      "overrides/include/flight/shape/shape_commands.hpp": "6308f87c72de24b13b98448a112fadc49bddfd09a4a41e8b52259e5013c4cb94"
+    },
+    "testingCommit": "329fd166d170d4ad88c71c494b1f7daa798c8201",
+    "testingBase": "63f0e10124659b9369c3ce903aa3b561895bde3a",
+    "preparedContentUnchangedAfterAdvisoryOnlyBase": true,
+    "packagingCommit": "3c833c7a58773e294c5d52072a4441d58a00cccc",
+    "packagingBase": "cb4788f63f3cf1393a2c037fd8256730a6d0cc8e",
+    "allCompiledRepoPathsUnchangedAtPackaging": true
+  },
+  "projectCompile": {
+    "status": "PASS",
+    "targets": [
+      {
+        "label": "flight_cpp_upstream_font_host-build",
+        "command": [
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+          "--target",
+          "flight_cpp_upstream_font_host",
+          "-j1"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "flight_cpp_upstream_camera2d-build",
+        "command": [
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+          "--target",
+          "flight_cpp_upstream_camera2d",
+          "-j1"
+        ],
+        "exit": 0
+      }
+    ],
+    "commands": [
+      {
+        "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream",
+        "command": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++  -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/overrides/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include -g0 -O0 -std=gnu++20 -Wall -Wextra -Wpedantic -Wconversion -Wno-conversion -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-result -ffp-contract=off -o CMakeFiles/flight_cpp_upstream_font_host.dir/font_host.cpp.o -c /home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/font_host.cpp",
+        "file": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/font_host.cpp",
+        "output": "examples/upstream/CMakeFiles/flight_cpp_upstream_font_host.dir/font_host.cpp.o"
+      },
+      {
+        "directory": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream",
+        "command": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++  -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/overrides/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include -I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream -g0 -O0 -std=gnu++20 -Wall -Wextra -Wpedantic -Wconversion -Wno-conversion -Wno-missing-field-initializers -Wno-unused-parameter -Wno-unused-result -ffp-contract=off -o CMakeFiles/flight_cpp_upstream_camera2d.dir/camera2d.cpp.o -c /home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/camera2d.cpp",
+        "file": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/camera2d.cpp",
+        "output": "examples/upstream/CMakeFiles/flight_cpp_upstream_camera2d.dir/camera2d.cpp.o"
+      }
+    ],
+    "actualObjectsAndDependencyHashes": [
+      {
+        "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/font_host.cpp",
+        "object": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream/CMakeFiles/flight_cpp_upstream_font_host.dir/font_host.cpp.o",
+        "objectBytes": 85065688,
+        "objectSha256": "0fdd15fa1055525936fc99ee01ff5d03ef43c86743a4bc91cfda69f48d3f94fc",
+        "dependencyFile": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream/CMakeFiles/flight_cpp_upstream_font_host.dir/font_host.cpp.o.d",
+        "dependencySha256": "7fcc78b1ae544938a6089764b76fd45f6dc1b41763ad12df5bff8064413fa8b4",
+        "finalHelperIsActualDependency": true
+      },
+      {
+        "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/examples/upstream/camera2d.cpp",
+        "object": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream/CMakeFiles/flight_cpp_upstream_camera2d.dir/camera2d.cpp.o",
+        "objectBytes": 159022784,
+        "objectSha256": "193dc957b4bd951c0e8087f6d55a4fe82f47ba04356581e8ad553f2db4cd082e",
+        "dependencyFile": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build/examples/upstream/CMakeFiles/flight_cpp_upstream_camera2d.dir/camera2d.cpp.o.d",
+        "dependencySha256": "04b1530a9757afb4aac982ee3f250b734ed25cebc1b1d3b08814a29deed9e505",
+        "finalHelperIsActualDependency": true
+      }
+    ]
+  },
+  "cameraGlSmoke": {
+    "status": "UNAVAILABLE: runtime graphics initialization failed",
+    "ctest": {
+      "label": "camera2d-smoke",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/ctest",
+        "--test-dir",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--output-on-failure",
+        "--timeout",
+        "60",
+        "-R",
+        "^flight_cpp_upstream_camera2d_smoke$"
+      ],
+      "exit": 8,
+      "environmentFromProjectCTest": [
+        "SDL_VIDEODRIVER=offscreen",
+        "LIBGL_ALWAYS_SOFTWARE=1"
+      ]
+    },
+    "diagnostic": "SDL_CreateWindow: Could not initialize OpenGL / GLES library",
+    "registeredAssertions": "Original three verified frames,122nodes,positive framebuffer coverage; required regex was not met.",
+    "renderedFrameQualification": false
+  },
+  "dependencySetup": {
+    "systemInstallation": false,
+    "networkUsed": false,
+    "SDL3": "3.4.10 real shared library built from already-present source into workspace-local prefix",
+    "SDLConfigure": {
+      "label": "sdl-configure",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "-S",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10",
+        "-B",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build",
+        "-DCMAKE_INSTALL_PREFIX=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DSDL_SHARED=ON",
+        "-DSDL_STATIC=OFF",
+        "-DSDL_TESTS=OFF",
+        "-DSDL_TEST_LIBRARY=OFF",
+        "-DSDL_INSTALL_CPACK=OFF",
+        "-DSDL_ALSA=OFF",
+        "-DSDL_X11=OFF",
+        "-DSDL_WAYLAND=OFF",
+        "-DSDL_KMSDRM=OFF",
+        "-DSDL_LIBUDEV=OFF",
+        "-DSDL_HIDAPI=OFF",
+        "-DSDL_UNIX_CONSOLE_BUILD=ON",
+        "-DCMAKE_C_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-cc",
+        "-DCMAKE_CXX_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++",
+        "-DCMAKE_AR=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ar",
+        "-DCMAKE_RANLIB=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ranlib"
+      ],
+      "exit": 0
+    },
+    "SDLBuild": {
+      "label": "sdl-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build",
+        "--target",
+        "SDL3-shared",
+        "-j1"
+      ],
+      "exit": 0
+    },
+    "SDLInstall": {
+      "label": "sdl-install",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--install",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build"
+      ],
+      "exit": 0
+    },
+    "projectConfigure": {
+      "label": "project-configure",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "-S",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo",
+        "-B",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "-DBUILD_TESTING=ON",
+        "-DFLIGHT_CPP_BUILD_EXAMPLES=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF",
+        "-DCMAKE_BUILD_TYPE=",
+        "-DCMAKE_C_FLAGS=-g0 -O0",
+        "-DCMAKE_CXX_FLAGS=-g0 -O0",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DCMAKE_C_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-cc",
+        "-DCMAKE_CXX_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++",
+        "-DCMAKE_AR=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ar",
+        "-DCMAKE_RANLIB=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ranlib",
+        "-DCMAKE_PREFIX_PATH=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix"
+      ],
+      "exit": 0
+    },
+    "KhronosHeaders": {
+      "unchangedDependencyHeaders": [
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/EGL/eglext.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/EGL/eglext.h",
+          "sha256": "efc117e5cbbf21fa4f2e9dbfb3899eedb3235c0152a2f6d9ca4510b7505e400f"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/EGL/eglplatform.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/EGL/eglplatform.h",
+          "sha256": "25b5391655effcf363a38fa00c3154f356a3eab3d35dc067847875513cf1e441"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/EGL/egl.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/EGL/egl.h",
+          "sha256": "f5f41711f5d7517eb50d63726d786d471a3e84a52b94fd9aca9b6262b629347c"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES2/gl2ext.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES2/gl2ext.h",
+          "sha256": "574de987d1f0751a132406abd893928cc7bc5b15c1df8ecea959f2732631b184"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES2/gl2.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES2/gl2.h",
+          "sha256": "3a2855122942ddc6bed5195cae901a8468e7c633ac999e3f3d70b98949a28652"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES2/gl2platform.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES2/gl2platform.h",
+          "sha256": "f5da0747540a50be5f44aad264aae45bdf157a192c40f17487dd9a2f99c71b6c"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES3/gl32.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES3/gl32.h",
+          "sha256": "e580e7db6bfc6b86860ae6b02fa27eb9acfe6726bab71f9c268568cdbf80baea"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES3/gl3platform.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES3/gl3platform.h",
+          "sha256": "a9e060dae5a2b11c5a889b679692b7089a10a7e03ebfbb6cf28217f6e322fb08"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES3/gl3.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES3/gl3.h",
+          "sha256": "d2f93787d1493c0cd4ca15382b77355d1c248bb8d2af9f4f3e0a54cf6fb018c3"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/GLES3/gl31.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/GLES3/gl31.h",
+          "sha256": "612fc3a3c483baa3b04dfa6be3cb44217ad5ebb92c3af05531dcac2c159b177a"
+        },
+        {
+          "source": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10/src/video/khronos/KHR/khrplatform.h",
+          "installed": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include/KHR/khrplatform.h",
+          "sha256": "7b1e01aaa7ad8f6fc34b5c7bdf79ebf5189bb09e2c4d2e79fc5d350623d11e83"
+        }
+      ],
+      "reason": "SDL public opengles header requires GLES development headers; supplied from the same existing SDL source, workspace prefix only."
+    },
+    "cachedGraphicsLibraries": []
+  },
+  "history": [
+    {
+      "label": "initial-project-configure",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "-S",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo",
+        "-B",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "-DBUILD_TESTING=ON",
+        "-DFLIGHT_CPP_BUILD_EXAMPLES=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF",
+        "-DCMAKE_BUILD_TYPE=",
+        "-DCMAKE_C_FLAGS=-g0 -O0",
+        "-DCMAKE_CXX_FLAGS=-g0 -O0",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DCMAKE_C_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-cc",
+        "-DCMAKE_CXX_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++",
+        "-DCMAKE_AR=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ar",
+        "-DCMAKE_RANLIB=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ranlib"
+      ],
+      "exit": 1
+    },
+    {
+      "label": "sdl-configure",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "-S",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/SDL3-3.4.10",
+        "-B",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build",
+        "-DCMAKE_INSTALL_PREFIX=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DSDL_SHARED=ON",
+        "-DSDL_STATIC=OFF",
+        "-DSDL_TESTS=OFF",
+        "-DSDL_TEST_LIBRARY=OFF",
+        "-DSDL_INSTALL_CPACK=OFF",
+        "-DSDL_ALSA=OFF",
+        "-DSDL_X11=OFF",
+        "-DSDL_WAYLAND=OFF",
+        "-DSDL_KMSDRM=OFF",
+        "-DSDL_LIBUDEV=OFF",
+        "-DSDL_HIDAPI=OFF",
+        "-DSDL_UNIX_CONSOLE_BUILD=ON",
+        "-DCMAKE_C_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-cc",
+        "-DCMAKE_CXX_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++",
+        "-DCMAKE_AR=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ar",
+        "-DCMAKE_RANLIB=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ranlib"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "sdl-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build",
+        "--target",
+        "SDL3-shared",
+        "-j1"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "sdl-install",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--install",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-build"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "project-configure",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "-S",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo",
+        "-B",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "-DBUILD_TESTING=ON",
+        "-DFLIGHT_CPP_BUILD_EXAMPLES=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL=ON",
+        "-DFLIGHT_CPP_BUILD_HOST_SDL_VULKAN=OFF",
+        "-DCMAKE_BUILD_TYPE=",
+        "-DCMAKE_C_FLAGS=-g0 -O0",
+        "-DCMAKE_CXX_FLAGS=-g0 -O0",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DCMAKE_C_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-cc",
+        "-DCMAKE_CXX_COMPILER=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/zig-c++",
+        "-DCMAKE_AR=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ar",
+        "-DCMAKE_RANLIB=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/zig-ranlib",
+        "-DCMAKE_PREFIX_PATH=/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "flight_cpp_upstream_font_host-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--target",
+        "flight_cpp_upstream_font_host",
+        "-j1"
+      ],
+      "exit": 2
+    },
+    {
+      "label": "flight_cpp_upstream_camera2d-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--target",
+        "flight_cpp_upstream_camera2d",
+        "-j1"
+      ],
+      "exit": 2
+    },
+    {
+      "label": "flight_cpp_upstream_font_host-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--target",
+        "flight_cpp_upstream_font_host",
+        "-j1"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "flight_cpp_upstream_camera2d-build",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/cmake",
+        "--build",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--target",
+        "flight_cpp_upstream_camera2d",
+        "-j1"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "camera2d-smoke",
+      "command": [
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/.tooling/cmake-python/cmake/data/bin/ctest",
+        "--test-dir",
+        "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/project-build",
+        "--output-on-failure",
+        "--timeout",
+        "60",
+        "-R",
+        "^flight_cpp_upstream_camera2d_smoke$"
+      ],
+      "exit": 8,
+      "environmentFromProjectCTest": [
+        "SDL_VIDEODRIVER=offscreen",
+        "LIBGL_ALWAYS_SOFTWARE=1"
+      ]
+    }
+  ],
+  "limits": [
+    "Both requested final-helper project targets compiled AND linked; their actual object dependency files name the final20-field native helper. No Flight product source, Types, SDK output or manifest was changed for this qualification.",
+    "The initial missing SDL3 package and later missing GLES2 header dependency were recovered using existing unmodified SDL/Khronos source in a private prefix; their failure logs are preserved.",
+    "The final smoke attempt failed before rendering at SDL window creation. This is recorded as unavailable runtime coverage, never as a passing GL smoke or migrated frame/pixel proof.",
+    "The first retry wrapper outer exit1 counted earlier failures despite latest target exits0/0; individual actual CMake exits and controller explanation are retained.",
+    "Inactive-only final rebase changed no compiled repo source/header path. Per-source hashes and tested/packaged commits are distinct.",
+    "The accepted76/nativeGL/DisplayObject/Gizmo/SVG proof is unchanged and not rerun. Original805849byte archive464230e2 remains immutable.",
+    "LAND HOLD continues pending actual host flight-hx five-symbol usage evidence/USER ABI decision plus coordinated Builder2 exact Types/B and Builder4 original source factory/image39. Neither fullB nor those factory contracts is qualified here.",
+    "No fifteenth product file, new row family, fake base, copied runtime state, off-scope RichText branch or provenance/SDK activation."
+  ],
+  "archive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-archives/builder5-final-example-qualification-proof.tgz",
+    "sha256": "5b8b4dce0cfcc76eb5d1cf284b914e825f8387ab67a5cc75a9ddb69fd8d7c14b",
+    "bytes": 233795,
+    "payloadMembers": 51,
+    "totalMembers": 52
+  }
+}
