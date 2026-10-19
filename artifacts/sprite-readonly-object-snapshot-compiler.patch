@@ -1,0 +1,9 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8531,0 +8532,3 @@
++          // The declared source null carrier must not become source undefined.
++          const nullSnapshot = getCppConstructedMemberSentinelCpp(property.type, context) === 'Null'
++            ? 'if (!value.has_value()) return {flight::AnyKind::null, true, {}, {}}; ' : '';
+@@ -8536 +8539 @@
+-            `class ${cell} final : public flight::TypedRowCell<${valueType}> { public: explicit ${cell}(std::function<${valueType}()> getter) : getter_(std::move(getter)) {} ${valueType}& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } void set(${valueType}) override { throw std::logic_error("object getter is readonly"); } private: std::function<${valueType}()> getter_; std::optional<${valueType}> value_; };`,
++            `class ${cell} final : public flight::TypedRowCell<${valueType}> { public: explicit ${cell}(std::function<${valueType}()> getter) : getter_(std::move(getter)) {} ${valueType}& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } [[nodiscard]] flight::detail::ReadonlyObjectValue readonly_object_value() const override { auto value = getter_(); ${nullSnapshot}return flight::detail::readonly_nested_object_value(value); } void set(${valueType}) override { throw std::logic_error("object getter is readonly"); } private: std::function<${valueType}()> getter_; std::optional<${valueType}> value_; };`,

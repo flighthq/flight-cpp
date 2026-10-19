@@ -1,0 +1,389 @@
+{
+  "schema": "flight-readonly-object-snapshot-proof/1",
+  "state": "INACTIVE bounded actual runtime/compiler proof; actual-byte review pending, same original Sprite closure continues",
+  "authority": [
+    "Manager3e1de4a2",
+    "Foremanf0914edc",
+    "Foremanbe4966fe"
+  ],
+  "runtimeBaseCommit": "cb4788f6",
+  "runtime": {
+    "patch": "artifacts/sprite-readonly-object-snapshot-runtime.patch",
+    "sha256": "3671391f84c6d7186683dbaf27ad3cc091bcf90433914c55b5f2bf2082942459",
+    "baselineSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+    "candidateSha256": "e06f84ef9a6c0f16e7c23a7f472512d87896254960bf88062f40713b8735a811",
+    "mechanism": "One new default RowCell virtual plus inherited typed/policy-aware native snapshot; direct actual StructuralRef owner including schema-only, owning native lifetime, variant/optional sentinel; get/as_any unchanged. Bounded pre-exact readonly outer -> optional readonly Partial<object> dispatch.",
+    "abiDecision": "Prior explicit conditional Manager authorization covers vtable change. No product activation or cpp_abi version change. Activation awaits coherent pair plus Builder6 review."
+  },
+  "compiler": {
+    "patch": "artifacts/sprite-readonly-object-snapshot-compiler.patch",
+    "sha256": "7df2fa3b183ef7431238684bf45b0b00565d4e1538ade0ceb4994527d3832497",
+    "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "composition": "archived combined136, old approved fresh-native PREP + nested-data projection + original allocation experiment; inactive and not whole factory qualified",
+    "baselineBackendSha256": "a420dafcc6febb05196485de5d627f6e0d2d20c964724cd8001c5f1599bf1af6",
+    "candidateBackendSha256": "9faff9ddc8b942cb8a50832ac2bb5c633ad4744c99db995e21e2157f71ab61dd",
+    "onlyNewHunk": "generated readonly accessor readonly_object_value; original get/as_any untouched",
+    "request": "docs/compiler-requests/readonly-nested-object-getter-snapshot.md",
+    "expiry": "Remove inactive hunk when compiler natively supplies this owning snapshot with matching runtime; invalidate and requalify on pin/base composition changes.",
+    "equivalence": "Getter source invokes once at original read, retains actual result without get-reference-cache retention, forwards exact source exception; declared Null/Undefined analysis and exact source owner preserved. No other read domain or dynamic representation changes.",
+    "strictBuild": {
+      "command": "npm run build --silent",
+      "exitCode": 0,
+      "compilerCandidate": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-compiler136",
+      "backendSha256": "9faff9ddc8b942cb8a50832ac2bb5c633ad4744c99db995e21e2157f71ab61dd",
+      "runtimeSha256": "e06f84ef9a6c0f16e7c23a7f472512d87896254960bf88062f40713b8735a811",
+      "scope": "Strict isolated compiler build; not SDK generation."
+    }
+  },
+  "sourceReemission": {
+    "strict": [],
+    "rows": [
+      {
+        "label": "baseline",
+        "id": "getter",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "baseline",
+        "id": "getter-controls",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "baseline",
+        "id": "getter-exact",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter-controls",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter-exact",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      }
+    ]
+  },
+  "native": {
+    "originalGetter21": [
+      {
+        "name": "baseline-original21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow/baseline/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/baseline-original21"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 2 checks: std::bad_cast\n"
+      },
+      {
+        "name": "narrow-old21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow/baseline/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/narrow-old21"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 21 checks: actual generated getter check failed\n"
+      },
+      {
+        "name": "narrow-emitted21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow/candidate/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/narrow-emitted21"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 21 actual compiler-generated getter once snapshot exception and lifetime checks\n",
+        "stderr": ""
+      }
+    ],
+    "exactTypedGetter13": [
+      {
+        "name": "exact-floor",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-floor"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 13 checks: exact-typed emitted getter check failed\n"
+      },
+      {
+        "name": "exact-narrow-old",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-narrow-old"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 13 checks: exact-typed emitted getter check failed\n"
+      },
+      {
+        "name": "exact-narrow-new",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/exact-narrow-new"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 13 actual emitted exact-typed getter identity snapshot and final release checks\n",
+        "stderr": ""
+      }
+    ],
+    "metadata62": [
+      {
+        "name": "metadata",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow/metadata-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/metadata"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 62 actual emitted exact-typed getter nullable sentinel schema-only owner policy default and JSON controls\n",
+        "stderr": ""
+      }
+    ],
+    "policyOwner83": {
+      "name": "policy-owner83",
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "/tmp/builder4-sprite-readonly-object-narrow/policy-owner-snapshot-native.cpp",
+        "-o",
+        "/tmp/builder4-sprite-readonly-object-narrow/policy-owner83"
+      ],
+      "compileExit": 0,
+      "runExit": 0,
+      "stdout": "PASS 83 existing-as_any policy presence external-subclass getter lifetime and readonly-only checks\n",
+      "stderr": ""
+    },
+    "originalPolicy83": {
+      "name": "policy83",
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "/tmp/builder4-sprite-data-cell-existing-path/policy-native.cpp",
+        "-o",
+        "/tmp/builder4-sprite-readonly-object-narrow/policy83"
+      ],
+      "compileExit": 0,
+      "runExit": 1,
+      "stdout": "",
+      "stderr": "FAIL after 81 checks: existing-path policy/compatibility check failed\n"
+    },
+    "finalRuntime": [
+      {
+        "name": "named-final",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "/tmp/builder4-sprite-readonly-object-narrow/named-properties-comparison.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/named-final"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "marked=0 represented=0 UnrepresentedProperty=1 exactSourceObject=0\nmarked=1 represented=0 UnrepresentedProperty=1 exactSourceObject=0\n",
+        "stderr": ""
+      },
+      {
+        "name": "emitted15-final",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-data-cell-contract/controls",
+          "/tmp/builder4-sprite-data-cell-contract/emitted-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow/emitted15-final"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 15 actual emitted generic nested-value checks\n",
+        "stderr": ""
+      }
+    ],
+    "namedBaseline": {
+      "name": "named-baseline",
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "/tmp/builder4-sprite-data-cell-existing-path/named-properties-comparison.cpp",
+        "-o",
+        "/tmp/builder4-sprite-readonly-object-narrow/named-baseline"
+      ],
+      "compileExit": 0,
+      "runExit": 0,
+      "stdout": "marked=0 represented=0 UnrepresentedProperty=1 exactSourceObject=0\nmarked=1 represented=0 UnrepresentedProperty=1 exactSourceObject=0\n",
+      "stderr": ""
+    }
+  },
+  "fixtureEvolution": {
+    "original83": "native-initial-results.json policy83 FAIL81; preserved unchanged",
+    "revised83": "metadata-gate-results.json policy-owner83 PASS83",
+    "assertionChanged": {
+      "from": "bad_cast for OwnedRowCell<Bag> with schema-only RowOwner",
+      "to": "exact source owner identity for that read",
+      "reason": "New approved direct StructuralRef owner capture preserves already represented object; empty schema-only object is a valid readonly Partial<Data>. This was a raw_value-era representation restriction, not source null/scalar/JSON acceptance."
+    },
+    "generatedNull": "source Data|null snapshot Null; unchanged inherited dynamic as_any still optional-empty undefined, outside bounded read. Owned optional without policy remains construction undefined; Native RequiredNullable null matches existing as_any.",
+    "v1MetadataCompile": "Ref alias template deduction helper corrected to std::shared_ptr; assertion logic unchanged; v1 source/log retained.",
+    "v1ConcreteExactEmission": "Both compiler variants refuse concrete readonly Partial<T> accessor fixture; preserved. Actual generic T accessor re-emits and instantiated T is the exact readonly partial value. No handwritten emitted class or source factory replacement."
+  },
+  "sameBaseCompilerParity": {
+    "rows": [
+      {
+        "variant": "baseline",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      },
+      {
+        "variant": "candidate",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      }
+    ],
+    "newFailures": [],
+    "runtimeFloor": "SAME fresh narrow snapshot runtime/current cb4788f6 includes; compiler variants differ only generated snapshot override.",
+    "scope": "16 getter/accessor tests, full suite NOTRUN; no standalone emitter activation."
+  },
+  "independentReview": {
+    "agent": "builder6",
+    "actualInputsArchive": "61a789b7bfc9fab7416ba0eb349189d68abccc81289325ad7aa64f81ad3d368b",
+    "status": "actual bytes supplied, awaiting final review; prior design simulation is not candidate approval"
+  },
+  "explicitLimits": [
+    "External caching subclasses and ordinary typed getter retention outside bounded read unchanged.",
+    "Original policy83 FAIL81 retained; exactly one schema-only rejection replaced with owner identity for revised83, not an unchanged83 pass.",
+    "Concrete readonly Partial accessor source refused by both variants; actual generic T getter instantiated exact target proves that cell path.",
+    "Existing generated nullable as_any default remains undefined outside bounded read; new metadata uses source declared Null.",
+    "16 accessor tests only; same13pass3existingfail, zero new, no full suite qualification.",
+    "No whole original native Sprite/image39 claim. Builder5 actual original public compile stops at display_object:196 uninstantiated generic runtime factory->Any before getter, link/run NOTRUN."
+  ],
+  "coreAbiActivation": false,
+  "runtimeOrCompilerProductChanges": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "wholeStrict": "220 baseline/candidate, two owned source errors open",
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-snapshot-proof.tgz",
+    "sha256": "a386ad11a32f0987d7f3f1d3389d80bfdc684cfe334bdc4824eee523ff52781e",
+    "bytes": 1145874,
+    "memberCount": 93,
+    "checksummedFileCount": 92
+  },
+  "verifyCommand": "node scripts/spriteReadonlyObjectSnapshotProof.mjs [archive]"
+}
