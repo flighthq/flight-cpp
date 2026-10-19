@@ -1,0 +1,27 @@
+{
+  "schema": "sprite-readonly-nested-value-narrow-seam/1",
+  "authority": "Foreman68defaff",
+  "state": "EXACT DESIGN BEFORE NEW ABI/GENERATED OVERRIDE REVIEW; no activation",
+  "whyExistingAsAnyIsInsufficient": {
+    "acceptedProof": "Actual emitted15 + policy83 + original re-emitted getter21 pass on v1 alternative (runtime-wide as_any change).",
+    "measuredConflict": "OwnedRowCell<StructuralRef<Bag>> has old as_any=nullopt but v1 as_any=Any(object). NamedProperties marked/unmarked answers change; forbidden activation.",
+    "erasedCellBoundary": "At readonly Init<Data> typed read, cell is RowCell erased. It may hold native Ref<Data>, optional<Ref<Data>>, or an anonymous StructuralRef<SourceSchema>. Expected target Readonly<Partial<Data>> does not name that arbitrary physical SourceSchema. Existing as_any refuses row values; existing get is available only after exact TypedRowCell<Stored> cast. Default exact-native/target-row guesses cannot recover an arbitrary stored source row without static source-type witness or a separate value metadata seam. Do not use a global/threadlocal as_any mode or per-object side registry."
+  },
+  "boundedProposal": {
+    "runtimeRowCell": "Keep existing as_any behavior byte-for-byte. New default readonly_object_value delegates to existing as_any once and captures actual object RowOwner plus strong native lifetime. This changes RowCell vtable as already proposed/conditionally reviewed; no product activation yet.",
+    "typedDefault": "TypedRowCell<Value> supplies the inherited typed default snapshot using its actual get() Value once. StructuralRef/optional/variant metadata uses original shared_owner/native object directly. External subclasses of RowCell/TypedRowCell need no new override; no as_any erasure broadening.",
+    "nativePolicyOverride": "NativeRowCell override reads stored Value once; empty RequiredNullable -> null, SourceOptional -> undefined, ambiguous Required -> OutOfProfileError. Existing presence/own-key APIs and physical address/value_type remain unchanged.",
+    "generatedGetterOverrideNeedingReview": "For the existing compiler-generated private readonly accessor cell, generate readonly_object_value() const override that invokes original getter_ once into local owning Value then returns typed metadata. It does not populate get reference cache. This is a newly specified derived override beyond the prior as_any-only emitter hunk, so review exact scope before implementing/activation. Existing get/set/class storage and as_any are unchanged.",
+    "rowGetDispatch": "Only readonly outer with optional/Partial member whose present type is readonly Partial<object>. Invoke snapshot BEFORE exact TypedRowCell matching fast paths for this one value domain. That also covers original Sprite options data getter whose physical type already equals target readonly row: routing that exact path through metadata avoids filling generated get cache. Every full-native/scalar/writable/JSON/external path stays on existing code. Missing cell -> absent; null rejects typed non-null view; present undefined -> absent value with own presence preserved."
+  },
+  "literalGeneratedMethod": "[[nodiscard]] flight::detail::ReadonlyObjectValue readonly_object_value() const override { auto value = getter_(); return flight::detail::readonly_nested_object_value(value); }",
+  "abiAndLimit": "No new class instance field, source body rewrite, native object fabrication, pointer cast, registry sweep or manual cache clearing. One proposed RowCell virtual plus default typed/native/generated implementations requires coordinated runtime/compiler qualification and Manager review. Typed get remains unchanged outside bounded readonly Partial<object> read; such general typed getter cache retention remains explicit separate behavior, no full getter-lifetime fix claim.",
+  "requiredNewProof": [
+    "Same21 original source getter fixture: baselineFAIL21 versus narrow candidatePASS without as_any broadening",
+    "Same83 policy/custom subclass and15 actual emitted generic projection receipts; baseline/candidate NamedProperties bag represented/get behavior identical marked and unmarked",
+    "Exact physical typed matching readonly Partial<object> generated getter path release (original Sprite options data shape), plus custom getter fresh result/error once",
+    "Required/RequiredNullable/SourceOptional kinds+presence, missing/authored undefined/null/ambiguous refusal; scalar/full-native/writable/JSON/external exclusions",
+    "Compiler strict build/re-emission and coherent same-base regression pair, no standalone emitter versus old runtime claim"
+  ],
+  "wholeFactory": "Original strict220/two owned errors and native Sprite/image39 remain OPEN, no Types/SDK/caller activation."
+}

@@ -1,0 +1,109 @@
+--- a/include/flight/structural_ref.hpp
++++ b/include/flight/structural_ref.hpp
+@@ -142,6 +142,11 @@
+ 
+ } // namespace detail
+ 
++namespace detail {
++template <typename Value>
++[[nodiscard]] std::optional<Any> row_cell_value_as_any(const Value& value);
++} // namespace detail
++
+ // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
+ // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
+ class RowCell {
+@@ -243,7 +248,7 @@
+   }
+ 
+   [[nodiscard]] std::optional<Any> as_any() const override {
+-    return detail::any_from(const_cast<TypedRowCell<Value>*>(this)->get());
++    return detail::row_cell_value_as_any(const_cast<TypedRowCell<Value>*>(this)->get());
+   }
+ };
+ 
+@@ -291,7 +296,7 @@
+         if (!const_cast<NativeRowCell*>(this)->get().has_value()) return Any(nullptr);
+       }
+     }
+-    return detail::any_from(const_cast<NativeRowCell*>(this)->get());
++    return detail::row_cell_value_as_any(const_cast<NativeRowCell*>(this)->get());
+   }
+ 
+   // The member's own address, taken once while the native object is being bound. Do not retain the
+@@ -601,6 +606,25 @@
+   std::unordered_map<const void*, SymbolCell> symbol_cells_;
+   std::unordered_map<const void*, Symbol> symbol_written_;
+ };
++
++namespace detail {
++template <typename Value>
++[[nodiscard]] std::optional<Any> row_cell_value_as_any(const Value& value) {
++  if constexpr (is_std_optional<std::remove_cvref_t<Value>>::value) {
++    return value ? row_cell_value_as_any(*value) : std::optional<Any>(Any(undefined));
++  } else if constexpr (requires { value.shared_owner(); value.shared_native_object(); }) {
++    const auto owner = value.shared_owner();
++    if (!owner) return std::nullopt;
++    auto erased = owner->raw_value();
++    // The existing owner must name its exact source object. No box, proxy-target substitution or
++    // fabricated nominal owner is a representation of this row value.
++    if (!erased || !erased->held_object() || erased->erased_row_owner().get() != owner.get()) return std::nullopt;
++    return erased;
++  } else {
++    return any_from(value);
++  }
++}
++} // namespace detail
+ 
+ template <typename Schema>
+ class StructuralRef;
+@@ -1975,6 +1999,12 @@
+ 
+ namespace detail {
+ 
++template <typename Value>
++inline constexpr bool readonly_partial_row_value = false;
++template <typename Schema>
++inline constexpr bool readonly_partial_row_value<StructuralRef<Schema>> =
++    schema_readonly<Schema> && schema_partial<Schema>;
++
+ template <typename Type, typename Key>
+ struct indexed_member {
+   using type = generated_row_member_t<Key, Type>;
+@@ -2036,6 +2066,18 @@
+     using Present = detail::optional_value_t<Value>;
+     if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
+       return Value(*present);
++    }
++    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<Present>) {
++      if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
++        if (cell->presence_ambiguous()) throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
++        const auto erased = cell->as_any(); // Existing virtual; one getter read, strong result lifetime.
++        if (erased && erased->kind() == AnyKind::undefined) return Value{};
++        if (erased && erased->held_object() && erased->held_type() != typeid(JsonObject) && erased->held_type() != typeid(JsonArray)) {
++          auto owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());
++          if (owner) return Value(Present::from_owner(std::move(owner)));
++        }
++        throw std::bad_cast();
++      }
+     }
+     return Value{};
+   } else if constexpr (detail::schema_member_required<Key, Schema>) {
+@@ -2064,6 +2106,18 @@
+     using Present = detail::optional_value_t<Value>;
+     if (auto* present = source.shared_owner()->template named_value_if<Present>(Key::name.view())) {
+       return Value(*present);
++    }
++    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<Present>) {
++      if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
++        if (cell->presence_ambiguous()) throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
++        const auto erased = cell->as_any(); // Existing virtual; one getter read, strong result lifetime.
++        if (erased && erased->kind() == AnyKind::undefined) return Value{};
++        if (erased && erased->held_object() && erased->held_type() != typeid(JsonObject) && erased->held_type() != typeid(JsonArray)) {
++          auto owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());
++          if (owner) return Value(Present::from_owner(std::move(owner)));
++        }
++        throw std::bad_cast();
++      }
+     }
+     if (source.shared_owner()->has_named_cell(Key::name.view())) throw std::bad_cast();
+     return Value{};

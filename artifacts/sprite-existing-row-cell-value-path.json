@@ -1,0 +1,219 @@
+{
+  "schema": "flight-sprite-existing-row-cell-value-path/1",
+  "state": "INACTIVE PROOF; v1 RUNTIME BROADENING FORBIDDEN; SAME ORIGINAL FACTORY CLOSURE CONTINUES",
+  "authority": [
+    "Foreman456096d8",
+    "Foreman00089983",
+    "Foremanf3698563",
+    "Foreman68defaff"
+  ],
+  "base": "63f0e101",
+  "runtime": {
+    "mechanism": "Existing as_any + RowOwner.raw_value exact-owner proof, no new virtual/layout/Any member. V1 globally changes Typed/Native as_any row-value erasure.",
+    "patch": "artifacts/sprite-existing-row-cell-value-runtime.patch",
+    "sha256": "88a28c38c6be0608be556ab0448139825d14ca3ec7d45e47c00e3b362d7ac6ed",
+    "baselineSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+    "candidateSha256": "106adff5a76731d28f721a4410e5e2fac10186bd1025e4cc785c639a89391972",
+    "activation": "FORBIDDEN: measured NamedProperties scope expansion, marked and unmarked, baseline unrepresented/UnrepresentedProperty -> candidate represented/Any(object).",
+    "dynamicComparison": {
+      "result": "CONFIRMED FORBIDDEN v1 SCOPE EXPANSION; not activation qualification",
+      "rows": [
+        {
+          "variant": "baseline",
+          "compileExitCode": 0,
+          "runExitCode": 0,
+          "stdout": "marked=0 represented=0 UnrepresentedProperty=1 exactSourceObject=0\nmarked=1 represented=0 UnrepresentedProperty=1 exactSourceObject=0\n",
+          "stderr": ""
+        },
+        {
+          "variant": "candidate",
+          "compileExitCode": 0,
+          "runExitCode": 0,
+          "stdout": "marked=0 represented=1 UnrepresentedProperty=0 exactSourceObject=1\nmarked=1 represented=1 UnrepresentedProperty=0 exactSourceObject=1\n",
+          "stderr": ""
+        }
+      ]
+    }
+  },
+  "emitter": {
+    "mechanism": "Existing private readonly accessor cell as_any invokes original getter exactly once into owning value, preserves declared null/undefined mapping, and leaves get/set/cache layout text unchanged.",
+    "patch": "artifacts/sprite-generated-getter-value-compiler.patch",
+    "sha256": "cb50b32da5fccff24f0bc014522818914f2d1eaebf72e537936a825745fc4db1",
+    "inputs": {
+      "baseline": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-data-cell-compiler136",
+      "candidate": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-getter-value-compiler136",
+      "path": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "baselineSha256": "a420dafcc6febb05196485de5d627f6e0d2d20c964724cd8001c5f1599bf1af6",
+      "candidateSha256": "f238c94730cca2b276eafec9946ed3b494cbfcc058154851c9a01f66e2028144",
+      "scope": "Only existing generated readonly accessor as_any override; source and typed get remain unchanged. No new virtual/layout/SDK.",
+      "sourceControls": "required native object +scalar+nullable+undefined+dual sentinel original getter source strict0; typed get text unchanged"
+    },
+    "strictCompilerBuild": {
+      "candidateV1": {
+        "command": "npm run build --silent",
+        "exitCode": 0,
+        "log": "getter-compiler-build.log"
+      },
+      "candidateV2": {
+        "command": "npm run build --silent",
+        "exitCode": 0,
+        "log": "getter-compiler-v2-build.log"
+      },
+      "scope": "Actual isolated strict builds reaped; no SDK generation or product activation."
+    },
+    "strictSourceAndReemission": {
+      "strict": [],
+      "rows": [
+        {
+          "label": "baseline",
+          "id": "getter",
+          "emitted": true,
+          "diagnostics": [],
+          "asAnyOverride": false
+        },
+        {
+          "label": "baseline",
+          "id": "getter-controls",
+          "emitted": true,
+          "diagnostics": [],
+          "asAnyOverride": false
+        },
+        {
+          "label": "candidate",
+          "id": "getter",
+          "emitted": true,
+          "diagnostics": [],
+          "asAnyOverride": true
+        },
+        {
+          "label": "candidate",
+          "id": "getter-controls",
+          "emitted": true,
+          "diagnostics": [],
+          "asAnyOverride": true
+        }
+      ]
+    },
+    "baselineNative": {
+      "compileExitCode": 0,
+      "runExitCode": 1,
+      "stdout": "",
+      "stderr": "FAIL after 21 checks: actual generated getter check failed\n"
+    },
+    "candidateNative": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 21 actual compiler-generated getter once snapshot exception and lifetime checks\n",
+      "stderr": ""
+    },
+    "controlsNative": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 29 actual emitted getter scalar/null/undefined/dual/same-owner/typed-get/throw controls\n",
+      "stderr": ""
+    },
+    "coherence": "Emitted override references new runtime helper. Against old pinned runtime, one new native compile failure is retained. Pair helper/emission coherently; no emitter-only activation."
+  },
+  "boundedNativePieces": {
+    "emittedGeneric15": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 15 actual emitted generic nested-value checks\n",
+      "stderr": ""
+    },
+    "policyCustom83": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 83 existing-as_any policy presence external-subclass getter lifetime and readonly-only checks\n",
+      "stderr": ""
+    },
+    "scope": "Required/RequiredNullable/SourceOptional kind and presence, missing/present undefined/null/ambiguous refusal, readonly-only exclusions, external default/custom getter, exact owner and lifetime. These receipts do not override the forbidden dynamic-read broadening."
+  },
+  "sameBaseCompilerParity": {
+    "rows": [
+      {
+        "variant": "baseline",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      },
+      {
+        "variant": "candidate",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      }
+    ],
+    "newFailures": [],
+    "runtimeFloor": "SAME v1 scratch runtime/header +current63f0e101 native inputs via explicit FLIGHT_CPP_CXX wrapper; compiler baseline/candidate differ only generated accessor as_any hunk. V1 runtime broadening remains FORBIDDEN for activation.",
+    "scope": "16 getter/accessor tests only, full suite not run/pass. Original pinned-old-runtime run new missing-helper compile failure retained as compatibility constraint."
+  },
+  "allocationMutants": {
+    "candidateOriginal58": {
+      "variant": "candidate-emitter+existing-shared-error-scratch-runtime",
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 58 ORIGINAL allocate/finish getters return-store aliases lifetime and sharedOutOfProfile escape checks\n",
+      "stderr": ""
+    },
+    "copiedFinishOwner": {
+      "compileExitCode": 0,
+      "runExitCode": 1,
+      "stdout": "",
+      "stderr": "FAIL after 12 checks: original allocation boundary check failed\n",
+      "qualification": "intentional fault injection; candidate original header unchanged"
+    },
+    "eagerFinishGetter": {
+      "compileExitCode": 0,
+      "runExitCode": 1,
+      "stdout": "",
+      "stderr": "FAIL after 11 checks: original allocation boundary check failed\n",
+      "qualification": "intentional fault injection; exact qualified original header unchanged"
+    },
+    "scope": "Intentional fault injection only; qualified candidate retains exact original emitted allocator/finisher. Mutants fail12 and11 as intended; no source body replacement in candidate."
+  },
+  "independentReview": {
+    "agent": "builder6",
+    "parcels": [
+      "builder6-24ff1077",
+      "builder6-861f0454"
+    ],
+    "findings": [
+      "V1 dynamic NamedProperties row value representation changes on marked/unmarked cells: forbidden activation.",
+      "General typed get still caches fresh getter result and stale registry owner can retain it: separate lifetime limitation.",
+      "Existing generated as_any override mechanically clears unchanged21 and preserves scalar typed get/default subclasses; actual compiler re-emission independently proved here.",
+      "No new virtual/layout/Any members, forced sweep/cache clear or changed assertion."
+    ]
+  },
+  "nextNarrowDesign": {
+    "path": "artifacts/sprite-readonly-nested-value-narrow-design.json",
+    "sha256": "f20823c46d9e8fc75a01559b299fa9198dfbe8f169e339e300cd48d505d4ae9c",
+    "status": "Exact DESIGN ONLY; new bounded metadata/generated override review required. Preserve dynamic NamedProperties answers and address bounded exact typed getter read before any activation."
+  },
+  "callbackEvidenceDesign": "Archived exact IR: reference planner and declaration retain current Traits, optional member expression loses it to NodeOf<unknown>. Design only, no generic callback fix claimed.",
+  "coreAbiActivation": false,
+  "runtimeOrCompilerProductChanges": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "wholeStrict": "220baseline/candidate; two owned errors remain separate and unresolved.",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-existing-path-proof-v2.tgz",
+    "sha256": "6db4b94047f3a4bd6f188854a8a14b5dfc568cdb2d112ac21bc5033a711e1994",
+    "bytes": 2123039,
+    "memberCount": 103,
+    "checksummedFileCount": 102
+  },
+  "priorFoundationArchiveSha256": "46224b4676f04ef1a8db4cb60d5cdc4fcdbcc56c9915f15b037488c980581fce",
+  "verifyCommand": "node scripts/spriteExistingRowCellProof.mjs [archive]",
+  "verifyScope": "Immutable bounded evidence/patch reconstruction and explicit design failures; no full native factory or activation qualification."
+}
