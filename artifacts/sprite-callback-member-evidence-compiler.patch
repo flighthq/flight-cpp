@@ -1,0 +1,6 @@
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -2929 +2929,2 @@
+-      unresolved = lowerType(declaration.type, declarationContext);
++      unresolved = getTypeScriptMappedSubjectSelection(declaration, declarationContext) ??
++        lowerType(declaration.type, declarationContext);

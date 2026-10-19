@@ -1,0 +1,161 @@
+{
+  "schema": "flight-sprite-callback-member-evidence/1",
+  "state": "INACTIVE original source IR + actual minimal emitted native proof; same original factory closure continues",
+  "runtimeBase": "9d180a30 (native compiled at prior6ca799c1; incoming proof-only changes leave runtime headers byte-identical)",
+  "compiler": {
+    "patch": "artifacts/sprite-callback-member-evidence-compiler.patch",
+    "sha256": "29d38f42ef0feb2a1bfda5077aad017b64c0cb764dbd7bb38e6bddc046c2caec",
+    "command": "npm run build --silent",
+    "exitCode": 0,
+    "semanticBaselineSha256": "50de198f825c974a3d4b861bb6ec64ee7a392a86beee397336510c1e9ab53025",
+    "semanticCandidateSha256": "5b7ab67e6be5d8f3e53700d2dbe532407299bee7faa21ac361bf9c056a441def",
+    "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "composition": "Old getter136 proof compiler + ONLY semantic alias mapped-subject helper reuse; old inactive getter-as_any hunk shared both variants, these sources have no accessors.",
+    "equivalence": "Reuse existing mapped subject selection while resolving alias member shape; preserve authored generic substitution and optional undefined arm, rather than degraded checker Unknown callable parameters. Runtime/source bodies unchanged.",
+    "expiry": "Retire inactive hunk once upstream resolves alias member shape through mapped-subject evidence; invalidate/requalify when pin/exact semantic baseline hash changes.",
+    "request": "docs/compiler-requests/mapped-subject-callback-expression-evidence.md"
+  },
+  "minimalSource": {
+    "strict": [],
+    "rows": [
+      {
+        "label": "baseline",
+        "source": "packages/types/src/contract.ts",
+        "emitted": true,
+        "path": "probe/types/contract.hpp",
+        "containsAny": false
+      },
+      {
+        "label": "baseline",
+        "source": "packages/node/src/node.ts",
+        "emitted": true,
+        "path": "probe/node/node.hpp",
+        "containsAny": true
+      },
+      {
+        "label": "candidate",
+        "source": "packages/types/src/contract.ts",
+        "emitted": true,
+        "path": "probe/types/contract.hpp",
+        "containsAny": false
+      },
+      {
+        "label": "candidate",
+        "source": "packages/node/src/node.ts",
+        "emitted": true,
+        "path": "probe/node/node.hpp",
+        "containsAny": false
+      }
+    ]
+  },
+  "native": [
+    {
+      "label": "baseline",
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/tmp/builder4-sprite-callback-evidence/baseline",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "/tmp/builder4-sprite-callback-evidence/native.cpp",
+        "-o",
+        "/tmp/builder4-sprite-callback-evidence/native-baseline"
+      ],
+      "compileExit": 0,
+      "runExit": 1,
+      "stdout": "",
+      "stderr": "FAIL after 4 checks: mapped callback evidence check failed\n"
+    },
+    {
+      "label": "candidate",
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/tmp/builder4-sprite-callback-evidence/candidate",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "/tmp/builder4-sprite-callback-evidence/native.cpp",
+        "-o",
+        "/tmp/builder4-sprite-callback-evidence/native-candidate"
+      ],
+      "compileExit": 0,
+      "runExit": 0,
+      "stdout": "PASS 30 actual emitted mapped callback family default/custom origin owner replacement exception and lifetime checks\n",
+      "stderr": ""
+    }
+  ],
+  "sameBaseSemanticParity": {
+    "rows": [
+      {
+        "variant": "baseline",
+        "pass": 15,
+        "fail": 1,
+        "failures": [
+          "lowerTypeScriptSources uses instantiated checker evidence for ambient mapped call results"
+        ]
+      },
+      {
+        "variant": "candidate",
+        "pass": 15,
+        "fail": 1,
+        "failures": [
+          "lowerTypeScriptSources uses instantiated checker evidence for ambient mapped call results"
+        ]
+      }
+    ],
+    "newFailures": []
+  },
+  "originalSource": {
+    "sourceCount": 1211,
+    "warnings": [
+      {
+        "code": "unsupported-typescript",
+        "column": 4,
+        "line": 31,
+        "message": "unsupported type ConditionalType",
+        "packageName": "@flighthq/types",
+        "severity": "warning",
+        "source": "packages/types/src/ElectronHost.ts"
+      },
+      {
+        "code": "unsupported-typescript",
+        "column": 31,
+        "line": 6,
+        "message": "unsupported type MappedType",
+        "packageName": "@flighthq/types",
+        "severity": "warning",
+        "source": "packages/types/src/Tween.ts"
+      }
+    ],
+    "originalExpression": "methods?.canAddChild in createNodeRuntime",
+    "baseline": "NodeOf<unknown> on expression even though planner/declaration preserve Traits",
+    "candidate": "NodeOf<current Traits binding> in expression type and optionalChain.valueType; source undefined optional arm preserved",
+    "headersGenerated": 0,
+    "sourceBodiesChanged": 0,
+    "typesChanged": 0
+  },
+  "scopeLimits": [
+    "Minimal two-module actual emitted native PASS30 does not qualify original whole native Sprite/runtime factory.",
+    "Baseline compiles, but FAIL4 default function-pointer identity; do not describe it as a compile failure.",
+    "Identity proved within this instantiated T; cross-generic source function identity remains unqualified.",
+    "Original strict220/two owned nullable N/D and Sprite callback receiver errors remain open; this compiler evidence fix does not make invalid source contracts valid.",
+    "Builder5 owns generic default runtime-factory value toAny compiler lane; not changed by this hunk.",
+    "Anonymous original factory physical/native owner ABI and four Sprite refusals remain separate.",
+    "Focused semantic16 baseline15pass1existingfail/candidate15pass1samefail, zero new; no full compiler suite claim."
+  ],
+  "runtimeOrCompilerProductChanges": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-callback-member-evidence-proof.tgz",
+    "sha256": "08dabc5cb9dfa58fb6481ec9b873cca5aceb91dc150948dd18bc57ddb5da71bc",
+    "bytes": 335018,
+    "memberCount": 41,
+    "checksummedFileCount": 40
+  },
+  "verifyCommand": "node scripts/spriteCallbackMemberEvidenceProof.mjs [archive]"
+}
