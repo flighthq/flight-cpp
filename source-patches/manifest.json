@@ -5947,6 +5947,23 @@
       "unblocks": "the shape morph-paint headers whose first failure is flight/shape/morph_shape_paint.hpp:77 (morph_shape_paint and its importers)",
       "expires": "when upstream compares a union-token String discriminant by its alternative instead of the whole carrier",
       "appliedOn": "2026-10-19"
+    },
+    {
+      "id": "compiler-readonly-object-value-snapshot",
+      "dependency": "flight-compiler",
+      "patch": "compiler-readonly-object-value-snapshot.patch",
+      "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/scene2d",
+      "answers": "diagnostic",
+      "refusal": "Readonly nested Partial<object> getter reads either lose an exact structural owner or retain the fresh result in the generated reference-returning get cache.",
+      "rewrite": "Add the reviewed owning readonly_object_value override to generated private readonly accessor cells. Invoke the original getter once into a local, preserve its declared Null sentinel, and return its exact owner through the paired runtime snapshot. Existing get, set, as_any and cache layout are unchanged.",
+      "equivalence": "Only readonly outer optional readonly Partial<object> reads use the paired runtime snapshot. The original getter executes once at the original read, keeps its exact owner/control block and exception prefix, and does not retain a hidden get-cache reference. Typed JSON-backed views preserve their existing owner; raw erased JSON and unsupported values retain existing fallback and absence. Ordinary typed reads and NamedProperties representation do not change.",
+      "verification": "Builder6 final actual-byte review builder6-30b10878 PASS on v3 runtime152217d5 and immutable proof9489b259. Getter21/exact13/revised83/corrected62/generic15/fallback30/freshJSON8/NamedProperties controls pass, four project targets pass, accessor16 paired13PASS/3same pre-existing failures. See docs/compiler-requests/readonly-nested-object-getter-activation.md for current-composition checks and exact-byte limits.",
+      "whyNotUpstreamFirst": "The pinned compiler needs the paired runtime owning snapshot, whose one RowCell virtual was authorized by Manager3e1de4a2 and Foremanffccf8e4 after independent actual-byte review. Request: docs/compiler-requests/readonly-nested-object-getter-snapshot.md; fallback correction: docs/compiler-requests/readonly-nested-object-getter-fallback.md.",
+      "unblocks": "Bounded readonly nested object getter owner and lifetime reads. This does not qualify the full original Sprite factory, its two source contract errors, native image39, general typed/external cache behavior or SDK inventory.",
+      "expires": "Remove when upstream emits the same owning snapshot with matching runtime fallback, sentinel, getter-once and release semantics. Requalify on compiler pin, composed accessor block or exact runtime base changes.",
+      "appliedOn": "2026-10-18"
     }
   ]
 }

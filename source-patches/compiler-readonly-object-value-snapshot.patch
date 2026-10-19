@@ -1,0 +1,18 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -8751,11 +8751,14 @@
+         const accessors = loweredAccessorConstruction.fields.flatMap(({ member, property }) => {
+           if (member.kind !== 'getAccessor') return [];
+           const valueType = emitType(property.type, context);
++          // The declared source null carrier must not become source undefined.
++          const nullSnapshot = getCppConstructedMemberSentinelCpp(property.type, context) === 'Null'
++            ? 'if (!value.has_value()) return {flight::AnyKind::null, true, {}, {}}; ' : '';
+           const cell = getGeneratedTargetName(`objectAccessorCell_${member.name}`, context);
+           const getter = values.get(member);
+           if (!getter) throw new TypeError(`expected object accessor value ${member.name}`);
+           return [
+-            `class ${cell} final : public flight::TypedRowCell<${valueType}> { public: explicit ${cell}(std::function<${valueType}()> getter) : getter_(std::move(getter)) {} ${valueType}& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } void set(${valueType}) override { throw std::logic_error("object getter is readonly"); } private: std::function<${valueType}()> getter_; std::optional<${valueType}> value_; };`,
++            `class ${cell} final : public flight::TypedRowCell<${valueType}> { public: explicit ${cell}(std::function<${valueType}()> getter) : getter_(std::move(getter)) {} ${valueType}& get() override { auto next = getter_(); if (value_.has_value()) value_.value() = std::move(next); else value_.emplace(std::move(next)); return value_.value(); } [[nodiscard]] flight::detail::ReadonlyObjectValue readonly_object_value() const override { auto value = getter_(); ${nullSnapshot}return flight::detail::readonly_nested_object_value(value); } void set(${valueType}) override { throw std::logic_error("object getter is readonly"); } private: std::function<${valueType}()> getter_; std::optional<${valueType}> value_; };`,
+             `${row}.shared_owner()->set_named_cell(${JSON.stringify(member.name)}, std::make_shared<${cell}>(std::function<${valueType}()>{std::move(${getter})}));`,
+           ];
+         });

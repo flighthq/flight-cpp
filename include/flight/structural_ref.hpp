@@ -142,6 +142,30 @@ inline void normalize_constructed_own_order(std::vector<std::string>& keys) {
 
 } // namespace detail
 
+class RowOwner;
+
+namespace detail {
+// An owning snapshot for one readonly nested-object read, independent of dynamic Any erasure.
+struct ReadonlyObjectValue final {
+  AnyKind kind{AnyKind::undefined};
+  bool represented{false};
+  std::shared_ptr<RowOwner> owner;
+  std::shared_ptr<void> retained_native;
+};
+template <typename Value>
+[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value);
+template <typename Value>
+struct has_structural_row_value : std::bool_constant<requires(const Value& value) {
+  value.shared_owner();
+  value.shared_native_object();
+}> {};
+template <typename Value>
+struct has_structural_row_value<std::optional<Value>> : has_structural_row_value<Value> {};
+template <typename... Values>
+struct has_structural_row_value<std::variant<Values...>>
+    : std::bool_constant<(has_structural_row_value<Values>::value || ...)> {};
+} // namespace detail
+
 // A StructuralRef compares this owner identity. A write proxy owns a distinct instance while
 // delegating storage to its target, matching JavaScript Proxy identity and forwarding behavior.
 class RowCell {
@@ -182,6 +206,9 @@ class RowCell {
 
   // The erased reading of this cell's value, or nothing when the runtime has none for its type.
   [[nodiscard]] virtual std::optional<Any> as_any() const = 0;
+
+  // Existing external cells retain their erased-read behavior without requiring an override.
+  [[nodiscard]] virtual detail::ReadonlyObjectValue readonly_object_value() const;
 
   // Copies another cell's value into this one when both hold the same type, and reports whether it
   // did. The materializing cast uses it to move what a construction bag held onto the member the
@@ -245,6 +272,15 @@ class TypedRowCell : public RowCell {
   [[nodiscard]] std::optional<Any> as_any() const override {
     return detail::any_from(const_cast<TypedRowCell<Value>*>(this)->get());
   }
+
+  [[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override {
+    if constexpr (detail::has_structural_row_value<Value>::value) {
+      return detail::readonly_nested_object_value(const_cast<TypedRowCell<Value>*>(this)->get());
+    } else {
+      // Preserve custom as_any overrides for ordinary native/scalar subclasses.
+      return RowCell::readonly_object_value();
+    }
+  }
 };
 
 template <typename Value>
@@ -292,6 +328,20 @@ class NativeRowCell final : public TypedRowCell<Value> {
       }
     }
     return detail::any_from(const_cast<NativeRowCell*>(this)->get());
+  }
+
+  [[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override {
+    const auto& value = *address_;
+    if constexpr (detail::is_std_optional<Value>::value) {
+      if (!value.has_value()) {
+        if (presence_ == MemberPresence::Required) {
+          throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
+        }
+        return {presence_ == MemberPresence::RequiredNullable ? AnyKind::null : AnyKind::undefined,
+                true, {}, {}};
+      }
+    }
+    return detail::readonly_nested_object_value(value);
   }
 
   // The member's own address, taken once while the native object is being bound. Do not retain the
@@ -601,6 +651,43 @@ class RowOwner {
   std::unordered_map<const void*, SymbolCell> symbol_cells_;
   std::unordered_map<const void*, Symbol> symbol_written_;
 };
+
+namespace detail {
+template <typename Value>
+[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value) {
+  using Stored = std::remove_cvref_t<Value>;
+  if constexpr (is_std_optional<Stored>::value) {
+    return value ? readonly_nested_object_value(*value)
+                 : ReadonlyObjectValue{AnyKind::undefined, true, {}, {}};
+  } else if constexpr (is_std_variant<Stored>::value) {
+    return std::visit([](const auto& item) { return readonly_nested_object_value(item); }, value);
+  } else if constexpr (requires {
+                         { value.shared_owner() } -> std::convertible_to<std::shared_ptr<RowOwner>>;
+                         value.shared_native_object();
+                       }) {
+    // A typed row already has its exact identity, including an existing JSON-backed view.
+    auto owner = value.shared_owner();
+    return {AnyKind::object, true, std::move(owner), value.shared_native_object()};
+  } else {
+    const auto erased = any_from(value);
+    if (!erased) return {};
+    // Raw JSON does not acquire a new projection; unsupported reads keep their existing fallback.
+    if (erased->held_type() == typeid(JsonObject) || erased->held_type() == typeid(JsonArray)) return {};
+    std::shared_ptr<RowOwner> owner;
+    if (erased->held_object() && erased->held_type() != typeid(JsonObject) &&
+        erased->held_type() != typeid(JsonArray)) {
+      owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());
+    }
+    auto retained = owner ? owner->native_object() : nullptr;
+    return {erased->kind(), true, std::move(owner), std::move(retained)};
+  }
+}
+} // namespace detail
+
+inline detail::ReadonlyObjectValue RowCell::readonly_object_value() const {
+  const auto value = as_any();
+  return value ? detail::readonly_nested_object_value(*value) : detail::ReadonlyObjectValue{};
+}
 
 template <typename Schema>
 class StructuralRef;
@@ -1975,6 +2062,12 @@ class StructuralRef {
 
 namespace detail {
 
+template <typename Value>
+inline constexpr bool readonly_partial_row_value = false;
+template <typename Schema>
+inline constexpr bool readonly_partial_row_value<StructuralRef<Schema>> =
+    schema_readonly<Schema> && schema_partial<Schema>;
+
 template <typename Type, typename Key>
 struct indexed_member {
   using type = generated_row_member_t<Key, Type>;
@@ -2030,6 +2123,23 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
   static_assert(!std::is_void_v<Value>, "structural row schema does not contain the requested property");
   if (!source.shared_owner()) throw std::bad_weak_ptr();
   if constexpr (detail::schema_partial<Schema>) {
+    using NestedPresent = detail::optional_value_t<Value>;
+    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<NestedPresent>) {
+      const auto cell = source.shared_owner()->named_cell(Key::name.view());
+      if (!cell) return Value{};
+      if (cell->presence_ambiguous()) {
+        throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
+      }
+      const auto snapshot = cell->readonly_object_value();
+      if (snapshot.represented && snapshot.kind == AnyKind::undefined) return Value{};
+      if (snapshot.represented && snapshot.kind == AnyKind::object &&
+          (snapshot.owner || cell->value_type() == typeid(Value) ||
+           cell->value_type() == typeid(NestedPresent))) {
+        // Capture the native lifetime before the owning getter snapshot leaves scope.
+        return Value(NestedPresent::from_owner(snapshot.owner));
+      }
+      // Unsupported values retain the original exact/present/absent path below.
+    }
     if (auto* exact = source.shared_owner()->template named_value_if<Value>(Key::name.view())) {
       return Value(*exact);
     }
@@ -2054,6 +2164,23 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
     if constexpr (detail::schema_readonly<Schema>) return std::as_const(**stored);
     else return **stored;
   } else if constexpr (detail::schema_readonly<Schema> && detail::optional_traits<Value>::optional) {
+    using NestedPresent = detail::optional_value_t<Value>;
+    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<NestedPresent>) {
+      const auto cell = source.shared_owner()->named_cell(Key::name.view());
+      if (!cell) return Value{};
+      if (cell->presence_ambiguous()) {
+        throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
+      }
+      const auto snapshot = cell->readonly_object_value();
+      if (snapshot.represented && snapshot.kind == AnyKind::undefined) return Value{};
+      if (snapshot.represented && snapshot.kind == AnyKind::object &&
+          (snapshot.owner || cell->value_type() == typeid(Value) ||
+           cell->value_type() == typeid(NestedPresent))) {
+        // Capture the native lifetime before the owning getter snapshot leaves scope.
+        return Value(NestedPresent::from_owner(snapshot.owner));
+      }
+      // Unsupported values retain the original exact/has-cell path below.
+    }
     // A readonly nullable member can be backed by either optional<T> or the proven present T.
     // Project a value on every read: there is no optional<T> reference inside a bare T cell, and
     // caching a wrapper would hide later writes through the original owner. Only the exact inner
