@@ -1,0 +1,137 @@
+--- a/include/flight/structural_ref.hpp
++++ b/include/flight/structural_ref.hpp
+@@ -144,0 +145,14 @@
++class RowOwner;
++namespace detail {
++// One read of the stored value, including its sentinel and the lifetime of a fresh getter result.
++// Metadata only: the object and its cell are never replaced.
++struct ReadonlyObjectValue {
++  AnyKind kind = AnyKind::undefined;
++  bool represented = false;
++  std::shared_ptr<RowOwner> owner;
++  std::shared_ptr<void> retained_native;
++};
++template <typename Value>
++[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value);
++} // namespace detail
++
+@@ -184,0 +199,2 @@
++
++  [[nodiscard]] virtual detail::ReadonlyObjectValue readonly_object_value() const;
+@@ -246,0 +263,4 @@
++  }
++
++  [[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override {
++    return detail::readonly_nested_object_value(const_cast<TypedRowCell<Value>*>(this)->get());
+@@ -603,0 +624,23 @@
++
++namespace detail {
++template <typename Value>
++[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value) {
++  if constexpr (is_std_optional<std::remove_cvref_t<Value>>::value) {
++    return value ? readonly_nested_object_value(*value)
++                 : ReadonlyObjectValue{AnyKind::undefined, true, {}, {}};
++  } else if constexpr (requires { { value.shared_owner() } -> std::convertible_to<std::shared_ptr<RowOwner>>; }) {
++    return {AnyKind::object, bool(value.shared_owner()), value.shared_owner(), value.shared_native_object()};
++  } else {
++    const auto erased = any_from(value);
++    if (!erased) return {};
++    auto owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());
++    auto retained = owner ? owner->native_object() : nullptr;
++    return {erased->kind(), true, std::move(owner), std::move(retained)};
++  }
++}
++} // namespace detail
++
++inline detail::ReadonlyObjectValue RowCell::readonly_object_value() const {
++  const auto value = as_any();
++  return value ? detail::readonly_nested_object_value(*value) : detail::ReadonlyObjectValue{};
++}
+@@ -1977,0 +2021,6 @@
++template <typename Value>
++inline constexpr bool readonly_partial_row_value = false;
++template <typename Schema>
++inline constexpr bool readonly_partial_row_value<StructuralRef<Schema>> =
++    schema_readonly<Schema> && schema_partial<Schema>;
++
+@@ -2038,0 +2088,8 @@
++    }
++    if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
++      const auto value = cell->readonly_object_value();
++      if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<Present>) {
++        if (value.owner) return Value(Present::from_owner(value.owner));
++      }
++      // A present incompatible value is not a missing property. Do not read a getter twice.
++      if (!value.represented || value.kind != AnyKind::undefined) throw std::bad_cast();
+@@ -2066,0 +2124,8 @@
++    }
++    if constexpr (detail::readonly_partial_row_value<Present>) {
++      if (const auto cell = source.shared_owner()->named_cell(Key::name.view())) {
++        const auto value = cell->readonly_object_value();
++        if (value.owner) return Value(Present::from_owner(value.owner));
++        if (value.represented && value.kind == AnyKind::undefined) return Value{};
++        throw std::bad_cast();
++      }
+@@ -2787,22 +2851,0 @@
+-namespace detail {
+-
+-// The class an erased object answers for: the type it was boxed at, or -- when that is a registered class
+-// with emitted subclasses, so the object may be a subclass -- the exact type make_ref recorded for its
+-// allocation, with that allocation's own address for the field readers. `exact` is false only when the
+-// boxed type has subclasses and no record proves which one the object is; the lookups then refuse.
+-struct ErasedClassTarget final {
+-  std::type_index type;
+-  const void* object;
+-  bool exact;
+-};
+-
+-[[nodiscard]] inline ErasedClassTarget erased_class_target(const Any& value) {
+-  const auto held = value.held_object();
+-  const auto type = value.held_type();
+-  if (!class_has_subclasses(type)) return {type, held.get(), true};
+-  if (const auto identity = recoverable_owner_identity(held)) return {identity->type, identity->object.get(), true};
+-  return {type, held.get(), false};
+-}
+-
+-} // namespace detail
+-
+@@ -2836 +2878,0 @@
+-  const auto target = detail::erased_class_target(value);
+@@ -2841,3 +2883,3 @@
+-  if (is_complete_registered_class(target.type)) {
+-    if (find_class_field(target.type, key.to_utf8(), target.exact)) return true;
+-    if (find_inherited_member(target.type, key.to_utf8(), target.exact) != InheritedMemberKind::none) return true;
++  if (is_complete_registered_class(value.held_type())) {
++    if (find_class_field(value.held_type(), key.to_utf8())) return true;
++    if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+@@ -2846 +2888 @@
+-  if (find_class_field(target.type, key.to_utf8(), target.exact)) return true;
++  if (find_class_field(value.held_type(), key.to_utf8())) return true;
+@@ -2851 +2893 @@
+-  if (find_inherited_member(target.type, key.to_utf8(), target.exact) != InheritedMemberKind::none) return true;
++  if (find_inherited_member(value.held_type(), key.to_utf8()) != InheritedMemberKind::none) return true;
+@@ -2853 +2895 @@
+-  if (is_complete_registered_class(target.type)) return false;
++  if (is_complete_registered_class(value.held_type())) return false;
+@@ -2878,3 +2920,2 @@
+-  const auto target = detail::erased_class_target(value);
+-  const bool complete_class = is_complete_registered_class(target.type);
+-  if (const auto field = find_class_field(target.type, key.to_utf8(), target.exact)) {
++  const bool complete_class = is_complete_registered_class(value.held_type());
++  if (const auto field = find_class_field(value.held_type(), key.to_utf8())) {
+@@ -2882,3 +2923,3 @@
+-      throw OutOfProfileError("typeof of a class field the exact class does not list: no reader for this layout");
+-    }
+-    const char* answer = field->field.type_of(target.object);
++      throw OutOfProfileError("typeof of a class field declared by a base class: its reader is for the base layout");
++    }
++    const char* answer = field->field.type_of(value.erased_ref().identity());
+@@ -2889 +2930 @@
+-    switch (find_inherited_member(target.type, key.to_utf8(), target.exact)) {
++    switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+@@ -2904 +2945 @@
+-  switch (find_inherited_member(target.type, key.to_utf8(), target.exact)) {
++  switch (find_inherited_member(value.held_type(), key.to_utf8())) {
+@@ -2914 +2955 @@
+-  if (is_complete_registered_class(target.type)) return String("undefined");
++  if (is_complete_registered_class(value.held_type())) return String("undefined");

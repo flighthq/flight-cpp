@@ -1,0 +1,17 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6813,0 +6814,14 @@
++          // The empty literal is the source allocation. A writable construction view must retain
++          // that anonymous owner, rather than materializing the type its future writes describe.
++          if (
++            expression.expression.members.length === 0 && structuralTarget?.kind === 'writable' &&
++            !hasCppStructuralRowReadonlyPlanCpp(structuralTarget.row)
++          ) {
++            const originalType = getIrExpressionTypeEvidenceCpp(expression.expression, context);
++            const originalRow = originalType && getCppStructuralProjectionRowCpp(originalType, context);
++            if (originalRow) {
++              const value = emitExpression(expression.expression, context, originalType, false);
++              context.includes.add('flight/structural_ref.hpp');
++              return `${emitType(expression.type, context)}::from_owner(${emitCppStructuralRowReferenceTypeCpp(originalRow, context)}(${value}).shared_owner())`;
++            }
++          }

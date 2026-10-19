@@ -1,0 +1,69 @@
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -6939,0 +6940,7 @@
++            projectionSource && projectionTargetObject &&
++            isCppStructuralRowSchemaReadonlyCpp(assertedRow) &&
++            hasCppReadonlyNestedObjectValueProjectionCpp(projectionSource, projectionTargetObject, context)
++          ) {
++            return `${target}::from_owner(${emitCppStructuralRowReferenceTypeCpp(sourceProjection, context)}(${subject}).shared_owner())`;
++          }
++          if (
+@@ -6959,0 +6967,7 @@
++        if (
++          reachedObject && assertedObject &&
++          isCppStructuralRowSchemaReadonlyCpp(assertedRow) &&
++          hasCppReadonlyNestedObjectValueProjectionCpp(reachedObject, assertedObject, context)
++        ) {
++          return `${target}::from_owner(${subject}.shared_owner())`;
++        }
+@@ -9445,0 +9460,6 @@
++    if (
++      isCppStructuralRowSchemaReadonlyCpp(targetRow) &&
++      hasCppReadonlyNestedObjectValueProjectionCpp(sourceObject, targetObject, context)
++    ) {
++      return `${emitType(expectedType, context)}::from_owner(${source}.shared_owner())`;
++    }
+@@ -9555,0 +9576,43 @@
++}
++
++// Read an existing object-valued cell through a readonly Partial row VALUE. This is not a
++// cell-storage equivalence proof and must never approve mutation or native-owner recovery.
++function hasCppReadonlyNestedObjectValueProjectionCpp(
++  source: Readonly<IrType>, target: Readonly<IrType>, context: EmitContext,
++): boolean {
++  const sourceProperties = context.referenceRepresentationPlanner.resolveObjectShape(source, context.module);
++  const targetProperties = context.referenceRepresentationPlanner.resolveObjectShape(target, context.module);
++  if (!sourceProperties || !targetProperties) return false;
++  const sourceByKey = new Map(sourceProperties.filter((property) => !property.phantom).map(
++    (property) => [getCppStructuralRowPropertyIdentityCpp(property, context), property],
++  ));
++  let projected = false;
++  const fits = targetProperties.filter((property) => !property.phantom).every((property) => {
++    const provided = sourceByKey.get(getCppStructuralRowPropertyIdentityCpp(property, context));
++    if (!provided || (provided.optional && !property.optional)) return false;
++    if (emitType(provided.type, context) === emitType(property.type, context)) return true;
++    const targetRow = context.referenceRepresentationPlanner.resolveStructuralRow(property.type, context.module);
++    if (!targetRow || !isCppStructuralRowSchemaReadonlyCpp(targetRow) || !isCppStructuralRowPartialPlanCpp(targetRow)) return false;
++    const targetObject = getCppStructuralRowObjectTypeCpp(targetRow);
++    if (!targetObject) return false;
++    // Explicit null/undefined unions are not erased by this present-object contract.
++    if (getIrUnionTypeCpp(provided.type, context, new Set())) return false;
++    if (emitType(provided.type, context) === emitType(targetObject, context)) {
++      projected = true; return true;
++    }
++    const sourceRow = context.referenceRepresentationPlanner.resolveStructuralRow(provided.type, context.module);
++    const sourceObject = sourceRow && getCppStructuralRowObjectTypeCpp(sourceRow);
++    if (!sourceObject) return false;
++    const from = context.referenceRepresentationPlanner.resolveObjectShape(sourceObject, context.module);
++    const to = context.referenceRepresentationPlanner.resolveObjectShape(targetObject, context.module);
++    if (!from || !to) return false;
++    const fromByKey = new Map(from.filter((member) => !member.phantom).map(
++      (member) => [getCppStructuralRowPropertyIdentityCpp(member, context), member],
++    ));
++    if (!to.filter((member) => !member.phantom).every((member) => {
++      const stored = fromByKey.get(getCppStructuralRowPropertyIdentityCpp(member, context));
++      return !stored || emitType(stored.type, context) === emitType(member.type, context);
++    })) return false;
++    projected = true; return true;
++  });
++  return fits && projected;

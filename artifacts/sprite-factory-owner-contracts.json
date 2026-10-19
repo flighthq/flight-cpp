@@ -1,0 +1,194 @@
+{
+  "schema": "flight-sprite-original-owner-contracts/1",
+  "status": "WORKING SAME ORIGINAL FACTORY CLOSURE; DESIGN/PROOF ONLY",
+  "authority": [
+    "Foreman-1911d28f",
+    "Foreman-cedbb69c"
+  ],
+  "repoBaseAtProof": "322d87f4",
+  "allocationOwnership": {
+    "parcel": "builder2-7264221d",
+    "finding": "No existing original-owner-preserving allocateEntity hunk on base or held B/c6. materialize_row allocates a second native owner; filed request has no fix. Builder4 owns this mechanism; Builder2 remains sole Types writer."
+  },
+  "allocation": {
+    "source": "EXACT ORIGINAL allocateEntity/finishEntity source and IR; no body replacement",
+    "sourceStrict": {
+      "minimalTypesContractDiagnostics": [],
+      "scope": "Original source body with a minimal matching Entity/mapped construction contract; not a full dependency strict qualification."
+    },
+    "native": [
+      {
+        "variant": "baseline",
+        "compileExitCode": 0,
+        "runExitCode": 1,
+        "stdout": "",
+        "stderr": "FAIL after 1 checks: original allocation owner check failed\n"
+      },
+      {
+        "variant": "candidate",
+        "compileExitCode": 0,
+        "runExitCode": 0,
+        "stdout": "PASS 36 ORIGINAL allocate/finish owner/control-block/cell/alias/escape/lifetime checks\n",
+        "stderr": ""
+      }
+    ],
+    "mechanism": "Only the original fresh empty literal -> writable construction assertion enters with from_owner(original anonymous row owner). Original finish implementation is unchanged and retains that owner when Type is the existing structural value carrier.",
+    "runtimeChanges": 0,
+    "newPublicFamily": false,
+    "positiveScope": "36 checks: zero fabricated native Model allocations; one original anonymous owner/control block across finish; same dynamic cell/aliases; original written-undefined symbol and absence; key order; lifetime; already-native caller fast path.",
+    "nativeEscape": "Type=Ref<Model> finish is rejected by existing checked exact-owner recovery without allocating Model.",
+    "abiProposal": "artifacts/sprite-original-allocation-abi-proposal.json",
+    "qualificationLimit": "Interface VALUE carrier vs physical native storage remains a proposal. No source interface/Types/public ABI mapping is activated; no actual Sprite factory consumer is qualified."
+  },
+  "nestedData": {
+    "design": "artifacts/sprite-nested-data-cell-design.json",
+    "native": [
+      {
+        "variant": "baseline",
+        "compileExitCode": 0,
+        "runExitCode": 1,
+        "stdout": "",
+        "stderr": "FAIL after 0 checks: std::bad_cast\n"
+      },
+      {
+        "variant": "candidate",
+        "compileExitCode": 0,
+        "runExitCode": 0,
+        "stdout": "PASS 44 nested data owner/cell/escape/absence/lifetime checks\n",
+        "stderr": ""
+      }
+    ],
+    "actualEmittedGenericNative": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 15 actual emitted generic nested-value checks\n",
+      "stderr": ""
+    },
+    "minimalSourceControls": [
+      {
+        "id": "exact_assertion",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "exact_implicit",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "generic_present",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "readonly_to_writable",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "full_native_data",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "unrelated_native_data",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "explicit_null_data",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "incompatible_callback",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "ordinary_row",
+        "strictDiagnostics": 0
+      },
+      {
+        "id": "structural_value",
+        "strictDiagnostics": 0
+      }
+    ],
+    "mechanism": "Read the stored object value once, retaining actual sentinel, existing RowOwner and strong native lifetime until the returned readonly row owns it. Preserve physical outer cell storage/address; no native Data fabricated, no cell replacement.",
+    "abiImpact": "INACTIVE private RowCell virtual snapshot metadata changes core ABI if activated; design/proof only.",
+    "negativeScope": "Writable target, full native target, unrelated native, explicit nullable source and callback-as-data retain original compiler refusals. Present wrong-typed nested scalar refuses rather than becoming absent.",
+    "nullableLimit": "Null and undefined remain distinct metadata states. A typed non-null readonly partial object view rejects null; this does not close original nullable factory/callback source semantics."
+  },
+  "wholeOriginalFactoryDataStage": {
+    "sourceCount": 1211,
+    "selectedModules": 3,
+    "functionsEmitted": [
+      "createSprite",
+      "createSpriteRuntime",
+      "createNode2D",
+      "createNode2DRuntime",
+      "createNodeRuntime"
+    ],
+    "refusals": [
+      {
+        "path": "flight/node/node.hpp",
+        "refused": []
+      },
+      {
+        "path": "flight/scene2d/display_object.hpp",
+        "refused": [
+          "// NOT GENERATED: function getNode2DRuntime -- source line 81",
+          "// NOT GENERATED: function getDisplayObjectRuntime -- source line 77"
+        ]
+      },
+      {
+        "path": "flight/scene2d/sprite.hpp",
+        "refused": [
+          "// NOT GENERATED: function initializeSpriteRendererData -- source line 72",
+          "// NOT GENERATED: function isSpriteRendererDirty -- source line 84"
+        ]
+      }
+    ],
+    "strictSourceReuse": "All three source overlays are unchanged from accepted v3; original JS token identity proof reused by exact source equality. Whole source baseline/candidate remain220 diagnostics/two owned; no zero-regression or full strict pass claimed.",
+    "phaseLimit": "V4 is the data-stage compiler with accepted fresh-native-literal PREP; allocation mechanism is separately isolated. Combined four-module emission is being checked next; V4 does not qualify anonymous-owner factory/native ABI."
+  },
+  "inactivePatches": [
+    {
+      "path": "artifacts/sprite-original-allocation-compiler.patch",
+      "sha256": "20f6b9c5d43bc4dd9c15595e661c60501f465b6004caa8f4374a6b3f354c17cd",
+      "baselineSha256": "0552823a3af11a5a21bedda4a8192d9633736aa475ef5439f134aed2b6565571",
+      "candidateSha256": "4eb3ac1ec8477c580bf16e69f7e38194df1456f47aff1c192d83fb08bf9f8f14",
+      "activation": "INACTIVE SCRATCH PROOF ONLY; apply --unidiff-zero only in an isolated reconstruction"
+    },
+    {
+      "path": "artifacts/sprite-nested-data-compiler.patch",
+      "sha256": "037da7c32b941a098afb47e90b8e773afdbc7abfa91d19f6fadb2378234c2a23",
+      "baselineSha256": "3de742467978159a155bf22b41c8442445c7792d835855c224c4a9e5a39f70ca",
+      "candidateSha256": "26c8f29373dee36981ec254608799fc79ff729ec8748451f439dd58776e9a40a",
+      "activation": "INACTIVE SCRATCH PROOF ONLY; apply --unidiff-zero only in an isolated reconstruction"
+    },
+    {
+      "path": "artifacts/sprite-nested-data-runtime.patch",
+      "sha256": "4a8948f26c01250fa8e7a5c6e8062014c7818bfbb88a9be7760a3b84193efdb8",
+      "baselineSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+      "candidateSha256": "8379b7659e4a41021bb4ab7fccde6a35b20da3232f24725f30e3ef9d485b5163",
+      "activation": "INACTIVE SCRATCH PROOF ONLY; apply --unidiff-zero only in an isolated reconstruction"
+    }
+  ],
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "coreAbiActivation": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "sourceBodyReplacements": 0,
+  "nextContracts": [
+    "Combined original source closure including allocation under one scratch compiler floor.",
+    "Original generic runtime function value retained via Any, and NoInfer/Traits callback evidence.",
+    "N.data/D and nullable data factory source contract without signature narrowing.",
+    "Sprite-only callback receiver correlation without widening just to compile.",
+    "Concrete bounded interface VALUE/physical ABI mapping before new family/core ABI; send exact later Types hunk to Builder2.",
+    "Actual original Sprite factory/image39 after compatible freeze and all contract closure."
+  ],
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-owner-contracts-proof.tgz",
+    "sha256": "baeb180c720a9f22f49ede172745f209a15e0b86157910b412cb80ac01dcde66",
+    "bytes": 7236784,
+    "memberCount": 441,
+    "checksummedFileCount": 370
+  },
+  "priorCompilerProjectArchiveSha256": "bbce084d1f90c74b4c3cefb4915ca4bf75e21ca2659152bc7f103b52fc7d531f",
+  "verifyCommand": "node scripts/spriteFactoryOwnerContractsProof.mjs [proof-archive-path]",
+  "verifyScope": "Archive hashes and retained bounded native/strict/emission receipts, isolated patch reconstruction only; no native Sprite or SDK qualification."
+}

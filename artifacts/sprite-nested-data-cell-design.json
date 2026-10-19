@@ -1,0 +1,77 @@
+{
+  "schema": "sprite-existing-row-nested-data-value-design/1",
+  "phase": "DESIGN BEFORE PRODUCT",
+  "authority": "Foreman-1911d28f",
+  "contract": "A readonly read may project the currently stored object value into Readonly<Partial<D>> while retaining the exact nested source allocation. It may not retype or replace the physical outer data cell.",
+  "existingInputs": {
+    "runtimeHeaderSha256": "5a7831b47e95b0ec42b0780ea0201d1a7dc0184917ba02c2e0996af1199eaa55",
+    "exactIR": "exact-data-path-ir.json",
+    "actualPath": "createSprite options -> createNode2D obj -> initializeNode obj.data -> original createSpriteData data -> initializeSpriteData texture",
+    "priorFailure": "std::bad_cast at first data read; outer same-owner row cast had succeeded"
+  },
+  "allocationProof": {
+    "nativeValue": "The cell already holds Ref<Data>; owner_for/Any row metadata supplies that same Data allocation. No Data or target nominal owner is constructed.",
+    "structuralValue": "The cell may hold a StructuralRef whose existing shared_owner is the source anonymous allocation. Reuse that owner directly; do not call materialize_row, make_ref<D>, recover-as-D, or shared_object to fabricate a nominal object.",
+    "physicalCell": "Retain original TypedRowCell<Value>, original address and declared storage. Read a value snapshot; later outer cell replacement is observed by the next read, while an earlier nested view retains its earlier object."
+  },
+  "mechanismProposal": {
+    "location": "Existing RowCell/TypedRowCell value metadata plus readonly row_get path; scratch header only initially.",
+    "metadata": "A narrow object-value projection hook returns the current stored value RowOwner, obtained while its actual type is known. Existing StructuralRef shared_owner and native Any row-owner thunk are the two sources. This extends existing row metadata, not a new public view family.",
+    "consumer": "Only a readonly structural-row member value. Construct TargetStructuralRef::from_owner(existingNestedOwner). The target row has no nominal-native escape proof unless the original allocation actually supplies it.",
+    "restrictions": [
+      "No conversion to a writable target from this projection.",
+      "No replacing or adapting callbacks.",
+      "No new attachment or shadow cell for existing physical member.",
+      "Null/undefined must not be merged; present-only projection does not claim nullable factory parameter support. Unsupported state/domain must remain explicit.",
+      "Do not treat wrong-typed present nested members as missing. Missing-property absence may remain absence only when the source member is actually absent."
+    ]
+  },
+  "proofPlan": {
+    "positive": [
+      "Exact original Ref<Data> physical cell -> readonly partial data value; nested pointer, row identity and control block unchanged.",
+      "Existing anonymous source StructuralRef data bag -> readonly partial data value; same owner; native escape remains unavailable.",
+      "Mutating original nested texture visible on next nested read.",
+      "Replacing outer data cell yields new value on next read; old view retains original owner/value.",
+      "Lifetime survives outer cell removal only while returned value view retains it."
+    ],
+    "negative": [
+      "Null vs undefined and missing data property remain distinct in retained source oracle; do not claim these are covered by present-only native fixture.",
+      "Wrong native nominal escape fails without manufacturing a target.",
+      "Readonly projection cannot provide a writable data slot or mutable row conversion.",
+      "Wrong-typed present scalar/callback member refuses explicitly rather than appearing absent.",
+      "Projected readonly view never replaces physical outer data cell type or address."
+    ]
+  },
+  "sourceTyping": "No source/Types edits for this first mechanism. Re-run same baseline/candidate strict comparison, preserve the two owned diagnostics separately; minimal source fixture must itself type-check. Whole original factory evidence remains partial until its independent source/callback/allocation contracts close.",
+  "productGate": "Only after exact IR/fresh-allocation/escape/cell proof is concrete; no SDK/caller activation or Types edits.",
+  "abiImpact": "SCRATCH RowCell virtual snapshot metadata extends internal/core ABI. No product/coreABI activation. Exact design and proof precede any requested activation.",
+  "snapshotRequirement": "A getter may return the sole reference to a fresh anonymous object: read exactly once, capture its kind/RowOwner AND strong native reference until TargetRow::from_owner acquires it. Propagate original getter exceptions; keep null/undefined distinct and never read twice for a failed projection.",
+  "actualProof": {
+    "directNative": [
+      {
+        "variant": "baseline",
+        "compileExitCode": 0,
+        "runExitCode": 1,
+        "stdout": "",
+        "stderr": "FAIL after 0 checks: std::bad_cast\n"
+      },
+      {
+        "variant": "candidate",
+        "compileExitCode": 0,
+        "runExitCode": 0,
+        "stdout": "PASS 44 nested data owner/cell/escape/absence/lifetime checks\n",
+        "stderr": ""
+      }
+    ],
+    "emittedGenericNativeV2": {
+      "compileExitCode": 0,
+      "runExitCode": 0,
+      "stdout": "PASS 15 actual emitted generic nested-value checks\n",
+      "stderr": ""
+    },
+    "minimalSourceStrict": "all10controls0diagnostics",
+    "sourceClosureCount": 1211,
+    "wholeFactoryStatus": "PARTIAL same4refusals; originalfactoriespresent; strictwhole220/2owned unchangedsourcehashes",
+    "negativeLimits": "Null is retained as its actual state; projection to non-null partial-row value rejects it at typed read rather than merging to undefined. This does not close original nullable factory callback contract."
+  }
+}

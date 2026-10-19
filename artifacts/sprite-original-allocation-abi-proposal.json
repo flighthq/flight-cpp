@@ -1,0 +1,69 @@
+{
+  "schema": "sprite-original-allocation-value-abi-design/1",
+  "phase": "CONCRETE DESIGN BEFORE ANY NEW FAMILY OR CORE ABI",
+  "authority": [
+    "Foreman-1911d28f",
+    "Foreman-cedbb69c"
+  ],
+  "ownership": "Builder4 owns original allocate->finish mechanism. Builder2 confirmed no existing fix and remains sole Types writer for any concrete later schema hunk.",
+  "sourceAndIR": {
+    "files": [
+      "entity-allocation-original-ir.json",
+      "entity-allocation-original.hpp"
+    ],
+    "sourceBody": "Original allocateEntity<Type>: const out = {} as EntityConstruction<Type>; out[EntityRuntimeKey] = undefined; return out. Original finishEntity<Type>: return out as Type.",
+    "rewrites": 0,
+    "allocationWitness": "Exactly the original fresh empty literal. The anonymous emitted native record is the original source object and must survive."
+  },
+  "existingFamilyProof": {
+    "construction": "Keep EntityConstruction<Type> as the existing StructuralRef<RowWritable<RowOf<Type>>>. A fresh empty literal assertion enters that view with ::from_owner(originalAnonymousRow.shared_owner()), never structural_ref_cast/materialize_row.",
+    "finish": "For an interface VALUE represented by an existing StructuralRef value schema, original finishEntity<Type> already re-views the same owner. Instantiate its original generic Type with that existing row value carrier in the proof; no finish body copy or rewrite.",
+    "dynamicCells": "An original empty anonymous object has no native Model fields. Its OwnedRowCell entries ARE its added source properties. Writes through construction aliases and finished aliases reach the SAME cells. Existing native physical cells must never be shadowed.",
+    "retention": "Both views retain the original anonymous native object/control block through shared_native_object; finish changes neither RowOwner identity nor native owner.",
+    "noNewFamily": "Initial proof uses only existing StructuralRef/RowWritable/RowOf/RowCell and original functions. No runtime/core ABI edit is needed for this allocation proof."
+  },
+  "valueVersusPhysicalABI": {
+    "sourceInterfaceValue": "Proposed bounded source interface VALUE mapping: StructuralRef<RowWritable<RowOf<Ref<ValueSchema>>>>. ValueSchema is compile-time key/type evidence only; it is never allocated as a native owner.",
+    "nativeStorage": "Existing native Model/Runtime structs and their field types remain their physical ABI. A native Ref<Model> can enter a structural value view as that exact owner without copying.",
+    "descriptorNeed": "A nested field whose source value is itself row-backed needs a VALUE schema describing that row carrier, distinct from an existing physical native field declared Ref<NativeData>. Do not silently reuse physical field storage as the value schema or claim those cells have equal types.",
+    "TypesBoundary": "If this bounded mapping requires generated source Types/value-schema declarations, send the exact hunk to Builder2; Builder4 will not edit Types or regenerate SDK. No mapping is activated by this proposal."
+  },
+  "escapeMapping": [
+    {
+      "boundary": "construction -> interface value -> return/store/alias/compare",
+      "representation": "existing structural value carrier",
+      "behavior": "same original owner and same dynamic cells, no validation or native fabrication"
+    },
+    {
+      "boundary": "readonly member access",
+      "representation": "existing readonly row projection",
+      "behavior": "same physical/dynamic cell; preserve absence, getter order, errors and value identity"
+    },
+    {
+      "boundary": "native Ref<Model> return, native API parameter, or typed native physical field write",
+      "representation": "checked exact native owner escape at the actual operation",
+      "behavior": "recover only if the ORIGINAL allocation already is that native Model; otherwise explicit existing out-of-profile/checked failure. Never allocate Model, reinterpret, materialize, copy cells, or put a row value in a different typed native slot"
+    },
+    {
+      "boundary": "computed runtime slot on original anonymous source object",
+      "representation": "same source RowOwner dynamic symbol cell with exact source value carrier",
+      "behavior": "written-undefined presence survives; no fake native runtime slot"
+    },
+    {
+      "boundary": "computed runtime slot physically declared optional<Ref<NativeRuntime>> on an existing native holder",
+      "representation": "preserve physical slot type/address; require exact native escape before the write",
+      "behavior": "row-backed anonymous runtime cannot fit; failure occurs at the actual slot write, with no side cell/attachment replacement or earlier factory validation"
+    }
+  ],
+  "minimalProofPlan": [
+    "Emit the ORIGINAL allocation and finish IR with only an empty-literal-to-writable-row ::from_owner compiler mechanism.",
+    "Instantiate Type as an existing structural Model value carrier in a native harness; no source factory body replacement.",
+    "Observe native Model constructor count remains0, original anonymous owner exists before/after finish, control block/RowOwner/dynamic cell pointers unchanged, writes through every alias visible.",
+    "Preserve original EntityRuntimeKey own present-undefined marker, named absence/presence, exact added-cell values and original own-key order.",
+    "Attempt Type=Ref<Model> native return: checked escape must fail without constructing a Model.",
+    "Native caller with an already-created Model remains the same physical owner/cell on the ordinary row path.",
+    "Lifetime follows aliases and releases after last returned value.",
+    "Record what is NOT solved: original full Sprite source/callback/data contracts, nested value schemas, typed native slot interoperability, all factory/image39 native controls."
+  ],
+  "productHold": "No new public family/core ABI or SDK work is introduced. Present concrete mapping/proof first; no signature narrowing, callback widening, source body rewrite, target-native fabrication or replacement."
+}
