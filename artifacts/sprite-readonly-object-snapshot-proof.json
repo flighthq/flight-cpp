@@ -1,6 +1,6 @@
 {
   "schema": "flight-readonly-object-snapshot-proof/1",
-  "state": "INACTIVE bounded actual runtime/compiler proof; actual-byte review pending, same original Sprite closure continues",
+  "state": "INACTIVE HISTORICAL PROOF: actual review found JSON/exact and partial unsupported fallback regressions; superseded by corrected fallback proof, no activation",
   "authority": [
     "Manager3e1de4a2",
     "Foremanf0914edc",
@@ -385,5 +385,13 @@
     "memberCount": 93,
     "checksummedFileCount": 92
   },
-  "verifyCommand": "node scripts/spriteReadonlyObjectSnapshotProof.mjs [archive]"
+  "verifyCommand": "node scripts/spriteReadonlyObjectSnapshotProof.mjs [archive]",
+  "reviewedRegression": {
+    "reviewParcels": [
+      "builder6-e3bf2ec6",
+      "builder6-c7086cba"
+    ],
+    "supersededBy": "artifacts/sprite-readonly-object-fallback-proof.json",
+    "scope": "Original archive and all claimed bounded receipts unchanged. metadata62 check47 encoded a baseline regression; corrected proof preserves floor typed JSON identity and unsupported partial absence without a second getter."
+  }
 }

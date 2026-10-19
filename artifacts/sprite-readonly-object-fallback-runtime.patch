@@ -1,0 +1,137 @@
+--- a/include/flight/structural_ref.hpp
++++ b/include/flight/structural_ref.hpp
+@@ -144,0 +145,24 @@
++class RowOwner;
++
++namespace detail {
++// An owning snapshot for one readonly nested-object read, independent of dynamic Any erasure.
++struct ReadonlyObjectValue final {
++  AnyKind kind{AnyKind::undefined};
++  bool represented{false};
++  std::shared_ptr<RowOwner> owner;
++  std::shared_ptr<void> retained_native;
++};
++template <typename Value>
++[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value);
++template <typename Value>
++struct has_structural_row_value : std::bool_constant<requires(const Value& value) {
++  value.shared_owner();
++  value.shared_native_object();
++}> {};
++template <typename Value>
++struct has_structural_row_value<std::optional<Value>> : has_structural_row_value<Value> {};
++template <typename... Values>
++struct has_structural_row_value<std::variant<Values...>>
++    : std::bool_constant<(has_structural_row_value<Values>::value || ...)> {};
++} // namespace detail
++
+@@ -184,0 +209,3 @@
++
++  // Existing external cells retain their erased-read behavior without requiring an override.
++  [[nodiscard]] virtual detail::ReadonlyObjectValue readonly_object_value() const;
+@@ -247,0 +275,9 @@
++
++  [[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override {
++    if constexpr (detail::has_structural_row_value<Value>::value) {
++      return detail::readonly_nested_object_value(const_cast<TypedRowCell<Value>*>(this)->get());
++    } else {
++      // Preserve custom as_any overrides for ordinary native/scalar subclasses.
++      return RowCell::readonly_object_value();
++    }
++  }
+@@ -294,0 +331,14 @@
++  }
++
++  [[nodiscard]] detail::ReadonlyObjectValue readonly_object_value() const override {
++    const auto& value = *address_;
++    if constexpr (detail::is_std_optional<Value>::value) {
++      if (!value.has_value()) {
++        if (presence_ == MemberPresence::Required) {
++          throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
++        }
++        return {presence_ == MemberPresence::RequiredNullable ? AnyKind::null : AnyKind::undefined,
++                true, {}, {}};
++      }
++    }
++    return detail::readonly_nested_object_value(value);
+@@ -603,0 +654,37 @@
++
++namespace detail {
++template <typename Value>
++[[nodiscard]] ReadonlyObjectValue readonly_nested_object_value(const Value& value) {
++  using Stored = std::remove_cvref_t<Value>;
++  if constexpr (is_std_optional<Stored>::value) {
++    return value ? readonly_nested_object_value(*value)
++                 : ReadonlyObjectValue{AnyKind::undefined, true, {}, {}};
++  } else if constexpr (is_std_variant<Stored>::value) {
++    return std::visit([](const auto& item) { return readonly_nested_object_value(item); }, value);
++  } else if constexpr (requires {
++                         { value.shared_owner() } -> std::convertible_to<std::shared_ptr<RowOwner>>;
++                         value.shared_native_object();
++                       }) {
++    // A typed row already has its exact identity, including an existing JSON-backed view.
++    auto owner = value.shared_owner();
++    return {AnyKind::object, true, std::move(owner), value.shared_native_object()};
++  } else {
++    const auto erased = any_from(value);
++    if (!erased) return {};
++    // Raw JSON does not acquire a new projection; unsupported reads keep their existing fallback.
++    if (erased->held_type() == typeid(JsonObject) || erased->held_type() == typeid(JsonArray)) return {};
++    std::shared_ptr<RowOwner> owner;
++    if (erased->held_object() && erased->held_type() != typeid(JsonObject) &&
++        erased->held_type() != typeid(JsonArray)) {
++      owner = std::static_pointer_cast<RowOwner>(erased->erased_row_owner());
++    }
++    auto retained = owner ? owner->native_object() : nullptr;
++    return {erased->kind(), true, std::move(owner), std::move(retained)};
++  }
++}
++} // namespace detail
++
++inline detail::ReadonlyObjectValue RowCell::readonly_object_value() const {
++  const auto value = as_any();
++  return value ? detail::readonly_nested_object_value(*value) : detail::ReadonlyObjectValue{};
++}
+@@ -1977,0 +2065,6 @@
++template <typename Value>
++inline constexpr bool readonly_partial_row_value = false;
++template <typename Schema>
++inline constexpr bool readonly_partial_row_value<StructuralRef<Schema>> =
++    schema_readonly<Schema> && schema_partial<Schema>;
++
+@@ -2032,0 +2126,17 @@
++    using NestedPresent = detail::optional_value_t<Value>;
++    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<NestedPresent>) {
++      const auto cell = source.shared_owner()->named_cell(Key::name.view());
++      if (!cell) return Value{};
++      if (cell->presence_ambiguous()) {
++        throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
++      }
++      const auto snapshot = cell->readonly_object_value();
++      if (snapshot.represented && snapshot.kind == AnyKind::undefined) return Value{};
++      if (snapshot.represented && snapshot.kind == AnyKind::object &&
++          (snapshot.owner || cell->value_type() == typeid(Value) ||
++           cell->value_type() == typeid(NestedPresent))) {
++        // Capture the native lifetime before the owning getter snapshot leaves scope.
++        return Value(NestedPresent::from_owner(snapshot.owner));
++      }
++      // Unsupported values retain the original exact/present/absent path below.
++    }
+@@ -2056,0 +2167,17 @@
++    using NestedPresent = detail::optional_value_t<Value>;
++    if constexpr (detail::schema_readonly<Schema> && detail::readonly_partial_row_value<NestedPresent>) {
++      const auto cell = source.shared_owner()->named_cell(Key::name.view());
++      if (!cell) return Value{};
++      if (cell->presence_ambiguous()) {
++        throw OutOfProfileError("readonly nested object read has ambiguous null/undefined storage");
++      }
++      const auto snapshot = cell->readonly_object_value();
++      if (snapshot.represented && snapshot.kind == AnyKind::undefined) return Value{};
++      if (snapshot.represented && snapshot.kind == AnyKind::object &&
++          (snapshot.owner || cell->value_type() == typeid(Value) ||
++           cell->value_type() == typeid(NestedPresent))) {
++        // Capture the native lifetime before the owning getter snapshot leaves scope.
++        return Value(NestedPresent::from_owner(snapshot.owner));
++      }
++      // Unsupported values retain the original exact/has-cell path below.
++    }

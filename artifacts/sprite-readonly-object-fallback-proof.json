@@ -1,0 +1,697 @@
+{
+  "schema": "flight-readonly-object-fallback-proof/1",
+  "state": "INACTIVE corrected bounded runtime/emission proof; awaiting Builder6 updated actual-byte final review",
+  "authority": [
+    "Manager3e1de4a2",
+    "Foreman01203c55",
+    "Foreman8ba09f0f"
+  ],
+  "runtimeBaseCommit": "0300323c",
+  "runtime": {
+    "patch": "artifacts/sprite-readonly-object-fallback-runtime.patch",
+    "sha256": "744cfeeffb6cb92512fa230a267d04027635102b6877a92f4b55bae613953844",
+    "baselineSha256": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+    "candidateSha256": "152217d57e6555aa91dd09c504c71074e09d97e0df078231776b39a0548923d5",
+    "mechanism": "Typed StructuralRef captures exact owner including JSON-backed views; raw Any JSON stays unrepresented. Both narrow blocks fall through for unsupported snapshots. Exact-cell type witness preserves empty row without a second getter. No extra snapshot/cell field or cache change.",
+    "request": "docs/compiler-requests/readonly-nested-object-getter-fallback.md",
+    "expiry": "Requalify on runtime exact-base changes; retire with upstream matching snapshot/fallback semantics.",
+    "abi": "One RowCell virtual already conditionally authorized; no product ABI version or header activation."
+  },
+  "compiler": {
+    "patch": "artifacts/sprite-readonly-object-snapshot-compiler.patch",
+    "sha256": "7df2fa3b183ef7431238684bf45b0b00565d4e1538ade0ceb4994527d3832497",
+    "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "composition": "archived combined136, old approved fresh-native PREP + nested-data projection + original allocation experiment; inactive and not whole factory qualified",
+    "baselineBackendSha256": "a420dafcc6febb05196485de5d627f6e0d2d20c964724cd8001c5f1599bf1af6",
+    "candidateBackendSha256": "9faff9ddc8b942cb8a50832ac2bb5c633ad4744c99db995e21e2157f71ab61dd",
+    "onlyNewHunk": "generated readonly accessor readonly_object_value; original get/as_any untouched",
+    "request": "docs/compiler-requests/readonly-nested-object-getter-snapshot.md",
+    "expiry": "Remove inactive hunk when compiler natively supplies this owning snapshot with matching runtime; invalidate and requalify on pin/base composition changes.",
+    "equivalence": "Getter source invokes once at original read, retains actual result without get-reference-cache retention, forwards exact source exception; declared Null/Undefined analysis and exact source owner preserved. No other read domain or dynamic representation changes.",
+    "strictBuild": {
+      "command": "npm run build --silent",
+      "exitCode": 0,
+      "compilerCandidate": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-compiler136",
+      "backendSha256": "9faff9ddc8b942cb8a50832ac2bb5c633ad4744c99db995e21e2157f71ab61dd",
+      "runtimeSha256": "e06f84ef9a6c0f16e7c23a7f472512d87896254960bf88062f40713b8735a811",
+      "scope": "Strict isolated compiler build; not SDK generation."
+    }
+  },
+  "sourceReemission": {
+    "strict": [],
+    "rows": [
+      {
+        "label": "baseline",
+        "id": "getter",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "baseline",
+        "id": "getter-controls",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "baseline",
+        "id": "getter-exact",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": false,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter-controls",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      },
+      {
+        "label": "candidate",
+        "id": "getter-exact",
+        "emitted": true,
+        "diagnostics": [],
+        "snapshotOverride": true,
+        "asAnyOverride": false
+      }
+    ]
+  },
+  "native": {
+    "getter21": [
+      {
+        "name": "baseline-original21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/baseline/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/baseline-original21"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 2 checks: std::bad_cast\n"
+      },
+      {
+        "name": "narrow-old21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/baseline/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/narrow-old21"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 21 checks: actual generated getter check failed\n"
+      },
+      {
+        "name": "narrow-emitted21",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/candidate/generated-getter-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/narrow-emitted21"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 21 actual compiler-generated getter once snapshot exception and lifetime checks\n",
+        "stderr": ""
+      }
+    ],
+    "exact13": [
+      {
+        "name": "exact-floor",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-floor"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 13 checks: exact-typed emitted getter check failed\n"
+      },
+      {
+        "name": "exact-narrow-old",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-narrow-old"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 13 checks: exact-typed emitted getter check failed\n"
+      },
+      {
+        "name": "exact-narrow-new",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/exact-narrow-new"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 13 actual emitted exact-typed getter identity snapshot and final release checks\n",
+        "stderr": ""
+      }
+    ],
+    "metadata62AndRevised83": [
+      {
+        "name": "metadata",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/metadata-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/metadata"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 62 actual emitted exact-typed getter nullable sentinel schema-only owner policy default and JSON controls\n",
+        "stderr": ""
+      },
+      {
+        "name": "policy-owner83",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/policy-owner-snapshot-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/policy-owner83"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 83 existing-as_any policy presence external-subclass getter lifetime and readonly-only checks\n",
+        "stderr": ""
+      }
+    ],
+    "fallback30AndFreshJson8": [
+      {
+        "name": "fallback-floor",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/baseline",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/fallback-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/fallback-floor"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 30 unsupported fallback exact JSON empty row partial scalar/rawJSON optionalNative and getter once/error-prefix checks\n",
+        "stderr": ""
+      },
+      {
+        "name": "fallback-candidate",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/fallback-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/fallback-candidate"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 30 unsupported fallback exact JSON empty row partial scalar/rawJSON optionalNative and getter once/error-prefix checks\n",
+        "stderr": ""
+      },
+      {
+        "name": "fresh-json8",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/json-getter-lifetime-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/fresh-json8"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 8 actual emitted fresh typed JSON getter once exact-owner capture and release checks\n",
+        "stderr": ""
+      }
+    ],
+    "generic15NamedPropertiesAndOldExpectations": [
+      {
+        "name": "named-final",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/named-properties-comparison.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/named-final"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "marked=0 represented=0 UnrepresentedProperty=1 exactSourceObject=0\nmarked=1 represented=0 UnrepresentedProperty=1 exactSourceObject=0\n",
+        "stderr": ""
+      },
+      {
+        "name": "emitted15-final",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-data-cell-contract/controls",
+          "/tmp/builder4-sprite-data-cell-contract/emitted-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/emitted15-final"
+        ],
+        "compileExit": 0,
+        "runExit": 0,
+        "stdout": "PASS 15 actual emitted generic nested-value checks\n",
+        "stderr": ""
+      },
+      {
+        "name": "original83-final",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/policy-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/original83-final"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 81 checks: existing-path policy/compatibility check failed\n"
+      },
+      {
+        "name": "old-metadata62-expectation",
+        "command": [
+          "/usr/bin/c++",
+          "-std=c++20",
+          "-O0",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/runtime/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+          "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+          "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+          "/tmp/builder4-sprite-readonly-object-narrow/metadata-native.cpp",
+          "-o",
+          "/tmp/builder4-sprite-readonly-object-narrow-v3/old-metadata62-expectation"
+        ],
+        "compileExit": 0,
+        "runExit": 1,
+        "stdout": "",
+        "stderr": "FAIL after 47 checks: narrow metadata control failed\n"
+      }
+    ],
+    "naiveThrowDeletion": {
+      "command": [
+        "/usr/bin/c++",
+        "-std=c++20",
+        "-O0",
+        "-I/tmp/builder4-sprite-readonly-object-narrow-v3/naive/runtime/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/include",
+        "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo/generated/include",
+        "-I/tmp/builder4-sprite-readonly-object-narrow-v3/candidate",
+        "/tmp/builder4-sprite-readonly-object-narrow-v3/fallback-native.cpp",
+        "-o",
+        "/tmp/builder4-sprite-readonly-object-narrow-v3/naive-fallback"
+      ],
+      "compileExit": 0,
+      "runExit": 1,
+      "stdout": "",
+      "stderr": "FAIL after 15 checks: unsupported snapshot fallback failed\n",
+      "scope": "Intentional throw-deletion-only fault injection; actual v3 runtime unchanged; unchanged fallback fixture detects second source getter at check15."
+    }
+  },
+  "sameBaseCompilerParity": {
+    "rows": [
+      {
+        "variant": "baseline",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      },
+      {
+        "variant": "candidate",
+        "pass": 13,
+        "fail": 3,
+        "failures": [
+          "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+          "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+          "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+        ]
+      }
+    ],
+    "newFailures": [],
+    "runtimeFloor": "SAME corrected v3 runtime/current0300323c native inputs via explicit wrapper. Compiler source and emitted method unchanged; no global as_any change.",
+    "scope": "16 getter/accessor cases; full compiler suite NOTRUN."
+  },
+  "projectRuntimeParity": {
+    "baselineRows": [
+      {
+        "variant": "baseline",
+        "name": "structural_row",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--target",
+          "flight_cpp_structural_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.structural_row$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/baseline\n    Start 20: flight_cpp.structural_row\n1/1 Test #20: flight_cpp.structural_row ........   Passed    0.01 sec\n\n100% tests passed, 0 tests failed out of 1\n\nLabel Time Summary:\npkg:types    =   0.01 sec*proc (1 test)\n\nTotal Test time (real) =   0.02 sec\n",
+        "testStderr": "",
+        "elapsedMs": 37233
+      },
+      {
+        "variant": "baseline",
+        "name": "merged_row",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--target",
+          "flight_cpp_merged_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.merged_row$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/baseline\n    Start 21: flight_cpp.merged_row\n1/1 Test #21: flight_cpp.merged_row ............   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nLabel Time Summary:\npkg:app       =   0.00 sec*proc (1 test)\npkg:entity    =   0.00 sec*proc (1 test)\npkg:types     =   0.00 sec*proc (1 test)\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 156417
+      },
+      {
+        "variant": "baseline",
+        "name": "nominal_or_structural_view",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--target",
+          "flight_cpp_nominal_or_structural_view_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.nominal_or_structural_view$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/baseline\n    Start 25: flight_cpp.nominal_or_structural_view\n1/1 Test #25: flight_cpp.nominal_or_structural_view ...   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 19120
+      },
+      {
+        "variant": "baseline",
+        "name": "optional_native_reference_any",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--target",
+          "flight_cpp_optional_native_reference_any_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/baseline",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.optional_native_reference_any$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/baseline\n    Start 5: flight_cpp.optional_native_reference_any\n1/1 Test #5: flight_cpp.optional_native_reference_any ...   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 6820
+      }
+    ],
+    "candidateRows": [
+      {
+        "variant": "candidate-v3",
+        "name": "structural_row",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--target",
+          "flight_cpp_structural_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.structural_row$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/candidate-v3\n    Start 20: flight_cpp.structural_row\n1/1 Test #20: flight_cpp.structural_row ........   Passed    0.01 sec\n\n100% tests passed, 0 tests failed out of 1\n\nLabel Time Summary:\npkg:types    =   0.01 sec*proc (1 test)\n\nTotal Test time (real) =   0.02 sec\n",
+        "testStderr": "",
+        "elapsedMs": 35249
+      },
+      {
+        "variant": "candidate-v3",
+        "name": "merged_row",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--target",
+          "flight_cpp_merged_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.merged_row$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/candidate-v3\n    Start 21: flight_cpp.merged_row\n1/1 Test #21: flight_cpp.merged_row ............   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nLabel Time Summary:\npkg:app       =   0.00 sec*proc (1 test)\npkg:entity    =   0.00 sec*proc (1 test)\npkg:types     =   0.00 sec*proc (1 test)\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 139153
+      },
+      {
+        "variant": "candidate-v3",
+        "name": "nominal_or_structural_view",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--target",
+          "flight_cpp_nominal_or_structural_view_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.nominal_or_structural_view$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/candidate-v3\n    Start 25: flight_cpp.nominal_or_structural_view\n1/1 Test #25: flight_cpp.nominal_or_structural_view ...   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 14632
+      },
+      {
+        "variant": "candidate-v3",
+        "name": "optional_native_reference_any",
+        "buildCommand": [
+          "cmake",
+          "--build",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--target",
+          "flight_cpp_optional_native_reference_any_tests",
+          "--parallel",
+          "2"
+        ],
+        "buildExit": 0,
+        "testCommand": [
+          "ctest",
+          "--test-dir",
+          "/tmp/builder4-sprite-narrow-runtime-parity/candidate-v3",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.optional_native_reference_any$"
+        ],
+        "testExit": 0,
+        "testStdout": "Test project /tmp/builder4-sprite-narrow-runtime-parity/candidate-v3\n    Start 5: flight_cpp.optional_native_reference_any\n1/1 Test #5: flight_cpp.optional_native_reference_any ...   Passed    0.00 sec\n\n100% tests passed, 0 tests failed out of 1\n\nTotal Test time (real) =   0.01 sec\n",
+        "testStderr": "",
+        "elapsedMs": 6363
+      }
+    ],
+    "inputs": {
+      "runtime": "953db0c123e3d4ccf553b168c20bdd604270d7ceccd20a19a5f35378ee1140dc",
+      "candidate": "152217d57e6555aa91dd09c504c71074e09d97e0df078231776b39a0548923d5",
+      "tests": {
+        "structural_row": "02aef585a5452045d453a9de81b8992058ebd84d0570203b653618a2df4a0258",
+        "merged_row": "922010932c864926b2998230a4cbfe5b612572584c2f95735b6450eac7ac7aa1",
+        "nominal_or_structural_view": "15f12768d425729fab49882a96629ffeeddfae620664aedfd842972fe5c9771a",
+        "optional_native_reference_any": "4a04ddad3384f93bb8dd06868573ada9192696fecbae489f744ef4dcc5c1ec94"
+      }
+    },
+    "scope": "Four project CMake/CTest targets only; input hashes match. Historical v1 candidate also passes these four but does not catch the independent JSON regression; new fallback30 and JSON8 do."
+  },
+  "independentReview": {
+    "agent": "builder6",
+    "priorParcels": [
+      "builder6-e3bf2ec6",
+      "builder6-c7086cba"
+    ],
+    "correctedActualInputArchive": "b453970c86704ec749d13688e1fcede3402b3f3b979530d157a3159e082b7df6",
+    "state": "updated actual bytes supplied; final review pending; no activation"
+  },
+  "historicalCounterexamples": {
+    "v1Archive": {
+      "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-snapshot-proof.tgz",
+      "sha256": "a386ad11a32f0987d7f3f1d3389d80bfdc684cfe334bdc4824eee523ff52781e",
+      "bytes": 1145874,
+      "memberCount": 93,
+      "checksummedFileCount": 92
+    },
+    "original83": "Rebuilt on corrected runtime FAIL81; revised83 changes ONLY schema-only owner rejection to exact-owner identity.",
+    "oldMetadata62": "Rebuilt unchanged old expectation on corrected runtime FAIL47; corrected62 changes ONLY exact JSON owner assertion to floor identity.",
+    "naiveFallthrough": "Intentional throw-deletion-only mutant built with unchanged fallback30 fixture; must fail getter-once at check15. Qualified runtime unchanged."
+  },
+  "explicitLimits": [
+    "General typed/external cache retention outside generated bounded snapshot unchanged.",
+    "Raw JSON gains no new projection; existing typed JSON views preserve owner and source getter semantics.",
+    "Four targeted project CMake/CTest targets, not full project suite; coherent compiler16 remains13pass3sameexistingfail zero new.",
+    "Compiler source/generated snapshot method unchanged; historical strictbuild0/strictsource0 witnesses remain exact by hash, fresh C++ builds test updated runtime.",
+    "Original strict220/two owned source errors, generic function-value and physical anonymous factory ABI remain independent; native Sprite/image39 not qualified."
+  ],
+  "coreAbiActivation": false,
+  "runtimeOrCompilerProductChanges": false,
+  "typesChanges": false,
+  "sdkOrCallerActivation": false,
+  "actualNativeSpriteFactory": "NOTRUN",
+  "actualNativeImage39": "NOTRUN",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-fallback-proof.tgz",
+    "sha256": "9489b25917bc77cac66f083a890ffdaae087458075e16f47507dc48d987330b8",
+    "bytes": 1265163,
+    "memberCount": 140,
+    "checksummedFileCount": 139
+  },
+  "verifyCommand": "node scripts/spriteReadonlyObjectFallbackProof.mjs [archive]"
+}
