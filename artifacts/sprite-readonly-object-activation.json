@@ -1,0 +1,282 @@
+{
+  "schema": "flight-readonly-object-activation/1",
+  "state": "ACTIVE bounded runtime and managed compiler patch; no SDK generation",
+  "authorization": [
+    "Manager3e1de4a2",
+    "Foremanffccf8e4"
+  ],
+  "review": {
+    "parcel": "builder6-30b10878",
+    "verdict": "PASS",
+    "reviewedRuntimeSha256": "152217d57e6555aa91dd09c504c71074e09d97e0df078231776b39a0548923d5",
+    "sameReviewedAccessorBlock": true
+  },
+  "productCommit": "637ba1dca38439972aaa7bbcbaf470b4178bb276",
+  "runtime": {
+    "path": "include/flight/structural_ref.hpp",
+    "sha256": "152217d57e6555aa91dd09c504c71074e09d97e0df078231776b39a0548923d5",
+    "rowCellVirtualAdded": true,
+    "advertisedAbiVersionChanged": false
+  },
+  "compiler": {
+    "manifestId": "compiler-readonly-object-value-snapshot",
+    "patch": "source-patches/compiler-readonly-object-value-snapshot.patch",
+    "sha256": "b6e8fbf2b6f6ce094c09f75a788ec2e32c7041541833f59e472e8a247f1d6e2e",
+    "baseCommit": "806d257d2f4100de745cc97340e61c2f301b0f24",
+    "activePatchCount": 144,
+    "baselineBackendSha256": "17f5daacd5f9244f3ef8dec021a99e8b0d65ac2311c222c9447850a191b770d5",
+    "candidateBackendSha256": "f1a884280267a8a68a413677e62e5a9e1b874bb39dadf833f1f82fcb1b855f38",
+    "managedPatchReconstructsCandidateExactly": true
+  },
+  "currentComposition": {
+    "strictBuilds": {
+      "baseline": 0,
+      "candidate": 0
+    },
+    "sourceReemissionStrictDiagnostics": [],
+    "emittedHeaders": [
+      {
+        "variant": "baseline",
+        "fixture": "getter",
+        "currentSha256": "c8c432205a4b93b5beeb6c6fec8a2c0fbf9f3b8209500673c43d2a3973a0b189",
+        "reviewedSha256": "c8c432205a4b93b5beeb6c6fec8a2c0fbf9f3b8209500673c43d2a3973a0b189",
+        "identical": true
+      },
+      {
+        "variant": "baseline",
+        "fixture": "getter-controls",
+        "currentSha256": "d3a95390e54f9dc28b911a8681e2a3bc15705d12a233157a031b94cd98cbcd2f",
+        "reviewedSha256": "d3a95390e54f9dc28b911a8681e2a3bc15705d12a233157a031b94cd98cbcd2f",
+        "identical": true
+      },
+      {
+        "variant": "baseline",
+        "fixture": "getter-exact",
+        "currentSha256": "9a9e9749c30c17b8338b2c8d220b0a73d6800406f8bf45feb58356958615ac77",
+        "reviewedSha256": "9a9e9749c30c17b8338b2c8d220b0a73d6800406f8bf45feb58356958615ac77",
+        "identical": true
+      },
+      {
+        "variant": "candidate",
+        "fixture": "getter",
+        "currentSha256": "dfb4f341d29ac2f7fa013a365ff88ccfffccaf8ad495574047a4437447e90b83",
+        "reviewedSha256": "dfb4f341d29ac2f7fa013a365ff88ccfffccaf8ad495574047a4437447e90b83",
+        "identical": true
+      },
+      {
+        "variant": "candidate",
+        "fixture": "getter-controls",
+        "currentSha256": "1328ca7fba89dac4909de9d5ef1afd3f9f1f4d9d8eac68dcdc367c083c8182a0",
+        "reviewedSha256": "1328ca7fba89dac4909de9d5ef1afd3f9f1f4d9d8eac68dcdc367c083c8182a0",
+        "identical": true
+      },
+      {
+        "variant": "candidate",
+        "fixture": "getter-exact",
+        "currentSha256": "f5ded32587ff2f611a3b3fefbf104a143b1c92296fedb3ec59dac805c320178d",
+        "reviewedSha256": "f5ded32587ff2f611a3b3fefbf104a143b1c92296fedb3ec59dac805c320178d",
+        "identical": true
+      }
+    ],
+    "runtimeProjectTargets": [
+      {
+        "name": "runtime-configure",
+        "command": [
+          "cmake",
+          "-S",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+          "-B",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "-DBUILD_TESTING=ON"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 21752
+      },
+      {
+        "name": "runtime-structural_row-build",
+        "command": [
+          "cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--target",
+          "flight_cpp_structural_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 37171
+      },
+      {
+        "name": "runtime-structural_row-test",
+        "command": [
+          "ctest",
+          "--test-dir",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.structural_row$"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 95
+      },
+      {
+        "name": "runtime-merged_row-build",
+        "command": [
+          "cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--target",
+          "flight_cpp_merged_row_tests",
+          "--parallel",
+          "2"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 155265
+      },
+      {
+        "name": "runtime-merged_row-test",
+        "command": [
+          "ctest",
+          "--test-dir",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.merged_row$"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 21
+      },
+      {
+        "name": "runtime-nominal_or_structural_view-build",
+        "command": [
+          "cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--target",
+          "flight_cpp_nominal_or_structural_view_tests",
+          "--parallel",
+          "2"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 14862
+      },
+      {
+        "name": "runtime-nominal_or_structural_view-test",
+        "command": [
+          "ctest",
+          "--test-dir",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.nominal_or_structural_view$"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 23
+      },
+      {
+        "name": "runtime-optional_native_reference_any-build",
+        "command": [
+          "cmake",
+          "--build",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--target",
+          "flight_cpp_optional_native_reference_any_tests",
+          "--parallel",
+          "2"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 5991
+      },
+      {
+        "name": "runtime-optional_native_reference_any-test",
+        "command": [
+          "ctest",
+          "--test-dir",
+          "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-snapshot-activation/runtime-build",
+          "--output-on-failure",
+          "-R",
+          "^flight_cpp\\.optional_native_reference_any$"
+        ],
+        "cwd": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/repo",
+        "exit": 0,
+        "elapsedMs": 35
+      }
+    ],
+    "accessorParity": {
+      "rows": [
+        {
+          "variant": "baseline",
+          "pass": 13,
+          "fail": 3,
+          "failures": [
+            "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+            "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+            "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+          ]
+        },
+        {
+          "variant": "candidate",
+          "pass": 13,
+          "fail": 3,
+          "failures": [
+            "createCppCompilerBackend requires the bounds runtime slot and accessor to carry their writable cells",
+            "createCppCompilerBackend requires the 2D transform runtime slot and accessor to carry one writable cache owner",
+            "createCppCompilerBackend requires the 3D transform runtime slot and accessor to preserve detached matrix state"
+          ]
+        }
+      ],
+      "newFailures": []
+    },
+    "sourcePatchTooling": {
+      "command": "node --test scripts/sourcePatches.test.mjs",
+      "pass": 2,
+      "fail": 0
+    }
+  },
+  "reusedNativeProof": {
+    "artifact": "artifacts/sprite-readonly-object-fallback-proof.json",
+    "archiveSha256": "9489b25917bc77cac66f083a890ffdaae087458075e16f47507dc48d987330b8",
+    "validator": "node scripts/spriteReadonlyObjectFallbackProof.mjs",
+    "validatedPayloadHashes": 139,
+    "reason": "Runtime and all six freshly emitted headers are byte-identical to the independent reviewed pair. Native fixtures and immutable positive/negative receipts unchanged. Current runtime four targets and compiler16 parity were freshly rerun.",
+    "passingCounts": [
+      21,
+      13,
+      62,
+      83,
+      15,
+      30,
+      8
+    ],
+    "retainedNegativeExpectations": [
+      "original83 FAIL81",
+      "old metadata62 FAIL47",
+      "naive deletion-only fallback FAIL15"
+    ]
+  },
+  "archive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/982b0732-986c-4d50-9655-031a33dc8902/.scratch-archive/builder4-sprite-readonly-object-activation.tgz",
+    "sha256": "5e1201d8b0aaf20df0d4a20aa166ed04019d18c37ff32cd18db82c17124a3518",
+    "bytes": 2007874,
+    "members": 204,
+    "payloadHashes": 203
+  },
+  "request": "docs/compiler-requests/readonly-nested-object-getter-activation.md",
+  "limits": {
+    "fullOriginalSpriteFactory": "NOT QUALIFIED",
+    "originalSourceStrict220": "Two owned contract errors remain; no source change",
+    "nativeImage39": "NOT QUALIFIED",
+    "generalTypedAndExternalCache": "UNCHANGED; outside bounded snapshot path",
+    "typesChanges": false,
+    "sdkGenerated": false,
+    "fullCompilerSuite": "NOTRUN; focused16 retains3pre-existing failures"
+  }
+}
