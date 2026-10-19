@@ -1,0 +1,258 @@
+{
+  "schema": "sprite-original-image-consumer-preparation/1",
+  "authority": "Foreman-d5812dcf",
+  "state": "PREPARATION COMPLETE; native original factory/image consumer BLOCKED before execution",
+  "testedCommit": "81967a56547ead00e1d60b2242eb548cb98c74b2",
+  "productChanges": false,
+  "typesChanges": false,
+  "metadataChanges": false,
+  "generationRuns": 0,
+  "sourceBodiesRewritten": 0,
+  "nativeOwnersFabricatedByFixture": 0,
+  "supplementaryExamples": {
+    "proofAlreadyLanded": "5e121030",
+    "standalonePatchSha256": "1b97af8a90b5e8aa99bfd473cc998b1e6e563ebd1f851ffa92cbc355cdbe9bf3",
+    "compileLink": "Camera2D and FontHost actual PROJECT targets PASS",
+    "glSmoke": "UNAVAILABLE at SDL initialization; unchanged environment not repeated"
+  },
+  "inputs": [
+    {
+      "kind": "Builder4 frozen original source/IR",
+      "archiveSha256": "2951965992e17babed679d1e2f8d1ff6963c49d0122ad0c70161a830cc54a794",
+      "members": 28
+    },
+    {
+      "kind": "Builder4 frozen effective Types/entity and existing whole1211 v5 output",
+      "archiveSha256": "4c7b839c83ee56f3322e93406124b80b8f5e68f674325af18979024ab3f22502",
+      "members": 1042
+    },
+    {
+      "kind": "original image136 nine-header output",
+      "archiveSha256": "6c7f2419458cace669f6f848aa0247916528f167f6d09436586b65e1547fdf64",
+      "qualification": "Historical image header failed at missing Sprite options factory. Current baseline now selects received whole original v5 factory first; no default override used."
+    }
+  ],
+  "sourceResults": {
+    "factoryRaw": {
+      "checks": 39,
+      "failures": 0,
+      "modules": 14
+    },
+    "factoryFrozen": {
+      "checks": 39,
+      "failures": 0,
+      "modules": 13
+    },
+    "imageRaw": {
+      "checks": 16,
+      "failures": 0,
+      "modules": 25
+    },
+    "imageFrozen": {
+      "checks": 16,
+      "failures": 0,
+      "modules": 24
+    },
+    "nativeImplication": "NONE; source oracles are not native qualification",
+    "factoryGetterErrorPrefixes": 19,
+    "imageControls": [
+      "public image handler invokes original resolver once with the exact asset",
+      "resolved original public image handler appends one child without diagnostics",
+      "original factories allocate a distinct Sprite and SpriteData",
+      "original nested Texture2D allocation retains exact resolver ImageResource",
+      "original hierarchy binds actual child and parent in both directions",
+      "constructed Sprite retains original runtime accessor and authored bounds callback",
+      "public image options preserve original Sprite defaults",
+      "repeated public calls allocate fresh Sprite data runtime and texture but retain image identity",
+      "fixture calls original public handler and resolver identities without replacement",
+      "public image missing asset preserves original diagnostic and no child",
+      "public image non-image asset preserves original diagnostic and no child",
+      "public image missing resolver preserves original diagnostic and no child",
+      "public image null resolver result preserves original diagnostic and no child",
+      "public resolver exception keeps exact thrown owner before construction or diagnostics",
+      "original image branch preserves refId reads and in-presence without invoking asset p getter",
+      "original layer getter exception keeps exact thrown owner and stops before resolver"
+    ],
+    "sourceEquality": [
+      {
+        "path": "packages/node/src/node.ts",
+        "rawSha256": "1deb121241a80cb6c519c2ccab7489cb6d59005fbb5eca93790d498b16dc5ed4",
+        "frozenSha256": "56449e8168592110590b043d99107d778f89d311df150ecc432414f09ddef1d4",
+        "matchesSuppliedBuilder4SourceBytes": true,
+        "rawTranspiledJavaScriptTokensEqual": false
+      },
+      {
+        "path": "packages/scene2d/src/displayObject.ts",
+        "rawSha256": "e7bdb330930355357438f211bbd6b9210fcb603b1b54d9663552c5655fed780f",
+        "frozenSha256": "b3c60666a39760dc1eac6d0e7e7a3a4c5bb40f79068d4905f515b1303bd68464",
+        "matchesSuppliedBuilder4SourceBytes": true,
+        "rawTranspiledJavaScriptTokensEqual": true
+      },
+      {
+        "path": "packages/scene2d/src/sprite.ts",
+        "rawSha256": "f9173ef2d83ff62f408697a2591bb1a998b68004025d0dbaa4da65e8661025be",
+        "frozenSha256": "6039465e0c2ab1a1f5d2e8629bf60bd576efe1ce83bd65033452e847f8194413",
+        "matchesSuppliedBuilder4SourceBytes": true,
+        "rawTranspiledJavaScriptTokensEqual": false
+      }
+    ],
+    "sourceReadGraphFiles": {
+      "raw": 793,
+      "frozen": 793
+    }
+  },
+  "nativeBaseline": {
+    "variant": "existing whole-original v5 plus actual original image136 and current baseline runtime/legacy effective Sprite Types",
+    "atCommit": "81967a56547ead00e1d60b2242eb548cb98c74b2",
+    "command": [
+      "/tmp/builder5-json-exact21-128/cxx-hostcache",
+      "-std=c++20",
+      "-g0",
+      "-O0",
+      "-ferror-limit=1",
+      "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-image39-support/builder4-supplement/whole-emission/include",
+      "-I/tmp/builder5-json-exact21-128/candidate136-qualified/include",
+      "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/overrides/include",
+      "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/generated/include",
+      "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/include",
+      "-I/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-final-example-qualification/sdl-prefix/include",
+      "-c",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/repo/artifacts/sprite-image-public-consumer.cpp",
+      "-o",
+      "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-caches/builder5-image39-support/image-baseline.o"
+    ],
+    "compileExitCode": 1,
+    "elapsedSeconds": 70.7893979549408,
+    "log": "native-baseline.log",
+    "inputsUnchanged": true,
+    "run": "NOTRUN unless compile succeeds; no source or owner substitution"
+  },
+  "firstFailure": {
+    "file": "flight/scene2d/display_object.hpp",
+    "line": 196,
+    "diagnostic": "address of overloaded function 'create_node_2d_runtime' cannot be static_cast to type 'flight::Any'",
+    "cause": "The original default runtime-factory function value is still an uninstantiated generic template under its source unknown/Any assertion. This is an existing open caller dependency independent of the readonly Partial nested-data read fix.",
+    "phase": "compile",
+    "runtimeChecksExecuted": 0,
+    "link": "NOTRUN",
+    "run": "NOTRUN"
+  },
+  "exactTypedReadonlyPartialDataGetter": {
+    "reached": false,
+    "reason": "Native compile stops in original createNode2D default factory-value expression before any consumer execution; no dynamic getter/lifetime/identity result can be claimed.",
+    "sourceCallPath": [
+      "lottieImageLayerHandler",
+      "appendLottieImage",
+      "createTexture",
+      "createSprite",
+      "createNode2D",
+      "initializeNode(runtime factory BEFORE obj.data)",
+      "createSpriteData",
+      "initializeSpriteData"
+    ],
+    "targetRead": "initialize_node: obj.data -> optional<StructuralRef<RowReadonly<RowPartial<RowOf<Data>>>>>; SpriteData initializer then reads texture",
+    "physicalImageLiteralCell": "optional<Ref<entity_runtime_key_texture_2ee086bc1479c030>>; original image options are schema-only fresh allocation, not an existing native Sprite.",
+    "exactTypedGeneratedGetterGate": "Builder4/6 own actual re-emitted generated getter21 + new exact-physical readonlyPartial getter release control under the narrow metadata seam. This public baseline does not reach or replace that gate."
+  },
+  "remainingCallerDependencies": [
+    {
+      "owner": "Builder4/compiler/source contract coordination",
+      "dependency": "Instantiate/preserve original generic createNode2DRuntime function value through source unknown/Any assertion without copying factory bodies, widening callbacks or fabricating a native owner. Actual first compile failure line196."
+    },
+    {
+      "owner": "Builder2 ONLY",
+      "dependency": "Effective exact Sprite runtime slot freeze unavailable. Generated B Sprite71433c8a has optional<Ref<SpriteRuntime>>, but effective override75a37e81/file764a8042 still legacy generic NodeRuntime. Exact re-derivation not written; no hand-edited Types substitute."
+    },
+    {
+      "owner": "Builder4 + Builder3 source/callback analysis",
+      "dependency": "Whole strict receipt retains220 baseline/candidate and two owned diagnostics: independent N/D nullable PartialNode data forwarding, and Sprite-specific bounds callback receiver versus nullable BoundsNode data. Full raw220 diagnostics/options absent from supplied summary; no strict pass claimed."
+    },
+    {
+      "owner": "Builder4/compiler",
+      "dependency": "MethodsOf optional callback expression degrades Traits to NodeOf<Any>; minimal written-member trial emits NodeOf<T> with strict0, whole original native qualification remains open."
+    },
+    {
+      "owner": "Builder4 runtime/compiler",
+      "dependency": "Actual anonymous allocation and runtime VALUE versus physical native factory return/symbol-slot contracts. Received v5 create_node_runtime still contains old PREP generic_native_owner allocation/field population; it is an unqualified historical mechanism and cannot certify source allocation identity or activation."
+    },
+    {
+      "owner": "Builder4",
+      "dependency": "Whole v5 still refuses getNode2DRuntime/getDisplayObjectRuntime and two Sprite renderer functions. Their absence remains visible; no replacement definition/blanket override/claim supplied here."
+    },
+    {
+      "owner": "Builder4 + Builder6 review",
+      "dependency": "Coherent approved readonly_object_value runtime/compiler/generated getter bytes, pre-exact dispatch, policy/null/undefined/getter-once/lifetime/NamedProperties parity and exact typed getter gate; implementation outside this support patch."
+    },
+    {
+      "owner": "Builder5/Foreman/host",
+      "dependency": "Consumer calls held common runtime view;14-product migration/host flight-hx usage decision and coordinatedB gates unchanged. No native public consumer or render/package support promotion."
+    },
+    {
+      "owner": "Builder4/Builder5 on actual matching outputs",
+      "dependency": "Reconcile original image136 concrete options row (...7edffc02f55c47ce, nested scene2d_formats owner) with original v5 Sprite factory options row (...480feb592fa82925, nested scene2d owner) on a coherent approved source/compiler/Types freeze. The authored image call is preserved; this failed baseline does not establish cross-package nested-row argument compatibility. No new generation, generated splice or anonymous/native field-copy conversion was made."
+    }
+  ],
+  "fixture": {
+    "path": "artifacts/sprite-image-public-consumer.cpp",
+    "status": "Prepared, baseline compiler fails in dependency before fixture assertions; fixture compile/link/run NOT qualified",
+    "entry": "actual lottie_image_layer_handler through original function pointer; actual source createDisplayObject/Sprite/Texture factories",
+    "controls": [
+      "unresolved resolver reports skip/no child",
+      "resolver original asset identity/once",
+      "nested ImageResource identity",
+      "exact required native Sprite owner as explicit future ABI gate",
+      "repeat allocation identity",
+      "original resolver exception owner and no append/report side effects"
+    ],
+    "prohibitedSubstitution": "Never use installed default-only create_sprite, copied factory/source body, handbuilt Sprite/runtime, fake base, shadow cell or manual owner fabrication."
+  },
+  "failuresRetained": [
+    {
+      "stage": "initial source runner",
+      "result": "39/39/16/16 source PASS; invalid raw-versus-qualified global token-equality assumption failed. Replaced with byte-for-byte supplied source check and explicit raw token difference, not a source/test semantic assertion change."
+    },
+    {
+      "stage": "initial full effective Types overlay",
+      "result": "Source loader checks base file existence and could not locate overlay-only GlTextureValue.ts. Materialized canonical TS plus exact supplied full source files in scratch root; source scripts/inputs unchanged."
+    },
+    {
+      "stage": "native baseline",
+      "result": "compile1 at original generic factory-value Any assertion;0 runtime checks; no native pass."
+    }
+  ],
+  "nativeInputHashCount": 3602,
+  "allNativeSessionsReaped": true,
+  "landHold": "UNCHANGED: product14/host ABI/B/factory holds remain; proof-only support artifact.",
+  "proofArchive": {
+    "path": "/home/joshua/.quimby/workspaces/4611d72d-6367-41cb-8cf3-aade4e05de18/.quimby/agents/d5b2c62b-3d1d-4bfa-a185-43115cb6a385/scratch-archives/builder5-original-image-consumer-preparation-proof.tgz",
+    "sha256": "eac22503564136c219291178104309fcd002e1790b920f4f33e454ff0257c22d",
+    "bytes": 9034333,
+    "members": 5248,
+    "checksummedFiles": 5247
+  },
+  "verifyCommand": "node scripts/spriteImageConsumerProof.mjs [archive]",
+  "sourceCommands": [
+    [
+      "node",
+      "scripts/spriteFactorySourceOracle.mjs",
+      "--flight=<archive-sources/raw>"
+    ],
+    [
+      "node",
+      "scripts/spriteFactorySourceOracle.mjs",
+      "--flight=<archive-sources/frozen>"
+    ],
+    [
+      "node",
+      "scripts/spriteImageConsumerSourceOracle.mjs",
+      "--flight=<archive-sources/raw>"
+    ],
+    [
+      "node",
+      "scripts/spriteImageConsumerSourceOracle.mjs",
+      "--flight=<archive-sources/frozen>"
+    ]
+  ],
+  "nativeBaselineQualificationLimit": "Diagnostic composition of existing frozen v5 factories + prior original image136 + current runtime/effective legacy Types, not a coherent final B/candidate. First-error compile uses -ferror-limit=1: later caller/fixture compile failures remain unknown. No link/run/fixture-pass or exhaustive remaining-failure claim.",
+  "changeScope": "All zero-change fields refer to this support patch. The exact received qualified source/compiler inputs retain their own prior differences and explicit unqualified mechanisms; no raw-source token equivalence or whole-factory success is asserted."
+}
